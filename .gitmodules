@@ -1,6 +1,6 @@
-[submodule "Swift-FHIR"]
-	path = Swift-FHIR
-	url = https://github.com/smart-on-fhir/Swift-FHIR.git
 [submodule "ResearchKit"]
 	path = ResearchKit
 	url = https://github.com/ResearchKit/ResearchKit.git
+[submodule "Swift-SMART"]
+	path = Swift-SMART
+	url = https://github.com/smart-on-fhir/Swift-SMART.git

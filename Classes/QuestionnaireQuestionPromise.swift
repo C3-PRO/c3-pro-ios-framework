@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SwiftFHIR
+import SMART
 import ResearchKit
 
 

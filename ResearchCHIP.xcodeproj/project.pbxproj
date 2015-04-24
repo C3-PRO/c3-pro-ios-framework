@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE5931771AEAD9AF00A7C5E1 /* SMART.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE5931701AEAD93F00A7C5E1 /* SMART.framework */; };
 		EEFA84C11AE5C18B00E61006 /* ResearchCHIP.h in Headers */ = {isa = PBXBuildFile; fileRef = EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EEFA84C71AE5C18B00E61006 /* ResearchCHIP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */; };
 		EEFA84CE1AE5C18B00E61006 /* ResearchCHIPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84CD1AE5C18B00E61006 /* ResearchCHIPTests.swift */; };
@@ -14,44 +15,50 @@
 		EEFA84DB1AE5C25500E61006 /* QuestionnairePromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */; };
 		EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D91AE5C25500E61006 /* QuestionnaireQuestionPromise.swift */; };
 		EEFA84FA1AE5C2BC00E61006 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84F31AE5C29100E61006 /* ResearchKit.framework */; };
-		EEFA84FB1AE5C2BC00E61006 /* SwiftFHIR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84E91AE5C28A00E61006 /* SwiftFHIR.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		EE59316F1AEAD93F00A7C5E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EE43B1A919546D880017679A;
+			remoteInfo = "SwiftSMART-iOS";
+		};
+		EE5931711AEAD93F00A7C5E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EE43B1B319546D880017679A;
+			remoteInfo = "SwiftSMART-iOSTests";
+		};
+		EE5931731AEAD93F00A7C5E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EECAA7831A5D3DE60062C64B;
+			remoteInfo = "SwiftSMART-OSX";
+		};
+		EE5931751AEAD93F00A7C5E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EE13AA921A5D44D100B901FD;
+			remoteInfo = "SwiftSMART-OSXTests";
+		};
+		EE5931781AEAD9B800A7C5E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = EE43B1A819546D880017679A;
+			remoteInfo = "SwiftSMART-iOS";
+		};
 		EEFA84C81AE5C18B00E61006 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EEFA84B21AE5C18B00E61006 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = EEFA84BA1AE5C18B00E61006;
 			remoteInfo = ResearchCHIP;
-		};
-		EEFA84E41AE5C28A00E61006 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EEFA84DD1AE5C28A00E61006 /* SwiftFHIR.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE684C1E19A789BA00B5A2C0;
-			remoteInfo = SwiftFHIR;
-		};
-		EEFA84E61AE5C28A00E61006 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EEFA84DD1AE5C28A00E61006 /* SwiftFHIR.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE684C2919A789BA00B5A2C0;
-			remoteInfo = SwiftFHIRTests;
-		};
-		EEFA84E81AE5C28A00E61006 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EEFA84DD1AE5C28A00E61006 /* SwiftFHIR.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE6DA8571A5D4B1000E00708;
-			remoteInfo = SwiftFHIRiOS;
-		};
-		EEFA84EA1AE5C28A00E61006 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EEFA84DD1AE5C28A00E61006 /* SwiftFHIR.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE6DA85D1A5D4B3A00E00708;
-			remoteInfo = SwiftFHIRiOSTests;
 		};
 		EEFA84F21AE5C29100E61006 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -67,13 +74,6 @@
 			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
 			remoteInfo = ResearchKitTests;
 		};
-		EEFA84F61AE5C2B300E61006 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EEFA84DD1AE5C28A00E61006 /* SwiftFHIR.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = EE6DA7CD1A5D4B1000E00708;
-			remoteInfo = SwiftFHIRiOS;
-		};
 		EEFA84F81AE5C2B300E61006 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */;
@@ -84,6 +84,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftSMART.xcodeproj; path = "Swift-SMART/SwiftSMART.xcodeproj"; sourceTree = "<group>"; };
 		EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ResearchCHIP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEFA84BF1AE5C18B00E61006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResearchCHIP.h; sourceTree = "<group>"; };
@@ -93,7 +94,6 @@
 		EEFA84D71AE5C25500E61006 /* QuestionnaireGroupPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireGroupPromise.swift; sourceTree = "<group>"; };
 		EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnairePromise.swift; sourceTree = "<group>"; };
 		EEFA84D91AE5C25500E61006 /* QuestionnaireQuestionPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireQuestionPromise.swift; sourceTree = "<group>"; };
-		EEFA84DD1AE5C28A00E61006 /* SwiftFHIR.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftFHIR.xcodeproj; path = "Swift-FHIR/SwiftFHIR.xcodeproj"; sourceTree = "<group>"; };
 		EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -102,8 +102,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE5931771AEAD9AF00A7C5E1 /* SMART.framework in Frameworks */,
 				EEFA84FA1AE5C2BC00E61006 /* ResearchKit.framework in Frameworks */,
-				EEFA84FB1AE5C2BC00E61006 /* SwiftFHIR.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +118,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EE5931681AEAD93F00A7C5E1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EE5931701AEAD93F00A7C5E1 /* SMART.framework */,
+				EE5931721AEAD93F00A7C5E1 /* SwiftSMART-iOSTests.xctest */,
+				EE5931741AEAD93F00A7C5E1 /* SMART.framework */,
+				EE5931761AEAD93F00A7C5E1 /* SwiftSMART-OSXTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		EEFA84B11AE5C18B00E61006 = {
 			isa = PBXGroup;
 			children = (
@@ -125,7 +136,7 @@
 				EEFA84BE1AE5C18B00E61006 /* Supporting Files */,
 				EEFA84CA1AE5C18B00E61006 /* Tests */,
 				EEFA84BC1AE5C18B00E61006 /* Products */,
-				EEFA84DD1AE5C28A00E61006 /* SwiftFHIR.xcodeproj */,
+				EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */,
 				EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */,
 			);
 			sourceTree = "<group>";
@@ -177,17 +188,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		EEFA84DE1AE5C28A00E61006 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				EEFA84E51AE5C28A00E61006 /* SwiftFHIR.framework */,
-				EEFA84E71AE5C28A00E61006 /* SwiftFHIRTests.xctest */,
-				EEFA84E91AE5C28A00E61006 /* SwiftFHIR.framework */,
-				EEFA84EB1AE5C28A00E61006 /* SwiftFHIRiOSTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		EEFA84ED1AE5C29100E61006 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,7 +223,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				EEFA84F71AE5C2B300E61006 /* PBXTargetDependency */,
+				EE5931791AEAD9B800A7C5E1 /* PBXTargetDependency */,
 				EEFA84F91AE5C2B300E61006 /* PBXTargetDependency */,
 			);
 			name = ResearchCHIP;
@@ -282,8 +282,8 @@
 					ProjectRef = EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */;
 				},
 				{
-					ProductGroup = EEFA84DE1AE5C28A00E61006 /* Products */;
-					ProjectRef = EEFA84DD1AE5C28A00E61006 /* SwiftFHIR.xcodeproj */;
+					ProductGroup = EE5931681AEAD93F00A7C5E1 /* Products */;
+					ProjectRef = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -295,32 +295,32 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		EEFA84E51AE5C28A00E61006 /* SwiftFHIR.framework */ = {
+		EE5931701AEAD93F00A7C5E1 /* SMART.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = SwiftFHIR.framework;
-			remoteRef = EEFA84E41AE5C28A00E61006 /* PBXContainerItemProxy */;
+			path = SMART.framework;
+			remoteRef = EE59316F1AEAD93F00A7C5E1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		EEFA84E71AE5C28A00E61006 /* SwiftFHIRTests.xctest */ = {
+		EE5931721AEAD93F00A7C5E1 /* SwiftSMART-iOSTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = SwiftFHIRTests.xctest;
-			remoteRef = EEFA84E61AE5C28A00E61006 /* PBXContainerItemProxy */;
+			path = "SwiftSMART-iOSTests.xctest";
+			remoteRef = EE5931711AEAD93F00A7C5E1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		EEFA84E91AE5C28A00E61006 /* SwiftFHIR.framework */ = {
+		EE5931741AEAD93F00A7C5E1 /* SMART.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = SwiftFHIR.framework;
-			remoteRef = EEFA84E81AE5C28A00E61006 /* PBXContainerItemProxy */;
+			path = SMART.framework;
+			remoteRef = EE5931731AEAD93F00A7C5E1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		EEFA84EB1AE5C28A00E61006 /* SwiftFHIRiOSTests.xctest */ = {
+		EE5931761AEAD93F00A7C5E1 /* SwiftSMART-OSXTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = SwiftFHIRiOSTests.xctest;
-			remoteRef = EEFA84EA1AE5C28A00E61006 /* PBXContainerItemProxy */;
+			path = "SwiftSMART-OSXTests.xctest";
+			remoteRef = EE5931751AEAD93F00A7C5E1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		EEFA84F31AE5C29100E61006 /* ResearchKit.framework */ = {
@@ -378,15 +378,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		EE5931791AEAD9B800A7C5E1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "SwiftSMART-iOS";
+			targetProxy = EE5931781AEAD9B800A7C5E1 /* PBXContainerItemProxy */;
+		};
 		EEFA84C91AE5C18B00E61006 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = EEFA84BA1AE5C18B00E61006 /* ResearchCHIP */;
 			targetProxy = EEFA84C81AE5C18B00E61006 /* PBXContainerItemProxy */;
-		};
-		EEFA84F71AE5C2B300E61006 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = SwiftFHIRiOS;
-			targetProxy = EEFA84F61AE5C2B300E61006 /* PBXContainerItemProxy */;
 		};
 		EEFA84F91AE5C2B300E61006 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
