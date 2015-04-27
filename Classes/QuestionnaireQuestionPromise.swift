@@ -118,7 +118,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 							callback(format: nil, error: error ?? createQuestionnaireError("There are no choices in question «\(question.text)»"))
 						}
 						else {
-							callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(.SingleChoice, textChoices: choices!), error: nil)
+							callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.answerChoiceStyle(question), textChoices: choices!), error: nil)
 						}
 					}
 				case "open-choice":
@@ -127,7 +127,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 							callback(format: nil, error: error ?? createQuestionnaireError("There are no choices in question «\(question.text)»"))
 						}
 						else {
-							callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(.SingleChoice, textChoices: choices!), error: nil)
+							callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.answerChoiceStyle(question), textChoices: choices!), error: nil)
 						}
 					}
 				//case "attachment":	callback(format: nil, error: nil)
@@ -177,6 +177,13 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 				callback(choices: nil, error: createQuestionnaireError("Question «\(question.text)» does not specify choices in its ValueSet"))
 			}
 		}
+	}
+	
+	/** For `choice` type questions, inspect if the given question is single or multiple choice. */
+	func answerChoiceStyle(question: QuestionnaireGroupQuestion) -> ORKChoiceAnswerStyle {
+		let multiple = question.repeats ?? false		// TODO: Inspect "questionnaire-maxOccurs" extension
+		let style: ORKChoiceAnswerStyle = multiple ? .MultipleChoice : .SingleChoice
+		return style
 	}
 	
 	
