@@ -21,7 +21,7 @@ protocol QuestionnairePromiseProto: Printable
 {
 	var steps: [ORKStep]? { get }
 	
-	func fulfill(callback: ((errors: [NSError]?) -> Void))
+	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void))
 }
 
 
@@ -51,14 +51,14 @@ public class QuestionnairePromise: QuestionnairePromiseProto
 		Upon completion, the receiver has filled its `steps` and `task` properties for you to use; unless there was an
 		error preventing creation of those. Errors may be reported but steps and the task may still be created.
 	 */
-	public func fulfill(callback: ((errors: [NSError]?) -> Void)) {
+	public func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
 		if let toplevel = questionnaire.group {
 			let identifier = toplevel.id ?? "questionnaire-task"		// TODO: inspect `identifier`
 			let gpromise = QuestionnaireGroupPromise(group: toplevel)
-			gpromise.fulfill() { errors in
+			gpromise.fulfill(parentRequirements) { errors in
 				if let steps = gpromise.steps {
 					self.steps = steps
-					self.task = ORKOrderedTask(identifier: identifier, steps: steps)
+					self.task = ConditionalOrderedTask(identifier: identifier, steps: steps)
 					callback(errors: errors)
 				}
 				else {

@@ -39,7 +39,7 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 		:param: callback The callback to be called when done; note that even when you get an error, some steps might
 			have successfully been allocated still, so don't throw everything away just because you receive errors
 	 */
-	func fulfill(callback: ((errors: [NSError]?) -> Void)) {
+	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
 		var errors = [NSError]()
 		var promises = [QuestionnairePromiseProto]()
 		
@@ -50,6 +50,16 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 			intro = ORKInstructionStep(identifier: group.linkId ?? NSUUID().UUIDString)
 			intro!.title = title
 			intro!.text = text
+		}
+		
+		// "enableWhen" requirements
+		var requirements = parentRequirements ?? [ResultRequirement]()
+		var error: NSError?
+		if let myreqs = group.chip_enableQuestionnaireElementWhen(&error) {
+			requirements.extend(myreqs)
+		}
+		else if nil != error {
+			errors.append(error!)
 		}
 		
 		// fulfill our subgroups or (!!) questions
@@ -69,7 +79,7 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 			let queueGroup = dispatch_group_create()
 			for promise in promises {
 				dispatch_group_enter(queueGroup)
-				promise.fulfill() { berrors in
+				promise.fulfill(requirements) { berrors in
 					if let err = berrors {
 						errors.extend(err)
 					}
@@ -128,17 +138,6 @@ extension QuestionnaireGroup
 		}
 		
 		return (ttl?.chip_stripMultipleSpaces(), txt?.chip_stripMultipleSpaces())
-	}
-}
-
-
-extension String
-{
-	func chip_stripMultipleSpaces() -> String {
-		if let regEx = NSRegularExpression(pattern: " +", options: nil, error: nil) {
-			return regEx.stringByReplacingMatchesInString(self, options: nil, range: NSMakeRange(0, count(self)), withTemplate: " ")
-		}
-		return self
 	}
 }
 
