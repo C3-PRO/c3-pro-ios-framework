@@ -10,42 +10,33 @@ import Foundation
 import ResearchKit
 
 
+/**
+	An ordered task subclass that can inspect `ConditionalQuestionStep` instances' requirements and skip past questions
+	in case the requirements are not met.
+ */
 class ConditionalOrderedTask: ORKOrderedTask
 {
 	override func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
 		let serialNext = super.stepAfterStep(step, withResult: result)
 		
-		// does the serial next step have conditional requirements?
-		if let condNext = serialNext as? ConditionalQuestionStep where nil != condNext.requirements {
-			for requirement in condNext.requirements! {
-				if let stepResult = result.resultForIdentifier(requirement.questionIdentifier as String) as? ORKStepResult {
-					if let questionResults = stepResult.results as? [ORKQuestionResult] {
-						var ok = false
-						for res in questionResults {
-							//chip_logIfDebug("\(res.identifier) is \(res.answer), needs to be \(requirement.result.answer): \(res.chip_hasSameAnswer(requirement.result))")
-							if res.chip_hasSameAnswer(requirement.result) {
-								ok = true
-							}
-						}
-						if !ok {
-							return stepAfterStep(condNext, withResult: result)
-						}
-					}
-					else {
-						chip_logIfDebug("Expecting ORKQuestionResult but got \(stepResult.results)")
-					}
-				}
-				else {
-					chip_logIfDebug("Next step \(condNext.identifier) has a condition on \(requirement.questionIdentifier), but the latter has no result yet")
-				}
+		// does the serial next step have conditional requirements and are they satisfied?
+		if let condNext = serialNext as? ConditionalQuestionStep {
+			if let ok = condNext.requirementsAreSatisfiedBy(result) where !ok {
+				return stepAfterStep(condNext, withResult: result)
 			}
 		}
-		
 		return serialNext
 	}
 	
 	override func stepBeforeStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
 		let serialPrev = super.stepBeforeStep(step, withResult: result)
+		
+		// does the serial previous step have conditional requirements and are they satisfied?
+		if let condPrev = serialPrev as? ConditionalQuestionStep {
+			if let ok = condPrev.requirementsAreSatisfiedBy(result) where !ok {
+				return stepBeforeStep(condPrev, withResult: result)
+			}
+		}
 		return serialPrev
 	}
 }
@@ -81,7 +72,7 @@ class ConditionalQuestionStep: ORKQuestionStep
 		}
 	}
 	
-	/** If the step has requirements, checks if all of them are fulfilled.
+	/** If the step has requirements, checks if all of them are fulfilled in step results in the given task result.
 	
 		:returns: A bool indicating success or failure, nil if there are no requirements
 	 */
@@ -96,7 +87,7 @@ class ConditionalQuestionStep: ORKQuestionStep
 				if let questionResults = stepResult.results as? [ORKQuestionResult] {
 					var ok = false
 					for questionResult in questionResults {
-						chip_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.chip_hasSameAnswer(requirement.result))")
+						//chip_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.chip_hasSameAnswer(requirement.result))")
 						if questionResult.chip_hasSameAnswer(requirement.result) {
 							ok = true
 						}
