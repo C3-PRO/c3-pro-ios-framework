@@ -39,8 +39,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 	 */
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
 		let linkId = question.linkId ?? NSUUID().UUIDString
-		let title = question.chip_bestTitle()
-		let text = nil != title ? nil : question.text
+		let (title, text) = question.chip_bestTitleAndText()
 		
 		// resolve answer format, THEN resolve sub-groups, if any
 		question.chip_asAnswerFormat() { format, berror in
@@ -114,11 +113,32 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 
 extension QuestionnaireGroupQuestion
 {
-	func chip_bestTitle() -> String? {
+	func chip_bestTitleAndText() -> (String?, String?) {
 		let cDisplay = concept?.filter() { return nil != $0.display }.map() { return $0.display! }
 		let cCodes = concept?.filter() { return nil != $0.code }.map() { return $0.code! }
 		
-		return cDisplay?.first ?? (cCodes?.first ?? text?.chip_stripMultipleSpaces())
+		var ttl = cDisplay?.first ?? cCodes?.first
+		var txt = text
+		
+		if nil == ttl {
+			ttl = text
+			txt = nil
+		}
+		if nil == txt {
+			txt = chip_questionHelpText()		// even if the title is still nil, we won't want to populate the title with help text
+		}
+		
+		return (ttl?.chip_stripMultipleSpaces(), txt?.chip_stripMultipleSpaces())
+	}
+	
+	func chip_questionHelpText() -> String? {
+		let optUnit = extension_fhir?.filter() { return $0.url?.absoluteString == "http://hl7.org/fhir/StructureDefinition/questionnaire-help" }
+		return optUnit?.first?.valueString
+	}
+	
+	func chip_numericAnswerUnit() -> String? {
+		let optUnit = extension_fhir?.filter() { return $0.url?.absoluteString == "http://hl7.org/fhir/StructureDefinition/questionnaire-units" }
+		return optUnit?.first?.valueString
 	}
 	
 	/** Determine ResearchKit's answer format for the question type.
@@ -131,7 +151,7 @@ extension QuestionnaireGroupQuestion
 			case "boolean":		callback(format: ORKAnswerFormat.booleanAnswerFormat(), error: nil)
 			case "decimal":		callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(nil), error: nil)
 			case "integer":		callback(format: ORKAnswerFormat.integerAnswerFormatWithUnit(nil), error: nil)
-			case "quantity":	callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(nil), error: nil)		// TODO: add unit
+			case "quantity":	callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(chip_numericAnswerUnit()), error: nil)
 			case "date":		callback(format: ORKAnswerFormat.dateAnswerFormat(), error: nil)
 			case "dateTime":	callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
 			case "instant":		callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
