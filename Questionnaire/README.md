@@ -1,23 +1,33 @@
 Questionnaires
 ==============
 
-You use a FHIR `Questionnaire` resources in combination with a UIViewController that conforms to the `ORKTaskViewControllerDelegate` protocol.
-This view controller can then present the questionnaire in an `ORKTaskViewController` and wait for completion of the questionnaire.
+You can use a FHIR `Questionnaire` resource in combination with a `QuestionnaireController` instance.
+This model implements the `ORKTaskViewControllerDelegate` protocol and has a main method and holds on to a callback block:
+
+- `prepareQuestionnaireViewController()` to fulfill any questionnaire dependencies before calling the callback, in which you get a handle to a `ORKTaskViewController` view controller that you can present on the UI
+- `whenFinished` is called when the user finishes the questionnaire
+
 
 ```swift
-let questionnaire = <# FHIR Questionnaire #>
-let promise = QuestionnairePromise(questionnaire: questionnaire)
-promise.fulfill(nil) { errors in
-    if let tsk = promise.task {
-        let viewController = ORKTaskViewController(task: tsk, taskRunUUID: nil)
-        viewController.delegate = self
-        self.presentViewController(viewController, animated: true, completion: nil)
+let controller = QuestionnaireController()
+controller.questionnaire = <# FHIR Questionnaire #>
+
+controller.whenFinished = { viewController, reason, error in
+    self.dismissViewControllerAnimated(true, completion: nil)
+    if let err = error {
+        // error when going through the questionnaire
     }
     else {
-        // error creating a task from questionnaire
+        // all done, result is in "viewController.result"
     }
-    if nil != errors {
-        // one or more errors fulfilling the promise
+}
+
+controller.prepareQuestionnaireViewController() { viewController, error in
+    if let vc = viewController {
+        self.presentViewController(vc, animated: true, completion: nil)
+    }
+    else {
+        // error preparing the questionnaire in "error"
     }
 }
 ```

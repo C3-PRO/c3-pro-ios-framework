@@ -11,9 +11,6 @@ import SMART
 import ResearchKit
 
 
-let CHIPQuestionnaireErrorKey = "CHIPQuestionnaireError"
-
-
 /**
     Protocol for our questionnaire promise architecture.
  */
@@ -77,11 +74,5 @@ public class QuestionnairePromise: QuestionnairePromiseProto
 	public var description: String {
 		return NSString(format: "<QuestionnairePromise %p>", unsafeAddressOf(self)) as String
 	}
-}
-
-
-/** Convenience function to create an NSError in our questionnaire error domain. */
-public func chip_genErrorQuestionnaire(message: String, code: Int = 0) -> NSError {
-	return NSError(domain: CHIPQuestionnaireErrorKey, code: code, userInfo: [NSLocalizedDescriptionKey: message])
 }
 
