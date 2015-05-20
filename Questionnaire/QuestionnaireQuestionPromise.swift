@@ -31,11 +31,11 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 	
 	/** Fulfill the promise.
 		
-		Once the promise has been successfully fulfilled, the `step` property will be assigned. No guarantees as to on
-		which queue the callback will be called.
+	    Once the promise has been successfully fulfilled, the `step` property will be assigned. No guarantees as to on
+	    which queue the callback will be called.
 
-		:param: callback The callback to be called when done; note that even when you get an error, some steps might
-			have successfully been allocated still, so don't throw everything away just because you receive errors
+	    :param: callback The callback to be called when done; note that even when you get an error, some steps might
+	        have successfully been allocated still, so don't throw everything away just because you receive errors
 	 */
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
 		let linkId = question.linkId ?? NSUUID().UUIDString
@@ -67,7 +67,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 				steps.append(step)
 			}
 			else {
-				errors.append(berror ?? createQuestionnaireError("Failed to map question type to ResearchKit answer format"))
+				errors.append(berror ?? chip_genErrorQuestionnaire("Failed to map question type to ResearchKit answer format"))
 			}
 			
 			// do we have sub-groups?
@@ -143,7 +143,7 @@ extension QuestionnaireGroupQuestion
 	
 	/** Determine ResearchKit's answer format for the question type.
 	
-		TODO: "open-choice" allows to choose an option OR to give a textual response: implement
+	    TODO: "open-choice" allows to choose an option OR to give a textual response: implement
 	 */
 	func chip_asAnswerFormat(callback: ((format: ORKAnswerFormat?, error: NSError?) -> Void)) {
 		if let type = type {
@@ -161,7 +161,7 @@ extension QuestionnaireGroupQuestion
 			case "choice":
 				chip_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? createQuestionnaireError("There are no choices in question «\(self.text)»"))
+						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)»"))
 					}
 					else {
 						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.chip_answerChoiceStyle(), textChoices: choices!), error: nil)
@@ -170,7 +170,7 @@ extension QuestionnaireGroupQuestion
 			case "open-choice":
 				chip_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? createQuestionnaireError("There are no choices in question «\(self.text)»"))
+						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)»"))
 					}
 					else {
 						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.chip_answerChoiceStyle(), textChoices: choices!), error: nil)
@@ -179,7 +179,7 @@ extension QuestionnaireGroupQuestion
 				//case "attachment":	callback(format: nil, error: nil)
 				//case "reference":		callback(format: nil, error: nil)
 			default:
-				callback(format: nil, error: createQuestionnaireError("Cannot map question type \"\(type)\" to ResearchKit answer format"))
+				callback(format: nil, error: chip_genErrorQuestionnaire("Cannot map question type \"\(type)\" to ResearchKit answer format"))
 			}
 		}
 		else {
@@ -220,7 +220,7 @@ extension QuestionnaireGroupQuestion
 				callback(choices: choices, error: nil)
 			}
 			else {
-				callback(choices: nil, error: createQuestionnaireError("Question «\(self.text)» does not specify choices in its ValueSet"))
+				callback(choices: nil, error: chip_genErrorQuestionnaire("Question «\(self.text)» does not specify choices in its ValueSet"))
 			}
 		}
 	}

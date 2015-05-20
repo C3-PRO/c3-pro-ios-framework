@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		EE0EB9681AEEDA3A006AF9E9 /* CHIPExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0EB9671AEEDA3A006AF9E9 /* CHIPExtensions.swift */; };
 		EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */; };
+		EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */; };
 		EE5931771AEAD9AF00A7C5E1 /* SMART.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE5931701AEAD93F00A7C5E1 /* SMART.framework */; };
 		EEFA84C11AE5C18B00E61006 /* ResearchCHIP.h in Headers */ = {isa = PBXBuildFile; fileRef = EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EEFA84C71AE5C18B00E61006 /* ResearchCHIP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */; };
@@ -86,12 +87,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		EE0EB9671AEEDA3A006AF9E9 /* CHIPExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CHIPExtensions.swift; sourceTree = "<group>"; };
+		EE0EB9671AEEDA3A006AF9E9 /* CHIPExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CHIPExtensions.swift; path = Classes/CHIPExtensions.swift; sourceTree = "<group>"; };
 		EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionalOrderedTask.swift; sourceTree = "<group>"; };
+		EE519B9C1B0CD3AC00036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireExtensions.swift; sourceTree = "<group>"; };
+		EE519BA41B0CD4A500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftSMART.xcodeproj; path = "Swift-SMART/SwiftSMART.xcodeproj"; sourceTree = "<group>"; };
 		EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ResearchCHIP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEFA84BF1AE5C18B00E61006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResearchCHIP.h; sourceTree = "<group>"; };
+		EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ResearchCHIP.h; path = ../Classes/ResearchCHIP.h; sourceTree = "<group>"; };
 		EEFA84C61AE5C18B00E61006 /* ResearchCHIPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResearchCHIPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEFA84CC1AE5C18B00E61006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EEFA84CD1AE5C18B00E61006 /* ResearchCHIPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResearchCHIPTests.swift; sourceTree = "<group>"; };
@@ -136,7 +140,9 @@
 		EEFA84B11AE5C18B00E61006 = {
 			isa = PBXGroup;
 			children = (
-				EEFA84BD1AE5C18B00E61006 /* Classes */,
+				EE519B9C1B0CD3AC00036B96 /* README.md */,
+				EE0EB9671AEEDA3A006AF9E9 /* CHIPExtensions.swift */,
+				EEFA84BD1AE5C18B00E61006 /* Questionnaire */,
 				EEFA84BE1AE5C18B00E61006 /* Supporting Files */,
 				EEFA84CA1AE5C18B00E61006 /* Tests */,
 				EEFA84BC1AE5C18B00E61006 /* Products */,
@@ -154,22 +160,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		EEFA84BD1AE5C18B00E61006 /* Classes */ = {
+		EEFA84BD1AE5C18B00E61006 /* Questionnaire */ = {
 			isa = PBXGroup;
 			children = (
+				EE519BA41B0CD4A500036B96 /* README.md */,
 				EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */,
 				EEFA84D71AE5C25500E61006 /* QuestionnaireGroupPromise.swift */,
 				EEFA84D91AE5C25500E61006 /* QuestionnaireQuestionPromise.swift */,
 				EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */,
-				EE0EB9671AEEDA3A006AF9E9 /* CHIPExtensions.swift */,
-				EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */,
+				EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */,
 			);
-			path = Classes;
+			path = Questionnaire;
 			sourceTree = "<group>";
 		};
 		EEFA84BE1AE5C18B00E61006 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */,
 				EEFA84BF1AE5C18B00E61006 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -368,6 +375,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */,
+				EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */,
 				EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */,
 				EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */,
 				EEFA84DB1AE5C25500E61006 /* QuestionnairePromise.swift in Sources */,

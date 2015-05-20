@@ -31,13 +31,13 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 	
 	/** Fulfill the promise.
 	
-		Once the promise and its step promises have been successfully fulfilled, the `group` property will be assigned.
+	    Once the promise and its step promises have been successfully fulfilled, the `group` property will be assigned.
 	
-		TODO: Implement `repeats` for repeating groups.
-		TODO: Respect "http://hl7.org/fhir/StructureDefinition/questionnaire-sdc-specialGroup" extensions
+	    TODO: Implement `repeats` for repeating groups.
+	    TODO: Respect "http://hl7.org/fhir/StructureDefinition/questionnaire-sdc-specialGroup" extensions
 	
-		:param: callback The callback to be called when done; note that even when you get an error, some steps might
-			have successfully been allocated still, so don't throw everything away just because you receive errors
+	    :param: callback The callback to be called when done; note that even when you get an error, some steps might
+	        have successfully been allocated still, so don't throw everything away just because you receive errors
 	 */
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
 		var errors = [NSError]()

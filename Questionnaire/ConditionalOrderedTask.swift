@@ -74,7 +74,7 @@ class ConditionalQuestionStep: ORKQuestionStep
 	
 	/** If the step has requirements, checks if all of them are fulfilled in step results in the given task result.
 	
-		:returns: A bool indicating success or failure, nil if there are no requirements
+	    :returns: A bool indicating success or failure, nil if there are no requirements
 	 */
 	func requirementsAreSatisfiedBy(result: ORKTaskResult) -> Bool? {
 		if nil == requirements {

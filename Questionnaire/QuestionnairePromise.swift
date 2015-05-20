@@ -15,7 +15,7 @@ let CHIPQuestionnaireErrorKey = "CHIPQuestionnaireError"
 
 
 /**
-	Protocol for our questionnaire promise architecture.
+    Protocol for our questionnaire promise architecture.
  */
 protocol QuestionnairePromiseProto: Printable
 {
@@ -26,7 +26,7 @@ protocol QuestionnairePromiseProto: Printable
 
 
 /**
-	A promise that can turn a FHIR Questionnaire into an ORKOrderedTask.
+    A promise that can turn a FHIR Questionnaire into an ORKOrderedTask.
  */
 public class QuestionnairePromise: QuestionnairePromiseProto
 {
@@ -48,8 +48,8 @@ public class QuestionnairePromise: QuestionnairePromiseProto
 	
 	/** Attempts to fulfill the questionnaire promise by creating steps for all questions.
 		
-		Upon completion, the receiver has filled its `steps` and `task` properties for you to use; unless there was an
-		error preventing creation of those. Errors may be reported but steps and the task may still be created.
+	    Upon completion, the receiver has filled its `steps` and `task` properties for you to use; unless there was an
+	    error preventing creation of those. Errors may be reported but steps and the task may still be created.
 	 */
 	public func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
 		if let toplevel = questionnaire.group {
@@ -62,12 +62,12 @@ public class QuestionnairePromise: QuestionnairePromiseProto
 					callback(errors: errors)
 				}
 				else {
-					callback(errors: errors ?? [createQuestionnaireError("Unknown error fulfilling questionnaire promise")])
+					callback(errors: errors ?? [chip_genErrorQuestionnaire("Unknown error fulfilling questionnaire promise")])
 				}
 			}
 		}
 		else {
-			callback(errors: [createQuestionnaireError("Invalid questionnaire, does not contain a top level group item")])
+			callback(errors: [chip_genErrorQuestionnaire("Invalid questionnaire, does not contain a top level group item")])
 		}
 	}
 	
@@ -81,7 +81,7 @@ public class QuestionnairePromise: QuestionnairePromiseProto
 
 
 /** Convenience function to create an NSError in our questionnaire error domain. */
-public func createQuestionnaireError(message: String, code: Int = 0) -> NSError {
+public func chip_genErrorQuestionnaire(message: String, code: Int = 0) -> NSError {
 	return NSError(domain: CHIPQuestionnaireErrorKey, code: code, userInfo: [NSLocalizedDescriptionKey: message])
 }
 
