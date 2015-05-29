@@ -20,6 +20,19 @@ extension String
 }
 
 
+public extension NSFileManager
+{
+	public func chip_appLibraryDirectory() -> String? {
+		if let paths = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true) as? [String] {
+			if count(paths) > 0 {
+				return paths[0];
+			}
+		}
+		return nil
+	}
+}
+
+
 func chip_logIfDebug(@autoclosure message: () -> String, function: String = __FUNCTION__, file: String = __FILE__, line: Int = __LINE__) {
 	#if DEBUG
 	println("[\(file.lastPathComponent):\(line)] \(function)  \(message())")
