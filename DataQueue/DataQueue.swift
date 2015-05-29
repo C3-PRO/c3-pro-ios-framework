@@ -122,7 +122,7 @@ public class DataQueue: Server
 	/** Convenience method for internal use; POST requests should be DataRequests so this should never fail. */
 	func enqueueResourceInHandler(handler: FHIRServerRequestHandler) {
 		if let resource = (handler as? FHIRServerDataRequestHandler)?.resource as? Resource {
-			self.enqueueResource(resource)
+			enqueueResource(resource)
 		}
 	}
 	

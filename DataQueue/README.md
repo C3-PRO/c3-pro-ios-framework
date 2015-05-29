@@ -20,7 +20,8 @@ let auth = [
     "client_secret": "{secret}",
     "authorize_type": "client_credentials",
 ] as OAuth2JSON
-var smart = Client(server: DataQueue(baseURL: baseURL, auth: auth))
+let dataQueue = DataQueue(baseURL: baseURL, auth: auth)
+let smart = Client(server: dataQueue)
 ```
 
 Now, whenever you issue a _create_ command on a FHIR _Resource_ (i.e. a POST request) and the request fails, the resource will automatically be enqueued.
@@ -48,7 +49,7 @@ smart.authorize { patient, error in
         // error authorizing
     }
     else {
-        (smart.server as! DataQueue).flush() { error in
+        dataQueue.flush() { error in
             // check error; you may attempt to re-flush any time
         }
     }
@@ -59,5 +60,5 @@ Resources are enqueued manually when a POST fails, but you can also enqueue manu
 
 ```swift
 let questionnaire = Questionnaire(json: {some FHIRJSON})
-(smart.server as! DataQueue).enqueueResource(questionnaire)
+dataQueue.enqueueResource(questionnaire)
 ```
