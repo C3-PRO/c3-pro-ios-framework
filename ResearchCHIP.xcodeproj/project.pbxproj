@@ -11,6 +11,8 @@
 		EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */; };
 		EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */; };
 		EE5931771AEAD9AF00A7C5E1 /* SMART.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE5931701AEAD93F00A7C5E1 /* SMART.framework */; };
+		EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */; };
+		EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */; };
 		EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7A43921B0D08DE00B30D17 /* ConsentController.swift */; };
 		EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */; };
 		EEFA84C11AE5C18B00E61006 /* ResearchCHIP.h in Headers */ = {isa = PBXBuildFile; fileRef = EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -96,6 +98,8 @@
 		EE519BA41B0CD4A500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE519BA61B0CD6C500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftSMART.xcodeproj; path = "Swift-SMART/SwiftSMART.xcodeproj"; sourceTree = "<group>"; };
+		EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueue.swift; sourceTree = "<group>"; };
+		EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueuedResource.swift; sourceTree = "<group>"; };
 		EE7A43921B0D08DE00B30D17 /* ConsentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentController.swift; sourceTree = "<group>"; };
 		EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireController.swift; sourceTree = "<group>"; };
 		EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ResearchCHIP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -151,11 +155,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		EE5F4F6A1B174B6B00DB38B3 /* DataQueue */ = {
+			isa = PBXGroup;
+			children = (
+				EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */,
+				EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */,
+			);
+			path = DataQueue;
+			sourceTree = "<group>";
+		};
 		EEFA84B11AE5C18B00E61006 = {
 			isa = PBXGroup;
 			children = (
 				EE519B9C1B0CD3AC00036B96 /* README.md */,
 				EE0EB9671AEEDA3A006AF9E9 /* CHIPExtensions.swift */,
+				EE5F4F6A1B174B6B00DB38B3 /* DataQueue */,
 				EE519BA51B0CD69B00036B96 /* Consent */,
 				EEFA84BD1AE5C18B00E61006 /* Questionnaire */,
 				EEFA84BE1AE5C18B00E61006 /* Supporting Files */,
@@ -390,9 +404,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */,
 				EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */,
 				EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */,
 				EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */,
+				EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */,
 				EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */,
 				EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */,
 				EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */,
