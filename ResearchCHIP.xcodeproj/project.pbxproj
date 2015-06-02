@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		EE0EB9681AEEDA3A006AF9E9 /* CHIPExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0EB9671AEEDA3A006AF9E9 /* CHIPExtensions.swift */; };
 		EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */; };
+		EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */; };
 		EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */; };
 		EE5931771AEAD9AF00A7C5E1 /* SMART.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE5931701AEAD93F00A7C5E1 /* SMART.framework */; };
 		EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */; };
@@ -93,6 +94,7 @@
 /* Begin PBXFileReference section */
 		EE0EB9671AEEDA3A006AF9E9 /* CHIPExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CHIPExtensions.swift; path = Classes/CHIPExtensions.swift; sourceTree = "<group>"; };
 		EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionalOrderedTask.swift; sourceTree = "<group>"; };
+		EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueueManager.swift; sourceTree = "<group>"; };
 		EE519B9C1B0CD3AC00036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireExtensions.swift; sourceTree = "<group>"; };
 		EE519BA41B0CD4A500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 			children = (
 				EE5F4F7E1B18E2B100DB38B3 /* README.md */,
 				EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */,
+				EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */,
 				EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */,
 			);
 			path = DataQueue;
@@ -415,6 +418,7 @@
 				EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */,
 				EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */,
 				EEFA84DB1AE5C25500E61006 /* QuestionnairePromise.swift in Sources */,
+				EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */,
 				EE0EB9681AEEDA3A006AF9E9 /* CHIPExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
