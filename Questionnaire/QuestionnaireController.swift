@@ -20,7 +20,11 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 {
 	public final var questionnaire: Questionnaire?
 	
-	public final var whenFinished: ((viewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason, error: NSError?) -> Void)?
+	/// Callback called when the user finishes the questionnaire without error.
+	public final var whenFinished: ((reason: ORKTaskViewControllerFinishReason, answers: QuestionnaireAnswers?) -> Void)?
+	
+	/// Callback to be called when the questionnaire finishes with an error.
+	public final var whenFailed: ((error: NSError) -> Void)?
 	
 	
 	// MARK: - Questionnaire
@@ -97,7 +101,23 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 	// MARK: - Task View Controller Delegate
 	
 	public func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
-		whenFinished?(viewController: taskViewController, reason: reason, error: error)
+		if let error = error {
+			didFailWithError(error)
+		}
+		else {
+			didFinish(taskViewController, reason: reason)
+		}
+	}
+	
+	
+	// MARK: - Questionnaire Answers
+	
+	func didFinish(viewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason) {
+		whenFinished?(reason: reason, answers: viewController.result.asQuestionnaireAnswers())
+	}
+	
+	func didFailWithError(error: NSError) {
+		whenFailed?(error: error)
 	}
 }
 
