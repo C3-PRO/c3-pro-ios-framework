@@ -113,7 +113,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 	// MARK: - Questionnaire Answers
 	
 	func didFinish(viewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason) {
-		whenFinished?(reason: reason, answers: viewController.result.asQuestionnaireAnswers())
+		whenFinished?(reason: reason, answers: viewController.result.chip_asQuestionnaireAnswersForTask(viewController.task))
 	}
 	
 	func didFailWithError(error: NSError) {

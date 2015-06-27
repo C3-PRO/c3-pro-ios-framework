@@ -49,6 +49,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 			
 			if let fmt = format {
 				let step = ConditionalQuestionStep(identifier: linkId, title: title, answer: fmt)
+				step.fhirType = self.question.type
 				step.text = text
 				step.optional = !(self.question.required ?? false)
 				

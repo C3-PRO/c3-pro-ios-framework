@@ -44,6 +44,10 @@ class ConditionalOrderedTask: ORKOrderedTask
 
 class ConditionalQuestionStep: ORKQuestionStep
 {
+	/// The original "type", specified in the FHIR Questionnaire.
+	var fhirType: String?
+	
+	/// Requirements to fulfil for the step to show up, if any.
 	var requirements: [ResultRequirement]?
 	
 	
