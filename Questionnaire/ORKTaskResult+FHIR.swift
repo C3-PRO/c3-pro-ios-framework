@@ -21,7 +21,6 @@ extension ORKTaskResult
 			
 			// loop results to collect groups
 			for result in results {
-				println("->  \(result.identifier)  \(result)")
 				if let group = result.chip_questionAnswers(task) {
 					groups.append(group)
 				}
@@ -55,11 +54,11 @@ extension ORKStepResult
 					
 					let question = QuestionnaireAnswersGroupQuestion(json: nil)
 					question.linkId = result.identifier
-					question.answer = result.chip_answerAsQuestionAnswersOfStep(task?.stepWithIdentifier?(result.identifier))
+					question.answer = result.chip_answerAsQuestionAnswersOfStep(task?.stepWithIdentifier?(result.identifier) as? ORKQuestionStep)
 					questions.append(question)
 				}
 				else {
-					println("xx>  Cannot handle ORKStepResult result \(result)")
+					chip_warn("I cannot handle ORKStepResult result \(result)")
 				}
 			}
 			
@@ -79,10 +78,9 @@ extension ORKQuestionResult
 	TODO: Cannot override methods defined in extensions, hence we need to check for the ORKQuestionResult subclass and then call the
 	method implemented in the extensions below.
 	*/
-	func chip_answerAsQuestionAnswersOfStep(step: ORKStep?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
+	func chip_answerAsQuestionAnswersOfStep(step: ORKQuestionStep?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
 		let fhirType = (step as? ConditionalQuestionStep)?.fhirType
-		println("-->  \(identifier)  \(self)")
-		println("-->  FHIR: \(fhirType)")
+		
 		if let this = self as? ORKChoiceQuestionResult {
 			return this.chip_asQuestionAnswers(fhirType)
 		}
@@ -107,7 +105,7 @@ extension ORKQuestionResult
 		if let this = self as? ORKDateQuestionResult {
 			return this.chip_asQuestionAnswers(fhirType)
 		}
-		println("xx>  Don't understand ORKQuestionResult answer from \(self)")
+		chip_warn("I don't understand ORKQuestionResult answer from \(self)")
 		return nil
 	}
 }
@@ -116,8 +114,20 @@ extension ORKQuestionResult
 extension ORKChoiceQuestionResult
 {
 	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
-		if let choices = choiceAnswers {
-			println("--->  \(choices)")
+		if let choices = choiceAnswers as? [String] {
+			var answers = [QuestionnaireAnswersGroupQuestionAnswer]()
+			for choice in choices {
+				let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+				let splat = split(choice) { $0 == kORKTextChoiceSystemSeparator }
+				let system = splat[0]
+				let code = (splat.count > 1) ? "\(kORKTextChoiceSystemSeparator)".join(splat[1..<splat.endIndex]) : kORKTextChoiceMissingCodeCode
+				answer.valueCoding = Coding(json: ["system": system, "code": code])
+				answers.append(answer)
+			}
+			return answers
+		}
+		else {
+			chip_warn("expecting choice question results to be strings, but got: \(choiceAnswers)")
 		}
 		return nil
 	}
@@ -129,7 +139,12 @@ extension ORKTextQuestionResult
 	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
 		if let text = textAnswer {
 			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
-			answer.valueString = text
+			if let fhir = fhirType where "url" == fhir {
+				answer.valueUri = NSURL(string: text)
+			}
+			else {
+				answer.valueString = text
+			}
 			return [answer]
 		}
 		return nil
@@ -141,13 +156,13 @@ extension ORKNumericQuestionResult
 {
 	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
 		if let numeric = numericAnswer {
-			println("--->  \(numeric)")
-			println("---->  \(unit)")
 			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
-			if let unit = unit {
-				answer.valueQuantity = Quantity(json: nil)
-				answer.valueQuantity!.value = NSDecimalNumber(json: numeric)
+			if let fhir = fhirType where "quantity" == fhir {
+				answer.valueQuantity = Quantity(json: ["value": numeric])
 				answer.valueQuantity!.units = unit
+			}
+			else if let fhir = fhirType where "integer" == fhir {
+				answer.valueInteger = numeric.integerValue
 			}
 			else {
 				answer.valueDecimal = NSDecimalNumber(json: numeric)
@@ -213,9 +228,31 @@ extension ORKDateQuestionResult
 {
 	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
 		if let date = dateAnswer {
-			println("--->  \(date)")
-			println("---->  \(calendar)")
-			println("---->  \(timeZone)")
+			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+			switch fhirType ?? "dateTime" {
+			case "date":
+				answer.valueDate = date.fhir_asDate()
+			case "dateTime":
+				var dateTime = date.fhir_asDateTime()
+				if let tz = timeZone {
+					dateTime.timeZone = tz
+				}
+				answer.valueDateTime = dateTime
+			case "instant":
+				var instant = date.fhir_asInstant()
+				if let tz = timeZone {
+					instant.timeZone = tz
+				}
+				answer.valueInstant = instant
+			default:
+				chip_warn("unknown date-time FHIR type “\(fhirType!)”, treating as dateTime")
+				var dateTime = date.fhir_asDateTime()
+				if let tz = timeZone {
+					dateTime.timeZone = tz
+				}
+				answer.valueDateTime = dateTime
+			}
+			return [answer]
 		}
 		return nil
 	}

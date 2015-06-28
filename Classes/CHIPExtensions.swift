@@ -39,3 +39,7 @@ func chip_logIfDebug(@autoclosure message: () -> String, function: String = __FU
 	#endif
 }
 
+func chip_warn(@autoclosure message: () -> String, function: String = __FUNCTION__, file: String = __FILE__, line: Int = __LINE__) {
+	println("[\(file.lastPathComponent):\(line)] \(function)  WARNING: \(message())")
+}
+
