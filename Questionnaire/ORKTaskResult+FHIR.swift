@@ -205,7 +205,7 @@ extension ORKTimeOfDayQuestionResult
 	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
 		if let components = dateComponentsAnswer {
 			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
-			answer.valueTime = Time(hour: UInt8(components.hour), minute: UInt8(components.minute), second: Double(components.second))
+			answer.valueTime = Time(hour: UInt8(components.hour), minute: UInt8(components.minute), second: 0.0)
 			return [answer]
 		}
 		return nil
@@ -235,20 +235,20 @@ extension ORKDateQuestionResult
 			case "dateTime":
 				var dateTime = date.fhir_asDateTime()
 				if let tz = timeZone {
-					dateTime.timeZone = tz
+//					dateTime.timeZone = tz			// TODO: reported NSDate is in UTC, convert to the given time zone
 				}
 				answer.valueDateTime = dateTime
 			case "instant":
 				var instant = date.fhir_asInstant()
 				if let tz = timeZone {
-					instant.timeZone = tz
+//					instant.timeZone = tz
 				}
 				answer.valueInstant = instant
 			default:
 				chip_warn("unknown date-time FHIR type “\(fhirType!)”, treating as dateTime")
 				var dateTime = date.fhir_asDateTime()
 				if let tz = timeZone {
-					dateTime.timeZone = tz
+//					dateTime.timeZone = tz
 				}
 				answer.valueDateTime = dateTime
 			}
