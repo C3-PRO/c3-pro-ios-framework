@@ -2,25 +2,31 @@ Questionnaires
 ==============
 
 You can use a FHIR `Questionnaire` resource in combination with a `QuestionnaireController` instance.
-This model implements the `ORKTaskViewControllerDelegate` protocol and has a main method and holds on to a callback block:
+This model implements the `ORKTaskViewControllerDelegate` protocol and holds on to a callback block:
 
 - `prepareQuestionnaireViewController()` to fulfill any questionnaire dependencies before calling the callback, in which you get a handle to a `ORKTaskViewController` view controller that you can present on the UI
-- `whenFinished` is called when the user finishes the questionnaire without error
-- `whenFailed` is called when the questionnaire finishes with an error
+- `whenCompleted` is called when the user completes the questionnaire without cancelling nor error
+- `whenCancelledOrFailed` is called when the questionnaire is cancelled (error = nil) or finishes with an error.
 
 
 ```swift
 let controller = QuestionnaireController()
 controller.questionnaire = <# FHIR Questionnaire #>
 
-controller.whenFinished = { reason, answers in
+controller.whenCompleted = { answers in
     self.dismissViewControllerAnimated(true, completion: nil)
-	// `reason` is an "ORKTaskViewControllerFinishReason" instance
-	// `answers` is a FHIR "QuestionnaireAnswers" resource
+	// `answers` is a FHIR "QuestionnaireAnswers" resource if not nil
+    // e.g. send to a SMART server:
+    if let answers = answers {
+        answers.create(<# smart.server #>) { error in
+            // check if `error` is not nil and handle
+        }
+    }
 }
 
-controller.whenFailed = { error in
-	// maybe do something with `error`
+controller.whenCancelledOrFailed = { error in
+    self.dismissViewControllerAnimated(true, completion: nil)
+	// check if `error` is not nil and handle
 }
 
 controller.prepareQuestionnaireViewController() { viewController, error in
