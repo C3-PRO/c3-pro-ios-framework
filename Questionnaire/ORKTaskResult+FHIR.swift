@@ -43,27 +43,36 @@ extension ORKTaskResult
 
 extension ORKStepResult
 {
+	/**
+	Creates a QuestionnaireAnswersGroup resource from all ORKSteps in the given ORKTask. Questions that do not have answers will be omitted,
+	and groups that do not have at least a single question with answer will likewise be omitted.
+	
+	:param: task The ORKTask to convert to a FHIR answer group
+	:returns: A QuestionnaireAnswersGroup element or nil
+	*/
 	func chip_questionAnswers(task: ORKTask?) -> QuestionnaireAnswersGroup? {
 		if let results = results as? [ORKResult] {
 			let group = QuestionnaireAnswersGroup(json: nil)
 			var questions = [QuestionnaireAnswersGroupQuestion]()
 			
-			// loop results to collect answers
+			// loop results to collect answers; omit questions that do not have answers
 			for result in results {
-				if let result = result as? ORKQuestionResult {
-					
-					let question = QuestionnaireAnswersGroupQuestion(json: nil)
-					question.linkId = result.identifier
-					question.answer = result.chip_answerAsQuestionAnswersOfStep(task?.stepWithIdentifier?(result.identifier) as? ORKQuestionStep)
-					questions.append(question)
+				if let result = result as? ORKQuestionResult,
+					let answers = result.chip_answerAsQuestionAnswersOfStep(task?.stepWithIdentifier?(result.identifier) as? ORKQuestionStep) {
+						let question = QuestionnaireAnswersGroupQuestion(json: nil)
+						question.linkId = result.identifier
+						question.answer = answers
+						questions.append(question)
 				}
 				else {
 					chip_warn("I cannot handle ORKStepResult result \(result)")
 				}
 			}
 			
-			group.question = questions
-			return group
+			if questions.count > 0 {
+				group.question = questions
+				return group
+			}
 		}
 		return nil
 	}
@@ -217,7 +226,9 @@ extension ORKTimeIntervalQuestionResult
 {
 	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
 		if let interval = intervalAnswer {
-			println("--->  \(interval)")
+			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+			// TODO: support interval answers
+			println("--->  \(interval) for FHIR type “\(fhirType)”")
 		}
 		return nil
 	}
