@@ -11,6 +11,11 @@ import SMART
 import ResearchKit
 
 
+let kORKTextChoiceSystemSeparator: Character = " "
+let kORKTextChoiceDefaultSystem = "https://fhir.smalthealthit.org"
+let kORKTextChoiceMissingCodeCode = "⚠️"
+
+
 /**
 	A promise that can fulfill a questionnaire question into an ORKQuestionStep.
  */
@@ -49,6 +54,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 			
 			if let fmt = format {
 				let step = ConditionalQuestionStep(identifier: linkId, title: title, answer: fmt)
+				step.fhirType = self.question.type
 				step.text = text
 				step.optional = !(self.question.required ?? false)
 				
@@ -188,16 +194,23 @@ extension QuestionnaireGroupQuestion
 		}
 	}
 	
-	/** For `choice` type questions, retrieves the possible answers and returns them as ORKTextChoice in the callback. */
+	/**
+	For `choice` type questions, retrieves the possible answers and returns them as ORKTextChoice in the callback.
+	
+	The `value` property of the text choice is a combination of the coding system URL and the code, separated by a space. If no system URL
+	is provided, "https://fhir.smalthealthit.org" is used.
+	*/
 	func chip_resolveAnswerChoices(callback: ((choices: [ORKTextChoice]?, error: NSError?) -> Void)) {
 		options?.resolve(ValueSet.self) { valueSet in
 			var choices = [ORKTextChoice]()
+			let system = valueSet?.define?.system?.absoluteString ?? kORKTextChoiceDefaultSystem
 			
 			// valueset defines its own concepts
 			if let options = valueSet?.define?.concept {
 				for option in options {
-					let code = option.code ?? ""				// code is a required property, so SHOULD always be present
-					let text = ORKTextChoice(text: option.display ?? code, value: code)
+					let code = option.code ?? kORKTextChoiceMissingCodeCode			// code is a required property, so SHOULD always be present
+					let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
+					let text = ORKTextChoice(text: option.display ?? code, value: value)
 					choices.append(text)
 				}
 			}
@@ -207,8 +220,9 @@ extension QuestionnaireGroupQuestion
 				for option in options {
 					if let concepts = option.concept {
 						for concept in concepts {
-							let code = concept.code ?? ""		// code is a required property, so SHOULD always be present
-							let text = ORKTextChoice(text: concept.display ?? code, value: code)
+							let code = concept.code ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
+							let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
+							let text = ORKTextChoice(text: concept.display ?? code, value: value)
 							choices.append(text)
 						}
 					}

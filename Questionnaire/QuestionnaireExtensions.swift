@@ -30,7 +30,7 @@ extension FHIRElement
 						requirements.append(req)
 					}
 					else {
-						//return nil		// let us be graceful during development period not fail on errors
+						//return nil		// TODO: let us be graceful during development period and not fail on errors
 					}
 				}
 				else {
@@ -60,7 +60,9 @@ extension Extension
 		if let val = valueCoding {
 			if let code = val.code {
 				let result = ORKChoiceQuestionResult(identifier: stepIdentifier)
-				result.answer = [code]
+				let system = val.system?.absoluteString ?? kORKTextChoiceDefaultSystem
+				let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
+				result.answer = [value]
 				return result
 			}
 			else {
