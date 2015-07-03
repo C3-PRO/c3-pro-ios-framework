@@ -21,10 +21,10 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 	public final var questionnaire: Questionnaire?
 	
 	/// Callback called when the user finishes the questionnaire without error.
-	public final var whenFinished: ((reason: ORKTaskViewControllerFinishReason, answers: QuestionnaireAnswers?) -> Void)?
+	public final var whenCompleted: ((answers: QuestionnaireAnswers?) -> Void)?
 	
-	/// Callback to be called when the questionnaire finishes with an error.
-	public final var whenFailed: ((error: NSError) -> Void)?
+	/// Callback to be called when the questionnaire is cancelled (error = nil) or finishes with an error.
+	public final var whenCancelledOrFailed: ((error: NSError?) -> Void)?
 	
 	
 	// MARK: - Questionnaire
@@ -113,11 +113,21 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 	// MARK: - Questionnaire Answers
 	
 	func didFinish(viewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason) {
-		whenFinished?(reason: reason, answers: viewController.result.chip_asQuestionnaireAnswersForTask(viewController.task))
+		switch reason {
+		case .Failed:
+			didFailWithError(chip_genErrorQuestionnaire("unknown error finishing questionnaire"))
+		case .Completed:
+			whenCompleted?(answers: viewController.result.chip_asQuestionnaireAnswersForTask(viewController.task))
+		case .Discarded:
+			didFailWithError(nil)
+		case .Saved:
+			// TODO: support saving tasks
+			didFailWithError(nil)
+		}
 	}
 	
-	func didFailWithError(error: NSError) {
-		whenFailed?(error: error)
+	func didFailWithError(error: NSError?) {
+		whenCancelledOrFailed?(error: error)
 	}
 }
 
