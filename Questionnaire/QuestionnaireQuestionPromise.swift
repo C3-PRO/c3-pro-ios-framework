@@ -203,10 +203,21 @@ extension QuestionnaireGroupQuestion
 	func chip_resolveAnswerChoices(callback: ((choices: [ORKTextChoice]?, error: NSError?) -> Void)) {
 		options?.resolve(ValueSet.self) { valueSet in
 			var choices = [ORKTextChoice]()
-			let system = valueSet?.define?.system?.absoluteString ?? kORKTextChoiceDefaultSystem
+			
+			// we have an expanded ValueSet
+			if let expansion = valueSet?.expansion?.contains {
+				for option in expansion {
+					let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem
+					let code = option.code ?? kORKTextChoiceMissingCodeCode
+					let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
+					let text = ORKTextChoice(text: option.display ?? code, value: value)
+					choices.append(text)
+				}
+			}
 			
 			// valueset defines its own concepts
-			if let options = valueSet?.define?.concept {
+			else if let options = valueSet?.define?.concept {
+				let system = valueSet?.define?.system?.absoluteString ?? kORKTextChoiceDefaultSystem
 				for option in options {
 					let code = option.code ?? kORKTextChoiceMissingCodeCode			// code is a required property, so SHOULD always be present
 					let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
@@ -216,8 +227,9 @@ extension QuestionnaireGroupQuestion
 			}
 			
 			// valueset includes codes
-			if let options = valueSet?.compose?.include {		// TODO: also support `import`
+			else if let options = valueSet?.compose?.include {		// TODO: also support `import`
 				for option in options {
+					let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem	// system is a required property
 					if let concepts = option.concept {
 						for concept in concepts {
 							let code = concept.code ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
