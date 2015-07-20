@@ -8,9 +8,16 @@
 
 import Foundation
 import CoreLocation
+import SMART
 
 
-public typealias GeocoderCallback = ((location: CLLocation?) -> Void)
+public typealias GeocoderLocationCallback = ((location: CLLocation?, error: NSError?) -> Void)
+
+public typealias GeocoderPlacemarkCallback = ((placemark: CLPlacemark?, error: NSError?) -> Void)
+
+public typealias GeocoderAddressCallback = ((address: Address?, error: NSError?) -> Void)
+
+let CHIPGeocoderErrorKey = "CHIPGeocoderError"
 
 
 /**
@@ -18,67 +25,173 @@ public typealias GeocoderCallback = ((location: CLLocation?) -> Void)
  */
 public class Geocoder
 {
-	var manager: CLLocationManager?
+	var locationManager: CLLocationManager?
 	
-	var delegate: GeocoderDelegate?
+	var locationDelegate: LocationManagerDelegate?
 	
-	var callback: GeocoderCallback?
+	var geocoder: CLGeocoder?
 	
-	public init() {
+	var locationCallback: GeocoderLocationCallback?
+	
+	public init() {  }
+	
+	
+	// MARK: - Location Manager
+	
+	/**
+	Determines the current location and, on success, presents a "CLLocation" instance in the callback.
+	
+	:param callback: The callback to call after geocoding, supplies either a CLLocation instance, an NSError instance or neither (on abort)
+	*/
+	public func currentLocation(callback inCallback: GeocoderLocationCallback) {
+		if let cb = locationCallback {
+			cb(location: nil, error: nil)
+			locationCallback = nil
+		}
 		
+		// exit early if location services are disabled or denied/restricted
+		if !CLLocationManager.locationServicesEnabled() || .Denied == CLLocationManager.authorizationStatus() || .Restricted == CLLocationManager.authorizationStatus() {
+			inCallback(location: nil, error: chip_genErrorGeocoder("Location services are disabled or have been restricted"))
+			return
+		}
+		
+		// setup and start location manager
+		locationCallback = inCallback
+		locationDelegate = LocationManagerDelegate()
+		locationManager = CLLocationManager()
+		locationManager!.delegate = locationDelegate
+		locationManager!.desiredAccuracy = kCLLocationAccuracyKilometer
+		
+		if .NotDetermined == CLLocationManager.authorizationStatus() {
+			locationManagerAuthorize()			// no need to wait for the callback, can start requesting location updates immediately
+		}
+		locationManagerStart()
+	}
+	
+	func locationManagerAuthorize() {
+		chip_logIfDebug("Authorizing location determination")
+		locationManager!.requestWhenInUseAuthorization()
+	}
+	
+	/** Calls `startUpdatingLocation` and `stopUpdatingLocation`, then calls the callback with the current/latest location. */
+	func locationManagerStart() {
+		chip_logIfDebug("Starting location determination")
+		locationDelegate!.didUpdateLocations = { locations in
+			self.locationManager?.stopUpdatingLocation()
+			self.locationManagerDidReceiveLocations(locations)
+		}
+		locationManager!.startUpdatingLocation()
+	}
+	
+	func locationManagerDidReceiveLocations(locations: [CLLocation]) {
+		locationCallback?(location: locations.last, error: nil)
+		locationCallback = nil
+		locationDelegate = nil
+		locationManager = nil
 	}
 	
 	
 	// MARK: - Geocoding
 	
-	public func currentLocation(callback inCallback: GeocoderCallback) {
-		if let cb = callback {
-			cb(location: nil)
-			callback = nil
+	/**
+	In the callback returns a FHIR "Address" instance of the current location, populated according to HIPAA Safe Harbor guidelines. Calls
+	`geocodeCurrentLocation()` to determine the current location, then reverse-geocodes and de-identifies that location/placemark.
+	
+	:param callback: The callback to call after geocoding, supplies either an Address element, an NSError instance or neither (on abort)
+	*/
+	public func hipaaCompliantCurrentLocation(callback: GeocoderAddressCallback) {
+		geocodeCurrentLocation { placemark, error in
+			if nil != error || nil == placemark {
+				callback(address: nil, error: error)
+			}
+			else {
+				callback(address: self.hipaaCompliantAddressFromPlacemark(placemark!), error: nil)
+			}
 		}
-		
-		if !CLLocationManager.locationServicesEnabled() || .Denied == CLLocationManager.authorizationStatus() || .Restricted == CLLocationManager.authorizationStatus() {
-			inCallback(location: nil)
-			return
-		}
-		
-		callback = inCallback
-		delegate = GeocoderDelegate()
-		manager = CLLocationManager()
-		manager!.delegate = delegate
-		manager!.desiredAccuracy = kCLLocationAccuracyKilometer
-		
-		if .NotDetermined == CLLocationManager.authorizationStatus() {
-			geocodeAuthorize()			// no need to wait for the callback, can start requesting location updates immediately
-		}
-		geocodeStart()
 	}
 	
-	func geocodeAuthorize() {
-		chip_logIfDebug("Authorizing geocoding")
-		manager!.requestWhenInUseAuthorization()
-	}
+	/**
+	In the callback returns a FHIR "Address" instance of the given location, populated according to HIPAA Safe Harbor guidelines.
 	
-	/** Calls `startUpdatingLocation` and `stopUpdatingLocation`, then calls the callback with the current/latest location. */
-	func geocodeStart() {
-		chip_logIfDebug("Starting geocoding")
-		delegate!.didUpdateLocations = { locations in
-			self.manager?.stopUpdatingLocation()
-			self.geocodeDidReceiveLocations(locations)
+	:param callback: The callback to call after geocoding, supplies either an Address element, an NSError instance or neither (on abort)
+	*/
+	public func hipaaCompliantLocation(location: CLLocation, callback: GeocoderAddressCallback) {
+		geocodeLocation(location) { placemark, error in
+			if nil != error || nil == placemark {
+				callback(address: nil, error: error)
+			}
+			else {
+				callback(address: self.hipaaCompliantAddressFromPlacemark(placemark!), error: nil)
+			}
 		}
-		manager!.startUpdatingLocation()
 	}
 	
-	func geocodeDidReceiveLocations(locations: [CLLocation]) {
-		callback?(location: locations.last)
-		callback = nil
-		delegate = nil
-		manager = nil
+	/**
+	Populate an "Address" element representing the given placemark according to HIPAA's Safe Harbor guidelines.
+	
+	:returns: A sparsely populated FHIR "Address" element
+	*/
+	func hipaaCompliantAddressFromPlacemark(placemark: CLPlacemark) -> Address {
+		let hipaa = Address(json: nil)
+		hipaa.country = placemark.country
+		
+		// US: 3-digit ZIP
+		if "US" == placemark.ISOcountryCode {
+			if let fullZip = placemark.postalCode where count(fullZip) >= 3 {
+				let zip = fullZip[fullZip.startIndex..<advance(fullZip.startIndex, 3)]
+				hipaa.postalCode = contains(Geocoder.restrictedThreeDigitZIPs(), zip) ? "000" : zip
+			}
+		}
+		
+		return hipaa
+	}
+	
+	/**
+	Returns an array of 3-digit US ZIP codes that **can not** be used in a HIPAA compliant fashion for reporting de-identified data.
+	See: http://www.hhs.gov/ocr/privacy/hipaa/understanding/coveredentities/De-identification/guidance.html#zip
+	*/
+	public class func restrictedThreeDigitZIPs() -> [String] {
+		return ["036", "059", "063", "102", "203", "556", "692", "790", "821", "823", "830", "831", "878", "879", "884", "890", "893"]
+	}
+	
+	/**
+	Determines and reverse-geocodes the phone's current location. Calls `currentLocation()`, then geocodes that location.
+	
+	:param callback: The callback to call when done, supplies either a CLPlacemark or an NSError or neither (on abort)
+	*/
+	public func geocodeCurrentLocation(callback: GeocoderPlacemarkCallback) {
+		currentLocation() { location, error in
+			if nil != error || nil == location {
+				callback(placemark: nil, error: error)
+			}
+			else {
+				self.geocodeLocation(location!, callback: callback)
+			}
+		}
+	}
+	
+	/**
+	Reverse geocodes the given location.
+	
+	:param location: The location to look up
+	:param callback: The callback to call when done, supplies either a CLPlacemark or an NSError or neither (on abort)
+	*/
+	public func geocodeLocation(location: CLLocation, callback: GeocoderPlacemarkCallback) {
+		chip_logIfDebug("Starting reverse geocoding")
+		geocoder = CLGeocoder()
+		geocoder!.reverseGeocodeLocation(location) { placemarks, error in
+			if nil != error || nil == placemarks {
+				callback(placemark: nil, error: error)
+			}
+			else {
+				callback(placemark: placemarks!.first as? CLPlacemark, error: nil)
+			}
+		}
 	}
 }
 
 
-class GeocoderDelegate: NSObject, CLLocationManagerDelegate
+class LocationManagerDelegate: NSObject, CLLocationManagerDelegate
 {
 	var didChangeAuthCallback: ((status: CLAuthorizationStatus) -> Void)?
 	
@@ -95,5 +208,13 @@ class GeocoderDelegate: NSObject, CLLocationManagerDelegate
 	func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
 		didUpdateLocations?(locations: [])
 	}
+}
+
+
+/**
+	Convenience function to create an NSError in the Geocoder error domain.
+ */
+public func chip_genErrorGeocoder(message: String, code: Int = 0) -> NSError {
+	return NSError(domain: CHIPGeocoderErrorKey, code: code, userInfo: [NSLocalizedDescriptionKey: message])
 }
 
