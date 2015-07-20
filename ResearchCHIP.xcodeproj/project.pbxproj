@@ -13,11 +13,12 @@
 		EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */; };
 		EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */; };
 		EE5931771AEAD9AF00A7C5E1 /* SMART.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE5931701AEAD93F00A7C5E1 /* SMART.framework */; };
-		EE5A4B6F1B5D0D6000C0019B /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5A4B6E1B5D0D6000C0019B /* Geocoder.swift */; };
 		EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */; };
 		EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */; };
 		EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7A43921B0D08DE00B30D17 /* ConsentController.swift */; };
 		EE8A13521B4E7CDE0044A9D7 /* HKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8A13511B4E7CDE0044A9D7 /* HKExtensions.swift */; };
+		EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */; };
+		EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */; };
 		EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */; };
 		EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */; };
 		EEFA84C11AE5C18B00E61006 /* ResearchCHIP.h in Headers */ = {isa = PBXBuildFile; fileRef = EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -105,12 +106,14 @@
 		EE519BA41B0CD4A500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE519BA61B0CD6C500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftSMART.xcodeproj; path = "Swift-SMART/SwiftSMART.xcodeproj"; sourceTree = "<group>"; };
-		EE5A4B6E1B5D0D6000C0019B /* Geocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geocoder.swift; sourceTree = "<group>"; };
 		EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueue.swift; sourceTree = "<group>"; };
 		EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueuedResource.swift; sourceTree = "<group>"; };
 		EE5F4F7E1B18E2B100DB38B3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE7A43921B0D08DE00B30D17 /* ConsentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentController.swift; sourceTree = "<group>"; };
 		EE8A13511B4E7CDE0044A9D7 /* HKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HKExtensions.swift; path = Classes/HKExtensions.swift; sourceTree = "<group>"; };
+		EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeIdentifier.swift; path = Identity/DeIdentifier.swift; sourceTree = SOURCE_ROOT; };
+		EEB6DD221B5D3FD3006A3B9F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geocoder.swift; sourceTree = "<group>"; };
 		EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireController.swift; sourceTree = "<group>"; };
 		EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKTaskResult+FHIR.swift"; sourceTree = "<group>"; };
 		EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ResearchCHIP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -151,7 +154,6 @@
 			children = (
 				EE519BA61B0CD6C500036B96 /* README.md */,
 				EE7A43921B0D08DE00B30D17 /* ConsentController.swift */,
-				EE5A4B6E1B5D0D6000C0019B /* Geocoder.swift */,
 			);
 			path = Consent;
 			sourceTree = "<group>";
@@ -179,6 +181,16 @@
 			path = DataQueue;
 			sourceTree = "<group>";
 		};
+		EEB6DD211B5D3FA3006A3B9F /* Identity */ = {
+			isa = PBXGroup;
+			children = (
+				EEB6DD221B5D3FD3006A3B9F /* README.md */,
+				EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */,
+				EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */,
+			);
+			path = Identity;
+			sourceTree = "<group>";
+		};
 		EEFA84B11AE5C18B00E61006 = {
 			isa = PBXGroup;
 			children = (
@@ -188,6 +200,7 @@
 				EE5F4F6A1B174B6B00DB38B3 /* DataQueue */,
 				EE519BA51B0CD69B00036B96 /* Consent */,
 				EEFA84BD1AE5C18B00E61006 /* Questionnaire */,
+				EEB6DD211B5D3FA3006A3B9F /* Identity */,
 				EEFA84BE1AE5C18B00E61006 /* Supporting Files */,
 				EEFA84CA1AE5C18B00E61006 /* Tests */,
 				EEFA84BC1AE5C18B00E61006 /* Products */,
@@ -422,7 +435,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */,
-				EE5A4B6F1B5D0D6000C0019B /* Geocoder.swift in Sources */,
+				EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */,
 				EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */,
 				EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */,
 				EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */,
@@ -430,6 +443,7 @@
 				EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */,
 				EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */,
 				EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */,
+				EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */,
 				EE8A13521B4E7CDE0044A9D7 /* HKExtensions.swift in Sources */,
 				EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */,
 				EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */,

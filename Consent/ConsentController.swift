@@ -10,27 +10,40 @@ import Foundation
 import SMART
 
 
+public typealias ConsentSigningCallback = ((contract: Contract, patient: Patient, error: NSError?) -> Void)
+
+let CHIPConsentingErrorKey = "CHIPConsentingError"
+
+
 /**
     Controller to capture consent in a FHIR Contract resource.
  */
 public class ConsentController
 {
+	/// The contract to be signed; if nil when signing, a new instance will be created.
 	public final var contract: Contract?
 	
-	public init() {
-		
-	}
+	var deidentifier: DeIdentifier?
 	
-	public func signConsentWithPatient(patient: Patient, date: NSDate, validUntil: NSDate? = nil) -> Contract? {
+	public init() {  }
+	
+	
+	// MARK: - Consenting
+	
+	/**
+	Instantiates a new "Contract" resource and fills the properties to represent a consent signed by a participant referencing the given
+	patient.
+	*/
+	public func signContractWithPatient(patient: Patient, date: NSDate, error: NSErrorPointer) -> Contract? {
+		if nil == patient.id {
+			patient.id = NSUUID().UUIDString
+		}
 		if let reference = patient.asRelativeReference() {
 			let myContract = contract ?? Contract(json: nil)
 			
 			// applicable period
 			let period = Period(json: nil)
 			period.start = date.fhir_asDateTime()
-			if let until = validUntil {
-				period.end = until.fhir_asDateTime()
-			}
 			myContract.applies = period
 			
 			// the participant/patient is the signer
@@ -43,18 +56,40 @@ public class ConsentController
 			signer.signature = patient.id
 			myContract.signer = [signer]
 			
-			#if DEBUG
-			let json = myContract.asJSON()
-			let jsdata = NSJSONSerialization.dataWithJSONObject(json, options: nil, error: nil)!
-			let jsstr = NSString(data: jsdata, encoding: NSUTF8StringEncoding)
-			println("CONTRACT  -->  \(jsstr)")
-			#endif
-			
 			return myContract
 		}
 		
-		chip_logIfDebug("Failed to generate a relative reference for the patient, hence cannot sign this consent. Does the patient have an «id»?")
+		if nil != error {
+			error.memory = chip_genErrorConsenting("Failed to generate a relative reference for the patient, hence cannot sign this consent")
+		}
+		chip_logIfDebug("Failed to generate a relative reference for the patient, hence cannot sign this consent")
 		return nil
 	}
+	
+	/**
+	Reverse geocodes and de-identifies the patient, then uses the new Patient resource to sign the contract.
+	*/
+	public func deIdentifyAndSignConsentWithPatient(patient: Patient, date: NSDate, callback: ConsentSigningCallback) {
+		deidentifier = DeIdentifier()
+		deidentifier!.hipaaCompliantPatient(patient: patient) { patient in
+			self.deidentifier = nil
+			
+			var error: NSError?
+			if let contract = self.signContractWithPatient(patient, date: date, error: &error) {
+				callback(contract: contract, patient: patient, error: nil)
+			}
+			else {
+				callback(contract: Contract(json: nil), patient: patient, error: error)
+			}
+		}
+	}
+}
+
+
+/**
+	Convenience function to create an NSError in the Consenting error domain.
+ */
+public func chip_genErrorConsenting(message: String, code: Int = 0) -> NSError {
+	return NSError(domain: CHIPConsentingErrorKey, code: code, userInfo: [NSLocalizedDescriptionKey: message])
 }
 
