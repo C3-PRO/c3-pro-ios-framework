@@ -56,6 +56,13 @@ extension Extension
 			return nil
 		}
 		
+		// standard bool switch
+		if let flag = valueBoolean {
+			let result = ORKBooleanQuestionResult(identifier: stepIdentifier)
+			result.answer = flag
+			return result
+		}
+		
 		// "Coding" value, which should be represented as a choice question
 		if let val = valueCoding {
 			if let code = val.code {
@@ -65,12 +72,11 @@ extension Extension
 				result.answer = [value]
 				return result
 			}
-			else {
-				let err = chip_genErrorQuestionnaire("Extension has `valueCoding` but is missing a code, cannot create an answer")
-				chip_logIfDebug(err.localizedDescription)
-				if nil != error {
-					error.memory = err
-				}
+			
+			let err = chip_genErrorQuestionnaire("Extension has `valueCoding` but is missing a code, cannot create an answer")
+			chip_logIfDebug(err.localizedDescription)
+			if nil != error {
+				error.memory = err
 			}
 		}
 		else {

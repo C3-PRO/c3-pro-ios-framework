@@ -119,6 +119,9 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 }
 
 
+// MARK: -
+
+
 extension QuestionnaireGroup
 {
 	func chip_bestTitleAndText() -> (String?, String?) {

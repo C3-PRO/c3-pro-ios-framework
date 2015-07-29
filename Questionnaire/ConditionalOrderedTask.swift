@@ -101,7 +101,7 @@ class ConditionalQuestionStep: ORKQuestionStep
 					}
 				}
 				else {
-					chip_logIfDebug("Expecting ORKQuestionResult but got \(stepResult.results)")
+					chip_logIfDebug("Expecting Array<ORKQuestionResult> but got \(stepResult.results)")
 				}
 			}
 			else {
@@ -176,6 +176,9 @@ public class ResultRequirement: NSObject, NSCopying, NSSecureCoding
 		aCoder.encodeObject(result, forKey: "result")
 	}
 }
+
+
+// MARK: -
 
 
 extension ORKQuestionResult

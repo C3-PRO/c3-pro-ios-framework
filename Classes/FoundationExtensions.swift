@@ -1,5 +1,5 @@
 //
-//  CHIPExtensions.swift
+//  FoundationExtensions.swift
 //  ResearchCHIP
 //
 //  Created by Pascal Pfiffner on 4/27/15.

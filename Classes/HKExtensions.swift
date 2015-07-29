@@ -100,7 +100,7 @@ public extension HKQuantitySample
 	
 	:returns: A Quantity instance on success
 	*/
-	public func chip_asFHIRQuantityInUnit() -> Quantity? {
+	public func chip_asFHIRQuantity() -> Quantity? {
 		return quantity?.chip_asFHIRQuantityInUnit(quantityType.chip_preferredUnit())
 	}
 }

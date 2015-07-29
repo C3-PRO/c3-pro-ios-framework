@@ -38,3 +38,52 @@ controller.prepareQuestionnaireViewController() { viewController, error in
     }
 }
 ```
+
+
+Examples
+--------
+
+Examples on how to achieve certain ResearchKit steps with FHIR.
+
+### Slider for Integers
+
+This will show the title “FHIR Likening”, a smaller instruction text and a slider going from 0-10, with 8 pre-selected.
+Sliders with more than 5 steps will render vertically instead of horizontally.
+If no default value is specified, the minimum value will be pre-selected.
+
+```json
+{
+    "linkId": "intSlider",
+    "extension": [
+        {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+            "valueString": "Rate how much you truly like FHIR"
+        },
+        {
+            "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+            "valueInteger": 0
+        },
+        {
+            "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+            "valueString": "Not at all"
+        },
+        {
+            "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+            "valueInteger": 10
+        },
+        {
+            "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+            "valueString": "Very very much"
+        },
+        {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue",
+            "valueInteger": 8
+        }
+    ],
+    "text": "FHIR Likening",
+    "type": "integer"
+}
+```
+
+Full: [examples/Questionnaire-sliders.json](examples/Questionnaire-sliders.json)
+
