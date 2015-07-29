@@ -17,13 +17,13 @@ extension FHIRElement
 	}
 	
 	/** Returns the extension defining the inclusive lower bound, if any. Use with "valueInteger", "valueDecimal" or other supported type. */
-	final func chip_minValue() -> Extension? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/minValue")?.first
+	final func chip_minValue() -> [Extension]? {
+		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/minValue")
 	}
 	
 	/** Returns the extension defining the inclusive upper bound, if any. Use with "valueInteger", "valueDecimal" or other supported type. */
-	final func chip_maxValue() -> Extension? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/maxValue")?.first
+	final func chip_maxValue() -> [Extension]? {
+		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/maxValue")
 	}
 }
 

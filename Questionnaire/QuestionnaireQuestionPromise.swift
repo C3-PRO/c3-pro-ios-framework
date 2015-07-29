@@ -160,16 +160,54 @@ extension QuestionnaireGroupQuestion
 		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
 	}
 	
-	/** Determine ResearchKit's answer format for the question type.
+	func chip_defaultAnswer() -> Extension? {
+		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue")?.first
+	}
 	
-	    TODO: "open-choice" allows to choose an option OR to give a textual response: implement
-	 */
+	
+	/**
+	Determine ResearchKit's answer format for the question type.
+	
+	Questions are multiple choice if "repeats" is set to true and the "max-occurs" extension is either not defined or larger than 1. See
+	`chip_answerChoiceStyle`.
+	
+	TODO: "open-choice" allows to choose an option OR to give a textual response: implement
+	
+	[x] ORKScaleAnswerFormat:           "integer" plus min- and max-values defined, where max > min
+	[ ] ORKContinuousScaleAnswerFormat:
+	[ ] ORKValuePickerAnswerFormat:
+	[ ] ORKImageChoiceAnswerFormat:
+	[x] ORKTextAnswerFormat:            "string", "url"
+	[x] ORKTextChoiceAnswerFormat:      "choice", "choice-open" (!)
+	[x] ORKBooleanAnswerFormat:         "boolean"
+	[x] ORKNumericAnswerFormat:         "decimal", "integer", "quantity"
+	[x] ORKDateAnswerFormat:            "date", "dateTime", "instant"
+	[x] ORKTimeOfDayAnswerFormat:       "time"
+	[ ] ORKTimeIntervalAnswerFormat:
+	*/
 	func chip_asAnswerFormat(callback: ((format: ORKAnswerFormat?, error: NSError?) -> Void)) {
 		if let type = type {
 			switch type {
 			case "boolean":		callback(format: ORKAnswerFormat.booleanAnswerFormat(), error: nil)
 			case "decimal":		callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(nil), error: nil)
-			case "integer":		callback(format: ORKAnswerFormat.integerAnswerFormatWithUnit(nil), error: nil)
+			case "integer":
+				let minVals = chip_minValue()
+				let maxVals = chip_maxValue()
+				let minVal = minVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger
+				let maxVal = maxVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger
+				if let minVal = minVal, maxVal = maxVal where maxVal > minVal {
+					let minDesc = minVals?.filter() { return $0.valueString != nil }.first?.valueString
+					let maxDesc = maxVals?.filter() { return $0.valueString != nil }.first?.valueString
+					let defVal = chip_defaultAnswer()?.valueInteger ?? minVal
+					let format = ORKAnswerFormat.scaleAnswerFormatWithMaximumValue(maxVal, minimumValue: minVal, defaultValue: defVal,
+						step: 1, vertical: (maxVal - minVal > 5),
+						maximumValueDescription: maxDesc, minimumValueDescription: minDesc)
+					callback(format: format, error: nil)
+					
+				}
+				else {
+					callback(format: ORKAnswerFormat.integerAnswerFormatWithUnit(nil), error: nil)
+				}
 			case "quantity":	callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(chip_numericAnswerUnit()), error: nil)
 			case "date":		callback(format: ORKAnswerFormat.dateAnswerFormat(), error: nil)
 			case "dateTime":	callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
@@ -269,7 +307,7 @@ extension QuestionnaireGroupQuestion
 	true and the "max-occurs" extension is either not defined or larger than 1.
 	*/
 	func chip_answerChoiceStyle() -> ORKChoiceAnswerStyle {
-		let multiple = repeats ?? ((chip_questionMaxOccurs() ?? 999) > 1)
+		let multiple = repeats ?? ((chip_questionMaxOccurs() ?? 1) > 1)
 		let style: ORKChoiceAnswerStyle = multiple ? .MultipleChoice : .SingleChoice
 		return style
 	}
