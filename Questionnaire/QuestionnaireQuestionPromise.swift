@@ -117,6 +117,9 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 }
 
 
+// MARK: -
+
+
 extension QuestionnaireGroupQuestion
 {
 	func chip_bestTitleAndText() -> (String?, String?) {
@@ -131,20 +134,30 @@ extension QuestionnaireGroupQuestion
 			txt = nil
 		}
 		if nil == txt {
-			txt = chip_questionHelpText()		// even if the title is still nil, we won't want to populate the title with help text
+			txt = chip_questionInstruction() ?? chip_questionHelpText()		// even if the title is still nil, we won't want to populate the title with help text
 		}
 		
 		return (ttl?.chip_stripMultipleSpaces(), txt?.chip_stripMultipleSpaces())
 	}
 	
+	func chip_questionMinOccurs() -> Int? {
+		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger
+	}
+	
+	func chip_questionMaxOccurs() -> Int? {
+		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger
+	}
+	
+	func chip_questionInstruction() -> String? {
+		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString
+	}
+	
 	func chip_questionHelpText() -> String? {
-		let optUnit = extension_fhir?.filter() { return $0.url?.absoluteString == "http://hl7.org/fhir/StructureDefinition/questionnaire-help" }
-		return optUnit?.first?.valueString
+		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString
 	}
 	
 	func chip_numericAnswerUnit() -> String? {
-		let optUnit = extension_fhir?.filter() { return $0.url?.absoluteString == "http://hl7.org/fhir/StructureDefinition/questionnaire-units" }
-		return optUnit?.first?.valueString
+		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
 	}
 	
 	/** Determine ResearchKit's answer format for the question type.
@@ -251,9 +264,12 @@ extension QuestionnaireGroupQuestion
 		}
 	}
 	
-	/** For `choice` type questions, inspect if the given question is single or multiple choice. */
+	/**
+	For `choice` type questions, inspect if the given question is single or multiple choice. Questions are multiple choice if "repeats" is
+	true and the "max-occurs" extension is either not defined or larger than 1.
+	*/
 	func chip_answerChoiceStyle() -> ORKChoiceAnswerStyle {
-		let multiple = repeats ?? false		// TODO: Inspect "questionnaire-maxOccurs" extension
+		let multiple = repeats ?? ((chip_questionMaxOccurs() ?? 999) > 1)
 		let style: ORKChoiceAnswerStyle = multiple ? .MultipleChoice : .SingleChoice
 		return style
 	}
