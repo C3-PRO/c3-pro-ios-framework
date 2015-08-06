@@ -141,8 +141,10 @@ public class Geocoder
 				let zip = fullZip[fullZip.startIndex..<advance(fullZip.startIndex, 3)]
 				hipaa.postalCode = contains(Geocoder.restrictedThreeDigitZIPs(), zip) ? "000" : zip
 			}
+			if let state = placemark.administrativeArea {
+				hipaa.state = state
+			}
 		}
-		
 		return hipaa
 	}
 	
