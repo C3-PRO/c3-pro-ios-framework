@@ -21,19 +21,21 @@ consentController!.deIdentifyAndSignConsentWithPatient(patient, date: NSDate()) 
         if let error = error {
             println("Error creating patient: \(error)")
         }
-    }
-    if let observations = observations {
-        for observation in observations {
-            observation.create(server) { error in
-                if let error = error {
-                    println("Error creating observation: \(error)")
+        else {
+            if let observations = observations {
+                for observation in observations {
+                    observation.create(server) { error in
+                        if let error = error {
+                            println("Error creating observation: \(error)")
+                        }
+                    }
                 }
             }
-        }
-    }
-    contract.create(server) { error in
-        if let error = error {
-            println("Error creating contract: \(error)")
+            contract.create(server) { error in
+                if let error = error {
+                    println("Error creating contract: \(error)")
+                }
+            }
         }
     }
 }
