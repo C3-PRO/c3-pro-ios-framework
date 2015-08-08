@@ -82,19 +82,18 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 	    SYNCHRONOUSLY reads a questionnaire from the given URL. You only want to use this for debug purposes on
 	    questionnaires included in the app bundle.
 	 */
-	final public func readQuestionnaireFromURL(url: NSURL, error: NSErrorPointer) -> Questionnaire? {
-		if let jsondata = NSData(contentsOfURL: url, options: nil, error: error) {
-			if let json = NSJSONSerialization.JSONObjectWithData(jsondata, options: nil, error: error) as? FHIRJSON {
+	final public func readQuestionnaireFromURL(url: NSURL) throws -> Questionnaire {
+		do {
+			let jsondata = try NSData(contentsOfURL: url, options: [])
+			do {
+				let json = try NSJSONSerialization.JSONObjectWithData(jsondata, options: []) as? FHIRJSON
 				return Questionnaire(json: json)
+			} catch let error {
+				throw chip_genErrorQuestionnaire("Failed to decode questionnaire JSON: \(error)")
 			}
-			else if nil != error && nil == error.memory {
-				error.memory = chip_genErrorQuestionnaire("Failed to decode questionnaire JSON")
-			}
+		} catch let error {
+			throw chip_genErrorQuestionnaire("Failed to read questionnaire: \(error)")
 		}
-		else if nil != error && nil == error.memory {
-			error.memory = chip_genErrorQuestionnaire("Failed to read questionnaire")
-		}
-		return nil
 	}
 	
 	

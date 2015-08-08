@@ -18,7 +18,7 @@ public extension HKHealthStore
 	Convenience method to retrieve the latest sample of a given type.
 	*/
 	public func chip_latestSampleOfType(typeIdentifier: String, callback: ((quantity: HKQuantity?, error: NSError?) -> Void)) {
-		chip_samplesOfTypeBetween(typeIdentifier, start: NSDate.distantPast() as! NSDate, end: NSDate(), limit: 1) { results, error in
+		chip_samplesOfTypeBetween(typeIdentifier, start: NSDate.distantPast() , end: NSDate(), limit: 1) { results, error in
 			callback(quantity: results?.first?.quantity, error: error)
 		}
 	}
@@ -64,7 +64,7 @@ public extension HKQuantitySample
 	
 	:param samples: An array of `HKQuantitySample` instances of the same type
 	:param unit: The unit to use in the resulting master quantity sample
-	:returns: An HKQuantitySample instance concatenating all given sample data
+	- returns: An HKQuantitySample instance concatenating all given sample data
 	*/
 	public class func chip_concatenatedQuantitySamples(samples: [HKQuantitySample], unit: HKUnit) -> HKQuantitySample? {
 		var type: HKQuantityType?
@@ -73,18 +73,17 @@ public extension HKQuantitySample
 		var total = 0.0
 		
 		for sample in samples {
-			if let quantity = sample.quantity {
-				if nil == type {
-					type = sample.quantityType
-				}
-				dateMin = (nil != dateMin) ? dateMin?.earlierDate(sample.startDate) : sample.startDate
-				dateMax = (nil != dateMax) ? dateMax?.laterDate(sample.endDate) : sample.endDate
-				if !quantity.isCompatibleWithUnit(unit) {
-					chip_warn("sample \(sample) is not compatible with unit \(unit), not adding to quantity")
-				}
-				else {
-					total += quantity.doubleValueForUnit(unit)
-				}
+			let quantity = sample.quantity
+			if nil == type {
+				type = sample.quantityType
+			}
+			dateMin = (nil != dateMin) ? dateMin?.earlierDate(sample.startDate) : sample.startDate
+			dateMax = (nil != dateMax) ? dateMax?.laterDate(sample.endDate) : sample.endDate
+			if !quantity.isCompatibleWithUnit(unit) {
+				chip_warn("sample \(sample) is not compatible with unit \(unit), not adding to quantity")
+			}
+			else {
+				total += quantity.doubleValueForUnit(unit)
 			}
 		}
 		
@@ -98,10 +97,10 @@ public extension HKQuantitySample
 	/**
 	Returns a FHIR "Quantity" element of the quantitiy contained in the receiver in the quantity type's preferred unit.
 	
-	:returns: A Quantity instance on success
+	- returns: A Quantity instance on success
 	*/
 	public func chip_asFHIRQuantity() -> Quantity? {
-		return quantity?.chip_asFHIRQuantityInUnit(quantityType.chip_preferredUnit())
+		return quantity.chip_asFHIRQuantityInUnit(quantityType.chip_preferredUnit())
 	}
 }
 
@@ -112,7 +111,7 @@ public extension HKQuantity
 	Returns a FHIR "Quantity" element with the given unit, **if** the quantity can be represented in that unit.
 	
 	:param unit: The unit to use
-	:returns: A Quantity instance on success
+	- returns: A Quantity instance on success
 	*/
 	public func chip_asFHIRQuantityInUnit(unit: HKUnit) -> Quantity? {
 		if isCompatibleWithUnit(unit) {

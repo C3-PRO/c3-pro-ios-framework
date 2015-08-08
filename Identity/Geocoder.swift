@@ -129,7 +129,7 @@ public class Geocoder
 	/**
 	Populate an "Address" element representing the given placemark according to HIPAA's Safe Harbor guidelines.
 	
-	:returns: A sparsely populated FHIR "Address" element
+	- returns: A sparsely populated FHIR "Address" element
 	*/
 	func hipaaCompliantAddressFromPlacemark(placemark: CLPlacemark) -> Address {
 		let hipaa = Address(json: nil)
@@ -137,9 +137,9 @@ public class Geocoder
 		
 		// US: 3-digit ZIP
 		if "US" == placemark.ISOcountryCode {
-			if let fullZip = placemark.postalCode where count(fullZip) >= 3 {
+			if let fullZip = placemark.postalCode where fullZip.characters.count >= 3 {
 				let zip = fullZip[fullZip.startIndex..<advance(fullZip.startIndex, 3)]
-				hipaa.postalCode = contains(Geocoder.restrictedThreeDigitZIPs(), zip) ? "000" : zip
+				hipaa.postalCode = Geocoder.restrictedThreeDigitZIPs().contains(zip) ? "000" : zip
 			}
 			if let state = placemark.administrativeArea {
 				hipaa.state = state
@@ -186,7 +186,7 @@ public class Geocoder
 				callback(placemark: nil, error: error)
 			}
 			else {
-				callback(placemark: placemarks!.first as? CLPlacemark, error: nil)
+				callback(placemark: placemarks!.first, error: nil)
 			}
 		}
 	}
@@ -199,15 +199,15 @@ class LocationManagerDelegate: NSObject, CLLocationManagerDelegate
 	
 	var didUpdateLocations: ((locations: [CLLocation]) -> Void)?
 	
-	func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+	func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
 		didChangeAuthCallback?(status: status)
 	}
 	
-	func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-		didUpdateLocations?(locations: locations as? [CLLocation] ?? [])
+	func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+		didUpdateLocations?(locations: locations ?? [])
 	}
 	
-	func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+	func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
 		didUpdateLocations?(locations: [])
 	}
 }

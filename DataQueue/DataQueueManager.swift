@@ -36,7 +36,7 @@ class DataQueueManager
 	
 	/** The filename of a resource at the given queue position. */
 	func fileNameForSequence(seq: Int) -> String {
-		return "\(self.dynamicType.prefix)\(seq)".stringByAppendingPathExtension(self.dynamicType.fileExtension)!
+		return ("\(self.dynamicType.prefix)\(seq)" as NSString).stringByAppendingPathExtension(self.dynamicType.fileExtension)!
 	}
 	
 	var fileProtection: NSDataWritingOptions {
@@ -59,11 +59,12 @@ class DataQueueManager
 	func ensureHasDirectory() {
 		let manager = NSFileManager.defaultManager()
 		
-		var error: NSError?
 		var isDir: ObjCBool = true
 		if !manager.fileExistsAtPath(queueDirectory, isDirectory: &isDir) || !isDir {
-			if !manager.createDirectoryAtPath(queueDirectory, withIntermediateDirectories: true, attributes: nil, error: &error) {
-				fatalError("DataQueue: Failed to create queue directory: \(error!)")
+			do {
+				try manager.createDirectoryAtPath(queueDirectory, withIntermediateDirectories: true, attributes: nil)
+			} catch let error {
+				fatalError("DataQueue: Failed to create queue directory: \(error)")
 			}
 		}
 	}
@@ -73,14 +74,16 @@ class DataQueueManager
 		var myMin: Int?
 		var myMax: Int?
 		
-		if let files = manager.contentsOfDirectoryAtPath(queueDirectory, error: nil) {
+		do {
+			let files = try manager.contentsOfDirectoryAtPath(queueDirectory)
 			for anyFile in files {
-				if let file = anyFile as? NSString {
-					var pure = file.stringByReplacingOccurrencesOfString(self.dynamicType.prefix, withString: "").stringByDeletingPathExtension as NSString
-					myMin = min(myMin ?? pure.integerValue, pure.integerValue)
-					myMax = max(myMax ?? pure.integerValue, pure.integerValue)
-				}
+				let file = anyFile as NSString
+				let pure = file.stringByDeletingPathExtension.stringByReplacingOccurrencesOfString(self.dynamicType.prefix, withString: "") as NSString
+				myMin = min(myMin ?? pure.integerValue, pure.integerValue)
+				myMax = max(myMax ?? pure.integerValue, pure.integerValue)
 			}
+		} catch let error {
+			chip_logIfDebug("Failed to read current queue: \(error)")
 		}
 		
 		return (nil != myMin) ? (min: myMin!, max: myMax!) : nil
@@ -92,7 +95,7 @@ class DataQueueManager
 	/**
 	    Enqueues the given resource.
 	
-	    :param: resource The FHIR Resource to enqueue
+	    - parameter resource: The FHIR Resource to enqueue
 	 */
 	func enqueueResource(resource: Resource) {
 		ensureHasDirectory()
@@ -102,18 +105,13 @@ class DataQueueManager
 		seq++
 		
 		// store new resoure to queue
-		let path = queueDirectory.stringByAppendingPathComponent(fileNameForSequence(seq))
-		var error: NSError?
-		if let data = NSJSONSerialization.dataWithJSONObject(resource.asJSON(), options: nil, error: &error) {
-			if data.writeToFile(path, options: fileProtection, error: &error) {
-				chip_logIfDebug("Enqueued resource at \(path)")
-			}
-			else {
-				chip_logIfDebug("Failed to write: \(error!)")
-			}
-		}
-		else {
-			chip_logIfDebug("Failed to serialize JSON: \(error!)")
+		let path = (queueDirectory as NSString).stringByAppendingPathComponent(fileNameForSequence(seq))
+		do {
+			let data = try NSJSONSerialization.dataWithJSONObject(resource.asJSON(), options: [])
+			try data.writeToFile(path, options: fileProtection)
+			chip_logIfDebug("Enqueued resource at \(path)")
+		} catch let error {
+			chip_logIfDebug("Failed to serialize or enqueue JSON: \(error)")
 		}
 	}
 	
@@ -147,7 +145,7 @@ class DataQueueManager
 	/**
 	    Looks and deserializes the first resource in the queue, then issues a `create` command to POST it to the server.
 	
-	    :param: callback The callback to call. "didDequeue" is true if the resource was successfully dequeued. "error" is nil on success or
+	    - parameter callback: The callback to call. "didDequeue" is true if the resource was successfully dequeued. "error" is nil on success or
 	    if there was no file to dequeue (in which case _didDequeue_ would be false)
 	 */
 	func dequeueFirst(callback: ((didDequeue: Bool, error: NSError?) -> Void)) {
@@ -159,8 +157,8 @@ class DataQueueManager
 		
 		if let first = firstInQueue() {
 			chip_logIfDebug("Dequeueing first in queue: \(first.path)")
-			var error: NSError?
-			if first.readFromFile(&error) {
+			do {
+				try first.readFromFile()
 				currentlyDequeueing = first
 				first.resource!.id = nil
 				first.resource!.create(server) { cError in
@@ -169,8 +167,7 @@ class DataQueueManager
 					}
 					callback(didDequeue: (nil == cError), error: cError)
 				}
-			}
-			else {
+			} catch let error {
 				chip_logIfDebug("Failed to read resource data: \(error)")
 				// TODO: figure out what to do (file should be readable at this point)
 				callback(didDequeue: false, error: nil)
@@ -186,11 +183,10 @@ class DataQueueManager
 		if let resource = currentlyDequeueing {
 			if let path = resource.path {
 				let manager = NSFileManager()
-				var error: NSError?
-				if manager.removeItemAtPath(path, error: &error) {
+				do {
+					try manager.removeItemAtPath(path)
 					currentlyDequeueing = nil
-				}
-				else {
+				} catch {
 					// TODO: figure out what to do
 					chip_logIfDebug("Failed to remove queued resource \(path)")
 				}
@@ -203,8 +199,8 @@ class DataQueueManager
 	 */
 	final func firstInQueue() -> QueuedResource? {
 		let manager = NSFileManager()
-		if let var first = currentQueueRange(manager)?.min {
-			let path = queueDirectory.stringByAppendingPathComponent(fileNameForSequence(first))
+		if let first = currentQueueRange(manager)?.min {
+			let path = (queueDirectory as NSString).stringByAppendingPathComponent(fileNameForSequence(first))
 			if manager.isReadableFileAtPath(path) {
 				return QueuedResource(path: path)
 			}

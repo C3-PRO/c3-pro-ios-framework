@@ -47,8 +47,8 @@ extension ORKStepResult
 	Creates a QuestionnaireAnswersGroup resource from all ORKSteps in the given ORKTask. Questions that do not have answers will be omitted,
 	and groups that do not have at least a single question with answer will likewise be omitted.
 	
-	:param: task The ORKTask to convert to a FHIR answer group
-	:returns: A QuestionnaireAnswersGroup element or nil
+	- parameter task: The ORKTask to convert to a FHIR answer group
+	- returns: A QuestionnaireAnswersGroup element or nil
 	*/
 	func chip_questionAnswers(task: ORKTask?) -> QuestionnaireAnswersGroup? {
 		if let results = results as? [ORKResult] {
@@ -127,7 +127,7 @@ extension ORKChoiceQuestionResult
 			var answers = [QuestionnaireAnswersGroupQuestionAnswer]()
 			for choice in choices {
 				let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
-				let splat = split(choice) { $0 == kORKTextChoiceSystemSeparator }
+				let splat = choice.characters.split() { $0 == kORKTextChoiceSystemSeparator }.map() { String($0) }
 				let system = splat[0]
 				let code = (splat.count > 1) ? "\(kORKTextChoiceSystemSeparator)".join(splat[1..<splat.endIndex]) : kORKTextChoiceMissingCodeCode
 				answer.valueCoding = Coding(json: ["system": system, "code": code])
@@ -226,9 +226,9 @@ extension ORKTimeIntervalQuestionResult
 {
 	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
 		if let interval = intervalAnswer {
-			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+			//let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
 			// TODO: support interval answers
-			println("--->  \(interval) for FHIR type “\(fhirType)”")
+			print("--->  \(interval) for FHIR type “\(fhirType)”")
 		}
 		return nil
 	}

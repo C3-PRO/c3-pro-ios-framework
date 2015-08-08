@@ -49,7 +49,7 @@ public class DeIdentifier
 	/**
 	Returns a Date that is compliant to HIPAA's Safe Harbor guidelines: year only and capped at 90 years of age.
 	
-	:returns: A compliant Date instance
+	- returns: A compliant Date instance
 	*/
 	public func hipaaCompliantBirthDate(birthdate: Date) -> Date {
 		let current = NSDate().fhir_asDate()

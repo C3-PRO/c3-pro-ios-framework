@@ -14,7 +14,7 @@ import ResearchKit
 /**
     Protocol for our questionnaire promise architecture.
  */
-protocol QuestionnairePromiseProto: Printable
+protocol QuestionnairePromiseProto: CustomStringConvertible
 {
 	var steps: [ORKStep]? { get }
 	

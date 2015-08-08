@@ -32,18 +32,21 @@ public class QueuedResource
 	/**
 	    If path is known, reads the data from file, interprets as JSON and instantiates the receiver's resource.
 	
-		:returns: True if the resource was successfully instantiated, false otherwise
+		- returns: True if the resource was successfully instantiated, false otherwise
 	 */
-	func readFromFile(error: NSErrorPointer) -> Bool {
+	func readFromFile() throws {
 		if let path = path {
-			if let data = NSData(contentsOfFile: path, options: nil, error: error) {
-				if let json = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: error) as? FHIRJSON {
-					resource = FHIRElement.instantiateFrom(json, owner: nil) as? Resource
-					return nil != resource
+			do {
+				let data = try NSData(contentsOfFile: path, options: [])
+				let json = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? FHIRJSON
+				resource = FHIRElement.instantiateFrom(json, owner: nil) as? Resource
+				if nil != resource {
+					return
 				}
+				throw NSError(domain: "CHIPQueuedResource", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to instantiate from json"])
 			}
 		}
-		return false
+		throw NSError(domain: "CHIPQueuedResource", code: 0, userInfo: [NSLocalizedDescriptionKey: "No path, cannot read from file"])
 	}
 }
 

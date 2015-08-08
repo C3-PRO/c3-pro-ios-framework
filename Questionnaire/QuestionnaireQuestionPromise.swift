@@ -39,7 +39,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 	    Once the promise has been successfully fulfilled, the `step` property will be assigned. No guarantees as to on
 	    which queue the callback will be called.
 
-	    :param: callback The callback to be called when done; note that even when you get an error, some steps might
+	    - parameter callback: The callback to be called when done; note that even when you get an error, some steps might
 	        have successfully been allocated still, so don't throw everything away just because you receive errors
 	 */
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
@@ -98,7 +98,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 					steps.extend(gsteps)
 					
 					self.steps = steps
-					callback(errors: count(errors) > 0 ? errors : nil)
+					callback(errors: errors.count > 0 ? errors : nil)
 				}
 			}
 			else {
@@ -293,7 +293,7 @@ extension QuestionnaireGroupQuestion
 			}
 			
 			// all done
-			if count(choices) > 0 {
+			if choices.count > 0 {
 				callback(choices: choices, error: nil)
 			}
 			else {
