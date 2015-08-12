@@ -30,41 +30,53 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 	// MARK: - Questionnaire
 	
 	/**
-	    Attempts to fulfill the promise, calling the callback when done, either with a task representing the
-	    questionnaire or an error.
-	 */
+	Attempts to fulfill the promise, calling the callback when done, either with a task representing the questionnaire or an error.
+	
+	:param callback: The callback once preparation has concluded, either with an ORKTask or an error. Called on the main queue.
+	*/
 	func prepareQuestionnaire(callback: ((task: ORKTask?, error: NSError?) -> Void)) {
 		if let questionnaire = questionnaire {
 			let promise = QuestionnairePromise(questionnaire: questionnaire)
 			promise.fulfill(nil) { errors in
-				if let tsk = promise.task {
-					callback(task: tsk, error: nil)
-				}
-				else if let errs = errors {
-					if 1 == errs.count {
-						callback(task: nil, error: errs[0])
+				dispatch_async(dispatch_get_main_queue()) {
+					if let tsk = promise.task {
+						callback(task: tsk, error: nil)
+					}
+					else if let errs = errors {
+						if 1 == errs.count {
+							callback(task: nil, error: errs[0])
+						}
+						else {
+							let err = chip_genErrorQuestionnaire(errs.map() { $0.localizedDescription }.reduce("") { $0 + (!$0.isEmpty ? "\n" : "") + $1 })
+							callback(task: nil, error: err)
+						}
 					}
 					else {
-						let err = chip_genErrorQuestionnaire(errs.map() { $0.localizedDescription }.reduce("") { $0 + (!$0.isEmpty ? "\n" : "") + $1 })
+						let err = chip_genErrorQuestionnaire("Unknown error creating a task from questionnaire")
 						callback(task: nil, error: err)
 					}
-				}
-				else {
-					let err = chip_genErrorQuestionnaire("Unknown error creating a task from questionnaire")
-					callback(task: nil, error: err)
 				}
 			}
 		}
 		else {
 			let err = chip_genErrorQuestionnaire("I do not have a questionnaire just yet, cannot start")
-			callback(task: nil, error: err)
+			if NSThread.isMainThread() {
+				callback(task: nil, error: err)
+			}
+			else {
+				dispatch_async(dispatch_get_main_queue()) {
+					callback(task: nil, error: err)
+				}
+			}
 		}
 	}
 	
 	/**
-	    Attempts to fulfill the promise, calling the callback when done, either with a task view controller already
-	    prepared with the questionnaire task or an error.
-	 */
+	Attempts to fulfill the promise, calling the callback when done.
+	
+	:param callback: Callback to be called on the main queue, either with a task view controller prepared for the questionnaire task or an
+		error
+	*/
 	public func prepareQuestionnaireViewController(callback: ((viewController: ORKTaskViewController?, error: NSError?) -> Void)) {
 		prepareQuestionnaire() { task, error in
 			if let task = task {
@@ -79,11 +91,10 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 	}
 	
 	/**
-	    SYNCHRONOUSLY reads a questionnaire from the given URL. You only want to use this for debug purposes on
-	    questionnaires included in the app bundle.
-	 */
-	final public func readQuestionnaireFromURL(url: NSURL, error: NSErrorPointer) -> Questionnaire? {
-		if let jsondata = NSData(contentsOfURL: url, options: nil, error: error) {
+	Synchronously reads a questionnaire from the given path.
+	*/
+	final public func readQuestionnaireFromPath(path: String, error: NSErrorPointer) -> Questionnaire? {
+		if let jsondata = NSData(contentsOfFile: path) {
 			if let json = NSJSONSerialization.JSONObjectWithData(jsondata, options: nil, error: error) as? FHIRJSON {
 				return Questionnaire(json: json)
 			}
@@ -92,7 +103,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 			}
 		}
 		else if nil != error && nil == error.memory {
-			error.memory = chip_genErrorQuestionnaire("Failed to read questionnaire")
+			error.memory = chip_genErrorQuestionnaire("Failed to read questionnaire from \(path)")
 		}
 		return nil
 	}
