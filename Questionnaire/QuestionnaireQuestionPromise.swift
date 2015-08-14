@@ -141,27 +141,27 @@ extension QuestionnaireGroupQuestion
 	}
 	
 	func chip_questionMinOccurs() -> Int? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger
 	}
 	
 	func chip_questionMaxOccurs() -> Int? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger
 	}
 	
 	func chip_questionInstruction() -> String? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString
 	}
 	
 	func chip_questionHelpText() -> String? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString
 	}
 	
 	func chip_numericAnswerUnit() -> String? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
 	}
 	
 	func chip_defaultAnswer() -> Extension? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue")?.first
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue")?.first
 	}
 	
 	

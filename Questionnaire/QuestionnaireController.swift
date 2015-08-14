@@ -90,24 +90,6 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 		}
 	}
 	
-	/**
-	Synchronously reads a questionnaire from the given path.
-	*/
-	final public func readQuestionnaireFromPath(path: String, error: NSErrorPointer) -> Questionnaire? {
-		if let jsondata = NSData(contentsOfFile: path) {
-			if let json = NSJSONSerialization.JSONObjectWithData(jsondata, options: nil, error: error) as? FHIRJSON {
-				return Questionnaire(json: json)
-			}
-			else if nil != error && nil == error.memory {
-				error.memory = chip_genErrorQuestionnaire("Failed to decode questionnaire JSON")
-			}
-		}
-		else if nil != error && nil == error.memory {
-			error.memory = chip_genErrorQuestionnaire("Failed to read questionnaire from \(path)")
-		}
-		return nil
-	}
-	
 	
 	// MARK: - Task View Controller Delegate
 	
