@@ -25,10 +25,32 @@ public class ConsentController
 	
 	var deidentifier: DeIdentifier?
 	
-	public init() {  }
+	/**
+	Designated initializer.
+	
+	You can optionally supply the name of a bundled JSON file (without extension) that represents a serialized FHIR Contract resource.
+	*/
+	public init(bundledContract: String? = nil) {
+		if let name = bundledContract, let bundled = NSBundle.mainBundle().fhir_bundledResource(name) as? Contract {
+			contract = bundled
+		}
+	}
 	
 	
 	// MARK: - Consenting
+	
+	public func consentTaskWithOptions(options: ConsentTaskOptions) -> ConsentTask? {
+		if let contract = contract {
+			let task = ConsentTask(identifier: NSUUID().UUIDString, contract: contract)
+			task.prepareWithOptions(options)
+			return task
+		}
+		chip_warn("No Contract, cannot create a consent task")
+		return nil
+	}
+	
+	
+	// MARK: - Consent Signing
 	
 	/**
 	Instantiates a new "Contract" resource and fills the properties to represent a consent signed by a participant referencing the given
@@ -62,7 +84,7 @@ public class ConsentController
 		if nil != error {
 			error.memory = chip_genErrorConsenting("Failed to generate a relative reference for the patient, hence cannot sign this consent")
 		}
-		chip_logIfDebug("Failed to generate a relative reference for the patient, hence cannot sign this consent")
+		chip_warn("Failed to generate a relative reference for the patient, hence cannot sign this consent")
 		return nil
 	}
 	

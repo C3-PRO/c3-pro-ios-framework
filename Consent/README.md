@@ -1,9 +1,57 @@
+Consent
+=======
+
+A FHIR `Contract` resource constitutes a consent document that can be rendered using a `ORKTaskViewController` view controller and can be signed with a patient reference.
+
+
 Consenting
-==========
+----------
 
-A FHIR `Contract` resource constitutes a consent document that can be rendered using a `ORKTaskViewController` view controller.
+To represent consent sections that can be shown on screen, we instantiate each `Contract.term` element as a `ORKConsentSection`.
+These sections are added to a `ORKConsentDocument`'s `section` property to represent the "_visual_" consenting step.
+The properties to use are:
 
-> Currently only signing a contract is supported.
+- `type`: one of [http://researchkit.org/docs/Constants/ORKConsentSectionType.html]() (without the _ORKConsentSectionType_ part)
+- `text`: the section's summary
+
+Several ResearchKit-specific parameters require the use of an extension.
+We use nested extensions under the parent URI `http://fhir-registry.smarthealthit.org/StructureDefinition/ORKConsentSection`.
+The nested extensions are:
+
+- `title`: A string representing the title of the section
+- `image`: A string for an image name, included in the app bundle, that will be assigned the section's `customImage` property.
+- `animation`: A string for a movie name, included in the app bundle, that will be assigned the section's `customAnimationURL` property.
+- `htmlContent`: A string representing the full HTML content, to be shown when “Learn More” is tapped.
+- `htmlContentFile`: A name of an HTML file (without file extension) that contains the HTML to be shown when “Learn More” is tapped.
+
+Example:
+
+```json
+{
+    "type": {
+        "coding": [{
+            "system": "http://researchkit.org/docs/Constants/ORKConsentSectionType.html",
+            "code": "Overview"
+        }]
+    },
+    "extension": [{
+        "url": "http://fhir-registry.smarthealthit.org/StructureDefinition/ORKConsentSection",
+        "extension": [{
+            "url": "htmlContentFile",
+            "valueString": "1_overview"
+        }]
+    }],
+    "text": "This simple walkthrough will help you to understand the study and give you the opportunity to consent to participate."
+}
+```
+
+
+Sharing Options
+---------------
+
+To populate the team name used when the user is asked if he's willing to share his data with qualified researchers worldwide or just the study researchers, the `authority.name` property of the Contract is consulted.
+
+> At this time this must be an _Organization_ element that is contained in the contract.
 
 
 Signing
