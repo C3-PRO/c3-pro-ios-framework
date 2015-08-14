@@ -11,28 +11,6 @@ import SMART
 
 
 /**
-	Struct to hold various options for consenting.
- */
-public struct ConsentTaskOptions
-{
-	public var askForSharing = true
-	
-	var shareTeamName = "the research team"
-	
-	/// Name of a bundled HTML file (without extension) that contains more information about data sharing.
-	public var shareMoreInfoDocument = "Consent_sharing"
-	
-	/// Optional: name of a bundled HTML file (without extension) that contains the full consent document for review.
-	public var reviewConsentDocument: String? = nil
-	
-	/// Shown when the user taps agree and she needs to confirm that she is in agreement.
-	public var reasonForConsent = "By agreeing you confirm that you read the consent and that you wish to take part in this research study.".localized
-	
-	public init() {  }
-}
-
-
-/**
 	An ORKTask-implementing class that can be fed to an ORKTaskViewController to guide a user through consenting.
 
 	Data to be shown is read from the `Contract` resource, which will be converted into an `ORKConsentDocument`.
@@ -46,6 +24,8 @@ public class ConsentTask: NSObject, ORKTask
 	public internal(set) var consentDocument: ORKConsentDocument?
 	
 	public internal(set) var steps: [ORKStep]?
+	
+	public internal(set) var sharingStep: ORKStep?
 	
 	public var teamName: String? {
 		return contract.authority?.first?.resolved(Organization)?.name
@@ -88,6 +68,7 @@ public class ConsentTask: NSObject, ORKTask
 						investigatorLongDescription: team,
 						localizedLearnMoreHTMLContent: NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding, error: nil) as! String)
 					steps.append(sharing)
+					sharingStep = sharing
 				}
 				else {
 					fatalError("You MUST adjust `sharingOptions.shareMoreInfoDocument` to the name of an HTML document (without extension) that is included in the app bundle. It's set to «\(more)» but this file could not be found in the bundle.")
@@ -98,7 +79,7 @@ public class ConsentTask: NSObject, ORKTask
 			
 			// consent review step
 			let signature = ORKConsentSignature(forPersonWithTitle: "Participant".localized, dateFormatString: nil, identifier: "participant")
-			let review = ORKConsentReviewStep(identifier: "review", signature: signature, inDocument: doc)
+			let review = ORKConsentReviewStep(identifier: "reviewStep", signature: signature, inDocument: doc)		// "reviewStep" for compatibility with AppCore
 			review.reasonForConsent = options.reasonForConsent
 			steps.append(review)
 			

@@ -4,14 +4,27 @@ Consent
 A FHIR `Contract` resource constitutes a consent document that can be rendered using a `ORKTaskViewController` view controller and can be signed with a patient reference.
 
 
-Consenting
-----------
+Task View Controller
+--------------------
+
+To create a consenting task from a bundled consent called `Consent.json` and show it using an `ORKTaskViewController` you can do the following.
+This will also use the bundled file `Consent_full.html` to show a custom HTML page in the _“Agree”_ step instead of auto-generating that page from all consent sections.
+
+```swift
+let controller = ConsentController(bundledContract: "Consent")
+controller.options.reviewConsentDocument = "Consent_full"
+let task = controller.createConsentTask()
+
+let vc = ORKTaskViewController(task: task, taskRunUUID: NSUUID())
+```
+
+### Consent Sections
 
 To represent consent sections that can be shown on screen, we instantiate each `Contract.term` element as a `ORKConsentSection`.
-These sections are added to a `ORKConsentDocument`'s `section` property to represent the "_visual_" consenting step.
+These sections are added to a `ORKConsentDocument`'s `section` property to represent the _"visual"_ consenting step.
 The properties to use are:
 
-- `type`: one of [http://researchkit.org/docs/Constants/ORKConsentSectionType.html]() (without the _ORKConsentSectionType_ part)
+- `type`: one of [`ORKConsentSectionType`](http://researchkit.org/docs/Constants/ORKConsentSectionType.html) (without the _ORKConsentSectionType_ part)
 - `text`: the section's summary
 
 Several ResearchKit-specific parameters require the use of an extension.
@@ -28,26 +41,29 @@ Example:
 
 ```json
 {
-    "type": {
-        "coding": [{
-            "system": "http://researchkit.org/docs/Constants/ORKConsentSectionType.html",
-            "code": "Overview"
-        }]
-    },
+  "type": {
+    "coding": [{
+      "system": "http://researchkit.org/docs/Constants/ORKConsentSectionType.html",
+      "code": "Privacy"
+    }]
+  },
+  "extension": [{
+    "url": "http://fhir-registry.smarthealthit.org/StructureDefinition/ORKConsentSection",
     "extension": [{
-        "url": "http://fhir-registry.smarthealthit.org/StructureDefinition/ORKConsentSection",
-        "extension": [{
-            "url": "htmlContentFile",
-            "valueString": "1_overview"
-        }]
-    }],
-    "text": "This simple walkthrough will help you to understand the study and give you the opportunity to consent to participate."
+      "url": "title",
+      "valueString": "Privacy"
+    },
+    {
+      "url": "htmlContentFile",
+      "valueString": "5_privacyprotection"
+    }]
+  }],
+  "text": "Your data will be sent to a secure database, ..."
 }
 ```
 
 
-Sharing Options
----------------
+### Sharing Options
 
 To populate the team name used when the user is asked if he's willing to share his data with qualified researchers worldwide or just the study researchers, the `authority.name` property of the Contract is consulted.
 

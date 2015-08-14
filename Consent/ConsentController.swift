@@ -16,12 +16,36 @@ let CHIPConsentingErrorKey = "CHIPConsentingError"
 
 
 /**
+	Struct to hold various options for consenting.
+ */
+public struct ConsentTaskOptions
+{
+	public var askForSharing = true
+	
+	var shareTeamName = "the research team"
+	
+	/// Name of a bundled HTML file (without extension) that contains more information about data sharing.
+	public var shareMoreInfoDocument = "Consent_sharing"
+	
+	/// Optional: name of a bundled HTML file (without extension) that contains the full consent document for review.
+	public var reviewConsentDocument: String? = nil
+	
+	/// Shown when the user taps agree and she needs to confirm that she is in agreement.
+	public var reasonForConsent = "By agreeing you confirm that you read the consent and that you wish to take part in this research study.".localized
+	
+	public init() {  }
+}
+
+
+/**
     Controller to capture consent in a FHIR Contract resource.
  */
 public class ConsentController
 {
 	/// The contract to be signed; if nil when signing, a new instance will be created.
 	public final var contract: Contract?
+	
+	public var options = ConsentTaskOptions()
 	
 	var deidentifier: DeIdentifier?
 	
@@ -39,7 +63,7 @@ public class ConsentController
 	
 	// MARK: - Consenting
 	
-	public func consentTaskWithOptions(options: ConsentTaskOptions) -> ConsentTask? {
+	public func createConsentTask() -> ConsentTask? {
 		if let contract = contract {
 			let task = ConsentTask(identifier: NSUUID().UUIDString, contract: contract)
 			task.prepareWithOptions(options)
