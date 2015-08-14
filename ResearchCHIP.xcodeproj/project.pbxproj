@@ -17,6 +17,8 @@
 		EE73B8C31B68CCF30034E621 /* FHIRExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE73B8C21B68CCF30034E621 /* FHIRExtensions.swift */; };
 		EE73B8C91B68CD7B0034E621 /* FoundationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0EB9671AEEDA3A006AF9E9 /* FoundationExtensions.swift */; };
 		EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7A43921B0D08DE00B30D17 /* ConsentController.swift */; };
+		EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */; };
+		EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */; };
 		EE8A13521B4E7CDE0044A9D7 /* HKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8A13511B4E7CDE0044A9D7 /* HKExtensions.swift */; };
 		EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */; };
 		EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */; };
@@ -112,6 +114,8 @@
 		EE5F4F7E1B18E2B100DB38B3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE73B8C21B68CCF30034E621 /* FHIRExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FHIRExtensions.swift; path = Classes/FHIRExtensions.swift; sourceTree = "<group>"; };
 		EE7A43921B0D08DE00B30D17 /* ConsentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentController.swift; sourceTree = "<group>"; };
+		EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentTask.swift; sourceTree = "<group>"; };
+		EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContractExtensions.swift; sourceTree = "<group>"; };
 		EE8A13511B4E7CDE0044A9D7 /* HKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HKExtensions.swift; path = Classes/HKExtensions.swift; sourceTree = "<group>"; };
 		EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeIdentifier.swift; path = Identity/DeIdentifier.swift; sourceTree = SOURCE_ROOT; };
 		EEB6DD221B5D3FD3006A3B9F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -156,6 +160,8 @@
 			children = (
 				EE519BA61B0CD6C500036B96 /* README.md */,
 				EE7A43921B0D08DE00B30D17 /* ConsentController.swift */,
+				EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */,
+				EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */,
 			);
 			path = Consent;
 			sourceTree = "<group>";
@@ -440,6 +446,7 @@
 				EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */,
 				EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */,
 				EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */,
+				EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */,
 				EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */,
 				EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */,
 				EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */,
@@ -451,6 +458,7 @@
 				EE8A13521B4E7CDE0044A9D7 /* HKExtensions.swift in Sources */,
 				EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */,
 				EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */,
+				EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */,
 				EEFA84DB1AE5C25500E61006 /* QuestionnairePromise.swift in Sources */,
 				EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */,
 				EE73B8C91B68CD7B0034E621 /* FoundationExtensions.swift in Sources */,

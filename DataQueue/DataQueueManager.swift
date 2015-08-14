@@ -162,12 +162,19 @@ class DataQueueManager
 			var error: NSError?
 			if first.readFromFile(&error) {
 				currentlyDequeueing = first
-				first.resource!.id = nil
-				first.resource!.create(server) { cError in
+				let cb: FHIRErrorCallback = { cError in
 					if nil == cError {
 						self.clearCurrentlyDequeueing()
 					}
 					callback(didDequeue: (nil == cError), error: cError)
+				}
+				
+				if nil != first.resource!.id {
+					first.resource!._server = server
+					first.resource!.update(cb)
+				}
+				else {
+					first.resource!.create(server, callback: cb)
 				}
 			}
 			else {
