@@ -79,6 +79,7 @@ public class ConsentTask: NSObject, ORKTask
 			
 			// consent review step
 			let signature = ORKConsentSignature(forPersonWithTitle: "Participant".localized, dateFormatString: nil, identifier: "participant")
+			doc.addSignature(signature)
 			let review = ORKConsentReviewStep(identifier: "reviewStep", signature: signature, inDocument: doc)		// "reviewStep" for compatibility with AppCore
 			review.reasonForConsent = options.reasonForConsent
 			steps.append(review)
