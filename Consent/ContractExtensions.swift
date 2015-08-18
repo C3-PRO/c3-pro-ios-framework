@@ -91,6 +91,7 @@ public extension ContractTerm
 					}
 				}
 			}
+			section.omitFromDocument = (section.content?.isEmpty ?? true) && (section.htmlContent?.isEmpty ?? true)
 			
 			return section
 		}
