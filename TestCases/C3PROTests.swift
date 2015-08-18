@@ -1,6 +1,6 @@
 //
-//  ResearchCHIPTests.swift
-//  ResearchCHIPTests
+//  C3PROTests.swift
+//  C3PROTests
 //
 //  Created by Pascal Pfiffner on 4/20/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -9,7 +9,7 @@
 import UIKit
 import XCTest
 
-class ResearchCHIPTests: XCTestCase {
+class C3PROTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

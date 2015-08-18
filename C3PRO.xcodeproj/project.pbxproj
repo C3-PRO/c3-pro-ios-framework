@@ -24,9 +24,9 @@
 		EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */; };
 		EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */; };
 		EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */; };
-		EEFA84C11AE5C18B00E61006 /* ResearchCHIP.h in Headers */ = {isa = PBXBuildFile; fileRef = EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EEFA84C71AE5C18B00E61006 /* ResearchCHIP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */; };
-		EEFA84CE1AE5C18B00E61006 /* ResearchCHIPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84CD1AE5C18B00E61006 /* ResearchCHIPTests.swift */; };
+		EEFA84C11AE5C18B00E61006 /* C3PRO.h in Headers */ = {isa = PBXBuildFile; fileRef = EEFA84C01AE5C18B00E61006 /* C3PRO.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EEFA84C71AE5C18B00E61006 /* C3PRO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */; };
+		EEFA84CE1AE5C18B00E61006 /* C3PROTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */; };
 		EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D71AE5C25500E61006 /* QuestionnaireGroupPromise.swift */; };
 		EEFA84DB1AE5C25500E61006 /* QuestionnairePromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */; };
 		EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D91AE5C25500E61006 /* QuestionnaireQuestionPromise.swift */; };
@@ -122,12 +122,12 @@
 		EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geocoder.swift; sourceTree = "<group>"; };
 		EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireController.swift; sourceTree = "<group>"; };
 		EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKTaskResult+FHIR.swift"; sourceTree = "<group>"; };
-		EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ResearchCHIP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C3PRO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEFA84BF1AE5C18B00E61006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ResearchCHIP.h; path = ../Classes/ResearchCHIP.h; sourceTree = "<group>"; };
-		EEFA84C61AE5C18B00E61006 /* ResearchCHIPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResearchCHIPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEFA84C01AE5C18B00E61006 /* C3PRO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = C3PRO.h; path = ../Classes/C3PRO.h; sourceTree = "<group>"; };
+		EEFA84C61AE5C18B00E61006 /* C3PROTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C3PROTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEFA84CC1AE5C18B00E61006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EEFA84CD1AE5C18B00E61006 /* ResearchCHIPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResearchCHIPTests.swift; sourceTree = "<group>"; };
+		EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C3PROTests.swift; sourceTree = "<group>"; };
 		EEFA84D71AE5C25500E61006 /* QuestionnaireGroupPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireGroupPromise.swift; sourceTree = "<group>"; };
 		EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnairePromise.swift; sourceTree = "<group>"; };
 		EEFA84D91AE5C25500E61006 /* QuestionnaireQuestionPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireQuestionPromise.swift; sourceTree = "<group>"; };
@@ -148,7 +148,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEFA84C71AE5C18B00E61006 /* ResearchCHIP.framework in Frameworks */,
+				EEFA84C71AE5C18B00E61006 /* C3PRO.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,8 +221,8 @@
 		EEFA84BC1AE5C18B00E61006 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */,
-				EEFA84C61AE5C18B00E61006 /* ResearchCHIPTests.xctest */,
+				EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */,
+				EEFA84C61AE5C18B00E61006 /* C3PROTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -245,7 +245,7 @@
 		EEFA84BE1AE5C18B00E61006 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */,
+				EEFA84C01AE5C18B00E61006 /* C3PRO.h */,
 				EEFA84BF1AE5C18B00E61006 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -255,7 +255,7 @@
 		EEFA84CA1AE5C18B00E61006 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				EEFA84CD1AE5C18B00E61006 /* ResearchCHIPTests.swift */,
+				EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */,
 				EEFA84CB1AE5C18B00E61006 /* Supporting Files */,
 			);
 			name = Tests;
@@ -286,16 +286,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEFA84C11AE5C18B00E61006 /* ResearchCHIP.h in Headers */,
+				EEFA84C11AE5C18B00E61006 /* C3PRO.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		EEFA84BA1AE5C18B00E61006 /* ResearchCHIP */ = {
+		EEFA84BA1AE5C18B00E61006 /* C3PRO */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EEFA84D11AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "ResearchCHIP" */;
+			buildConfigurationList = EEFA84D11AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "C3PRO" */;
 			buildPhases = (
 				EEFA84B61AE5C18B00E61006 /* Sources */,
 				EEFA84B71AE5C18B00E61006 /* Frameworks */,
@@ -308,14 +308,14 @@
 				EE5931791AEAD9B800A7C5E1 /* PBXTargetDependency */,
 				EEFA84F91AE5C2B300E61006 /* PBXTargetDependency */,
 			);
-			name = ResearchCHIP;
+			name = C3PRO;
 			productName = ResearchCHIP;
-			productReference = EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */;
+			productReference = EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		EEFA84C51AE5C18B00E61006 /* ResearchCHIPTests */ = {
+		EEFA84C51AE5C18B00E61006 /* C3PROTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EEFA84D41AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "ResearchCHIPTests" */;
+			buildConfigurationList = EEFA84D41AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "C3PROTests" */;
 			buildPhases = (
 				EEFA84C21AE5C18B00E61006 /* Sources */,
 				EEFA84C31AE5C18B00E61006 /* Frameworks */,
@@ -326,9 +326,9 @@
 			dependencies = (
 				EEFA84C91AE5C18B00E61006 /* PBXTargetDependency */,
 			);
-			name = ResearchCHIPTests;
+			name = C3PROTests;
 			productName = ResearchCHIPTests;
-			productReference = EEFA84C61AE5C18B00E61006 /* ResearchCHIPTests.xctest */;
+			productReference = EEFA84C61AE5C18B00E61006 /* C3PROTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -348,7 +348,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EEFA84B51AE5C18B00E61006 /* Build configuration list for PBXProject "ResearchCHIP" */;
+			buildConfigurationList = EEFA84B51AE5C18B00E61006 /* Build configuration list for PBXProject "C3PRO" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -370,8 +370,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				EEFA84BA1AE5C18B00E61006 /* ResearchCHIP */,
-				EEFA84C51AE5C18B00E61006 /* ResearchCHIPTests */,
+				EEFA84BA1AE5C18B00E61006 /* C3PRO */,
+				EEFA84C51AE5C18B00E61006 /* C3PROTests */,
 			);
 		};
 /* End PBXProject section */
@@ -469,7 +469,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEFA84CE1AE5C18B00E61006 /* ResearchCHIPTests.swift in Sources */,
+				EEFA84CE1AE5C18B00E61006 /* C3PROTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,7 +483,7 @@
 		};
 		EEFA84C91AE5C18B00E61006 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = EEFA84BA1AE5C18B00E61006 /* ResearchCHIP */;
+			target = EEFA84BA1AE5C18B00E61006 /* C3PRO */;
 			targetProxy = EEFA84C81AE5C18B00E61006 /* PBXContainerItemProxy */;
 		};
 		EEFA84F91AE5C2B300E61006 /* PBXTargetDependency */ = {
@@ -592,9 +592,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/SupportingFiles/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				"OTHER_SWIFT_FLAGS[arch=*]" = "-DDEBUG";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = C3PRO;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -608,8 +609,9 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/SupportingFiles/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = C3PRO;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -627,7 +629,7 @@
 				);
 				INFOPLIST_FILE = TestCases/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = C3PROTests;
 			};
 			name = Debug;
 		};
@@ -640,14 +642,14 @@
 				);
 				INFOPLIST_FILE = TestCases/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = C3PROTests;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EEFA84B51AE5C18B00E61006 /* Build configuration list for PBXProject "ResearchCHIP" */ = {
+		EEFA84B51AE5C18B00E61006 /* Build configuration list for PBXProject "C3PRO" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EEFA84CF1AE5C18B00E61006 /* Debug */,
@@ -656,7 +658,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EEFA84D11AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "ResearchCHIP" */ = {
+		EEFA84D11AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "C3PRO" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EEFA84D21AE5C18B00E61006 /* Debug */,
@@ -665,7 +667,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EEFA84D41AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "ResearchCHIPTests" */ = {
+		EEFA84D41AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "C3PROTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EEFA84D51AE5C18B00E61006 /* Debug */,
