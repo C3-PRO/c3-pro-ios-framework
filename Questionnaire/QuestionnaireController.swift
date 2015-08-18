@@ -39,20 +39,24 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 			let promise = QuestionnairePromise(questionnaire: questionnaire)
 			promise.fulfill(nil) { errors in
 				dispatch_async(dispatch_get_main_queue()) {
-					if let tsk = promise.task {
-						callback(task: tsk, error: nil)
-					}
-					else if let errs = errors {
+					var multiErrors: NSError?
+					if let errs = errors {
 						if 1 == errs.count {
-							callback(task: nil, error: errs[0])
+							multiErrors = errs[0]
 						}
 						else {
-							let err = chip_genErrorQuestionnaire(errs.map() { $0.localizedDescription }.reduce("") { $0 + (!$0.isEmpty ? "\n" : "") + $1 })
-							callback(task: nil, error: err)
+							multiErrors = chip_genErrorQuestionnaire(errs.map() { $0.localizedDescription }.reduce("") { $0 + (!$0.isEmpty ? "\n" : "") + $1 })
 						}
 					}
+					
+					if let tsk = promise.task {
+						if let errors = multiErrors {
+							chip_logIfDebug("Successfully prepared questionnaire but encountered errors:\n\(errors.localizedDescription)")
+						}
+						callback(task: tsk, error: multiErrors)
+					}
 					else {
-						let err = chip_genErrorQuestionnaire("Unknown error creating a task from questionnaire")
+						let err = multiErrors ?? chip_genErrorQuestionnaire("Unknown error creating a task from questionnaire")
 						callback(task: nil, error: err)
 					}
 				}
@@ -82,7 +86,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 			if let task = task {
 				let viewController = ORKTaskViewController(task: task, taskRunUUID: nil)
 				viewController.delegate = self
-				callback(viewController: viewController, error: nil)
+				callback(viewController: viewController, error: error)
 			}
 			else {
 				callback(viewController: nil, error: error)

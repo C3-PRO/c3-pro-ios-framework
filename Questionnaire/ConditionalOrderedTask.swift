@@ -25,6 +25,11 @@ class ConditionalOrderedTask: ORKOrderedTask
 				return stepAfterStep(condNext, withResult: result)
 			}
 		}
+		if let condNext = serialNext as? ConditionalInstructionStep {
+			if let ok = condNext.requirementsAreSatisfiedBy(result) where !ok {
+				return stepAfterStep(condNext, withResult: result)
+			}
+		}
 		return serialNext
 	}
 	
@@ -33,6 +38,11 @@ class ConditionalOrderedTask: ORKOrderedTask
 		
 		// does the serial previous step have conditional requirements and are they satisfied?
 		if let condPrev = serialPrev as? ConditionalQuestionStep {
+			if let ok = condPrev.requirementsAreSatisfiedBy(result) where !ok {
+				return stepBeforeStep(condPrev, withResult: result)
+			}
+		}
+		if let condPrev = serialPrev as? ConditionalInstructionStep {
 			if let ok = condPrev.requirementsAreSatisfiedBy(result) where !ok {
 				return stepBeforeStep(condPrev, withResult: result)
 			}
@@ -80,6 +90,96 @@ class ConditionalQuestionStep: ORKQuestionStep
 	
 	    :returns: A bool indicating success or failure, nil if there are no requirements
 	 */
+	func requirementsAreSatisfiedBy(result: ORKTaskResult) -> Bool? {
+		if nil == requirements {
+			return nil
+		}
+		
+		// check each requirement and drop out early if one fails
+		for requirement in requirements! {
+			if let stepResult = result.resultForIdentifier(requirement.questionIdentifier as String) as? ORKStepResult {
+				if let questionResults = stepResult.results as? [ORKQuestionResult] {
+					var ok = false
+					for questionResult in questionResults {
+						//chip_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.chip_hasSameAnswer(requirement.result))")
+						if questionResult.chip_hasSameAnswer(requirement.result) {
+							ok = true
+						}
+					}
+					if !ok {
+						return false
+					}
+				}
+				else {
+					chip_logIfDebug("Expecting Array<ORKQuestionResult> but got \(stepResult.results)")
+				}
+			}
+			else {
+				chip_logIfDebug("Next step \(identifier) has a condition on \(requirement.questionIdentifier), but the latter has no result yet")
+			}
+		}
+		return true
+	}
+	
+	
+	// MARK: - NSCopying
+	
+	override func copyWithZone(zone: NSZone) -> AnyObject {
+		super.copyWithZone(zone)
+		return self
+	}
+	
+	
+	// MARK: - NSSecureCoding
+	
+	required init(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+		let set = NSSet(array: [NSArray.self, ResultRequirement.self]) as Set<NSObject>
+		requirements = aDecoder.decodeObjectOfClasses(set, forKey: "requirements") as? [ResultRequirement]
+	}
+	
+	override func encodeWithCoder(aCoder: NSCoder) {
+		super.encodeWithCoder(aCoder)
+		aCoder.encodeObject(requirements, forKey: "requirements")
+	}
+}
+
+
+class ConditionalInstructionStep: ORKInstructionStep
+{
+	/// Requirements to fulfil for the step to show up, if any.
+	var requirements: [ResultRequirement]?
+	
+	init(identifier: String, title ttl: String?, text txt: String?) {
+		super.init(identifier: identifier)
+		title = ttl
+		text = txt
+	}
+	
+	
+	// MARK: - Requirements
+	
+	func addRequirement(requirement: ResultRequirement) {
+		if nil == requirements {
+			requirements = [ResultRequirement]()
+		}
+		requirements!.append(requirement)
+	}
+	
+	func addRequirements(requirements reqs: [ResultRequirement]) {
+		if nil == requirements {
+			requirements = reqs
+		}
+		else {
+			requirements!.extend(reqs)
+		}
+	}
+	
+	/**
+	If the step has requirements, checks if all of them are fulfilled in step results in the given task result.
+	
+	:returns: A bool indicating success or failure, nil if there are no requirements
+	*/
 	func requirementsAreSatisfiedBy(result: ORKTaskResult) -> Bool? {
 		if nil == requirements {
 			return nil

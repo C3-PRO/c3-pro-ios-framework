@@ -186,6 +186,7 @@ extension QuestionnaireGroupQuestion
 	[ ] ORKTimeIntervalAnswerFormat:
 	*/
 	func chip_asAnswerFormat(callback: ((format: ORKAnswerFormat?, error: NSError?) -> Void)) {
+		let link = linkId ?? "<nil>"
 		if let type = type {
 			switch type {
 			case "boolean":		callback(format: ORKAnswerFormat.booleanAnswerFormat(), error: nil)
@@ -218,7 +219,7 @@ extension QuestionnaireGroupQuestion
 			case "choice":
 				chip_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)»"))
+						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)» [linkId: \(link)]"))
 					}
 					else {
 						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.chip_answerChoiceStyle(), textChoices: choices!), error: nil)
@@ -227,7 +228,7 @@ extension QuestionnaireGroupQuestion
 			case "open-choice":
 				chip_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)»"))
+						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)» [linkId: \(link)]"))
 					}
 					else {
 						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.chip_answerChoiceStyle(), textChoices: choices!), error: nil)
@@ -236,11 +237,11 @@ extension QuestionnaireGroupQuestion
 				//case "attachment":	callback(format: nil, error: nil)
 				//case "reference":		callback(format: nil, error: nil)
 			default:
-				callback(format: nil, error: chip_genErrorQuestionnaire("Cannot map question type \"\(type)\" to ResearchKit answer format"))
+				callback(format: nil, error: chip_genErrorQuestionnaire("Cannot map question type \"\(type)\" to ResearchKit answer format [linkId: \(link)]"))
 			}
 		}
 		else {
-			NSLog("Question «\(text)» does not have an answer type, assuming text answer")
+			NSLog("Question «\(text)» does not have an answer type, assuming text answer [linkId: \(link)]")
 			callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
 		}
 	}

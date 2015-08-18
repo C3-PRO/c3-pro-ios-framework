@@ -44,12 +44,10 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 		var promises = [QuestionnairePromiseProto]()
 		
 		// create an introductory instruction step if we have a title or text
-		var intro: ORKStep?
+		var intro: ConditionalInstructionStep?
 		let (title, text) = group.chip_bestTitleAndText()
 		if (nil != title && !title!.isEmpty) || (nil != text && !text!.isEmpty) {
-			intro = ORKInstructionStep(identifier: group.linkId ?? NSUUID().UUIDString)
-			intro!.title = title
-			intro!.text = text
+			intro = ConditionalInstructionStep(identifier: group.linkId ?? NSUUID().UUIDString, title: title, text: text)
 		}
 		
 		// "enableWhen" requirements
@@ -101,8 +99,9 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 		
 		// no groups nor questions; maybe still some text
 		else {
-			if let intr = intro {
-				steps = [intr]
+			if let intro = intro {
+				intro.addRequirements(requirements: requirements)
+				steps = [intro]
 			}
 			callback(errors: count(errors) > 0 ? errors : nil)
 		}
