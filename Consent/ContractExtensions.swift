@@ -9,8 +9,10 @@
 import SMART
 import ResearchKit
 
-public let kContractTermConsentSectionTypeSystem = "http://fhir-registry.smarthealthit.org/StructureDefinition/ORKConsentSection"
 
+public let kContractTermConsentSectionExtension = "http://fhir-registry.smarthealthit.org/StructureDefinition/ORKConsentSection"
+
+public let kContractTermConsentSectionType = "http://researchkit.org/docs/Constants/ORKConsentSectionType"
 
 public extension Contract
 {
@@ -50,7 +52,7 @@ public extension ContractTerm
 			section.summary = text
 			
 			// We need extensions for some other properties
-			if let subs = extensionsFor(kContractTermConsentSectionTypeSystem)?.first?.extension_fhir {
+			if let subs = extensionsFor(kContractTermConsentSectionExtension)?.first?.extension_fhir {
 				for sub in subs {
 					if let url = sub.url?.absoluteString {
 						switch url {
@@ -101,8 +103,8 @@ public extension ContractTerm
 	public func chip_consentSectionType() -> ORKConsentSectionType? {
 		if let codings = type?.coding {
 			for code in codings {
-				if let url = code.system?.absoluteString where url != "http://researchkit.org/docs/Constants/ORKConsentSectionType.html" {
-					chip_logIfDebug("Ignoring consent section system “\(url)” (expecting “http://researchkit.org/docs/Constants/ORKConsentSectionType.html”)")
+				if let url = code.system?.absoluteString where url != kContractTermConsentSectionType {
+					chip_logIfDebug("Ignoring consent section system “\(url)” (expecting “\(kContractTermConsentSectionType)”)")
 					continue
 				}
 				if nil == code.code {
