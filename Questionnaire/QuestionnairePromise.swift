@@ -54,7 +54,7 @@ public class QuestionnairePromise: QuestionnairePromiseProto
 	*/
 	public func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
 		if let toplevel = questionnaire.group {
-			let identifier = toplevel.id ?? "questionnaire-task"		// TODO: inspect `identifier`
+			let identifier = questionnaire.id ?? (questionnaire.identifier?.first?.value ?? "questionnaire-task")
 			let gpromise = QuestionnaireGroupPromise(group: toplevel)
 			gpromise.fulfill(parentRequirements) { errors in
 				if let steps = gpromise.steps {

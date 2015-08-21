@@ -28,11 +28,14 @@ extension ORKTaskResult
 			
 			// create top-level group to hold all groups
 			let master = QuestionnaireAnswersGroup(json: nil)
-			master.linkId = identifier
 			master.group = groups
 			
-			// create and return answer
+			// create and return questionnaire answers
+			let questionnaire = Reference(json: nil)
+			questionnaire.reference = identifier
+			
 			let answer = QuestionnaireAnswers(status: "completed")
+			answer.questionnaire = questionnaire
 			answer.group = master
 			return answer
 		}
