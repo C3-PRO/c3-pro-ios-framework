@@ -20,16 +20,15 @@ public class AESUtility
 	/// Bytes of the key to use, 32 by default
 	public var keySize = 32
 	
-	public var symmetricKeyData: NSData? {
-		if let key = symmetricKey {
-			return NSData.withBytes(key)
-		}
-		return nil
+	public var symmetricKeyData: NSData {
+		return NSData.withBytes(symmetricKey)
 	}
 	
-	var symmetricKey: [UInt8]?
+	var symmetricKey: [UInt8]
 	
-	public init() {  }
+	public init() {
+		symmetricKey = Cipher.randomIV(keySize)
+	}
 	
 	
 	// MARK: - Key
@@ -48,10 +47,7 @@ public class AESUtility
 	Encrypt given data with the current symmetricKey and an IV parameter of all-zeroes.
 	*/
 	public func encrypt(data: NSData, error: NSErrorPointer) -> NSData? {
-		if nil == symmetricKey {
-			randomizeKey()
-		}
-		let aes = AES(key: symmetricKey!)!		// this only fails if keySize is wrong
+		let aes = AES(key: symmetricKey)!		// this only fails if keySize is wrong
 		if let enc = aes.encrypt(data.arrayOfBytes()) {
 			return NSData.withBytes(enc)
 		}
@@ -68,17 +64,12 @@ public class AESUtility
 	Decrypt given data with the current symmetricKey and an IV parameter of all-zeroes.
 	*/
 	public func decrypt(encData: NSData, error: NSErrorPointer) -> NSData? {
-		if let key = symmetricKey {
-			let aes = AES(key: key)!		// this only fails if keySize is wrong
-			if let dec = aes.decrypt(encData.arrayOfBytes()) {
-				return NSData.withBytes(dec)
-			}
-			else if nil != error {
-				error.memory = chip_genErrorAES("Failed to decrypt data")
-			}
+		let aes = AES(key: symmetricKey)!		// this only fails if keySize is wrong
+		if let dec = aes.decrypt(encData.arrayOfBytes()) {
+			return NSData.withBytes(dec)
 		}
 		else if nil != error {
-			error.memory = chip_genErrorAES("I do not have a key, cannot decrypt")
+			error.memory = chip_genErrorAES("Failed to decrypt data")
 		}
 		return nil
 	}

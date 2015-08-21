@@ -74,11 +74,11 @@ public class DataQueue: Server
 	// MARK: - URL Session
 	
 	override public func performPreparedRequest<R : FHIRServerRequestHandler>(request: NSMutableURLRequest, handler: R, callback: ((response: R.ResponseType) -> Void)) {
-		if "POST" == request.HTTPMethod {
+		if .POST == handler.type || .PUT == handler.type {
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			
 			// are we currently dequeueing the resource we're trying to POST (and hence inside a `flush` call)?
-			if let resource = (handler as? FHIRServerDataRequestHandler)?.resource as? Resource where queueManager.isDequeueing(resource) {
+			if let resource = handler.resource as? Resource where queueManager.isDequeueing(resource) {
 				super.performPreparedRequest(request, handler: handler, callback: callback)
 			}
 			

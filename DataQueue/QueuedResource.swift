@@ -36,9 +36,11 @@ public class QueuedResource
 	 */
 	func readFromFile(error: NSErrorPointer) -> Bool {
 		if let path = path {
-			if let resource = Resource.instantiateFromPath(path, error: error) {
-				self.resource = resource
-				return true
+			if let data = NSData(contentsOfFile: path, options: nil, error: error) {
+				if let json = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: error) as? FHIRJSON {
+					self.resource = FHIRElement.instantiateFrom(json, owner: nil) as? Resource
+					return true
+				}
 			}
 		}
 		return false
