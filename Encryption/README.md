@@ -14,7 +14,7 @@ It does NOT require OpenSSL.
 Key pairs can be generated using OpenSSL like so:
 
 ```
-openssl req -x509 -out public.crt -outform DER -new -newkey rsa:2048 -keyout private.pem
+openssl req -x509 -days 3652 -out public.crt -outform DER -new -newkey rsa:2048 -keyout private.pem
 ```
 
 
