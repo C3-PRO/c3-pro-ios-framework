@@ -1,6 +1,6 @@
 //
 //  ConsentController.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 5/20/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -16,6 +16,28 @@ let CHIPConsentingErrorKey = "CHIPConsentingError"
 
 
 /**
+	Struct to hold various options for consenting.
+ */
+public struct ConsentTaskOptions
+{
+	public var askForSharing = true
+	
+	var shareTeamName = "the research team"
+	
+	/// Name of a bundled HTML file (without extension) that contains more information about data sharing.
+	public var shareMoreInfoDocument = "Consent_sharing"
+	
+	/// Optional: name of a bundled HTML file (without extension) that contains the full consent document for review.
+	public var reviewConsentDocument: String? = nil
+	
+	/// Shown when the user taps agree and she needs to confirm that she is in agreement.
+	public var reasonForConsent = "By agreeing you confirm that you read the consent and that you wish to take part in this research study.".localized
+	
+	public init() {  }
+}
+
+
+/**
     Controller to capture consent in a FHIR Contract resource.
  */
 public class ConsentController
@@ -23,12 +45,41 @@ public class ConsentController
 	/// The contract to be signed; if nil when signing, a new instance will be created.
 	public final var contract: Contract?
 	
+	public var options = ConsentTaskOptions()
+	
 	var deidentifier: DeIdentifier?
 	
-	public init() {  }
+	/**
+	Designated initializer.
+	
+	You can optionally supply the name of a bundled JSON file (without extension) that represents a serialized FHIR Contract resource.
+	*/
+	public init(bundledContract: String? = nil) {
+		if let name = bundledContract {
+			do {
+				contract = try NSBundle.mainBundle().fhir_bundledResource(name) as? Contract
+			}
+			catch let error {
+				chip_warn("Failed to read bundled Contract resource: \(error)")
+			}
+		}
+	}
 	
 	
 	// MARK: - Consenting
+	
+	public func createConsentTask() -> ConsentTask? {
+		if let contract = contract {
+			let task = ConsentTask(identifier: NSUUID().UUIDString, contract: contract)
+			task.prepareWithOptions(options)
+			return task
+		}
+		chip_warn("No Contract, cannot create a consent task")
+		return nil
+	}
+	
+	
+	// MARK: - Consent Signing
 	
 	/**
 	Instantiates a new "Contract" resource and fills the properties to represent a consent signed by a participant referencing the given
@@ -62,7 +113,7 @@ public class ConsentController
 		if nil != error {
 			error.memory = chip_genErrorConsenting("Failed to generate a relative reference for the patient, hence cannot sign this consent")
 		}
-		chip_logIfDebug("Failed to generate a relative reference for the patient, hence cannot sign this consent")
+		chip_warn("Failed to generate a relative reference for the patient, hence cannot sign this consent")
 		return nil
 	}
 	

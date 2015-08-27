@@ -1,7 +1,8 @@
-ResearchCHIP
-============
+C3-PRO
+======
 
 Combining [🔥 FHIR][fhir] and [ResearchKit][].
+This framework will be available as `C3PRO`.
 
 
 Requirements
@@ -9,8 +10,8 @@ Requirements
 
 Apps built using this framework need to include:
 
-- SMART (built with ResearchCHIP)
-- ResearchKit (built with ResearchCHIP)
+- SMART (built with C3PRO)
+- ResearchKit (built with C3PRO)
 - HealthKit
 
 

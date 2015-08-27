@@ -1,6 +1,6 @@
 //
 //  QuestionnaireExtensions.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 5/20/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -17,8 +17,7 @@ extension FHIRElement
 	    instantiates ResultRequirements representing those.
 	*/
 	func chip_enableQuestionnaireElementWhen(error: NSErrorPointer) -> [ResultRequirement]? {
-		let optWhen = extension_fhir?.filter() { return $0.url?.absoluteString == "http://hl7.org/fhir/StructureDefinition/questionnaire-enableWhen" }
-		if let enableWhen = optWhen {
+		if let enableWhen = extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-enableWhen") {
 			var requirements = [ResultRequirement]()
 			
 			for when in enableWhen {

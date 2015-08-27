@@ -4,3 +4,6 @@
 [submodule "Swift-SMART"]
 	path = Swift-SMART
 	url = https://github.com/smart-on-fhir/Swift-SMART.git
+[submodule "CryptoSwift"]
+	path = CryptoSwift
+	url = https://github.com/krzyzanowskim/CryptoSwift.git

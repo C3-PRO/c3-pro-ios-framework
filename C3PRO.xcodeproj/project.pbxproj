@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */; };
+		EE2D8DE51B87764200D044B4 /* EncryptedDataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */; };
 		EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */; };
 		EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */; };
 		EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */; };
@@ -17,14 +18,18 @@
 		EE73B8C31B68CCF30034E621 /* FHIRExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE73B8C21B68CCF30034E621 /* FHIRExtensions.swift */; };
 		EE73B8C91B68CD7B0034E621 /* FoundationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0EB9671AEEDA3A006AF9E9 /* FoundationExtensions.swift */; };
 		EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7A43921B0D08DE00B30D17 /* ConsentController.swift */; };
+		EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */; };
+		EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */; };
 		EE8A13521B4E7CDE0044A9D7 /* HKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8A13511B4E7CDE0044A9D7 /* HKExtensions.swift */; };
 		EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */; };
 		EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */; };
+		EEC3C95D1B83D3C80096D5BE /* RSAUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC3C95C1B83D3C80096D5BE /* RSAUtility.swift */; };
+		EEC3C95F1B83DA650096D5BE /* AESUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC3C95E1B83DA650096D5BE /* AESUtility.swift */; };
 		EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */; };
 		EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */; };
-		EEFA84C11AE5C18B00E61006 /* ResearchCHIP.h in Headers */ = {isa = PBXBuildFile; fileRef = EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EEFA84C71AE5C18B00E61006 /* ResearchCHIP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */; };
-		EEFA84CE1AE5C18B00E61006 /* ResearchCHIPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84CD1AE5C18B00E61006 /* ResearchCHIPTests.swift */; };
+		EEFA84C11AE5C18B00E61006 /* C3PRO.h in Headers */ = {isa = PBXBuildFile; fileRef = EEFA84C01AE5C18B00E61006 /* C3PRO.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EEFA84C71AE5C18B00E61006 /* C3PRO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */; };
+		EEFA84CE1AE5C18B00E61006 /* C3PROTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */; };
 		EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D71AE5C25500E61006 /* QuestionnaireGroupPromise.swift */; };
 		EEFA84DB1AE5C25500E61006 /* QuestionnairePromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */; };
 		EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D91AE5C25500E61006 /* QuestionnaireQuestionPromise.swift */; };
@@ -32,6 +37,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		EE32BDFD1B8396A100024E7A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 754BE45519693E190098E6F3;
+			remoteInfo = CryptoSwift;
+		};
+		EE32BDFF1B8396A100024E7A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 754BE46019693E190098E6F3;
+			remoteInfo = CryptoSwiftTests;
+		};
+		EE32BE061B8396B300024E7A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 754BE45419693E190098E6F3;
+			remoteInfo = CryptoSwift;
+		};
 		EE59316F1AEAD93F00A7C5E1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
@@ -100,6 +126,8 @@
 /* Begin PBXFileReference section */
 		EE0EB9671AEEDA3A006AF9E9 /* FoundationExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoundationExtensions.swift; path = Classes/FoundationExtensions.swift; sourceTree = "<group>"; };
 		EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionalOrderedTask.swift; sourceTree = "<group>"; };
+		EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncryptedDataQueue.swift; sourceTree = "<group>"; };
+		EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CryptoSwift.xcodeproj; path = CryptoSwift/CryptoSwift.xcodeproj; sourceTree = "<group>"; };
 		EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueueManager.swift; sourceTree = "<group>"; };
 		EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2DynRegAppStore.swift; sourceTree = "<group>"; };
 		EE519B9C1B0CD3AC00036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -112,18 +140,23 @@
 		EE5F4F7E1B18E2B100DB38B3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE73B8C21B68CCF30034E621 /* FHIRExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FHIRExtensions.swift; path = Classes/FHIRExtensions.swift; sourceTree = "<group>"; };
 		EE7A43921B0D08DE00B30D17 /* ConsentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentController.swift; sourceTree = "<group>"; };
+		EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentTask.swift; sourceTree = "<group>"; };
+		EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContractExtensions.swift; sourceTree = "<group>"; };
 		EE8A13511B4E7CDE0044A9D7 /* HKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HKExtensions.swift; path = Classes/HKExtensions.swift; sourceTree = "<group>"; };
 		EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeIdentifier.swift; path = Identity/DeIdentifier.swift; sourceTree = SOURCE_ROOT; };
 		EEB6DD221B5D3FD3006A3B9F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geocoder.swift; sourceTree = "<group>"; };
+		EEC3C95B1B83D37F0096D5BE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EEC3C95C1B83D3C80096D5BE /* RSAUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAUtility.swift; sourceTree = "<group>"; };
+		EEC3C95E1B83DA650096D5BE /* AESUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AESUtility.swift; sourceTree = "<group>"; };
 		EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireController.swift; sourceTree = "<group>"; };
 		EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKTaskResult+FHIR.swift"; sourceTree = "<group>"; };
-		EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ResearchCHIP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C3PRO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEFA84BF1AE5C18B00E61006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ResearchCHIP.h; path = ../Classes/ResearchCHIP.h; sourceTree = "<group>"; };
-		EEFA84C61AE5C18B00E61006 /* ResearchCHIPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResearchCHIPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEFA84C01AE5C18B00E61006 /* C3PRO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = C3PRO.h; path = ../Classes/C3PRO.h; sourceTree = "<group>"; };
+		EEFA84C61AE5C18B00E61006 /* C3PROTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C3PROTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEFA84CC1AE5C18B00E61006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EEFA84CD1AE5C18B00E61006 /* ResearchCHIPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResearchCHIPTests.swift; sourceTree = "<group>"; };
+		EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C3PROTests.swift; sourceTree = "<group>"; };
 		EEFA84D71AE5C25500E61006 /* QuestionnaireGroupPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireGroupPromise.swift; sourceTree = "<group>"; };
 		EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnairePromise.swift; sourceTree = "<group>"; };
 		EEFA84D91AE5C25500E61006 /* QuestionnaireQuestionPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireQuestionPromise.swift; sourceTree = "<group>"; };
@@ -144,18 +177,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEFA84C71AE5C18B00E61006 /* ResearchCHIP.framework in Frameworks */,
+				EEFA84C71AE5C18B00E61006 /* C3PRO.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EE32BDF81B8396A100024E7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EE32BDFE1B8396A100024E7A /* CryptoSwift.framework */,
+				EE32BE001B8396A100024E7A /* CryptoSwiftTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		EE519BA51B0CD69B00036B96 /* Consent */ = {
 			isa = PBXGroup;
 			children = (
 				EE519BA61B0CD6C500036B96 /* README.md */,
 				EE7A43921B0D08DE00B30D17 /* ConsentController.swift */,
+				EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */,
+				EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */,
 			);
 			path = Consent;
 			sourceTree = "<group>";
@@ -176,6 +220,7 @@
 			children = (
 				EE5F4F7E1B18E2B100DB38B3 /* README.md */,
 				EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */,
+				EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */,
 				EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */,
 				EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */,
 				EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */,
@@ -193,6 +238,16 @@
 			path = Identity;
 			sourceTree = "<group>";
 		};
+		EEC3C9531B83D3460096D5BE /* Encryption */ = {
+			isa = PBXGroup;
+			children = (
+				EEC3C95B1B83D37F0096D5BE /* README.md */,
+				EEC3C95C1B83D3C80096D5BE /* RSAUtility.swift */,
+				EEC3C95E1B83DA650096D5BE /* AESUtility.swift */,
+			);
+			path = Encryption;
+			sourceTree = "<group>";
+		};
 		EEFA84B11AE5C18B00E61006 = {
 			isa = PBXGroup;
 			children = (
@@ -203,20 +258,22 @@
 				EE5F4F6A1B174B6B00DB38B3 /* DataQueue */,
 				EE519BA51B0CD69B00036B96 /* Consent */,
 				EEFA84BD1AE5C18B00E61006 /* Questionnaire */,
+				EEC3C9531B83D3460096D5BE /* Encryption */,
 				EEB6DD211B5D3FA3006A3B9F /* Identity */,
 				EEFA84BE1AE5C18B00E61006 /* Supporting Files */,
 				EEFA84CA1AE5C18B00E61006 /* Tests */,
 				EEFA84BC1AE5C18B00E61006 /* Products */,
 				EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */,
 				EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */,
+				EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
 		EEFA84BC1AE5C18B00E61006 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */,
-				EEFA84C61AE5C18B00E61006 /* ResearchCHIPTests.xctest */,
+				EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */,
+				EEFA84C61AE5C18B00E61006 /* C3PROTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -239,7 +296,7 @@
 		EEFA84BE1AE5C18B00E61006 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				EEFA84C01AE5C18B00E61006 /* ResearchCHIP.h */,
+				EEFA84C01AE5C18B00E61006 /* C3PRO.h */,
 				EEFA84BF1AE5C18B00E61006 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -249,7 +306,7 @@
 		EEFA84CA1AE5C18B00E61006 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				EEFA84CD1AE5C18B00E61006 /* ResearchCHIPTests.swift */,
+				EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */,
 				EEFA84CB1AE5C18B00E61006 /* Supporting Files */,
 			);
 			name = Tests;
@@ -280,16 +337,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEFA84C11AE5C18B00E61006 /* ResearchCHIP.h in Headers */,
+				EEFA84C11AE5C18B00E61006 /* C3PRO.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		EEFA84BA1AE5C18B00E61006 /* ResearchCHIP */ = {
+		EEFA84BA1AE5C18B00E61006 /* C3PRO */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EEFA84D11AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "ResearchCHIP" */;
+			buildConfigurationList = EEFA84D11AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "C3PRO" */;
 			buildPhases = (
 				EEFA84B61AE5C18B00E61006 /* Sources */,
 				EEFA84B71AE5C18B00E61006 /* Frameworks */,
@@ -299,17 +356,18 @@
 			buildRules = (
 			);
 			dependencies = (
+				EE32BE071B8396B300024E7A /* PBXTargetDependency */,
 				EE5931791AEAD9B800A7C5E1 /* PBXTargetDependency */,
 				EEFA84F91AE5C2B300E61006 /* PBXTargetDependency */,
 			);
-			name = ResearchCHIP;
+			name = C3PRO;
 			productName = ResearchCHIP;
-			productReference = EEFA84BB1AE5C18B00E61006 /* ResearchCHIP.framework */;
+			productReference = EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		EEFA84C51AE5C18B00E61006 /* ResearchCHIPTests */ = {
+		EEFA84C51AE5C18B00E61006 /* C3PROTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EEFA84D41AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "ResearchCHIPTests" */;
+			buildConfigurationList = EEFA84D41AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "C3PROTests" */;
 			buildPhases = (
 				EEFA84C21AE5C18B00E61006 /* Sources */,
 				EEFA84C31AE5C18B00E61006 /* Frameworks */,
@@ -320,9 +378,9 @@
 			dependencies = (
 				EEFA84C91AE5C18B00E61006 /* PBXTargetDependency */,
 			);
-			name = ResearchCHIPTests;
+			name = C3PROTests;
 			productName = ResearchCHIPTests;
-			productReference = EEFA84C61AE5C18B00E61006 /* ResearchCHIPTests.xctest */;
+			productReference = EEFA84C61AE5C18B00E61006 /* C3PROTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -332,7 +390,6 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0700;
-				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Boston Children's Hospital";
 				TargetAttributes = {
@@ -344,7 +401,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EEFA84B51AE5C18B00E61006 /* Build configuration list for PBXProject "ResearchCHIP" */;
+			buildConfigurationList = EEFA84B51AE5C18B00E61006 /* Build configuration list for PBXProject "C3PRO" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -356,6 +413,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = EE32BDF81B8396A100024E7A /* Products */;
+					ProjectRef = EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */;
+				},
+				{
 					ProductGroup = EEFA84ED1AE5C29100E61006 /* Products */;
 					ProjectRef = EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */;
 				},
@@ -366,13 +427,27 @@
 			);
 			projectRoot = "";
 			targets = (
-				EEFA84BA1AE5C18B00E61006 /* ResearchCHIP */,
-				EEFA84C51AE5C18B00E61006 /* ResearchCHIPTests */,
+				EEFA84BA1AE5C18B00E61006 /* C3PRO */,
+				EEFA84C51AE5C18B00E61006 /* C3PROTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		EE32BDFE1B8396A100024E7A /* CryptoSwift.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CryptoSwift.framework;
+			remoteRef = EE32BDFD1B8396A100024E7A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		EE32BE001B8396A100024E7A /* CryptoSwiftTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = CryptoSwiftTests.xctest;
+			remoteRef = EE32BDFF1B8396A100024E7A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		EE5931701AEAD93F00A7C5E1 /* SMART.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -440,19 +515,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */,
+				EEC3C95D1B83D3C80096D5BE /* RSAUtility.swift in Sources */,
+				EE2D8DE51B87764200D044B4 /* EncryptedDataQueue.swift in Sources */,
 				EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */,
 				EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */,
+				EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */,
 				EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */,
 				EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */,
 				EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */,
 				EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */,
 				EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */,
+				EEC3C95F1B83DA650096D5BE /* AESUtility.swift in Sources */,
 				EE73B8C31B68CCF30034E621 /* FHIRExtensions.swift in Sources */,
 				EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */,
 				EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */,
 				EE8A13521B4E7CDE0044A9D7 /* HKExtensions.swift in Sources */,
 				EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */,
 				EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */,
+				EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */,
 				EEFA84DB1AE5C25500E61006 /* QuestionnairePromise.swift in Sources */,
 				EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */,
 				EE73B8C91B68CD7B0034E621 /* FoundationExtensions.swift in Sources */,
@@ -463,13 +543,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEFA84CE1AE5C18B00E61006 /* ResearchCHIPTests.swift in Sources */,
+				EEFA84CE1AE5C18B00E61006 /* C3PROTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		EE32BE071B8396B300024E7A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CryptoSwift;
+			targetProxy = EE32BE061B8396B300024E7A /* PBXContainerItemProxy */;
+		};
 		EE5931791AEAD9B800A7C5E1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "SwiftSMART-iOS";
@@ -477,7 +562,7 @@
 		};
 		EEFA84C91AE5C18B00E61006 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = EEFA84BA1AE5C18B00E61006 /* ResearchCHIP */;
+			target = EEFA84BA1AE5C18B00E61006 /* C3PRO */;
 			targetProxy = EEFA84C81AE5C18B00E61006 /* PBXContainerItemProxy */;
 		};
 		EEFA84F91AE5C2B300E61006 /* PBXTargetDependency */ = {
@@ -587,10 +672,11 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/SupportingFiles/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				"OTHER_SWIFT_FLAGS[arch=*]" = "-DDEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.chip.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.chip.c3-pro-ios-framework.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = C3PRO;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -604,9 +690,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/SupportingFiles/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.chip.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.chip.c3-pro-ios-framework.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = C3PRO;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -624,8 +711,7 @@
 				);
 				INFOPLIST_FILE = TestCases/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.chip.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = C3PROTests;
 			};
 			name = Debug;
 		};
@@ -638,15 +724,14 @@
 				);
 				INFOPLIST_FILE = TestCases/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.chip.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = C3PROTests;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EEFA84B51AE5C18B00E61006 /* Build configuration list for PBXProject "ResearchCHIP" */ = {
+		EEFA84B51AE5C18B00E61006 /* Build configuration list for PBXProject "C3PRO" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EEFA84CF1AE5C18B00E61006 /* Debug */,
@@ -655,7 +740,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EEFA84D11AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "ResearchCHIP" */ = {
+		EEFA84D11AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "C3PRO" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EEFA84D21AE5C18B00E61006 /* Debug */,
@@ -664,7 +749,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EEFA84D41AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "ResearchCHIPTests" */ = {
+		EEFA84D41AE5C18B00E61006 /* Build configuration list for PBXNativeTarget "C3PROTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EEFA84D51AE5C18B00E61006 /* Debug */,

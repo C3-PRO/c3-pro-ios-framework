@@ -1,6 +1,6 @@
 //
 //  ORKTaskResult+FHIR.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 6/26/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -28,11 +28,14 @@ extension ORKTaskResult
 			
 			// create top-level group to hold all groups
 			let master = QuestionnaireAnswersGroup(json: nil)
-			master.linkId = identifier
 			master.group = groups
 			
-			// create and return answer
+			// create and return questionnaire answers
+			let questionnaire = Reference(json: nil)
+			questionnaire.reference = identifier
+			
 			let answer = QuestionnaireAnswers(status: "completed")
+			answer.questionnaire = questionnaire
 			answer.group = master
 			return answer
 		}
@@ -51,7 +54,7 @@ extension ORKStepResult
 	- returns: A QuestionnaireAnswersGroup element or nil
 	*/
 	func chip_questionAnswers(task: ORKTask?) -> QuestionnaireAnswersGroup? {
-		if let results = results as? [ORKResult] {
+		if let results = results {
 			let group = QuestionnaireAnswersGroup(json: nil)
 			var questions = [QuestionnaireAnswersGroupQuestion]()
 			
@@ -129,7 +132,7 @@ extension ORKChoiceQuestionResult
 				let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
 				let splat = choice.characters.split() { $0 == kORKTextChoiceSystemSeparator }.map() { String($0) }
 				let system = splat[0]
-				let code = (splat.count > 1) ? "\(kORKTextChoiceSystemSeparator)".join(splat[1..<splat.endIndex]) : kORKTextChoiceMissingCodeCode
+				let code = (splat.count > 1) ? splat[1..<splat.endIndex].joinWithSeparator("\(kORKTextChoiceSystemSeparator)") : kORKTextChoiceMissingCodeCode
 				answer.valueCoding = Coding(json: ["system": system, "code": code])
 				answers.append(answer)
 			}

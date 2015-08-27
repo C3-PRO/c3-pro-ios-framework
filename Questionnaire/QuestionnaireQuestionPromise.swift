@@ -1,6 +1,6 @@
 //
 //  QuestionnaireQuestionPromise.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 4/20/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -61,7 +61,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 				// questions "enableWhen" requirements
 				var error: NSError?
 				if let myreqs = self.question.chip_enableQuestionnaireElementWhen(&error) {
-					requirements.extend(myreqs)
+					requirements.appendContentsOf(myreqs)
 				}
 				else if nil != error {
 					errors.append(error!)
@@ -86,7 +86,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 					dispatch_group_enter(queueGroup)
 					gpromise.fulfill(requirements) { berrors in
 						if nil != berrors {
-							errors.extend(berrors!)
+							errors.appendContentsOf(berrors!)
 						}
 						dispatch_group_leave(queueGroup)
 					}
@@ -95,7 +95,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 				// all done
 				dispatch_group_notify(queueGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
 					let gsteps = gpromises.filter() { return nil != $0.steps }.flatMap() { return $0.steps! }
-					steps.extend(gsteps)
+					steps.appendContentsOf(gsteps)
 					
 					self.steps = steps
 					callback(errors: errors.count > 0 ? errors : nil)
@@ -141,27 +141,27 @@ extension QuestionnaireGroupQuestion
 	}
 	
 	func chip_questionMinOccurs() -> Int? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger
 	}
 	
 	func chip_questionMaxOccurs() -> Int? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger
 	}
 	
 	func chip_questionInstruction() -> String? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString
 	}
 	
 	func chip_questionHelpText() -> String? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString
 	}
 	
 	func chip_numericAnswerUnit() -> String? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
 	}
 	
 	func chip_defaultAnswer() -> Extension? {
-		return chip_extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue")?.first
+		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue")?.first
 	}
 	
 	
@@ -186,6 +186,7 @@ extension QuestionnaireGroupQuestion
 	[ ] ORKTimeIntervalAnswerFormat:
 	*/
 	func chip_asAnswerFormat(callback: ((format: ORKAnswerFormat?, error: NSError?) -> Void)) {
+		let link = linkId ?? "<nil>"
 		if let type = type {
 			switch type {
 			case "boolean":		callback(format: ORKAnswerFormat.booleanAnswerFormat(), error: nil)
@@ -218,7 +219,7 @@ extension QuestionnaireGroupQuestion
 			case "choice":
 				chip_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)»"))
+						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)» [linkId: \(link)]"))
 					}
 					else {
 						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.chip_answerChoiceStyle(), textChoices: choices!), error: nil)
@@ -227,7 +228,7 @@ extension QuestionnaireGroupQuestion
 			case "open-choice":
 				chip_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)»"))
+						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)» [linkId: \(link)]"))
 					}
 					else {
 						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.chip_answerChoiceStyle(), textChoices: choices!), error: nil)
@@ -236,11 +237,11 @@ extension QuestionnaireGroupQuestion
 				//case "attachment":	callback(format: nil, error: nil)
 				//case "reference":		callback(format: nil, error: nil)
 			default:
-				callback(format: nil, error: chip_genErrorQuestionnaire("Cannot map question type \"\(type)\" to ResearchKit answer format"))
+				callback(format: nil, error: chip_genErrorQuestionnaire("Cannot map question type \"\(type)\" to ResearchKit answer format [linkId: \(link)]"))
 			}
 		}
 		else {
-			NSLog("Question «\(text)» does not have an answer type, assuming text answer")
+			NSLog("Question «\(text)» does not have an answer type, assuming text answer [linkId: \(link)]")
 			callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
 		}
 	}

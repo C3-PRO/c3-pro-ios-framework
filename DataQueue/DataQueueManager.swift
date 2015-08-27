@@ -1,6 +1,6 @@
 //
 //  DataQueueManager.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 6/2/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -117,7 +117,7 @@ class DataQueueManager
 	
 	/** Convenience method for internal use; POST requests should be DataRequests so this should never fail. */
 	func enqueueResourceInHandler(handler: FHIRServerRequestHandler) {
-		if let resource = (handler as? FHIRServerDataRequestHandler)?.resource as? Resource {
+		if let resource = handler.resource as? Resource {
 			enqueueResource(resource)
 		}
 	}
@@ -160,14 +160,22 @@ class DataQueueManager
 			do {
 				try first.readFromFile()
 				currentlyDequeueing = first
-				first.resource!.id = nil
-				first.resource!.create(server) { cError in
+				let cb: FHIRErrorCallback = { cError in
 					if nil == cError {
 						self.clearCurrentlyDequeueing()
 					}
 					callback(didDequeue: (nil == cError), error: cError)
 				}
-			} catch let error {
+				
+				if nil != first.resource!.id {
+					first.resource!._server = server
+					first.resource!.update(cb)
+				}
+				else {
+					first.resource!.create(server, callback: cb)
+				}
+			}
+			catch let error {
 				chip_logIfDebug("Failed to read resource data: \(error)")
 				// TODO: figure out what to do (file should be readable at this point)
 				callback(didDequeue: false, error: nil)

@@ -1,6 +1,6 @@
 //
 //  Geocoder.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 7/20/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -41,7 +41,7 @@ public class Geocoder
 	/**
 	Determines the current location and, on success, presents a "CLLocation" instance in the callback.
 	
-	:param callback: The callback to call after geocoding, supplies either a CLLocation instance, an NSError instance or neither (on abort)
+	- param callback: The callback to call after geocoding, supplies either a CLLocation instance, an NSError instance or neither (on abort)
 	*/
 	public func currentLocation(callback inCallback: GeocoderLocationCallback) {
 		if let cb = locationCallback {
@@ -97,7 +97,7 @@ public class Geocoder
 	In the callback returns a FHIR "Address" instance of the current location, populated according to HIPAA Safe Harbor guidelines. Calls
 	`geocodeCurrentLocation()` to determine the current location, then reverse-geocodes and de-identifies that location/placemark.
 	
-	:param callback: The callback to call after geocoding, supplies either an Address element, an NSError instance or neither (on abort)
+	- param callback: The callback to call after geocoding, supplies either an Address element, an NSError instance or neither (on abort)
 	*/
 	public func hipaaCompliantCurrentLocation(callback: GeocoderAddressCallback) {
 		geocodeCurrentLocation { placemark, error in
@@ -113,7 +113,7 @@ public class Geocoder
 	/**
 	In the callback returns a FHIR "Address" instance of the given location, populated according to HIPAA Safe Harbor guidelines.
 	
-	:param callback: The callback to call after geocoding, supplies either an Address element, an NSError instance or neither (on abort)
+	- param callback: The callback to call after geocoding, supplies either an Address element, an NSError instance or neither (on abort)
 	*/
 	public func hipaaCompliantLocation(location: CLLocation, callback: GeocoderAddressCallback) {
 		geocodeLocation(location) { placemark, error in
@@ -138,7 +138,7 @@ public class Geocoder
 		// US: 3-digit ZIP
 		if "US" == placemark.ISOcountryCode {
 			if let fullZip = placemark.postalCode where fullZip.characters.count >= 3 {
-				let zip = fullZip[fullZip.startIndex..<advance(fullZip.startIndex, 3)]
+				let zip = fullZip[fullZip.startIndex..<fullZip.startIndex.advancedBy(3)]
 				hipaa.postalCode = Geocoder.restrictedThreeDigitZIPs().contains(zip) ? "000" : zip
 			}
 			if let state = placemark.administrativeArea {
@@ -159,7 +159,7 @@ public class Geocoder
 	/**
 	Determines and reverse-geocodes the phone's current location. Calls `currentLocation()`, then geocodes that location.
 	
-	:param callback: The callback to call when done, supplies either a CLPlacemark or an NSError or neither (on abort)
+	- param callback: The callback to call when done, supplies either a CLPlacemark or an NSError or neither (on abort)
 	*/
 	public func geocodeCurrentLocation(callback: GeocoderPlacemarkCallback) {
 		currentLocation() { location, error in
@@ -175,8 +175,8 @@ public class Geocoder
 	/**
 	Reverse geocodes the given location.
 	
-	:param location: The location to look up
-	:param callback: The callback to call when done, supplies either a CLPlacemark or an NSError or neither (on abort)
+	- param location: The location to look up
+	- param callback: The callback to call when done, supplies either a CLPlacemark or an NSError or neither (on abort)
 	*/
 	public func geocodeLocation(location: CLLocation, callback: GeocoderPlacemarkCallback) {
 		chip_logIfDebug("Starting reverse geocoding")

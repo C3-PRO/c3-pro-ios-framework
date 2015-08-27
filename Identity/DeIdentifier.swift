@@ -1,6 +1,6 @@
 //
 //  DeIdentifier.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 7/20/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -25,8 +25,8 @@ public class DeIdentifier
 	/**
 	Takes the given Patient resource and creates a new instance with only HIPAA compliant de-identified data.
 	
-	:param patient: The Patient resource to de-identify
-	:param callback: The callback to call when de-identification has completed
+	- param patient: The Patient resource to de-identify
+	- param callback: The callback to call when de-identification has completed
 	*/
 	public func hipaaCompliantPatient(patient inPatient: Patient, callback: ((patient: Patient) -> Void)) {
 		geocoder = Geocoder()

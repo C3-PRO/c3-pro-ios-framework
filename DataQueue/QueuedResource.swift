@@ -1,6 +1,6 @@
 //
 //  QueuedResource.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 5/28/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.

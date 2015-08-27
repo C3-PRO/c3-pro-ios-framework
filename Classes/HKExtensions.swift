@@ -1,6 +1,6 @@
 //
 //  HKExtensions.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 7/9/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -26,11 +26,11 @@ public extension HKHealthStore
 	/**
 	Convenience method to retrieve samples from a given period.
 	
-	:param typeIdentifier: The sample type to receivec
-	:param start: Start date
-	:param end: End date
-	:param limit: How many samples to retrieve at max
-	:param callback: Callback to call when query finishes
+	- param typeIdentifier: The sample type to receivec
+	- param start: Start date
+	- param end: End date
+	- param limit: How many samples to retrieve at max
+	- param callback: Callback to call when query finishes
 	*/
 	public func chip_samplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, limit: Int, callback: ((results: [HKQuantitySample]?, error: NSError?) -> Void)) {
 		if let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) {
@@ -62,8 +62,8 @@ public extension HKQuantitySample
 	
 	TODO: would be cool as a failable initializer, but can't bail out without initializing all ivars first :P
 	
-	:param samples: An array of `HKQuantitySample` instances of the same type
-	:param unit: The unit to use in the resulting master quantity sample
+	- param samples: An array of `HKQuantitySample` instances of the same type
+	- param unit: The unit to use in the resulting master quantity sample
 	- returns: An HKQuantitySample instance concatenating all given sample data
 	*/
 	public class func chip_concatenatedQuantitySamples(samples: [HKQuantitySample], unit: HKUnit) -> HKQuantitySample? {
@@ -110,7 +110,7 @@ public extension HKQuantity
 	/**
 	Returns a FHIR "Quantity" element with the given unit, **if** the quantity can be represented in that unit.
 	
-	:param unit: The unit to use
+	- param unit: The unit to use
 	- returns: A Quantity instance on success
 	*/
 	public func chip_asFHIRQuantityInUnit(unit: HKUnit) -> Quantity? {
