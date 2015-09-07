@@ -73,7 +73,7 @@ public class DataQueue: Server
 	
 	// MARK: - URL Session
 	
-	override public func performPreparedRequest<R : FHIRServerRequestHandler>(request: NSMutableURLRequest, handler: R, callback: ((response: R.ResponseType) -> Void)) {
+	override public func performPreparedRequest<R : FHIRServerRequestHandler>(request: NSMutableURLRequest, handler: R, callback: ((response: FHIRServerResponse) -> Void)) {
 		if .POST == handler.type || .PUT == handler.type {
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			
