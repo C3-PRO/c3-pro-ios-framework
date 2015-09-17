@@ -144,7 +144,7 @@ public class ConsentController
 	- parameter mustExist: If true will return nil if no file exists at the expected file URL
 	*/
 	public class func signedConsentPDFURL(mustExist: Bool = false) -> NSURL? {
-		if let first = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).first {
+		if let first = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first {
 			let url = NSURL(fileURLWithPath: first).URLByAppendingPathComponent("consent-signed.pdf")
 			if !mustExist || NSFileManager().fileExistsAtPath(url.path!) {
 				return url

@@ -247,23 +247,23 @@ extension ORKDateQuestionResult
 			case "date":
 				answer.valueDate = date.fhir_asDate()
 			case "dateTime":
-				var dateTime = date.fhir_asDateTime()
-				if let tz = timeZone {
+				let dateTime = date.fhir_asDateTime()
+//				if let tz = timeZone {
 //					dateTime.timeZone = tz			// TODO: reported NSDate is in UTC, convert to the given time zone
-				}
+//				}
 				answer.valueDateTime = dateTime
 			case "instant":
-				var instant = date.fhir_asInstant()
-				if let tz = timeZone {
+				let instant = date.fhir_asInstant()
+//				if let tz = timeZone {
 //					instant.timeZone = tz
-				}
+//				}
 				answer.valueInstant = instant
 			default:
 				chip_warn("unknown date-time FHIR type “\(fhirType!)”, treating as dateTime")
-				var dateTime = date.fhir_asDateTime()
-				if let tz = timeZone {
+				let dateTime = date.fhir_asDateTime()
+//				if let tz = timeZone {
 //					dateTime.timeZone = tz
-				}
+//				}
 				answer.valueDateTime = dateTime
 			}
 			return [answer]
