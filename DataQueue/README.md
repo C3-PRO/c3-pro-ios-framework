@@ -8,6 +8,18 @@ The queue acts like a standard SMART on FHIR server class, except that it automa
 Issuing a POST later on first clears the queue, if needed, before issuing the intended POST, to ensure creation order of all resources intended for the respective server.
 The queue can also be manually flushed.
 
+### Encrypted Queue
+
+There is also an `EncryptedDataQueue` subclass.
+Instances of this class are capable of encrypting resources before sending them to a server.
+These resources are sent to a different endpoint and are, by default, AES encrypted with a random 32 byte key.
+The key itself is RSA encrypted using a public key in a X509 certificate.
+A request with a JSON body containing a key-identifier and base-64 encoded key and resource data is then sent to the encrypted endpoint.
+
+You can implement a delegate to only encrypt certain resources, and the instance can handle two different endpoints so "normal" FHIR requests can be routed to a standard FHIR endpoint (just like `DataQueue` does).
+Only resources to-be-encrypted are sent to the "encrypt" endpoint.
+
+
 Usage
 -----
 
@@ -24,8 +36,8 @@ let dataQueue = DataQueue(baseURL: baseURL, auth: auth)
 let smart = Client(server: dataQueue)
 ```
 
-Now, whenever you issue a _create_ command on a FHIR _Resource_ (i.e. a POST request) and the request fails, the resource will automatically be enqueued.
-Next time a POST command is issued and the queue is not empty, the queue is first (attempted to be) flushed, then the POST is executed.
+Now, whenever you issue a _create_ or _update_ command on a FHIR _Resource_ (i.e. a POST or PUT request) and the request fails, the resource will automatically be enqueued.
+Next time a command is issued and the queue is not empty, the queue is first (attempted to be) flushed, then the POST or PUT is executed.
 
 ```swift
 let questionnaire = Questionnaire(json: {some FHIRJSON})
@@ -56,7 +68,7 @@ smart.authorize { patient, error in
 }
 ```
 
-Resources are enqueued manually when a POST fails, but you can also enqueue manually:
+Resources are enqueued automatically when a POST or PUT fails, but you can also enqueue manually:
 
 ```swift
 let questionnaire = Questionnaire(json: {some FHIRJSON})

@@ -1,6 +1,6 @@
 //
 //  DataQueueManager.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 6/2/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -117,7 +117,7 @@ class DataQueueManager
 	
 	/** Convenience method for internal use; POST requests should be DataRequests so this should never fail. */
 	func enqueueResourceInHandler(handler: FHIRServerRequestHandler) {
-		if let resource = (handler as? FHIRServerDataRequestHandler)?.resource as? Resource {
+		if let resource = handler.resource as? Resource {
 			enqueueResource(resource)
 		}
 	}

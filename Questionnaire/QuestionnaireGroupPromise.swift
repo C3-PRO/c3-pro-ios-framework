@@ -1,6 +1,6 @@
 //
 //  QuestionnaireGroupPromise.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 4/20/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -37,26 +37,25 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 	    TODO: Respect "http://hl7.org/fhir/StructureDefinition/questionnaire-sdc-specialGroup" extensions
 	
 	    - parameter callback: The callback to be called when done; note that even when you get an error, some steps might
-	        have successfully been allocated still, so don't throw everything away just because you receive errors
+	        have successfully been allocated still, so don't throw everything away just because you receive errors. Likely
+	        called on a background queue.
 	 */
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
 		var errors = [NSError]()
 		var promises = [QuestionnairePromiseProto]()
 		
 		// create an introductory instruction step if we have a title or text
-		var intro: ORKStep?
+		var intro: ConditionalInstructionStep?
 		let (title, text) = group.chip_bestTitleAndText()
 		if (nil != title && !title!.isEmpty) || (nil != text && !text!.isEmpty) {
-			intro = ORKInstructionStep(identifier: group.linkId ?? NSUUID().UUIDString)
-			intro!.title = title
-			intro!.text = text
+			intro = ConditionalInstructionStep(identifier: group.linkId ?? NSUUID().UUIDString, title: title, text: text)
 		}
 		
 		// "enableWhen" requirements
 		var requirements = parentRequirements ?? [ResultRequirement]()
 		var error: NSError?
 		if let myreqs = group.chip_enableQuestionnaireElementWhen(&error) {
-			requirements.extend(myreqs)
+			requirements.appendContentsOf(myreqs)
 		}
 		else if nil != error {
 			errors.append(error!)
@@ -81,7 +80,7 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 				dispatch_group_enter(queueGroup)
 				promise.fulfill(requirements) { berrors in
 					if let err = berrors {
-						errors.extend(err)
+						errors.appendContentsOf(err)
 					}
 					dispatch_group_leave(queueGroup)
 				}
@@ -95,18 +94,17 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 				}
 				
 				self.steps = steps
-				dispatch_async(dispatch_get_main_queue()) {
-					callback(errors: errors.count > 0 ? errors : nil)
-				}
+				callback(errors: errors.count > 0 ? errors : nil)
 			}
 		}
 		
 		// no groups nor questions; maybe still some text
 		else {
-			if let intr = intro {
-				steps = [intr]
+			if let intro = intro {
+				intro.addRequirements(requirements: requirements)
+				steps = [intro]
 			}
-			callback(errors: errors)
+			callback(errors: errors.count > 0 ? errors : nil)
 		}
 	}
 	

@@ -1,6 +1,6 @@
 //
 //  DataQueue.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 5/28/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -73,12 +73,12 @@ public class DataQueue: Server
 	
 	// MARK: - URL Session
 	
-	override public func performPreparedRequest<R : FHIRServerRequestHandler>(request: NSMutableURLRequest, handler: R, callback: ((response: R.ResponseType) -> Void)) {
-		if "POST" == request.HTTPMethod {
+	override public func performPreparedRequest<R : FHIRServerRequestHandler>(request: NSMutableURLRequest, handler: R, callback: ((response: FHIRServerResponse) -> Void)) {
+		if .POST == handler.type || .PUT == handler.type {
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			
 			// are we currently dequeueing the resource we're trying to POST (and hence inside a `flush` call)?
-			if let resource = (handler as? FHIRServerDataRequestHandler)?.resource as? Resource where queueManager.isDequeueing(resource) {
+			if let resource = handler.resource as? Resource where queueManager.isDequeueing(resource) {
 				super.performPreparedRequest(request, handler: handler, callback: callback)
 			}
 			
@@ -88,7 +88,7 @@ public class DataQueue: Server
 					if let error = error {
 						self.queueManager.enqueueResourceInHandler(handler)
 						
-						let response = R.ResponseType(notSentBecause: error)
+						let response = R.ResponseType.init(notSentBecause: error)
 						callback(response: response)
 					}
 					else {

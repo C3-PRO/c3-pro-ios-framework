@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EEFA84BA1AE5C18B00E61006"
-               BuildableName = "ResearchCHIP.framework"
-               BlueprintName = "ResearchCHIP"
-               ReferencedContainer = "container:ResearchCHIP.xcodeproj">
+               BuildableName = "C3PRO.framework"
+               BlueprintName = "C3PRO"
+               ReferencedContainer = "container:C3PRO.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EEFA84C51AE5C18B00E61006"
-               BuildableName = "ResearchCHIPTests.xctest"
-               BlueprintName = "ResearchCHIPTests"
-               ReferencedContainer = "container:ResearchCHIP.xcodeproj">
+               BuildableName = "C3PROTests.xctest"
+               BlueprintName = "C3PROTests"
+               ReferencedContainer = "container:C3PRO.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,9 +47,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EEFA84C51AE5C18B00E61006"
-               BuildableName = "ResearchCHIPTests.xctest"
-               BlueprintName = "ResearchCHIPTests"
-               ReferencedContainer = "container:ResearchCHIP.xcodeproj">
+               BuildableName = "C3PROTests.xctest"
+               BlueprintName = "C3PROTests"
+               ReferencedContainer = "container:C3PRO.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,9 +57,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "EEFA84BA1AE5C18B00E61006"
-            BuildableName = "ResearchCHIP.framework"
-            BlueprintName = "ResearchCHIP"
-            ReferencedContainer = "container:ResearchCHIP.xcodeproj">
+            BuildableName = "C3PRO.framework"
+            BlueprintName = "C3PRO"
+            ReferencedContainer = "container:C3PRO.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -79,9 +79,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "EEFA84BA1AE5C18B00E61006"
-            BuildableName = "ResearchCHIP.framework"
-            BlueprintName = "ResearchCHIP"
-            ReferencedContainer = "container:ResearchCHIP.xcodeproj">
+            BuildableName = "C3PRO.framework"
+            BlueprintName = "C3PRO"
+            ReferencedContainer = "container:C3PRO.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -97,9 +97,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "EEFA84BA1AE5C18B00E61006"
-            BuildableName = "ResearchCHIP.framework"
-            BlueprintName = "ResearchCHIP"
-            ReferencedContainer = "container:ResearchCHIP.xcodeproj">
+            BuildableName = "C3PRO.framework"
+            BlueprintName = "C3PRO"
+            ReferencedContainer = "container:C3PRO.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

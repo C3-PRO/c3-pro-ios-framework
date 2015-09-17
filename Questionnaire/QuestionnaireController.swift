@@ -1,6 +1,6 @@
 //
 //  QuestionnaireController.swift
-//  ResearchCHIP
+//  C3PRO
 //
 //  Created by Pascal Pfiffner on 5/20/15.
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
@@ -30,69 +30,67 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 	// MARK: - Questionnaire
 	
 	/**
-	    Attempts to fulfill the promise, calling the callback when done, either with a task representing the
-	    questionnaire or an error.
-	 */
+	Attempts to fulfill the promise, calling the callback when done, either with a task representing the questionnaire or an error.
+	
+	- parameter callback: The callback once preparation has concluded, either with an ORKTask or an error. Called on the main queue.
+	*/
 	func prepareQuestionnaire(callback: ((task: ORKTask?, error: NSError?) -> Void)) {
 		if let questionnaire = questionnaire {
 			let promise = QuestionnairePromise(questionnaire: questionnaire)
 			promise.fulfill(nil) { errors in
-				if let tsk = promise.task {
-					callback(task: tsk, error: nil)
-				}
-				else if let errs = errors {
-					if 1 == errs.count {
-						callback(task: nil, error: errs[0])
+				dispatch_async(dispatch_get_main_queue()) {
+					var multiErrors: NSError?
+					if let errs = errors {
+						if 1 == errs.count {
+							multiErrors = errs[0]
+						}
+						else {
+							multiErrors = chip_genErrorQuestionnaire(errs.map() { $0.localizedDescription }.reduce("") { $0 + (!$0.isEmpty ? "\n" : "") + $1 })
+						}
+					}
+					
+					if let tsk = promise.task {
+						if let errors = multiErrors {
+							chip_logIfDebug("Successfully prepared questionnaire but encountered errors:\n\(errors.localizedDescription)")
+						}
+						callback(task: tsk, error: multiErrors)
 					}
 					else {
-						let err = chip_genErrorQuestionnaire(errs.map() { $0.localizedDescription }.reduce("") { $0 + (!$0.isEmpty ? "\n" : "") + $1 })
+						let err = multiErrors ?? chip_genErrorQuestionnaire("Unknown error creating a task from questionnaire")
 						callback(task: nil, error: err)
 					}
-				}
-				else {
-					let err = chip_genErrorQuestionnaire("Unknown error creating a task from questionnaire")
-					callback(task: nil, error: err)
 				}
 			}
 		}
 		else {
 			let err = chip_genErrorQuestionnaire("I do not have a questionnaire just yet, cannot start")
-			callback(task: nil, error: err)
+			if NSThread.isMainThread() {
+				callback(task: nil, error: err)
+			}
+			else {
+				dispatch_async(dispatch_get_main_queue()) {
+					callback(task: nil, error: err)
+				}
+			}
 		}
 	}
 	
 	/**
-	    Attempts to fulfill the promise, calling the callback when done, either with a task view controller already
-	    prepared with the questionnaire task or an error.
-	 */
+	Attempts to fulfill the promise, calling the callback when done.
+	
+	- parameter callback: Callback to be called on the main queue, either with a task view controller prepared for the questionnaire task or an
+		error
+	*/
 	public func prepareQuestionnaireViewController(callback: ((viewController: ORKTaskViewController?, error: NSError?) -> Void)) {
 		prepareQuestionnaire() { task, error in
 			if let task = task {
 				let viewController = ORKTaskViewController(task: task, taskRunUUID: nil)
 				viewController.delegate = self
-				callback(viewController: viewController, error: nil)
+				callback(viewController: viewController, error: error)
 			}
 			else {
 				callback(viewController: nil, error: error)
 			}
-		}
-	}
-	
-	/**
-	    SYNCHRONOUSLY reads a questionnaire from the given URL. You only want to use this for debug purposes on
-	    questionnaires included in the app bundle.
-	 */
-	final public func readQuestionnaireFromURL(url: NSURL) throws -> Questionnaire {
-		do {
-			let jsondata = try NSData(contentsOfURL: url, options: [])
-			do {
-				let json = try NSJSONSerialization.JSONObjectWithData(jsondata, options: []) as? FHIRJSON
-				return Questionnaire(json: json)
-			} catch let error {
-				throw chip_genErrorQuestionnaire("Failed to decode questionnaire JSON: \(error)")
-			}
-		} catch let error {
-			throw chip_genErrorQuestionnaire("Failed to read questionnaire: \(error)")
 		}
 	}
 	
