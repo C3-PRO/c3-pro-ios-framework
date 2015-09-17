@@ -32,7 +32,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 	/**
 	Attempts to fulfill the promise, calling the callback when done, either with a task representing the questionnaire or an error.
 	
-	- param callback: The callback once preparation has concluded, either with an ORKTask or an error. Called on the main queue.
+	- parameter callback: The callback once preparation has concluded, either with an ORKTask or an error. Called on the main queue.
 	*/
 	func prepareQuestionnaire(callback: ((task: ORKTask?, error: NSError?) -> Void)) {
 		if let questionnaire = questionnaire {
@@ -78,7 +78,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate
 	/**
 	Attempts to fulfill the promise, calling the callback when done.
 	
-	- param callback: Callback to be called on the main queue, either with a task view controller prepared for the questionnaire task or an
+	- parameter callback: Callback to be called on the main queue, either with a task view controller prepared for the questionnaire task or an
 		error
 	*/
 	public func prepareQuestionnaireViewController(callback: ((viewController: ORKTaskViewController?, error: NSError?) -> Void)) {

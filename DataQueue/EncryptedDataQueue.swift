@@ -35,10 +35,10 @@ public class EncryptedDataQueue: DataQueue
 	/**
 	Designated initializer.
 	
-	- param baseURL: Base URL for the server's FHIR endpoint
-	- param auth: OAuth2 settings
-	- param encBaseURL: The base URL for encrypted resources
-	- param publicCertificateFile: Filename, without ".crt" extension, of a bundled X509 public key certificate
+	- parameter baseURL: Base URL for the server's FHIR endpoint
+	- parameter auth: OAuth2 settings
+	- parameter encBaseURL: The base URL for encrypted resources
+	- parameter publicCertificateFile: Filename, without ".crt" extension, of a bundled X509 public key certificate
 	*/
 	public init(baseURL: NSURL, auth: OAuth2JSON?, encBaseURL: NSURL, publicCertificateFile: String) {
 		if let lastChar = encBaseURL.absoluteString.characters.last where "/" != lastChar {
@@ -94,8 +94,9 @@ public class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler
 	}
 	
 	public override func prepareData() throws {
+		data = nil					// to avoid double-encryption
 		try super.prepareData()
-		if let data = data {	// GET requests that do not have data to prepare are fine to not encrypt, obviously
+		if let data = data {
 			self.data = try dataQueue.encryptedData(data)
 		}
 	}

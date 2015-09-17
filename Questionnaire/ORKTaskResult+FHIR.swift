@@ -132,7 +132,7 @@ extension ORKChoiceQuestionResult
 				let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
 				let splat = choice.characters.split() { $0 == kORKTextChoiceSystemSeparator }.map() { String($0) }
 				let system = splat[0]
-				let code = (splat.count > 1) ? splat[1..<splat.endIndex].joinWithSeparator("\(kORKTextChoiceSystemSeparator)") : kORKTextChoiceMissingCodeCode
+				let code = (splat.count > 1) ? splat[1..<splat.endIndex].joinWithSeparator(String(kORKTextChoiceSystemSeparator)) : kORKTextChoiceMissingCodeCode
 				answer.valueCoding = Coding(json: ["system": system, "code": code])
 				answers.append(answer)
 			}

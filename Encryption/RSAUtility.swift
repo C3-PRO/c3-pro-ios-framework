@@ -29,8 +29,10 @@ public class RSAUtility
 	// MARK: - Encryption
 	
 	public func encrypt(data: NSData) throws -> NSData {
-		let key = nil != publicKey ? publicKey! : try readBundledCertificate()		// TODO: compiler doesn't like "publicKey ?? try ..."
-		return try encryptDataWithKey(data, key: key)
+		if nil == publicKey {
+			try readBundledCertificate()
+		}
+		return try encryptDataWithKey(data, key: publicKey!)
 	}
 	
 	public func encryptDataWithKey(data: NSData, key: SecKey) throws -> NSData {
@@ -40,7 +42,7 @@ public class RSAUtility
 		var cipherBufferSizeResult = Int(cipherBufferSize)
 		
 		let status = SecKeyEncrypt(key,
-			SecPadding.OAEP,				// `kSecPaddingOAEP` works with RSA/ECB/OAEPWithSHA1AndMGF1Padding on the Java side
+			SecPadding.OAEP,				// `SecPadding.OAEP` works with RSA/ECB/OAEPWithSHA1AndMGF1Padding on the Java side
 			UnsafePointer<UInt8>(data.bytes),
 			data.length,
 			cipherBufferPointer,

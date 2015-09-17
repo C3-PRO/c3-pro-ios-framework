@@ -134,6 +134,30 @@ public class ConsentController
 			}
 		}
 	}
+	
+	
+	// MARK: - Consent PDF
+	
+	/**
+	URL to the user-signed contract PDF.
+	
+	- parameter mustExist: If true will return nil if no file exists at the expected file URL
+	*/
+	public class func signedConsentPDFURL(mustExist: Bool = false) -> NSURL? {
+		if let first = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).first {
+			let url = NSURL(fileURLWithPath: first).URLByAppendingPathComponent("consent-signed.pdf")
+			if !mustExist || NSFileManager().fileExistsAtPath(url.path!) {
+				return url
+			}
+		}
+		return nil
+	}
+	
+	/**
+	*/
+	public class func bundledConsentPDFURL() -> NSURL? {
+		return NSBundle.mainBundle().URLForResource("consent", withExtension: "pdf")
+	}
 }
 
 

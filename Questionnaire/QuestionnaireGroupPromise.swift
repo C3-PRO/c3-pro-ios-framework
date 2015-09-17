@@ -37,8 +37,9 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 	TODO: Implement `repeats` for repeating groups.
 	TODO: Respect "http://hl7.org/fhir/StructureDefinition/questionnaire-sdc-specialGroup" extensions
 	
-	- param callback: The callback to be called when done; note that even when you get an error, some steps might have successfully been
-		allocated still, so don't throw everything away just because you receive errors. Likely called on a background queue.
+	- parameter callback: The callback to be called when done; note that even when you get an error, some steps might
+	    have successfully been allocated still, so don't throw everything away just because you receive errors. Likely
+	    called on a background queue.
 	 */
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
 		var errors = [NSError]()

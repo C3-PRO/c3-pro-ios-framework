@@ -49,8 +49,8 @@ public class QuestionnairePromise: QuestionnairePromiseProto
 	Upon completion, the receiver has filled its `steps` and `task` properties for you to use; unless there was an error preventing creation
 	of those. Errors may be reported but steps and the task may still be created.
 	
-	- param parentRequirements: An array of ResultRequirement instances required by parent elements
-	- param callback: Callback to be called upon promise fulfillment with a list of errors, if any. Called on the main thread.
+	- parameter parentRequirements: An array of ResultRequirement instances required by parent elements
+	- parameter callback: Callback to be called upon promise fulfillment with a list of errors, if any. Called on the main thread.
 	*/
 	public func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
 		if let toplevel = questionnaire.group {

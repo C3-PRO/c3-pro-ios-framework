@@ -9,8 +9,6 @@
 import Foundation
 import CryptoSwift
 
-let CHIPAESErrorKey = "CHIPAESError"
-
 
 /**
     Utility to work with symmetric AES encryption. Relies on `CryptoSwift`.
@@ -63,13 +61,5 @@ public class AESUtility
 		let dec = try aes.decrypt(encData.arrayOfBytes())
 		return NSData.withBytes(dec)
 	}
-}
-
-
-/**
-    Convenience function to create an NSError in our questionnaire error domain.
- */
-public func chip_genErrorAES(message: String, code: Int = 0) -> NSError {
-	return NSError(domain: CHIPAESErrorKey, code: code, userInfo: [NSLocalizedDescriptionKey: message])
 }
 
