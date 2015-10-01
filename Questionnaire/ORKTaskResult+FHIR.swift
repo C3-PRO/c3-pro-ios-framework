@@ -11,13 +11,13 @@ import SMART
 
 
 /**
-    Extend ORKTaskResult to add functionality to convert to QuestionnaireAnswers.
+    Extend ORKTaskResult to add functionality to convert to QuestionnaireResponse.
  */
 extension ORKTaskResult
 {
-	func chip_asQuestionnaireAnswersForTask(task: ORKTask?) -> QuestionnaireAnswers? {
+	func chip_asQuestionnaireResponseForTask(task: ORKTask?) -> QuestionnaireResponse? {
 		if let results = results as? [ORKStepResult] {
-			var groups = [QuestionnaireAnswersGroup]()
+			var groups = [QuestionnaireResponseGroup]()
 			
 			// loop results to collect groups
 			for result in results {
@@ -27,14 +27,14 @@ extension ORKTaskResult
 			}
 			
 			// create top-level group to hold all groups
-			let master = QuestionnaireAnswersGroup(json: nil)
+			let master = QuestionnaireResponseGroup(json: nil)
 			master.group = groups
 			
 			// create and return questionnaire answers
 			let questionnaire = Reference(json: nil)
 			questionnaire.reference = identifier
 			
-			let answer = QuestionnaireAnswers(status: "completed")
+			let answer = QuestionnaireResponse(status: "completed")
 			answer.questionnaire = questionnaire
 			answer.group = master
 			return answer
@@ -47,22 +47,22 @@ extension ORKTaskResult
 extension ORKStepResult
 {
 	/**
-	Creates a QuestionnaireAnswersGroup resource from all ORKSteps in the given ORKTask. Questions that do not have answers will be omitted,
+	Creates a QuestionnaireResponseGroup resource from all ORKSteps in the given ORKTask. Questions that do not have answers will be omitted,
 	and groups that do not have at least a single question with answer will likewise be omitted.
 	
 	- parameter task: The ORKTask to convert to a FHIR answer group
-	- returns: A QuestionnaireAnswersGroup element or nil
+	- returns: A QuestionnaireResponseGroup element or nil
 	*/
-	func chip_questionAnswers(task: ORKTask?) -> QuestionnaireAnswersGroup? {
+	func chip_questionAnswers(task: ORKTask?) -> QuestionnaireResponseGroup? {
 		if let results = results {
-			let group = QuestionnaireAnswersGroup(json: nil)
-			var questions = [QuestionnaireAnswersGroupQuestion]()
+			let group = QuestionnaireResponseGroup(json: nil)
+			var questions = [QuestionnaireResponseGroupQuestion]()
 			
 			// loop results to collect answers; omit questions that do not have answers
 			for result in results {
 				if let result = result as? ORKQuestionResult,
 					let answers = result.chip_answerAsQuestionAnswersOfStep(task?.stepWithIdentifier?(result.identifier) as? ORKQuestionStep) {
-						let question = QuestionnaireAnswersGroupQuestion(json: nil)
+						let question = QuestionnaireResponseGroupQuestion(json: nil)
 						question.linkId = result.identifier
 						question.answer = answers
 						questions.append(question)
@@ -85,12 +85,12 @@ extension ORKStepResult
 extension ORKQuestionResult
 {
 	/**
-	Instantiate a QuestionnaireAnswers.group.question.answer element from the receiver's answer, if any.
+	Instantiate a QuestionnaireResponse.group.question.answer element from the receiver's answer, if any.
 	
 	TODO: Cannot override methods defined in extensions, hence we need to check for the ORKQuestionResult subclass and then call the
 	method implemented in the extensions below.
 	*/
-	func chip_answerAsQuestionAnswersOfStep(step: ORKQuestionStep?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
+	func chip_answerAsQuestionAnswersOfStep(step: ORKQuestionStep?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
 		let fhirType = (step as? ConditionalQuestionStep)?.fhirType
 		
 		if let this = self as? ORKChoiceQuestionResult {
@@ -125,11 +125,11 @@ extension ORKQuestionResult
 
 extension ORKChoiceQuestionResult
 {
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
 		if let choices = choiceAnswers as? [String] {
-			var answers = [QuestionnaireAnswersGroupQuestionAnswer]()
+			var answers = [QuestionnaireResponseGroupQuestionAnswer]()
 			for choice in choices {
-				let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+				let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
 				let splat = choice.characters.split() { $0 == kORKTextChoiceSystemSeparator }.map() { String($0) }
 				let system = splat[0]
 				let code = (splat.count > 1) ? splat[1..<splat.endIndex].joinWithSeparator(String(kORKTextChoiceSystemSeparator)) : kORKTextChoiceMissingCodeCode
@@ -148,9 +148,9 @@ extension ORKChoiceQuestionResult
 
 extension ORKTextQuestionResult
 {
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
 		if let text = textAnswer {
-			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
 			if let fhir = fhirType where "url" == fhir {
 				answer.valueUri = NSURL(string: text)
 			}
@@ -166,12 +166,12 @@ extension ORKTextQuestionResult
 
 extension ORKNumericQuestionResult
 {
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
 		if let numeric = numericAnswer {
-			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
 			if let fhir = fhirType where "quantity" == fhir {
 				answer.valueQuantity = Quantity(json: ["value": numeric])
-				answer.valueQuantity!.units = unit
+				answer.valueQuantity!.unit = unit
 			}
 			else if let fhir = fhirType where "integer" == fhir {
 				answer.valueInteger = numeric.integerValue
@@ -188,9 +188,9 @@ extension ORKNumericQuestionResult
 
 extension ORKScaleQuestionResult
 {
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
 		if let numeric = scaleAnswer {
-			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
 			answer.valueDecimal = NSDecimalNumber(json: numeric)
 			return [answer]
 		}
@@ -201,9 +201,9 @@ extension ORKScaleQuestionResult
 
 extension ORKBooleanQuestionResult
 {
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
 		if let boolean = booleanAnswer?.boolValue {
-			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
 			answer.valueBoolean = boolean
 			return [answer]
 		}
@@ -214,9 +214,9 @@ extension ORKBooleanQuestionResult
 
 extension ORKTimeOfDayQuestionResult
 {
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
 		if let components = dateComponentsAnswer {
-			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
 			answer.valueTime = Time(hour: UInt8(components.hour), minute: UInt8(components.minute), second: 0.0)
 			return [answer]
 		}
@@ -227,9 +227,9 @@ extension ORKTimeOfDayQuestionResult
 
 extension ORKTimeIntervalQuestionResult
 {
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
 		if let interval = intervalAnswer {
-			//let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+			//let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
 			// TODO: support interval answers
 			print("--->  \(interval) for FHIR type “\(fhirType)”")
 		}
@@ -240,9 +240,9 @@ extension ORKTimeIntervalQuestionResult
 
 extension ORKDateQuestionResult
 {
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
 		if let date = dateAnswer {
-			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
 			switch fhirType ?? "dateTime" {
 			case "date":
 				answer.valueDate = date.fhir_asDate()

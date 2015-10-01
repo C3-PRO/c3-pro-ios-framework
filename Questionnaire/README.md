@@ -15,7 +15,7 @@ controller.questionnaire = <# FHIR Questionnaire #>
 
 controller.whenCompleted = { answers in
     self.dismissViewControllerAnimated(true, completion: nil)
-	// `answers` is a FHIR "QuestionnaireAnswers" resource if not nil
+	// `answers` is a FHIR "QuestionnaireResponse" resource if not nil
     // e.g. send to a SMART server:
     if let answers = answers {
         answers.create(<# smart.server #>) { error in
