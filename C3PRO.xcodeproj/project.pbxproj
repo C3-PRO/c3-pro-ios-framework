@@ -389,6 +389,7 @@
 		EEFA84B21AE5C18B00E61006 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = "Boston Children's Hospital";
 				TargetAttributes = {

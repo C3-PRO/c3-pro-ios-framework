@@ -1,0 +1,69 @@
+Installation
+============
+
+
+CocoaPods
+---------
+
+You can use [CocoaPods](http://cocoapods.org) (v 0.38.2 or above) to install _C3-PRO_.
+If you don't have it yet, you can install CocoaPods with the following command:
+
+```bash
+$ gem install cocoapods
+```
+
+Create a `Podfile` with these contents:
+
+```ruby
+platform :ios, '8.0'
+use_frameworks!
+
+pod 'C3PRO', '~> 1.0'
+```
+
+To install run:
+
+```bash
+$ pod install
+```
+
+If C3-PRO has been updated, run:
+
+```bash
+$ pod update
+```
+
+
+Manual Installation
+-------------------
+
+Installing C3-PRO via git gives you most control.
+Add C3-PRO as a git [submodule](http://git-scm.com/docs/git-submodule) by running the following command:
+
+```bash
+$ git submodule add https://github.com/chb/c3-pro-ios-framework.git
+```
+
+#### _“Add files to XY”_
+Open your Xcode project, select the blue top level project file, then at the bottom click <key>+</key> to add a new file to your project.
+Select `c3-pro-ios-framework/C3PRO.xcodeproj` and make sure it appears nested in your own project hierarchy (doesn't matter whether at the top or bottom).
+
+#### Embed Libraries
+
+With your blue project icon still active (in the Project Navigator), select the _“General”_ tab and scroll down to _“Embedded Libraries”_.
+Click on the <key>+</key> button; under `C3PRO.xcodeproj` you will see a `Products` folder with `C3PRO.framework`.
+Select it.
+
+Xcode will automatically add the C3-PRO framework as a target dependency, meaning it will build first whenever you build your app, and add a copy-files build phase that copies the built framework into your app bundle.
+
+#### Sub-Frameworks
+
+You will need to **manually add sub-frameworks** that are used by C3-PRO but not automatically linked.
+This is unfortunately a rather painful exercise.
+You will first need to add these to your main project, similarly to how you added _C3-PRO_ above, by choosing _“Add files to XY”_, then selecting the `*.xcodeproj` files found nested in _C3-PRO_.
+Then, in the _“Embedded Libraries”_ section, you need to add those that are **at the top level** (they will appear multiple times, nested under _C3-PRO_; **don't** select those):
+
+- ResearchKit.framework
+- SMART.framework
+- CryptoSwift.framework
+
