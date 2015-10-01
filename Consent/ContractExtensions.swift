@@ -62,11 +62,11 @@ public extension ContractTerm
 							section.htmlContent = sub.valueString
 						case "htmlContentFile":
 							if let name = sub.valueString, let url = NSBundle.mainBundle().URLForResource(name, withExtension: "html", subdirectory: "HTMLContent") {
-								if let str = NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding, error: nil) as? String {
-									section.htmlContent = str
+								do {
+									section.htmlContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
 								}
-								else {
-									chip_warn("Failed to read from bundled file «\(url)»")
+								catch let error {
+									chip_warn("Failed to read from bundled file «\(url)»: \(error)")
 								}
 							}
 							else {

@@ -82,13 +82,13 @@ class ConditionalQuestionStep: ORKQuestionStep
 			requirements = reqs
 		}
 		else {
-			requirements!.extend(reqs)
+			requirements!.appendContentsOf(reqs)
 		}
 	}
 	
 	/** If the step has requirements, checks if all of them are fulfilled in step results in the given task result.
 	
-	    :returns: A bool indicating success or failure, nil if there are no requirements
+	    - returns: A bool indicating success or failure, nil if there are no requirements
 	 */
 	func requirementsAreSatisfiedBy(result: ORKTaskResult) -> Bool? {
 		if nil == requirements {
@@ -171,14 +171,14 @@ class ConditionalInstructionStep: ORKInstructionStep
 			requirements = reqs
 		}
 		else {
-			requirements!.extend(reqs)
+			requirements!.appendContentsOf(reqs)
 		}
 	}
 	
 	/**
 	If the step has requirements, checks if all of them are fulfilled in step results in the given task result.
 	
-	:returns: A bool indicating success or failure, nil if there are no requirements
+	- returns: A bool indicating success or failure, nil if there are no requirements
 	*/
 	func requirementsAreSatisfiedBy(result: ORKTaskResult) -> Bool? {
 		if nil == requirements {
@@ -253,10 +253,8 @@ public class ResultRequirement: NSObject, NSCopying, NSSecureCoding
 	// MARK: - NSCopying
 	
 	public func copyWithZone(zone: NSZone) -> AnyObject {
-		let copy = self.dynamicType.allocWithZone(zone)
-		copy.questionIdentifier = questionIdentifier.copyWithZone(zone) as! NSString
-		copy.result = result.copyWithZone(zone) as! ORKQuestionResult
-		return copy
+		let step = questionIdentifier.copyWithZone(zone) as! String
+		return ResultRequirement(step: step, result: result.copyWithZone(zone) as! ORKQuestionResult)
 	}
 	
 	
@@ -266,9 +264,9 @@ public class ResultRequirement: NSObject, NSCopying, NSSecureCoding
 		return true
 	}
 	
-	required public init(coder aDecoder: NSCoder) {
-		questionIdentifier = aDecoder.decodeObjectOfClass(NSString.self, forKey: "stepIdentifier") as! NSString
-		result = aDecoder.decodeObjectOfClass(ORKQuestionResult.self, forKey: "result") as! ORKQuestionResult
+	required public init?(coder aDecoder: NSCoder) {
+		questionIdentifier = aDecoder.decodeObjectOfClass(NSString.self, forKey: "stepIdentifier")!
+		result = aDecoder.decodeObjectOfClass(ORKQuestionResult.self, forKey: "result")!
 	}
 	
 	public func encodeWithCoder(aCoder: NSCoder) {

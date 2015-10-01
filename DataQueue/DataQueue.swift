@@ -30,7 +30,7 @@ public class DataQueue: Server
 	
 	/** The filename of a resource at the given queue position. */
 	func fileNameForSequence(seq: Int) -> String {
-		return "\(self.dynamicType.prefix)\(seq)".stringByAppendingPathExtension(self.dynamicType.fileExtension)!
+		return ("\(self.dynamicType.prefix)\(seq)" as NSString).stringByAppendingPathExtension(self.dynamicType.fileExtension)!
 	}
 	
 	var fileProtection: NSDataWritingOptions {
@@ -41,7 +41,7 @@ public class DataQueue: Server
 		super.init(baseURL: baseURL, auth: auth)
 		if let dir = NSFileManager.defaultManager().chip_appLibraryDirectory() {
 			if let host = baseURL.host {
-				let full = dir.stringByAppendingPathComponent("DataQueue").stringByAppendingPathComponent(host)
+				let full = ((dir as NSString).stringByAppendingPathComponent("DataQueue") as NSString).stringByAppendingPathComponent(host)
 				queueManager = DataQueueManager(fhirServer: self, directory: full)
 			}
 			else {
@@ -59,7 +59,7 @@ public class DataQueue: Server
 	/**
 	    Enqueues the given resource.
 	
-	    :param: resource The FHIR Resource to enqueue
+	    - parameter resource: The FHIR Resource to enqueue
 	 */
 	public func enqueueResource(resource: Resource) {
 		queueManager.enqueueResource(resource)
@@ -88,7 +88,7 @@ public class DataQueue: Server
 					if let error = error {
 						self.queueManager.enqueueResourceInHandler(handler)
 						
-						let response = R.ResponseType(notSentBecause: error)
+						let response = R.ResponseType.init(notSentBecause: error)
 						callback(response: response)
 					}
 					else {

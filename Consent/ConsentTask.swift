@@ -45,7 +45,12 @@ public class ConsentTask: NSObject, ORKTask
 			// full consent review document (override, if nil will automatically combine all consent sections)
 			if let reviewDoc = options.reviewConsentDocument {
 				if let url = bundle.URLForResource(reviewDoc, withExtension: "html") ?? bundle.URLForResource(reviewDoc, withExtension: "html", subdirectory: "HTMLContent") {
-					doc.htmlReviewContent = NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding, error: nil) as? String
+					do {
+						doc.htmlReviewContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
+					}
+					catch let error {
+						chip_warn("Failed to read contents of file named «\(reviewDoc).html»: \(error)")
+					}
 				}
 				else {
 					chip_warn("The bundle does not contain a file named «\(reviewDoc).html», ignoring")
@@ -61,14 +66,20 @@ public class ConsentTask: NSObject, ORKTask
 			if options.askForSharing {
 				let more = options.shareMoreInfoDocument
 				if let url = bundle.URLForResource(more, withExtension: "html") ?? bundle.URLForResource(more, withExtension: "html", subdirectory: "HTMLContent") {
-					
-					let team = (nil != teamName) ? "the \(teamName!)" : options.shareTeamName
-					let sharing = ORKConsentSharingStep(identifier: "sharing",
-						investigatorShortDescription: team,
-						investigatorLongDescription: team,
-						localizedLearnMoreHTMLContent: NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding, error: nil) as! String)
-					steps.append(sharing)
-					sharingStep = sharing
+					do {
+						let learnMore = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
+						
+						let team = (nil != teamName) ? "the \(teamName!)" : options.shareTeamName
+						let sharing = ORKConsentSharingStep(identifier: "sharing",
+							investigatorShortDescription: team,
+							investigatorLongDescription: team,
+							localizedLearnMoreHTMLContent: learnMore)
+						steps.append(sharing)
+						sharingStep = sharing
+					}
+					catch let error {
+						chip_warn("Failed to read learn more content from «\(url)»: \(error)")
+					}
 				}
 				else {
 					fatalError("You MUST adjust `sharingOptions.shareMoreInfoDocument` to the name of an HTML document (without extension) that is included in the app bundle. It's set to «\(more)» but this file could not be found in the bundle.")

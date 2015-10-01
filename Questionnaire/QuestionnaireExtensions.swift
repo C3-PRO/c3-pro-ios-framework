@@ -48,7 +48,7 @@ extension Extension
 	/** If this is an "answer" extension in questionnaire "enableWhen" extensions, returns the result that is required
 	    for the parent element to be shown.
 	
-	    :returns: An ORKQuestionResult representing the result that is required for the Group or Question to be shown
+	    - returns: An ORKQuestionResult representing the result that is required for the Group or Question to be shown
 	*/
 	func chip_desiredResultForValueOfStep(stepIdentifier: String, error: NSErrorPointer) -> ORKQuestionResult? {
 		if "answer" != url?.fragment {

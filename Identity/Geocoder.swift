@@ -41,7 +41,7 @@ public class Geocoder
 	/**
 	Determines the current location and, on success, presents a "CLLocation" instance in the callback.
 	
-	:param callback: The callback to call after geocoding, supplies either a CLLocation instance, an NSError instance or neither (on abort)
+	- parameter callback: The callback to call after geocoding, supplies either a CLLocation instance, an NSError instance or neither (on abort)
 	*/
 	public func currentLocation(callback inCallback: GeocoderLocationCallback) {
 		if let cb = locationCallback {
@@ -97,7 +97,7 @@ public class Geocoder
 	In the callback returns a FHIR "Address" instance of the current location, populated according to HIPAA Safe Harbor guidelines. Calls
 	`geocodeCurrentLocation()` to determine the current location, then reverse-geocodes and de-identifies that location/placemark.
 	
-	:param callback: The callback to call after geocoding, supplies either an Address element, an NSError instance or neither (on abort)
+	- parameter callback: The callback to call after geocoding, supplies either an Address element, an NSError instance or neither (on abort)
 	*/
 	public func hipaaCompliantCurrentLocation(callback: GeocoderAddressCallback) {
 		geocodeCurrentLocation { placemark, error in
@@ -113,7 +113,7 @@ public class Geocoder
 	/**
 	In the callback returns a FHIR "Address" instance of the given location, populated according to HIPAA Safe Harbor guidelines.
 	
-	:param callback: The callback to call after geocoding, supplies either an Address element, an NSError instance or neither (on abort)
+	- parameter callback: The callback to call after geocoding, supplies either an Address element, an NSError instance or neither (on abort)
 	*/
 	public func hipaaCompliantLocation(location: CLLocation, callback: GeocoderAddressCallback) {
 		geocodeLocation(location) { placemark, error in
@@ -129,7 +129,7 @@ public class Geocoder
 	/**
 	Populate an "Address" element representing the given placemark according to HIPAA's Safe Harbor guidelines.
 	
-	:returns: A sparsely populated FHIR "Address" element
+	- returns: A sparsely populated FHIR "Address" element
 	*/
 	func hipaaCompliantAddressFromPlacemark(placemark: CLPlacemark) -> Address {
 		let hipaa = Address(json: nil)
@@ -137,9 +137,9 @@ public class Geocoder
 		
 		// US: 3-digit ZIP
 		if "US" == placemark.ISOcountryCode {
-			if let fullZip = placemark.postalCode where count(fullZip) >= 3 {
-				let zip = fullZip[fullZip.startIndex..<advance(fullZip.startIndex, 3)]
-				hipaa.postalCode = contains(Geocoder.restrictedThreeDigitZIPs(), zip) ? "000" : zip
+			if let fullZip = placemark.postalCode where fullZip.characters.count >= 3 {
+				let zip = fullZip[fullZip.startIndex..<fullZip.startIndex.advancedBy(3)]
+				hipaa.postalCode = Geocoder.restrictedThreeDigitZIPs().contains(zip) ? "000" : zip
 			}
 			if let state = placemark.administrativeArea {
 				hipaa.state = state
@@ -159,7 +159,7 @@ public class Geocoder
 	/**
 	Determines and reverse-geocodes the phone's current location. Calls `currentLocation()`, then geocodes that location.
 	
-	:param callback: The callback to call when done, supplies either a CLPlacemark or an NSError or neither (on abort)
+	- parameter callback: The callback to call when done, supplies either a CLPlacemark or an NSError or neither (on abort)
 	*/
 	public func geocodeCurrentLocation(callback: GeocoderPlacemarkCallback) {
 		currentLocation() { location, error in
@@ -175,8 +175,8 @@ public class Geocoder
 	/**
 	Reverse geocodes the given location.
 	
-	:param location: The location to look up
-	:param callback: The callback to call when done, supplies either a CLPlacemark or an NSError or neither (on abort)
+	- parameter location: The location to look up
+	- parameter callback: The callback to call when done, supplies either a CLPlacemark or an NSError or neither (on abort)
 	*/
 	public func geocodeLocation(location: CLLocation, callback: GeocoderPlacemarkCallback) {
 		chip_logIfDebug("Starting reverse geocoding")
@@ -186,7 +186,7 @@ public class Geocoder
 				callback(placemark: nil, error: error)
 			}
 			else {
-				callback(placemark: placemarks!.first as? CLPlacemark, error: nil)
+				callback(placemark: placemarks!.first, error: nil)
 			}
 		}
 	}
@@ -199,15 +199,15 @@ class LocationManagerDelegate: NSObject, CLLocationManagerDelegate
 	
 	var didUpdateLocations: ((locations: [CLLocation]) -> Void)?
 	
-	func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+	func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
 		didChangeAuthCallback?(status: status)
 	}
 	
-	func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-		didUpdateLocations?(locations: locations as? [CLLocation] ?? [])
+	func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+		didUpdateLocations?(locations: locations ?? [])
 	}
 	
-	func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+	func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
 		didUpdateLocations?(locations: [])
 	}
 }

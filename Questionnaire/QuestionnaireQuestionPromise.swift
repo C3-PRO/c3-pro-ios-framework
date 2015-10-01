@@ -39,7 +39,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 	    Once the promise has been successfully fulfilled, the `step` property will be assigned. No guarantees as to on
 	    which queue the callback will be called.
 
-	    :param: callback The callback to be called when done; note that even when you get an error, some steps might
+	    - parameter callback: The callback to be called when done; note that even when you get an error, some steps might
 	        have successfully been allocated still, so don't throw everything away just because you receive errors
 	 */
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
@@ -61,7 +61,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 				// questions "enableWhen" requirements
 				var error: NSError?
 				if let myreqs = self.question.chip_enableQuestionnaireElementWhen(&error) {
-					requirements.extend(myreqs)
+					requirements.appendContentsOf(myreqs)
 				}
 				else if nil != error {
 					errors.append(error!)
@@ -86,7 +86,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 					dispatch_group_enter(queueGroup)
 					gpromise.fulfill(requirements) { berrors in
 						if nil != berrors {
-							errors.extend(berrors!)
+							errors.appendContentsOf(berrors!)
 						}
 						dispatch_group_leave(queueGroup)
 					}
@@ -95,10 +95,10 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 				// all done
 				dispatch_group_notify(queueGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
 					let gsteps = gpromises.filter() { return nil != $0.steps }.flatMap() { return $0.steps! }
-					steps.extend(gsteps)
+					steps.appendContentsOf(gsteps)
 					
 					self.steps = steps
-					callback(errors: count(errors) > 0 ? errors : nil)
+					callback(errors: errors.count > 0 ? errors : nil)
 				}
 			}
 			else {
@@ -294,7 +294,7 @@ extension QuestionnaireGroupQuestion
 			}
 			
 			// all done
-			if count(choices) > 0 {
+			if choices.count > 0 {
 				callback(choices: choices, error: nil)
 			}
 			else {

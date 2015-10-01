@@ -55,8 +55,13 @@ public class ConsentController
 	You can optionally supply the name of a bundled JSON file (without extension) that represents a serialized FHIR Contract resource.
 	*/
 	public init(bundledContract: String? = nil) {
-		if let name = bundledContract, let bundled = NSBundle.mainBundle().fhir_bundledResource(name) as? Contract {
-			contract = bundled
+		if let name = bundledContract {
+			do {
+				contract = try NSBundle.mainBundle().fhir_bundledResource(name) as? Contract
+			}
+			catch let error {
+				chip_warn("Failed to read bundled Contract resource: \(error)")
+			}
 		}
 	}
 	
@@ -136,14 +141,13 @@ public class ConsentController
 	/**
 	URL to the user-signed contract PDF.
 	
-	:param mustExist: If true will return nil if no file exists at the expected file URL
+	- parameter mustExist: If true will return nil if no file exists at the expected file URL
 	*/
 	public class func signedConsentPDFURL(mustExist: Bool = false) -> NSURL? {
-		if let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true) as? [NSString] {
-			if let path = paths.first?.stringByAppendingPathComponent("consent-signed.pdf") {
-				if !mustExist || NSFileManager().fileExistsAtPath(path) {
-					return NSURL(fileURLWithPath: path)
-				}
+		if let first = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first {
+			let url = NSURL(fileURLWithPath: first).URLByAppendingPathComponent("consent-signed.pdf")
+			if !mustExist || NSFileManager().fileExistsAtPath(url.path!) {
+				return url
 			}
 		}
 		return nil

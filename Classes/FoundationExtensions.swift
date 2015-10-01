@@ -12,8 +12,10 @@ import Foundation
 extension String
 {
 	func chip_stripMultipleSpaces() -> String {
-		if let regEx = NSRegularExpression(pattern: " +", options: nil, error: nil) {
-			return regEx.stringByReplacingMatchesInString(self, options: nil, range: NSMakeRange(0, count(self)), withTemplate: " ")
+		do {
+			let regEx = try NSRegularExpression(pattern: " +", options: [])
+			return regEx.stringByReplacingMatchesInString(self, options: [], range: NSMakeRange(0, self.characters.count), withTemplate: " ")
+		} catch _ {
 		}
 		return self
 	}
@@ -23,23 +25,19 @@ extension String
 public extension NSFileManager
 {
 	public func chip_appLibraryDirectory() -> String? {
-		if let paths = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true) as? [String] {
-			if count(paths) > 0 {
-				return paths[0];
-			}
-		}
-		return nil
+		let paths = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true)
+		return (paths.count > 0) ? paths[0] : nil
 	}
 }
 
 
-func chip_logIfDebug(@autoclosure message: () -> String, function: String = __FUNCTION__, file: String = __FILE__, line: Int = __LINE__) {
+func chip_logIfDebug(@autoclosure message: () -> String, function: String = __FUNCTION__, file: NSString = __FILE__, line: Int = __LINE__) {
 	#if DEBUG
-	println("[\(file.lastPathComponent):\(line)] \(function)  \(message())")
+	print("[\(file.lastPathComponent):\(line)] \(function)  \(message())")
 	#endif
 }
 
-func chip_warn(@autoclosure message: () -> String, function: String = __FUNCTION__, file: String = __FILE__, line: Int = __LINE__) {
-	println("[\(file.lastPathComponent):\(line)] \(function)  WARNING: \(message())")
+func chip_warn(@autoclosure message: () -> String, function: String = __FUNCTION__, file: NSString = __FILE__, line: Int = __LINE__) {
+	print("[\(file.lastPathComponent):\(line)] \(function)  WARNING: \(message())")
 }
 

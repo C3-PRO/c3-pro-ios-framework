@@ -29,15 +29,17 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 	
 	// MARK: - Fulfilling
 	
-	/** Fulfill the promise.
+	/**
+	Fulfill the promise.
 	
-	    Once the promise and its step promises have been successfully fulfilled, the `group` property will be assigned.
+	Once the promise and its step promises have been successfully fulfilled, the `group` property will be assigned.
 	
-	    TODO: Implement `repeats` for repeating groups.
-	    TODO: Respect "http://hl7.org/fhir/StructureDefinition/questionnaire-sdc-specialGroup" extensions
+	TODO: Implement `repeats` for repeating groups.
+	TODO: Respect "http://hl7.org/fhir/StructureDefinition/questionnaire-sdc-specialGroup" extensions
 	
-	    :param: callback The callback to be called when done; note that even when you get an error, some steps might have successfully been
-			allocated still, so don't throw everything away just because you receive errors. Likely called on a background queue.
+	- parameter callback: The callback to be called when done; note that even when you get an error, some steps might
+	    have successfully been allocated still, so don't throw everything away just because you receive errors. Likely
+	    called on a background queue.
 	 */
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
 		var errors = [NSError]()
@@ -54,7 +56,7 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 		var requirements = parentRequirements ?? [ResultRequirement]()
 		var error: NSError?
 		if let myreqs = group.chip_enableQuestionnaireElementWhen(&error) {
-			requirements.extend(myreqs)
+			requirements.appendContentsOf(myreqs)
 		}
 		else if nil != error {
 			errors.append(error!)
@@ -73,13 +75,13 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 		}
 		
 		// fulfill our promises
-		if count(promises) > 0 {
+		if promises.count > 0 {
 			let queueGroup = dispatch_group_create()
 			for promise in promises {
 				dispatch_group_enter(queueGroup)
 				promise.fulfill(requirements) { berrors in
 					if let err = berrors {
-						errors.extend(err)
+						errors.appendContentsOf(err)
 					}
 					dispatch_group_leave(queueGroup)
 				}
@@ -93,7 +95,7 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 				}
 				
 				self.steps = steps
-				callback(errors: count(errors) > 0 ? errors : nil)
+				callback(errors: errors.count > 0 ? errors : nil)
 			}
 		}
 		
@@ -103,7 +105,7 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 				intro.addRequirements(requirements: requirements)
 				steps = [intro]
 			}
-			callback(errors: count(errors) > 0 ? errors : nil)
+			callback(errors: errors.count > 0 ? errors : nil)
 		}
 	}
 	

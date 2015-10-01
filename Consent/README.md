@@ -86,15 +86,6 @@ consentController!.deIdentifyAndSignConsentWithPatient(patient, date: NSDate()) 
             println("Error creating patient: \(error)")
         }
         else {
-            if let observations = observations {
-                for observation in observations {
-                    observation.create(server) { error in
-                        if let error = error {
-                            println("Error creating observation: \(error)")
-                        }
-                    }
-                }
-            }
             contract.create(server) { error in
                 if let error = error {
                     println("Error creating contract: \(error)")

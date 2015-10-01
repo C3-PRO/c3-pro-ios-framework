@@ -64,7 +64,7 @@ public class OAuth2DynRegAppStore: OAuth2DynReg
 	func ensureHasAppReceipt() -> Bool {
 		if nil == appReceipt, let receiptURL = NSBundle.mainBundle().appStoreReceiptURL {
 			if let receipt = NSData(contentsOfURL: receiptURL) {
-				appReceipt = receipt.base64EncodedStringWithOptions(nil)
+				appReceipt = receipt.base64EncodedStringWithOptions([])
 			}
 		}
 		return (nil != appReceipt)
@@ -100,11 +100,11 @@ class AppStoreRequestDelegate: NSObject, SKRequestDelegate
 		self.callback = callback
 	}
 	
-	func requestDidFinish(request: SKRequest!) {
+	func requestDidFinish(request: SKRequest) {
 		callback(error: nil)
 	}
 	
-	func request(request: SKRequest!, didFailWithError error: NSError!) {
+	func request(request: SKRequest, didFailWithError error: NSError) {
 		callback(error: error)
 	}
 }

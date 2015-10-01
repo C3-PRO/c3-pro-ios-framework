@@ -35,13 +35,13 @@ public class EncryptedDataQueue: DataQueue
 	/**
 	Designated initializer.
 	
-	:param baseURL: Base URL for the server's FHIR endpoint
-	:param auth: OAuth2 settings
-	:param encBaseURL: The base URL for encrypted resources
-	:param publicCertificateFile: Filename, without ".crt" extension, of a bundled X509 public key certificate
+	- parameter baseURL: Base URL for the server's FHIR endpoint
+	- parameter auth: OAuth2 settings
+	- parameter encBaseURL: The base URL for encrypted resources
+	- parameter publicCertificateFile: Filename, without ".crt" extension, of a bundled X509 public key certificate
 	*/
 	public init(baseURL: NSURL, auth: OAuth2JSON?, encBaseURL: NSURL, publicCertificateFile: String) {
-		if let baseStr = encBaseURL.absoluteString where baseStr[advance(baseStr.endIndex, -1)] != "/" {
+		if let lastChar = encBaseURL.absoluteString.characters.last where "/" != lastChar {
 			encryptedBaseURL = encBaseURL.URLByAppendingPathComponent("/")
 		}
 		else {
@@ -54,18 +54,15 @@ public class EncryptedDataQueue: DataQueue
 	
 	// MARK: - Encryption
 	
-	public func encryptedData(data: NSData, error: NSErrorPointer) -> NSData? {
-		if let encData = aes.encrypt(data, error: error) {
-			if let encKey = rsa.encrypt(aes.symmetricKeyData, error: error) {
-				let dict = [
-					"key_id": delegate?.keyIdentifierForEncryptedDataQueue(self) ?? "",
-					"symmetric_key": encKey.base64EncodedStringWithOptions(nil),
-					"message": encData.base64EncodedStringWithOptions(nil),
-				]
-				return NSJSONSerialization.dataWithJSONObject(dict, options: nil, error: error)
-			}
-		}
-		return nil
+	public func encryptedData(data: NSData) throws -> NSData {
+		let encData = try aes.encrypt(data)
+		let encKey = try rsa.encrypt(aes.symmetricKeyData)
+		let dict = [
+			"key_id": delegate?.keyIdentifierForEncryptedDataQueue(self) ?? "",
+			"symmetric_key": encKey.base64EncodedStringWithOptions([]),
+			"message": encData.base64EncodedStringWithOptions([]),
+		]
+		return try NSJSONSerialization.dataWithJSONObject(dict, options: [])
 	}
 	
 	
@@ -96,18 +93,12 @@ public class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler
 		super.init(type, resource: resource)
 	}
 	
-	public override func prepareData(error: NSErrorPointer) -> Bool {
-		if super.prepareData(error) {
-			if let data = data {
-				if let encrypted = dataQueue.encryptedData(data, error: error) {
-					self.data = encrypted
-					return true
-				}
-				return false
-			}
-			return true			// e.g. GET requests that do not have data to prepare
+	public override func prepareData() throws {
+		data = nil					// to avoid double-encryption
+		try super.prepareData()
+		if let data = data {
+			self.data = try dataQueue.encryptedData(data)
 		}
-		return false
 	}
 }
 

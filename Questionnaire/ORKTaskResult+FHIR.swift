@@ -50,11 +50,11 @@ extension ORKStepResult
 	Creates a QuestionnaireAnswersGroup resource from all ORKSteps in the given ORKTask. Questions that do not have answers will be omitted,
 	and groups that do not have at least a single question with answer will likewise be omitted.
 	
-	:param: task The ORKTask to convert to a FHIR answer group
-	:returns: A QuestionnaireAnswersGroup element or nil
+	- parameter task: The ORKTask to convert to a FHIR answer group
+	- returns: A QuestionnaireAnswersGroup element or nil
 	*/
 	func chip_questionAnswers(task: ORKTask?) -> QuestionnaireAnswersGroup? {
-		if let results = results as? [ORKResult] {
+		if let results = results {
 			let group = QuestionnaireAnswersGroup(json: nil)
 			var questions = [QuestionnaireAnswersGroupQuestion]()
 			
@@ -130,9 +130,9 @@ extension ORKChoiceQuestionResult
 			var answers = [QuestionnaireAnswersGroupQuestionAnswer]()
 			for choice in choices {
 				let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
-				let splat = split(choice) { $0 == kORKTextChoiceSystemSeparator }
+				let splat = choice.characters.split() { $0 == kORKTextChoiceSystemSeparator }.map() { String($0) }
 				let system = splat[0]
-				let code = (splat.count > 1) ? "\(kORKTextChoiceSystemSeparator)".join(splat[1..<splat.endIndex]) : kORKTextChoiceMissingCodeCode
+				let code = (splat.count > 1) ? splat[1..<splat.endIndex].joinWithSeparator(String(kORKTextChoiceSystemSeparator)) : kORKTextChoiceMissingCodeCode
 				answer.valueCoding = Coding(json: ["system": system, "code": code])
 				answers.append(answer)
 			}
@@ -229,9 +229,9 @@ extension ORKTimeIntervalQuestionResult
 {
 	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireAnswersGroupQuestionAnswer]? {
 		if let interval = intervalAnswer {
-			let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
+			//let answer = QuestionnaireAnswersGroupQuestionAnswer(json: nil)
 			// TODO: support interval answers
-			println("--->  \(interval) for FHIR type “\(fhirType)”")
+			print("--->  \(interval) for FHIR type “\(fhirType)”")
 		}
 		return nil
 	}
@@ -247,23 +247,23 @@ extension ORKDateQuestionResult
 			case "date":
 				answer.valueDate = date.fhir_asDate()
 			case "dateTime":
-				var dateTime = date.fhir_asDateTime()
-				if let tz = timeZone {
+				let dateTime = date.fhir_asDateTime()
+//				if let tz = timeZone {
 //					dateTime.timeZone = tz			// TODO: reported NSDate is in UTC, convert to the given time zone
-				}
+//				}
 				answer.valueDateTime = dateTime
 			case "instant":
-				var instant = date.fhir_asInstant()
-				if let tz = timeZone {
+				let instant = date.fhir_asInstant()
+//				if let tz = timeZone {
 //					instant.timeZone = tz
-				}
+//				}
 				answer.valueInstant = instant
 			default:
 				chip_warn("unknown date-time FHIR type “\(fhirType!)”, treating as dateTime")
-				var dateTime = date.fhir_asDateTime()
-				if let tz = timeZone {
+				let dateTime = date.fhir_asDateTime()
+//				if let tz = timeZone {
 //					dateTime.timeZone = tz
-				}
+//				}
 				answer.valueDateTime = dateTime
 			}
 			return [answer]

@@ -25,8 +25,8 @@ public class DeIdentifier
 	/**
 	Takes the given Patient resource and creates a new instance with only HIPAA compliant de-identified data.
 	
-	:param patient: The Patient resource to de-identify
-	:param callback: The callback to call when de-identification has completed
+	- parameter patient: The Patient resource to de-identify
+	- parameter callback: The callback to call when de-identification has completed
 	*/
 	public func hipaaCompliantPatient(patient inPatient: Patient, callback: ((patient: Patient) -> Void)) {
 		geocoder = Geocoder()
@@ -49,7 +49,7 @@ public class DeIdentifier
 	/**
 	Returns a Date that is compliant to HIPAA's Safe Harbor guidelines: year only and capped at 90 years of age.
 	
-	:returns: A compliant Date instance
+	- returns: A compliant Date instance
 	*/
 	public func hipaaCompliantBirthDate(birthdate: Date) -> Date {
 		let current = NSDate().fhir_asDate()
