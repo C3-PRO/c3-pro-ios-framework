@@ -6,7 +6,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "C3PRO"
-  s.version          = "1.0.0"
+  s.version          = "0.5.0"
   s.summary          = "Combining 🔥 SMART on FHIR and ResearchKit for data storage into i2b2."
   s.description      = <<-DESC
     Combining 🔥 FHIR and ResearchKit for data storage into i2b2, this
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.homepage         = "https://c3-pro.chip.org"
   s.license          = 'Apache 2'
   s.author           = { "Pascal Pfiffner" => "phase.of.matter@gmail.com" }
-  s.source           = { :git => "https://github.com/chb/c3-pro-ios-framework.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/p2/c3-pro-ios-framework.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
@@ -30,5 +30,7 @@ Pod::Spec.new do |s|
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit', 'HealthKit'
-  s.dependency 'ResearchKit', '~> 1.2', 'SMART', '-> 2.0', 'CryptoSwift', '-> 0.0.16'
+  s.dependency 'ResearchKit', '1.3'
+  s.dependency 'SMART', '2.0'
+  s.dependency 'CryptoSwift', '0.0.16'
 end

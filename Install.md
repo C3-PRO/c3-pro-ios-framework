@@ -1,11 +1,15 @@
 Installation
 ============
 
+There are two ways to use the _C3-PRO_ iOS framework: install via _CocoaPods_ or a manual install.
+
+The CocoaPods install is **not yet functional** since the ResearchKit version that is needed (at least 1.3) has not yet been published.
+
 
 CocoaPods
 ---------
 
-You can use [CocoaPods](http://cocoapods.org) (v 0.38.2 or above) to install _C3-PRO_.
+Soon you can use [CocoaPods](http://cocoapods.org) (v 0.38.2 or above) to install _C3-PRO_.
 If you don't have it yet, you can install CocoaPods with the following command:
 
 ```bash
@@ -37,14 +41,16 @@ $ pod update
 Manual Installation
 -------------------
 
-Installing C3-PRO via git gives you most control.
-Add C3-PRO as a git [submodule](http://git-scm.com/docs/git-submodule) by running the following command:
+Installing C3-PRO via git gives you most control but requires some fidgeting with Xcode.
+
+Add C3-PRO as a git [submodule](http://git-scm.com/docs/git-submodule) to your own project by running the following command:
 
 ```bash
 $ git submodule add https://github.com/chb/c3-pro-ios-framework.git
 ```
 
 #### _“Add files to XY”_
+
 Open your Xcode project, select the blue top level project file, then at the bottom click <key>+</key> to add a new file to your project.
 Select `c3-pro-ios-framework/C3PRO.xcodeproj` and make sure it appears nested in your own project hierarchy (doesn't matter whether at the top or bottom).
 
@@ -58,12 +64,12 @@ Xcode will automatically add the C3-PRO framework as a target dependency, meanin
 
 #### Sub-Frameworks
 
-You will need to **manually add sub-frameworks** that are used by C3-PRO but not automatically linked.
+You will need to **manually add sub-frameworks** that are used by C3-PRO but are not automatically linked and embedded.
 This is unfortunately a rather painful exercise.
-You will first need to add these to your main project, similarly to how you added _C3-PRO_ above, by choosing _“Add files to XY”_, then selecting the `*.xcodeproj` files found nested in _C3-PRO_.
+You will first need to add these frameworks to your main project, similarly to how you added _C3-PRO_ above, by choosing _“Add files to XY”_, then selecting the `*.xcodeproj` files found **nested in _C3-PRO_**.
+
 Then, in the _“Embedded Libraries”_ section, you need to add those that are **at the top level** (they will appear multiple times, nested under _C3-PRO_; **don't** select those):
 
 - ResearchKit.framework
 - SMART.framework
 - CryptoSwift.framework
-
