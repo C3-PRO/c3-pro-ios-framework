@@ -268,8 +268,8 @@ extension QuestionnaireGroupQuestion
 			}
 			
 			// valueset defines its own concepts
-			else if let options = valueSet?.define?.concept {
-				let system = valueSet?.define?.system?.absoluteString ?? kORKTextChoiceDefaultSystem
+			else if let options = valueSet?.codeSystem?.concept {
+				let system = valueSet?.codeSystem?.system?.absoluteString ?? kORKTextChoiceDefaultSystem
 				for option in options {
 					let code = option.code ?? kORKTextChoiceMissingCodeCode			// code is a required property, so SHOULD always be present
 					let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
