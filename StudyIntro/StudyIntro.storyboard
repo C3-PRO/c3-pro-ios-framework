@@ -19,7 +19,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hnh-w4-uhI">
+                            <view contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hnh-w4-uhI">
                                 <rect key="frame" x="0.0" y="20" width="320" height="105"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OMu-zF-Pul">
@@ -30,8 +30,8 @@
                                             <constraint firstAttribute="height" constant="1" id="WhB-Wq-Wnf"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Study Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vLT-BZ-JQv">
-                                        <rect key="frame" x="46" y="70" width="228" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Study Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="vLT-BZ-JQv">
+                                        <rect key="frame" x="16" y="70" width="288" height="21"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                         <nil key="highlightedColor"/>
@@ -50,14 +50,14 @@
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="OMu-zF-Pul" secondAttribute="bottom" id="B6i-da-wI0"/>
                                     <constraint firstItem="OMu-zF-Pul" firstAttribute="leading" secondItem="hnh-w4-uhI" secondAttribute="leading" id="D3f-Gb-UTr"/>
-                                    <constraint firstItem="vLT-BZ-JQv" firstAttribute="leading" secondItem="hnh-w4-uhI" secondAttribute="leading" constant="46" id="DKN-zK-XOr"/>
                                     <constraint firstAttribute="height" constant="105" id="FAd-Qf-dgg"/>
                                     <constraint firstAttribute="centerX" secondItem="3Pi-hw-ceo" secondAttribute="centerX" id="HPI-r5-8if"/>
                                     <constraint firstItem="vLT-BZ-JQv" firstAttribute="top" secondItem="3Pi-hw-ceo" secondAttribute="bottom" constant="16" id="HbL-4g-LVW"/>
                                     <constraint firstItem="3Pi-hw-ceo" firstAttribute="top" secondItem="hnh-w4-uhI" secondAttribute="top" constant="10" id="KCI-b9-ZYp"/>
-                                    <constraint firstAttribute="trailing" secondItem="vLT-BZ-JQv" secondAttribute="trailing" constant="46" id="Olo-QU-z1b"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="vLT-BZ-JQv" secondAttribute="trailing" id="Olo-QU-z1b"/>
                                     <constraint firstAttribute="bottom" secondItem="vLT-BZ-JQv" secondAttribute="bottom" constant="7" id="aHT-Mf-yN0"/>
                                     <constraint firstAttribute="trailing" secondItem="OMu-zF-Pul" secondAttribute="trailing" id="dTt-xU-x8L"/>
+                                    <constraint firstItem="vLT-BZ-JQv" firstAttribute="leading" secondItem="hnh-w4-uhI" secondAttribute="leadingMargin" id="sYB-bR-6Hr"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -112,8 +112,8 @@
                                                                             <nil key="highlightedColor"/>
                                                                             <variation key="default">
                                                                                 <mask key="constraints">
-                                                                                    <exclude reference="g0a-B9-P66"/>
                                                                                     <exclude reference="Uc3-3X-uFU"/>
+                                                                                    <exclude reference="g0a-B9-P66"/>
                                                                                 </mask>
                                                                             </variation>
                                                                         </label>
@@ -273,8 +273,8 @@
                                                                     </state>
                                                                     <variation key="default">
                                                                         <mask key="constraints">
-                                                                            <exclude reference="tDr-Vz-DCL"/>
                                                                             <exclude reference="EUT-EC-RRD"/>
+                                                                            <exclude reference="tDr-Vz-DCL"/>
                                                                         </mask>
                                                                     </variation>
                                                                     <connections>
@@ -439,7 +439,7 @@
                         <outlet property="joinButton" destination="m7j-a1-sfG" id="hKa-Hu-sZl"/>
                         <outlet property="pageControl" destination="rtd-te-xvS" id="GbX-er-52A"/>
                         <outlet property="topImage" destination="3Pi-hw-ceo" id="NTO-HA-8kM"/>
-                        <outlet property="topTitle" destination="vLT-BZ-JQv" id="Scj-qt-zwu"/>
+                        <outlet property="topTitleLabel" destination="vLT-BZ-JQv" id="qeR-di-VKA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Jo-V2-aUb" userLabel="First Responder" sceneMemberID="firstResponder"/>

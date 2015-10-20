@@ -28,6 +28,8 @@
 		EEEA7F481BD61EA20089BF85 /* StudyIntroCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		EEEA7F4A1BD624490089BF85 /* StudyIntroCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		EEEA7F4C1BD627570089BF85 /* StudyIntroItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F4B1BD627570089BF85 /* StudyIntroItem.swift */; settings = {ASSET_TAGS = (); }; };
+		EEEA7F671BD68DFE0089BF85 /* StudyIntroConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F661BD68DFE0089BF85 /* StudyIntroConfiguration.swift */; settings = {ASSET_TAGS = (); }; };
+		EEEA7F691BD68E800089BF85 /* C3Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F681BD68E800089BF85 /* C3Error.swift */; settings = {ASSET_TAGS = (); }; };
 		EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */; };
 		EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */; };
 		EEFA84C11AE5C18B00E61006 /* C3PRO.h in Headers */ = {isa = PBXBuildFile; fileRef = EEFA84C01AE5C18B00E61006 /* C3PRO.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -157,6 +159,8 @@
 		EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroCollectionViewCell.swift; sourceTree = "<group>"; };
 		EEEA7F4B1BD627570089BF85 /* StudyIntroItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroItem.swift; sourceTree = "<group>"; };
 		EEEA7F4F1BD64E040089BF85 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EEEA7F661BD68DFE0089BF85 /* StudyIntroConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroConfiguration.swift; sourceTree = "<group>"; };
+		EEEA7F681BD68E800089BF85 /* C3Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C3Error.swift; sourceTree = "<group>"; };
 		EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireController.swift; sourceTree = "<group>"; };
 		EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKTaskResult+FHIR.swift"; sourceTree = "<group>"; };
 		EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C3PRO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -262,6 +266,7 @@
 				EEEA7F4F1BD64E040089BF85 /* README.md */,
 				EEEA7F451BD61E800089BF85 /* StudyIntro.storyboard */,
 				EEEA7F4B1BD627570089BF85 /* StudyIntroItem.swift */,
+				EEEA7F661BD68DFE0089BF85 /* StudyIntroConfiguration.swift */,
 				EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */,
 				EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */,
 			);
@@ -273,12 +278,13 @@
 			children = (
 				EE519B9C1B0CD3AC00036B96 /* README.md */,
 				EE0EB9671AEEDA3A006AF9E9 /* FoundationExtensions.swift */,
+				EEEA7F681BD68E800089BF85 /* C3Error.swift */,
 				EE73B8C21B68CCF30034E621 /* FHIRExtensions.swift */,
 				EE8A13511B4E7CDE0044A9D7 /* HKExtensions.swift */,
 				EEEA7F3D1BD61E4B0089BF85 /* StudyIntro */,
-				EE5F4F6A1B174B6B00DB38B3 /* DataQueue */,
 				EE519BA51B0CD69B00036B96 /* Consent */,
 				EEFA84BD1AE5C18B00E61006 /* Questionnaire */,
+				EE5F4F6A1B174B6B00DB38B3 /* DataQueue */,
 				EEC3C9531B83D3460096D5BE /* Encryption */,
 				EEB6DD211B5D3FA3006A3B9F /* Identity */,
 				EEFA84BE1AE5C18B00E61006 /* Supporting Files */,
@@ -550,6 +556,8 @@
 				EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */,
 				EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */,
 				EEC3C95F1B83DA650096D5BE /* AESUtility.swift in Sources */,
+				EEEA7F671BD68DFE0089BF85 /* StudyIntroConfiguration.swift in Sources */,
+				EEEA7F691BD68E800089BF85 /* C3Error.swift in Sources */,
 				EE73B8C31B68CCF30034E621 /* FHIRExtensions.swift in Sources */,
 				EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */,
 				EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */,

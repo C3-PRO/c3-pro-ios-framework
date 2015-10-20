@@ -9,16 +9,51 @@
 import UIKit
 
 
+/**
+A collection view controller that renders a logo image and a title at the top, a square-ish section of horizontally swipeable content in the
+center, and a "Join Study" button at the bottom.
+
+You can use `StudyIntro.storyboard` provided with the framework but **you must** add it to your app yourself. Customization is done via
+configuration, which you can either do manually in code or -- much better -- by using a JSON file loaded by the `StudyIntroConfiguration`
+class.
+*/
 public class StudyIntroCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate {
 	
 	@IBOutlet var collectionView: UICollectionView?
 	@IBOutlet var topImage: UIImageView?
-	@IBOutlet var topTitle: UILabel?
+	@IBOutlet var topTitleLabel: UILabel?
 	
 	@IBOutlet var pageControl: UIPageControl?
 	@IBOutlet var joinButton: UIButton?
 	
-	public var topImageName = "logo_disease_researchInstitute"
+	/// The title shown at the top.
+	public var topTitle: String? {
+		didSet {
+			if isViewLoaded() {
+				topTitleLabel?.text = topTitle
+			}
+		}
+	}
+	
+	/// Name of the image file shown at the very top.
+	public var topImageName = "logo_institute" {
+		didSet {
+			if isViewLoaded() {
+				topImage?.image = UIImage(named: topImageName)
+			}
+		}
+	}
+	
+	/// The configuration object to use to... configure the instance.
+	public var config: StudyIntroConfiguration? {
+		didSet {
+			if let config = config {
+				topTitle = config.title ?? topTitle
+				topImageName = config.logoName ?? topImageName
+				items = config.items ?? items
+			}
+		}
+	}
 	
 	/// The study intro items to show
 	public var items: [StudyIntroItem]? {
@@ -30,12 +65,15 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	}
 	
 	/// Block executed when the user taps the "Join Study" button. You usually want to start consenting when this is done.
-	public var onSignUp: (Void -> Void)?
+	public var onJoinStudy: (Void -> Void)?
 	
 	public required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 	}
 	
+	/**
+	Load the instance from the given storyboard. This is the preferred way to instantiate the intro view controller.
+	*/
 	public class func fromStoryboard(storyboardName: String) -> StudyIntroCollectionViewController? {
 		let storyboard = UIStoryboard(name: storyboardName, bundle: nil)
 		let vc = storyboard.instantiateInitialViewController() as? StudyIntroCollectionViewController
@@ -50,7 +88,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	// MARK: - Actions
 	
 	@IBAction public func joinStudy() {
-		if let exec = onSignUp {
+		if let exec = onJoinStudy {
 			exec()
 		}
 		else {
@@ -74,6 +112,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
+		topTitleLabel?.text = topTitle
 		topImage?.image = UIImage(named: topImageName)
 		pageControl?.numberOfPages = items?.count ?? 0
 	}
