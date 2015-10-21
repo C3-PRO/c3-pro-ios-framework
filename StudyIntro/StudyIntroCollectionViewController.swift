@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MediaPlayer
 
 
 /**
@@ -67,6 +68,9 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	/// Block executed when the user taps the "Join Study" button. You usually want to start consenting when this is done.
 	public var onJoinStudy: (Void -> Void)?
 	
+	/// If set to true (the default) will hide any navigation bar when the receiver is the top view controller
+	public var hidesNavigationBar = true
+	
 	public required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 	}
@@ -103,8 +107,41 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 		}
 	}
 	
+	public func showConsent() {
+		let pdfVC = PDFViewController()
+		if let url = self.dynamicType.bundledConsentPDFURL() {
+			pdfVC.title = NSLocalizedString("Consent", comment: "")
+			pdfVC.hidesBottomBarWhenPushed = true
+			if let navi = navigationController {
+				navi.pushViewController(pdfVC, animated: true)
+			}
+			else {
+				chip_logIfDebug("Hint: if you put the intro collection view controller into a navigation controller, the consent document will be pushed instead of shown modally")
+				let navi = UINavigationController(rootViewController: pdfVC)
+				let done = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "dismissModal")
+				pdfVC.navigationItem.rightBarButtonItem = done
+				presentViewController(navi, animated: true, completion: nil)
+			}
+			
+			dispatch_async(dispatch_get_main_queue()) {
+				pdfVC.loadPDFDataFrom(url)
+			}
+		}
+		else {
+			chip_warn("failed to locate consent PDF")
+		}
+	}
+	
 	public func showVideo(name: String) {
-		print("PLAY VIDEO \(name)")
+		if let url = NSBundle.mainBundle().URLForResource(name, withExtension: "mp4") {
+			let player = MPMoviePlayerViewController(contentURL: url)
+			player.moviePlayer.controlStyle = .Fullscreen
+			
+			presentViewController(player, animated: true, completion: nil)
+		}
+		else {
+			chip_warn("Video named «\(name).mp4» not found in app bundle")
+		}
 	}
 	
 	
@@ -127,6 +164,24 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 		}
 	}
 	
+	public override func viewWillAppear(animated: Bool) {
+		if hidesNavigationBar {
+			navigationController?.setNavigationBarHidden(true, animated: animated)
+		}
+		super.viewWillAppear(animated)
+	}
+	
+	public override func viewWillDisappear(animated: Bool) {
+		if hidesNavigationBar {
+			navigationController?.setNavigationBarHidden(false, animated: animated)
+		}
+		super.viewWillDisappear(animated)
+	}
+	
+	func dismissModal() {
+		dismissViewControllerAnimated(true, completion: nil)
+	}
+	
 	
 	// MARK: - Collection View
 	
@@ -145,6 +200,9 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 		if let item = item as? StudyIntroWelcomeItem {
 			let cell = collectionView.dequeueReusableCellWithReuseIdentifier(item.dynamicType.cellReuseIdentifier, forIndexPath: indexPath) as! StudyIntroWelcomeCell
 			cell.item = item
+			cell.onConsentTap = {
+				self.showConsent()
+			}
 			cell.onVideoTap = { video in
 				self.showVideo(video)
 			}
@@ -175,6 +233,16 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 		if let pageWidth = collectionView?.frame.size.width, let offset = collectionView?.contentOffset.x {
 			pageControl?.currentPage = Int((offset + pageWidth / 2) / pageWidth)
 		}
+	}
+	
+	
+	// MARK: - Goodies
+	
+	/**
+	Returns the URL to the bundled blank consent PDF, by default named «Consent.pdf»
+	*/
+	public class func bundledConsentPDFURL() -> NSURL? {
+		return NSBundle.mainBundle().URLForResource("Consent", withExtension: "pdf")
 	}
 }
 

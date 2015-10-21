@@ -10,7 +10,7 @@
         <!--Study Intro Collection View Controller-->
         <scene sceneID="a7M-wt-y1B">
             <objects>
-                <viewController storyboardIdentifier="StudyOverviewVC" id="7Xo-de-aEI" customClass="StudyIntroCollectionViewController" customModule="C3PRO" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="StudyOverviewVC" hidesBottomBarWhenPushed="YES" id="7Xo-de-aEI" customClass="StudyIntroCollectionViewController" customModule="C3PRO" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="OxH-R9-PUw"/>
                         <viewControllerLayoutGuide type="bottom" id="NvP-0L-0fy"/>
@@ -66,10 +66,10 @@
                                 </variation>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mUM-Kj-bwy">
-                                <rect key="frame" x="0.0" y="125" width="320" height="332"/>
+                                <rect key="frame" x="0.0" y="125" width="320" height="343"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="KUO-Er-hOj">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="332"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="343"/>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="YHb-iq-49I">
@@ -80,7 +80,7 @@
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="WelcomeCell" id="hFn-ds-Q5E" customClass="StudyIntroWelcomeCell" customModule="C3PRO">
-                                                <rect key="frame" x="0.0" y="5" width="320" height="322"/>
+                                                <rect key="frame" x="0.0" y="11" width="320" height="322"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="322"/>
@@ -244,7 +244,7 @@
                                                 </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="VideoCell" id="rrK-7e-M8R" customClass="StudyIntroVideoCell" customModule="C3PRO">
-                                                <rect key="frame" x="320" y="5" width="320" height="322"/>
+                                                <rect key="frame" x="320" y="11" width="320" height="322"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="322"/>
@@ -329,7 +329,7 @@
                                                 </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="WebCell" id="cUa-nz-CVv" customClass="StudyIntroHTMLCell" customModule="C3PRO">
-                                                <rect key="frame" x="640" y="5" width="320" height="322"/>
+                                                <rect key="frame" x="640" y="11" width="320" height="322"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="322"/>
@@ -366,7 +366,7 @@
                                         </connections>
                                     </collectionView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7at-AO-1Vw">
-                                        <rect key="frame" x="0.0" y="331" width="320" height="1"/>
+                                        <rect key="frame" x="0.0" y="342" width="320" height="1"/>
                                         <animations/>
                                         <color key="backgroundColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
@@ -386,50 +386,63 @@
                                     <constraint firstAttribute="trailing" secondItem="KUO-Er-hOj" secondAttribute="trailing" id="tev-5s-Dtu"/>
                                 </constraints>
                             </view>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="rtd-te-xvS">
-                                <rect key="frame" x="141" y="457" width="39" height="37"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uzN-8b-eLZ">
+                                <rect key="frame" x="0.0" y="468" width="320" height="100"/>
+                                <subviews>
+                                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="rtd-te-xvS">
+                                        <rect key="frame" x="141" y="-1" width="39" height="37"/>
+                                        <animations/>
+                                        <color key="pageIndicatorTintColor" red="0.0" green="0.0" blue="0.0" alpha="0.25" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="currentPageIndicatorTintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <action selector="switchPage" destination="7Xo-de-aEI" eventType="touchUpInside" id="jVd-uT-k5L"/>
+                                        </connections>
+                                    </pageControl>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m7j-a1-sfG">
+                                        <rect key="frame" x="88" y="36" width="144" height="44"/>
+                                        <animations/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="Dvu-zv-PUf"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="144" id="NTO-1H-xST"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                        <state key="normal" title="Join Study"/>
+                                        <connections>
+                                            <action selector="joinStudy" destination="7Xo-de-aEI" eventType="touchUpInside" id="2SX-YG-jLh"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <animations/>
-                                <color key="pageIndicatorTintColor" red="0.0" green="0.0" blue="0.0" alpha="0.25" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="currentPageIndicatorTintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <connections>
-                                    <action selector="switchPage" destination="7Xo-de-aEI" eventType="touchUpInside" id="jVd-uT-k5L"/>
-                                </connections>
-                            </pageControl>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m7j-a1-sfG">
-                                <rect key="frame" x="88" y="494" width="144" height="44"/>
-                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="Dvu-zv-PUf"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="144" id="NTO-1H-xST"/>
+                                    <constraint firstAttribute="height" constant="100" id="HZ6-MM-VF4"/>
+                                    <constraint firstItem="m7j-a1-sfG" firstAttribute="centerX" secondItem="uzN-8b-eLZ" secondAttribute="centerX" id="Mhq-Ql-e3m"/>
+                                    <constraint firstItem="m7j-a1-sfG" firstAttribute="top" secondItem="rtd-te-xvS" secondAttribute="bottom" id="NUp-1t-H05"/>
+                                    <constraint firstItem="rtd-te-xvS" firstAttribute="centerX" secondItem="uzN-8b-eLZ" secondAttribute="centerX" id="Nef-Z7-bfH"/>
+                                    <constraint firstAttribute="bottom" secondItem="m7j-a1-sfG" secondAttribute="bottom" constant="20" id="OCG-zz-6ah"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                <state key="normal" title="Join Study"/>
-                                <connections>
-                                    <action selector="joinStudy" destination="7Xo-de-aEI" eventType="touchUpInside" id="2SX-YG-jLh"/>
-                                </connections>
-                            </button>
+                            </view>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="uzN-8b-eLZ" firstAttribute="top" secondItem="mUM-Kj-bwy" secondAttribute="bottom" id="0Iq-Zv-1be"/>
                             <constraint firstItem="mUM-Kj-bwy" firstAttribute="top" secondItem="hnh-w4-uhI" secondAttribute="bottom" id="3Id-Vl-5lP"/>
+                            <constraint firstItem="NvP-0L-0fy" firstAttribute="top" secondItem="mUM-Kj-bwy" secondAttribute="bottom" constant="111" id="7D8-yl-42N"/>
+                            <constraint firstAttribute="trailing" secondItem="uzN-8b-eLZ" secondAttribute="trailing" id="As4-Dn-BH3"/>
                             <constraint firstItem="hnh-w4-uhI" firstAttribute="trailing" secondItem="mUM-Kj-bwy" secondAttribute="trailing" id="BnQ-e7-mmH"/>
-                            <constraint firstItem="rtd-te-xvS" firstAttribute="leading" secondItem="7AT-wr-A7X" secondAttribute="leadingMargin" constant="50" id="H4d-oI-h2g"/>
-                            <constraint firstItem="NvP-0L-0fy" firstAttribute="top" secondItem="m7j-a1-sfG" secondAttribute="bottom" constant="30" id="VI8-Ng-54Q"/>
+                            <constraint firstItem="uzN-8b-eLZ" firstAttribute="top" secondItem="KUO-Er-hOj" secondAttribute="bottom" id="Dcz-Si-OQx"/>
+                            <constraint firstItem="NvP-0L-0fy" firstAttribute="top" secondItem="uzN-8b-eLZ" secondAttribute="bottom" id="ECd-ZJ-5fn"/>
                             <constraint firstItem="hnh-w4-uhI" firstAttribute="leading" secondItem="7AT-wr-A7X" secondAttribute="leading" id="XvS-DM-7mA"/>
-                            <constraint firstItem="m7j-a1-sfG" firstAttribute="top" secondItem="rtd-te-xvS" secondAttribute="bottom" id="bDD-7k-cOs"/>
                             <constraint firstItem="hnh-w4-uhI" firstAttribute="leading" secondItem="mUM-Kj-bwy" secondAttribute="leading" id="bL2-eT-8UU"/>
-                            <constraint firstItem="rtd-te-xvS" firstAttribute="top" secondItem="mUM-Kj-bwy" secondAttribute="bottom" id="d1y-Sz-n97"/>
+                            <constraint firstItem="uzN-8b-eLZ" firstAttribute="leading" secondItem="7AT-wr-A7X" secondAttribute="leading" id="bnj-QF-VDn"/>
                             <constraint firstItem="hnh-w4-uhI" firstAttribute="top" secondItem="OxH-R9-PUw" secondAttribute="bottom" id="fEO-Qo-Ibj"/>
-                            <constraint firstAttribute="centerX" secondItem="m7j-a1-sfG" secondAttribute="centerX" id="hCb-zL-fj5"/>
                             <constraint firstAttribute="trailing" secondItem="hnh-w4-uhI" secondAttribute="trailing" id="iIJ-Bc-Hh5"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="rtd-te-xvS" secondAttribute="trailing" constant="50" id="jEG-En-SST"/>
-                            <constraint firstAttribute="centerX" secondItem="rtd-te-xvS" secondAttribute="centerX" id="pf8-2U-Snw"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="H4d-oI-h2g"/>
-                                <exclude reference="jEG-En-SST"/>
+                                <exclude reference="0Iq-Zv-1be"/>
+                                <exclude reference="7D8-yl-42N"/>
                             </mask>
                         </variation>
                     </view>
