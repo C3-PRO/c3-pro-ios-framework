@@ -14,12 +14,13 @@ This assumes you have a file `StudyOverview.json` with the proper structure in y
 
 ```swift
 func setupUI() {
-    if let intro = StudyIntroCollectionViewController.fromStoryboard("StudyIntro") {
-        intro.config = try! StudyIntroConfiguration(json: "StudyOverview")
-        window?.rootViewController = intro
-    }
-    else {
-        // Problem: no "StudyIntro.storyboard" in bundle
-    }
+    let intro = try! StudyIntroCollectionViewController.fromStoryboard("StudyIntro")
+	intro.config = try! StudyIntroConfiguration(json: "StudyOverview")
+	let navi = UINavigationController(rootViewController: intro)
+	window?.rootViewController = navi
 }
 ```
+
+### Consent
+
+Add your blank consent PDF named `Consent.pdf` to the app bundle to make it accessible from a _welcome_ intro item.

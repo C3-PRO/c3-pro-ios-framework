@@ -78,14 +78,13 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	/**
 	Load the instance from the given storyboard. This is the preferred way to instantiate the intro view controller.
 	*/
-	public class func fromStoryboard(storyboardName: String) -> StudyIntroCollectionViewController? {
+	public class func fromStoryboard(storyboardName: String) throws -> StudyIntroCollectionViewController {
 		let storyboard = UIStoryboard(name: storyboardName, bundle: nil)
-		let vc = storyboard.instantiateInitialViewController() as? StudyIntroCollectionViewController
-		if let vc = vc {
+		let vc = storyboard.instantiateInitialViewController()
+		if let vc = vc as? StudyIntroCollectionViewController {
 			return vc
 		}
-		chip_warn("The initial view controller of the given storyboard must be a `StudyIntroCollectionViewController` instance, but is: \(vc)")
-		return nil
+		throw C3Error.InvalidStoryboard("The initial view controller of «\(storyboardName).storyboard» must be a `StudyIntroCollectionViewController` instance, but is: \(vc)")
 	}
 	
 	

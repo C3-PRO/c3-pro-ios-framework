@@ -13,6 +13,7 @@ Errors thrown around when working with C3-PRO.
 public enum C3Error: ErrorType, CustomStringConvertible {
 	case BundleFileNotFound(String)
 	case InvalidJSON(String)
+	case InvalidStoryboard(String)
 	
 	/// A string representation of the error.
 	public var description: String {
@@ -21,6 +22,8 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 			return name
 		case .InvalidJSON(let reason):
 			return "Invalid JSON: \(reason)"
+		case .InvalidStoryboard(let reason):
+			return "Invalid Storyboard: \(reason)"
 		}
 	}
 }
