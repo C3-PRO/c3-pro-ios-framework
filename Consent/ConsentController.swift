@@ -31,7 +31,7 @@ public struct ConsentTaskOptions
 	public var reviewConsentDocument: String? = nil
 	
 	/// Shown when the user taps agree and she needs to confirm that she is in agreement.
-	public var reasonForConsent = "By agreeing you confirm that you read the consent and that you wish to take part in this research study.".localized
+	public var reasonForConsent = NSLocalizedString("By agreeing you confirm that you read the consent and that you wish to take part in this research study.", comment: "")
 	
 	public init() {  }
 }
@@ -63,6 +63,43 @@ public class ConsentController
 				chip_warn("Failed to read bundled Contract resource: \(error)")
 			}
 		}
+	}
+	
+	
+	// MARK: - Eligibility
+	
+	public func eligibilityCheckViewController(config: StudyIntroConfiguration? = nil, onStartConsent: ((controller: EligibilityCheckViewController) -> Void)) -> EligibilityStatusViewController {
+		let check = EligibilityStatusViewController()
+		check.title = NSLocalizedString("Eligibility", comment: "")
+		check.titleText = NSLocalizedString("Let's see if you may take part in this study", comment: "")
+		check.subText = NSLocalizedString("Tap the button below to begin the eligibility process", comment: "")
+		check.actionButtonTitle = NSLocalizedString("Start Eligibility", comment: "")
+		
+		let elig = EligibilityCheckViewController(style: .Grouped)
+		elig.onStartConsent = onStartConsent
+		
+		// apply configurations
+		if let config = config {
+			check.titleText = config.eligibleLetsCheckMessage ?? check.titleText
+			elig.eligibleTitle = config.eligibleTitle ?? elig.eligibleTitle
+			elig.eligibleMessage = config.eligibleMessage ?? elig.eligibleMessage
+			elig.ineligibleMessage = config.ineligibleMessage ?? elig.ineligibleMessage
+		}
+		
+		// eligibility requirements
+		elig.requirements = [
+			// TODO: read from contract
+		]
+		
+		check.onActionButtonTap = { controller in
+			if let navi = controller.navigationController {
+				navi.pushViewController(elig, animated: true)
+			}
+			else {
+				chip_warn("must embed eligibility status view controller in a navigation controller")
+			}
+		}
+		return check
 	}
 	
 	

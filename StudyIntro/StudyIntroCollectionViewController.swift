@@ -66,7 +66,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	}
 	
 	/// Block executed when the user taps the "Join Study" button. You usually want to start consenting when this is done.
-	public var onJoinStudy: (Void -> Void)?
+	public var onJoinStudy: ((controller: StudyIntroCollectionViewController) -> Void)?
 	
 	/// If set to true (the default) will hide any navigation bar when the receiver is the top view controller
 	public var hidesNavigationBar = true
@@ -92,7 +92,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	
 	@IBAction public func joinStudy() {
 		if let exec = onJoinStudy {
-			exec()
+			exec(controller: self)
 		}
 		else {
 			chip_warn("Tapped “Join Study” but `onSignUp` is not defined")

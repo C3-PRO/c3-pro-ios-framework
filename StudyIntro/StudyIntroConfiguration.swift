@@ -32,7 +32,12 @@ A sample configuration, showing a `StudyIntroWelcomeItem`, a `StudyIntroVideoIte
           "title": "About this Study",
           "filename": "Intro_about",
         }
-      ]
+      ],
+      "eligibility": {
+        "letsCheckMessage": "Let's see if you're eligible to join this study",
+        "eligibleMessage": "Tap the button below to start the consenting process",
+        "ineligibleMessage": "Thank you for your interest"
+      }
     }
 
 */
@@ -44,6 +49,14 @@ public class StudyIntroConfiguration {
 	
 	public internal(set) var items: [StudyIntroItem]?
 	
+	public internal(set) var eligibleLetsCheckMessage: String?
+	
+	public internal(set) var eligibleTitle: String?
+	
+	public internal(set) var eligibleMessage: String?
+	
+	public internal(set) var ineligibleMessage: String?
+	
 	public init(json filename: String, inBundle: NSBundle? = nil) throws {
 		if let url = (inBundle ?? NSBundle.mainBundle()).URLForResource(filename, withExtension: "json"), let data = NSData(contentsOfURL: url) {
 			let json = try NSJSONSerialization.JSONObjectWithData(data, options: [])
@@ -54,6 +67,22 @@ public class StudyIntroConfiguration {
 			}
 			if let logo = json["logo"] as? String {
 				logoName = logo
+			}
+			
+			// eligibility
+			if let eligibility = json["eligibility"] as? [String: String] {
+				if let text = eligibility["letsCheckMessage"] {
+					eligibleLetsCheckMessage = text
+				}
+				if let text = eligibility["eligibleTitle"] {
+					eligibleTitle = text
+				}
+				if let text = eligibility["eligibleMessage"] {
+					eligibleMessage = text
+				}
+				if let text = eligibility["ineligibleMessage"] {
+					ineligibleMessage = text
+				}
 			}
 			
 			// items

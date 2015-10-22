@@ -16,6 +16,9 @@ This assumes you have a file `StudyOverview.json` with the proper structure in y
 func setupUI() {
     let intro = try! StudyIntroCollectionViewController.fromStoryboard("StudyIntro")
 	intro.config = try! StudyIntroConfiguration(json: "StudyOverview")
+    intro.onJoinStudy = { viewController in
+        // action to perform when user taps "Join Study"
+    }
 	let navi = UINavigationController(rootViewController: intro)
 	window?.rootViewController = navi
 }
@@ -24,3 +27,7 @@ func setupUI() {
 ### Consent
 
 Add your blank consent PDF named `Consent.pdf` to the app bundle to make it accessible from a _welcome_ intro item.
+
+You can use the _Consent & Eligibility_ classes contained in C3-PRO to move on to eligibility checking and consenting when the user taps “Join Study”.
+A [`ConsentController`](../ConsentController) instance has a method `eligibilityCheckViewController()` that configures and returns a view controller that guides through simple YES/NO eligibility checking.
+If you call this method on the intro's `onJoinStudy` block and display the returned view controller, you will get the default ResearchKit app experience when users want to join a study.
