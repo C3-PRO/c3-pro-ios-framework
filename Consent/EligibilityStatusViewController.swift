@@ -27,6 +27,13 @@ public class EligibilityStatusViewController: UIViewController {
 	
 	var actionButton: UIButton?
 	
+	/// To inform the receiver that the action button cannot yet be enabled.
+	public var waitingForAction = false {
+		didSet {
+			actionButton?.enabled = !waitingForAction
+		}
+	}
+	
 	/// The title of the one and only action button, which appears at the bottom **if** `onActionButtonTap` is defined.
 	public var actionButtonTitle = NSLocalizedString("Start Consent", comment: "Start Consent button title")
 	
@@ -102,6 +109,7 @@ public class EligibilityStatusViewController: UIViewController {
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle(actionButtonTitle, forState: .Normal)
 		button.hidden = nil == onActionButtonTap
+		button.enabled = !waitingForAction
 		button.addTarget(self, action: "didTapActionButton:", forControlEvents: .TouchUpInside)
 		actionButton = button
 		
@@ -115,3 +123,4 @@ public class EligibilityStatusViewController: UIViewController {
 		view.addConstraint(NSLayoutConstraint(item: button, attribute: .Bottom, relatedBy: .Equal, toItem: bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: -20.0))
 	}
 }
+

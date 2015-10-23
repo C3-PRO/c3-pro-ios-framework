@@ -16,24 +16,26 @@
 		EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */; };
 		EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */; };
 		EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7A43921B0D08DE00B30D17 /* ConsentController.swift */; };
-		EE851A551BD90984007EC6A9 /* EligibilityStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE851A541BD90984007EC6A9 /* EligibilityStatusViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		EE851A651BD90DBC007EC6A9 /* BorderedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE851A641BD90DBC007EC6A9 /* BorderedButton.swift */; settings = {ASSET_TAGS = (); }; };
+		EE851A551BD90984007EC6A9 /* EligibilityStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE851A541BD90984007EC6A9 /* EligibilityStatusViewController.swift */; };
+		EE851A651BD90DBC007EC6A9 /* BorderedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE851A641BD90DBC007EC6A9 /* BorderedButton.swift */; };
 		EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */; };
 		EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */; };
 		EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */; };
 		EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */; };
 		EEC3C95D1B83D3C80096D5BE /* RSAUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC3C95C1B83D3C80096D5BE /* RSAUtility.swift */; };
 		EEC3C95F1B83DA650096D5BE /* AESUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC3C95E1B83DA650096D5BE /* AESUtility.swift */; };
-		EEEA7F481BD61EA20089BF85 /* StudyIntroCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		EEEA7F4A1BD624490089BF85 /* StudyIntroCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */; settings = {ASSET_TAGS = (); }; };
-		EEEA7F4C1BD627570089BF85 /* StudyIntroItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F4B1BD627570089BF85 /* StudyIntroItem.swift */; settings = {ASSET_TAGS = (); }; };
-		EEEA7F671BD68DFE0089BF85 /* StudyIntroConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F661BD68DFE0089BF85 /* StudyIntroConfiguration.swift */; settings = {ASSET_TAGS = (); }; };
-		EEEA7F691BD68E800089BF85 /* C3Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F681BD68E800089BF85 /* C3Error.swift */; settings = {ASSET_TAGS = (); }; };
-		EEEA7FCB1BD784FA0089BF85 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCA1BD784FA0089BF85 /* WebViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		EEEA7FCF1BD785360089BF85 /* FHIRExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCC1BD785360089BF85 /* FHIRExtensions.swift */; settings = {ASSET_TAGS = (); }; };
-		EEEA7FD01BD785360089BF85 /* FoundationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCD1BD785360089BF85 /* FoundationExtensions.swift */; settings = {ASSET_TAGS = (); }; };
-		EEEA7FD11BD785360089BF85 /* HKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCE1BD785360089BF85 /* HKExtensions.swift */; settings = {ASSET_TAGS = (); }; };
-		EEEA7FD31BD8D9890089BF85 /* EligibilityCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FD21BD8D9890089BF85 /* EligibilityCheckViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		EEEA7F481BD61EA20089BF85 /* StudyIntroCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */; };
+		EEEA7F4A1BD624490089BF85 /* StudyIntroCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */; };
+		EEEA7F4C1BD627570089BF85 /* StudyIntroItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F4B1BD627570089BF85 /* StudyIntroItem.swift */; };
+		EEEA7F671BD68DFE0089BF85 /* StudyIntroConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F661BD68DFE0089BF85 /* StudyIntroConfiguration.swift */; };
+		EEEA7F691BD68E800089BF85 /* C3Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F681BD68E800089BF85 /* C3Error.swift */; };
+		EEEA7FCB1BD784FA0089BF85 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCA1BD784FA0089BF85 /* WebViewController.swift */; };
+		EEEA7FCF1BD785360089BF85 /* FHIRExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCC1BD785360089BF85 /* FHIRExtensions.swift */; };
+		EEEA7FD01BD785360089BF85 /* FoundationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCD1BD785360089BF85 /* FoundationExtensions.swift */; };
+		EEEA7FD11BD785360089BF85 /* HKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCE1BD785360089BF85 /* HKExtensions.swift */; };
+		EEEA7FD31BD8D9890089BF85 /* EligibilityCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FD21BD8D9890089BF85 /* EligibilityCheckViewController.swift */; };
+		EEEEAB801BDA9648001F8B5C /* EligibilityRequirement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEEAB7F1BDA9648001F8B5C /* EligibilityRequirement.swift */; };
+		EEEEAB891BDA97EE001F8B5C /* GroupExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEEAB881BDA97EE001F8B5C /* GroupExtensions.swift */; };
 		EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */; };
 		EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */; };
 		EEFA84C11AE5C18B00E61006 /* C3PRO.h in Headers */ = {isa = PBXBuildFile; fileRef = EEFA84C01AE5C18B00E61006 /* C3PRO.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -169,6 +171,8 @@
 		EEEA7FCD1BD785360089BF85 /* FoundationExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationExtensions.swift; sourceTree = "<group>"; };
 		EEEA7FCE1BD785360089BF85 /* HKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HKExtensions.swift; sourceTree = "<group>"; };
 		EEEA7FD21BD8D9890089BF85 /* EligibilityCheckViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EligibilityCheckViewController.swift; sourceTree = "<group>"; };
+		EEEEAB7F1BDA9648001F8B5C /* EligibilityRequirement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EligibilityRequirement.swift; sourceTree = "<group>"; };
+		EEEEAB881BDA97EE001F8B5C /* GroupExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupExtensions.swift; sourceTree = "<group>"; };
 		EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireController.swift; sourceTree = "<group>"; };
 		EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKTaskResult+FHIR.swift"; sourceTree = "<group>"; };
 		EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C3PRO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -219,9 +223,11 @@
 				EE519BA61B0CD6C500036B96 /* README.md */,
 				EE7A43921B0D08DE00B30D17 /* ConsentController.swift */,
 				EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */,
+				EEEEAB7F1BDA9648001F8B5C /* EligibilityRequirement.swift */,
 				EEEA7FD21BD8D9890089BF85 /* EligibilityCheckViewController.swift */,
 				EE851A541BD90984007EC6A9 /* EligibilityStatusViewController.swift */,
 				EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */,
+				EEEEAB881BDA97EE001F8B5C /* GroupExtensions.swift */,
 			);
 			name = "Consent & Eligibility";
 			path = Consent;
@@ -589,6 +595,7 @@
 				EE851A551BD90984007EC6A9 /* EligibilityStatusViewController.swift in Sources */,
 				EEEA7FCB1BD784FA0089BF85 /* WebViewController.swift in Sources */,
 				EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */,
+				EEEEAB891BDA97EE001F8B5C /* GroupExtensions.swift in Sources */,
 				EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */,
 				EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */,
 				EEC3C95F1B83DA650096D5BE /* AESUtility.swift in Sources */,
@@ -602,6 +609,7 @@
 				EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */,
 				EEFA84DB1AE5C25500E61006 /* QuestionnairePromise.swift in Sources */,
 				EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */,
+				EEEEAB801BDA9648001F8B5C /* EligibilityRequirement.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

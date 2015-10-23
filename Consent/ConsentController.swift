@@ -68,6 +68,13 @@ public class ConsentController
 	
 	// MARK: - Eligibility
 	
+	/**
+	Instantiates a controller prompting the user to press "Start Eligibility". Pressing that button pushes an EligibilityCheckViewController
+	onto the navigation stack, which carries the actual eligibility criteria.
+	
+	- parameter config: An optional `StudyIntroConfiguration` instance that carries custom eligible/ineligible texts
+	- parameter onStartConsent: The block to execute when all eligibility criteria are met and the participant wants to start consent
+	*/
 	public func eligibilityCheckViewController(config: StudyIntroConfiguration? = nil, onStartConsent: ((controller: EligibilityCheckViewController) -> Void)) -> EligibilityStatusViewController {
 		let check = EligibilityStatusViewController()
 		check.title = NSLocalizedString("Eligibility", comment: "")
@@ -87,9 +94,13 @@ public class ConsentController
 		}
 		
 		// eligibility requirements
-		elig.requirements = [
-			// TODO: read from contract
-		]
+		check.waitingForAction = true
+		eligibilityRequirements { requirements in
+			dispatch_async(dispatch_get_main_queue()) {
+				elig.requirements = requirements
+				check.waitingForAction = false
+			}
+		}
 		
 		check.onActionButtonTap = { controller in
 			if let navi = controller.navigationController {
@@ -100,6 +111,39 @@ public class ConsentController
 			}
 		}
 		return check
+	}
+	
+	/**
+	Resolves the contract's first subject to a Group. This Group is expected to have characteristics that represent eligibility criteria.
+	
+	- parameter callback: The callback that is called when the group is resolved (or resolution fails); may be on any thread but may be
+	called immediately in case of embedded resources.
+	*/
+	public func eligibilityRequirements(callback: ((requirements: [EligibilityRequirement]?) -> Void)) {
+		if let group = contract?.subject?.first {
+			group.resolve(Group.self) { group in
+				if let characteristics = group?.characteristic {
+					var criteria = [EligibilityRequirement]()
+					for characteristic in characteristics {
+						if let req = characteristic.chip_asEligibilityRequirement() {
+							criteria.append(req)
+						}
+						else {
+							chip_warn("this characteristic failed to return an eligibility requirement: \(characteristic.asJSON())")
+						}
+					}
+					callback(requirements: criteria)
+				}
+				else {
+					chip_warn("failed to resolve the contract's subject group or there are no characteristics, hence no eligibility criteria")
+					callback(requirements: nil)
+				}
+			}
+		}
+		else {
+			chip_logIfDebug("the contract does not have a subject, hence no eligibility criteria")
+			callback(requirements: nil)
+		}
 	}
 	
 	

@@ -11,9 +11,10 @@ import UIKit
 
 public class EligibilityCheckViewController: UITableViewController {
 	
-	public var requirements: [ConsentEligibilityRequirement]?
-	
 	var nextButton: UIBarButtonItem?
+	
+	/// The eligibility criteria.
+	public var requirements: [EligibilityRequirement]?
 	
 	/// Set this string to override the title message. Defaults to "You are eligible to join the study".
 	public var eligibleTitle: String?
@@ -32,7 +33,7 @@ public class EligibilityCheckViewController: UITableViewController {
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
-		tableView.registerClass(ConsentEligibilityCell.self, forCellReuseIdentifier: "EligibilityCell")
+		tableView.registerClass(EligibilityCell.self, forCellReuseIdentifier: "EligibilityCell")
 		tableView.estimatedRowHeight = 120.0
 		tableView.rowHeight = UITableViewAutomaticDimension
 		
@@ -65,7 +66,7 @@ public class EligibilityCheckViewController: UITableViewController {
 		if let reqs = requirements {
 			for requirement in reqs {
 				if let met = requirement.met {
-					if !met {
+					if met != requirement.mustBeMet {
 						showIneligibleAnimated(true)
 						return
 					}
@@ -117,7 +118,7 @@ public class EligibilityCheckViewController: UITableViewController {
 	}
 	
 	public override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("EligibilityCell", forIndexPath: indexPath) as! ConsentEligibilityCell
+		let cell = tableView.dequeueReusableCellWithIdentifier("EligibilityCell", forIndexPath: indexPath) as! EligibilityCell
 		cell.item = requirements![indexPath.section]
 		cell.onButtonPress = { button in
 			self.enableDisableNext()
@@ -128,23 +129,9 @@ public class EligibilityCheckViewController: UITableViewController {
 
 
 /**
-Objects holding and tracking eligibility requirements.
+Table view cell displaying an eligibility requirement.
 */
-public class ConsentEligibilityRequirement {
-	
-	/// The question/statement to show when asking about this requirement.
-	public let title: String
-	
-	/// Whether this requirement has been met.
-	public var met: Bool? = nil
-	
-	public init(title: String) {
-		self.title = title
-	}
-}
-
-
-class ConsentEligibilityCell: UITableViewCell {
+class EligibilityCell: UITableViewCell {
 	
 	var titleLabel: UILabel?
 	
@@ -152,7 +139,8 @@ class ConsentEligibilityCell: UITableViewCell {
 	
 	var noButton: UIButton?
 	
-	var item: ConsentEligibilityRequirement? {
+	/// The requirement to show.
+	var item: EligibilityRequirement? {
 		didSet {
 			if let item = item {
 				titleLabel?.text = item.title

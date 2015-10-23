@@ -1,11 +1,52 @@
-Consent
-=======
+Eligibility & Consent
+=====================
 
 A FHIR `Contract` resource constitutes a consent document that can be rendered using a `ORKTaskViewController` view controller and can be signed with a patient reference.
+It can also contain eligibility criteria which a participant must answer first in order to be able to start consenting.
 
 
-Task View Controller
---------------------
+Eligibility
+-----------
+
+Eligibility criteria can be included in the `Contract` resource as the contract's `subject`, represented as a `Group` resource.
+
+Here's an example group that requires participants to be older than 18 and reside in the US.
+This is a Group resource that is contained in the Contract resource it applies to and referenced accordingly:
+
+```json
+{
+  "id": "org.chip.c-tracker.consent",
+  "resourceType": "Contract",
+  ...
+  "subject": [{
+    "reference": "#eligibility"
+  }],
+  "contained": [{
+    "id": "eligibility",
+    "resourceType": "Group",
+    "type": "person",
+    "actual": false,
+    "characteristic": [{
+      "code": {
+        "text": "Are you 18 years of age or older?"
+      },
+      "valueBoolean": true,
+      "exclude": false
+    },
+    {
+      "code": {
+        "text": "Do you live in the United States of America?"
+      },
+      "valueBoolean": true,
+      "exclude": false
+    }]
+  }]
+}
+```
+
+
+Consent Workflow
+----------------
 
 To create a consenting task from a bundled consent called `Consent.json` and show it using an `ORKTaskViewController` you can do the following.
 This will also use the bundled file `Consent_full.html` to show a custom HTML page in the _“Agree”_ step instead of auto-generating that page from all consent sections.
@@ -41,24 +82,41 @@ Example:
 
 ```json
 {
+  "id": "org.chip.c-tracker.consent",
+  "resourceType": "Contract",
   "type": {
     "coding": [{
-      "system": "http://researchkit.org/docs/Constants/ORKConsentSectionType.html",
-      "code": "Privacy"
+      "system": "http://hl7.org/fhir/contracttypecodes",
+      "code": "consent"
     }]
   },
-  "extension": [{
-    "url": "http://fhir-registry.smarthealthit.org/StructureDefinition/ORKConsentSection",
-    "extension": [{
-      "url": "title",
-      "valueString": "Privacy"
-    },
-    {
-      "url": "htmlContentFile",
-      "valueString": "5_privacyprotection"
-    }]
+  "issued": "2015-08-18",
+  "applies": {
+    "start": "2015-08-18"
+  },
+  "authority": [{
+    "reference": "#bch"
   }],
-  "text": "Your data will be sent to a secure database, ..."
+  "term": [{
+    "type": {
+      "coding": [{
+        "system": "http://researchkit.org/docs/Constants/ORKConsentSectionType.html",
+        "code": "Privacy"
+      }]
+    },
+    "extension": [{
+      "url": "http://fhir-registry.smarthealthit.org/StructureDefinition/ORKConsentSection",
+      "extension": [{
+        "url": "title",
+        "valueString": "Privacy"
+      },
+      {
+        "url": "htmlContentFile",
+        "valueString": "5_privacyprotection"
+      }]
+    }],
+    "text": "Your data will be sent to a secure database, ..."
+  }]
 }
 ```
 
@@ -68,6 +126,24 @@ Example:
 To populate the team name used when the user is asked if he's willing to share his data with qualified researchers worldwide or just the study researchers, the `authority.name` property of the Contract is consulted.
 
 > At this time this must be an _Organization_ element that is contained in the contract.
+
+Example:
+
+```json
+{
+  "id": "org.chip.c-tracker.consent",
+  "resourceType": "Contract",
+  ...
+  "authority": [{
+    "reference": "#team"
+  }],
+  "contained": [{
+    "id": "team",
+    "resourceType": "Organization",
+    "name": "C Tracker Team"
+  }]
+}
+```
 
 
 Signing
