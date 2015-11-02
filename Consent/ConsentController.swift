@@ -8,9 +8,17 @@
 
 import Foundation
 import SMART
+import ResearchKit
 
 
 public typealias ConsentSigningCallback = ((contract: Contract, patient: Patient, error: NSError?) -> Void)
+
+/// Name of notification sent when the user completes and agrees to consent.
+public let C3UserDidConsentNotification = "C3UserDidConsentNotification"
+
+/// Name of notification sent when the user cancels or declines to consent.
+public let C3UserDidDeclineConsentNotification = "C3UserDidDeclineConsentNotification"
+
 
 let CHIPConsentingErrorKey = "CHIPConsentingError"
 
@@ -49,6 +57,12 @@ public class ConsentController
 	
 	var deidentifier: DeIdentifier?
 	
+	var consentDelegate: ConsentTaskViewControllerDelegate?
+	
+	var onUserDidConsent: ((controller: ORKTaskViewController) -> Void)?
+	
+	var onUserDidDeclineConsent: ((controller: ORKTaskViewController) -> Void)?
+	
 	/**
 	Designated initializer.
 	
@@ -60,7 +74,7 @@ public class ConsentController
 				contract = try NSBundle.mainBundle().fhir_bundledResource(name) as? Contract
 			}
 			catch let error {
-				chip_warn("Failed to read bundled Contract resource: \(error)")
+				chip_warn("failed to read bundled Contract resource: \(error)")
 			}
 		}
 	}
@@ -69,21 +83,44 @@ public class ConsentController
 	// MARK: - Eligibility
 	
 	/**
-	Instantiates a controller prompting the user to press "Start Eligibility". Pressing that button pushes an EligibilityCheckViewController
+	Instantiates a controller prompting the user to press “Start Eligibility”. Pressing that button pushes an EligibilityCheckViewController
 	onto the navigation stack, which carries the actual eligibility criteria.
 	
 	- parameter config: An optional `StudyIntroConfiguration` instance that carries custom eligible/ineligible texts
-	- parameter onStartConsent: The block to execute when all eligibility criteria are met and the participant wants to start consent
+	- parameter onStartConsent: The block to execute when all eligibility criteria are met and the participant wants to start consent. Leave
+	    nil to automatically present (and dismiss) the consent task view controller that will be returned by `consentViewController()`.
 	*/
-	public func eligibilityCheckViewController(config: StudyIntroConfiguration? = nil, onStartConsent: ((controller: EligibilityCheckViewController) -> Void)) -> EligibilityStatusViewController {
+	public func eligibilityStatusViewController(config: StudyIntroConfiguration? = nil, onStartConsent: ((viewController: EligibilityCheckViewController) -> Void)? = nil) -> EligibilityStatusViewController {
 		let check = EligibilityStatusViewController()
 		check.title = NSLocalizedString("Eligibility", comment: "")
 		check.titleText = NSLocalizedString("Let's see if you may take part in this study", comment: "")
 		check.subText = NSLocalizedString("Tap the button below to begin the eligibility process", comment: "")
 		check.actionButtonTitle = NSLocalizedString("Start Eligibility", comment: "")
 		
+		// the actual eligibility check view controller; configure to present on check's navigation controller if no block is provided
 		let elig = EligibilityCheckViewController(style: .Grouped)
-		elig.onStartConsent = onStartConsent
+		if let onStartConsent = onStartConsent {
+			elig.onStartConsent = onStartConsent
+		}
+		else {
+			elig.onStartConsent = { viewController in
+				if let navi = viewController.navigationController {
+					let consent = self.consentViewController(
+						onUserDidConsent: { controller in
+							navi.dismissViewControllerAnimated(true, completion: nil)
+						},
+						onUserDidDecline: { controller in
+							navi.popToRootViewControllerAnimated(false)
+							navi.dismissViewControllerAnimated(true, completion: nil)
+						}
+					)
+					navi.presentViewController(consent, animated: true, completion: nil)
+				}
+				else {
+					chip_warn("must embed eligibility status view controller in a navigation controller")
+				}
+			}
+		}
 		
 		// apply configurations
 		if let config = config {
@@ -155,8 +192,75 @@ public class ConsentController
 			task.prepareWithOptions(options)
 			return task
 		}
-		chip_warn("No Contract, cannot create a consent task")
+		chip_warn("no Contract, cannot create a consent task")
 		return nil
+	}
+	
+	/**
+	A consent view controller, preconfigured with the consenting task, that can be presented to have the user go through consent.
+	
+	You are given two blocks, one of them will be called when the user finishes or exits consenting, never both. They are deallocated after
+	either has been called.
+	
+	- parameter onUserDidConsent: Block executed when the user completes and agrees to consent
+	- parameter onUserDidDecline: Block executed when the user cancels or actively declines consent
+	*/
+	public func consentViewController(onUserDidConsent onConsent: ((controller: ORKTaskViewController) -> Void), onUserDidDecline: ((controller: ORKTaskViewController) -> Void)) -> ORKTaskViewController {
+		if nil != onUserDidConsent {
+			chip_warn("a `onUserDidConsent` block is already set on \(self), are you already presenting a consent view controller? This might have unintended consequences.")
+		}
+		onUserDidConsent = onConsent
+		onUserDidDeclineConsent = onUserDidDecline
+		consentDelegate = ConsentTaskViewControllerDelegate(controller: self)
+		
+		let consentVC = ORKTaskViewController(task: createConsentTask(), taskRunUUID: NSUUID())
+		consentVC.delegate = consentDelegate!
+		
+		return consentVC
+	}
+	
+	func userDidFinishConsent(taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason) {
+		var signatureResult: ORKConsentSignatureResult?
+		if let results = taskViewController.result.results {
+			let sigParent = results.filter() { $0.identifier == "reviewStep" }.first as? ORKStepResult
+			signatureResult = sigParent?.results?.filter() { $0 is ORKConsentSignatureResult }.first as? ORKConsentSignatureResult
+		}
+		
+		// if we have a signature in the signature result, we're consented
+		if let signatureResult = signatureResult, let signature = signatureResult.signature where nil != signature.signatureImage {
+			// TODO: generate PDF
+			userDidConsent(taskViewController)
+		}
+		else if .Completed == reason {
+			userDidDeclineConsent(taskViewController)
+		}
+		else {
+			userDidDeclineConsent(taskViewController)		// TODO: room for a new "did-cancel-consent" method
+		}
+		
+		onUserDidConsent = nil
+		onUserDidDeclineConsent = nil
+		consentDelegate = nil
+	}
+	
+	/**
+	Called when the user successfully completes the consent task and agrees to all the things.
+	*/
+	public func userDidConsent(taskViewController: ORKTaskViewController) {
+		if let exec = onUserDidConsent {
+			exec(controller: taskViewController)
+		}
+		NSNotificationCenter.defaultCenter().postNotificationName(C3UserDidConsentNotification, object: self)
+	}
+	
+	/**
+	Called when the user aborts consenting or actively declines consent.
+	*/
+	public func userDidDeclineConsent(taskViewController: ORKTaskViewController) {
+		if let exec = onUserDidDeclineConsent {
+			exec(controller: taskViewController)
+		}
+		NSNotificationCenter.defaultCenter().postNotificationName(C3UserDidDeclineConsentNotification, object: self)
 	}
 	
 	
@@ -194,7 +298,7 @@ public class ConsentController
 		if nil != error {
 			error.memory = chip_genErrorConsenting("Failed to generate a relative reference for the patient, hence cannot sign this consent")
 		}
-		chip_warn("Failed to generate a relative reference for the patient, hence cannot sign this consent")
+		chip_warn("failed to generate a relative reference for the patient, hence cannot sign this consent")
 		return nil
 	}
 	
@@ -238,6 +342,20 @@ public class ConsentController
 	*/
 	public class func bundledConsentPDFURL() -> NSURL? {
 		return NSBundle.mainBundle().URLForResource("consent", withExtension: "pdf")
+	}
+}
+
+
+class ConsentTaskViewControllerDelegate: NSObject, ORKTaskViewControllerDelegate {
+	
+	let controller: ConsentController
+	
+	init(controller: ConsentController) {
+		self.controller = controller
+	}
+	
+	func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
+		controller.userDidFinishConsent(taskViewController, reason: reason)
 	}
 }
 

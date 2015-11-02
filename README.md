@@ -23,6 +23,11 @@ Components
 
 The framework consists of several components that complement each other.
 
+### Study Introduction
+
+Shows the well-known _“Welcome to my study”_ screens that allows users to inform themselves before joining your study.  
+[➔ Study Intro](StudyIntro)
+
 ### Eligibility & Consent
 
 Using a FHIR `Contract` resource representing the **consent document**, can render eligibility questions and the consenting workflow.  

@@ -9,6 +9,10 @@
 import UIKit
 
 
+/**
+View controller presenting all eligibility criteria provided in the receiver`s `requirements` property, allowing the user to proceed to a
+summary page that informs of eligibility and allows to proceed to to consenting or not.
+*/
 public class EligibilityCheckViewController: UITableViewController {
 	
 	var nextButton: UIBarButtonItem?
@@ -26,7 +30,7 @@ public class EligibilityCheckViewController: UITableViewController {
 	public var ineligibleMessage: String?
 	
 	/// Block executed if all eligibility requirements are met and the user taps the "Start Consent" button.
-	public var onStartConsent: ((controller: EligibilityCheckViewController) -> Void)?
+	public var onStartConsent: ((viewController: EligibilityCheckViewController) -> Void)?
 	
 	
 	// MARK: - View Tasks
@@ -44,6 +48,13 @@ public class EligibilityCheckViewController: UITableViewController {
 		enableDisableNext()
 	}
 	
+	public override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+		if isMovingToParentViewController(), let eligible = isEligible() where eligible {
+			showEligibleAnimated(true)
+		}
+	}
+	
 	
 	// MARK: - Actions
 	
@@ -55,43 +66,55 @@ public class EligibilityCheckViewController: UITableViewController {
 					return
 				}
 			}
-			nextButton?.enabled = true
+		}
+		nextButton?.enabled = true
+	}
+	
+	func verifyEligibility() {
+		if let eligible = isEligible() {
+			if eligible {
+				showEligibleAnimated(true)
+			}
+			else {
+				showIneligibleAnimated(true)
+			}
 		}
 		else {
 			nextButton?.enabled = false
 		}
 	}
 	
-	func verifyEligibility() {
+	/** Determine current eligibility status.
+	- returns: True if all requirements are met, false if at least one is not met, nil if not all have been answered yet
+	*/
+	func isEligible() -> Bool? {
 		if let reqs = requirements {
 			for requirement in reqs {
 				if let met = requirement.met {
 					if met != requirement.mustBeMet {
-						showIneligibleAnimated(true)
-						return
+						return false
 					}
 				}
 				else {
-					nextButton?.enabled = false
-					return
+					return nil
 				}
 			}
-			
-			// all requirements checked and met
-			showEligibleAnimated(true)
 		}
-		else {
-			nextButton?.enabled = false
-		}
+		
+		// all requirements answered and met (or none to meet)
+		return true
 	}
 	
+	/** Eligible. Push `EligibilityStatusViewController` informing about eligibility and presenting the “Start Consent” button that will
+	execute the `onStartConsent` block.
+	*/
 	public func showEligibleAnimated(animated: Bool) {
 		let vc = EligibilityStatusViewController()
 		vc.titleText = eligibleTitle ?? NSLocalizedString("You are eligible to join the study", comment: "")
 		vc.subText = eligibleMessage ?? NSLocalizedString("Tap the button below to begin the consent process", comment: "")
 		vc.onActionButtonTap = { controller in
 			if let exec = self.onStartConsent {
-				exec(controller: self)
+				exec(viewController: self)
 			}
 			else {
 				chip_warn("Tapped “Start Consent” but `onStartConsent` is not defined")
@@ -100,10 +123,21 @@ public class EligibilityCheckViewController: UITableViewController {
 		navigationController?.pushViewController(vc, animated: true)
 	}
 	
+	/** Ineligible. Push EligibilityStatusViewController informing about non-eligibility, removing the other status and check view
+	controllers from the stack so that if pressing "< Back", the user lands back at where eligibility checking started.
+	*/
 	public func showIneligibleAnimated(animated: Bool) {
 		let vc = EligibilityStatusViewController()
 		vc.subText = ineligibleMessage ?? NSLocalizedString("Thank you for your interest!\nUnfortunately, you are not eligible to join this study at this time.", comment: "")
-		navigationController?.pushViewController(vc, animated: true)
+		
+		if let navi = navigationController {
+			var vcs = navi.viewControllers.filter() { !($0 is EligibilityStatusViewController || $0 is EligibilityCheckViewController) }
+			vcs.append(vc)
+			navi.setViewControllers(vcs, animated: true)
+		}
+		else {
+			chip_warn("Incredible error, my navigation controller disappeared! I'm \(self)")
+		}
 	}
 	
 	

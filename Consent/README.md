@@ -48,15 +48,37 @@ This is a Group resource that is contained in the Contract resource it applies t
 Consent Workflow
 ----------------
 
-To create a consenting task from a bundled consent called `Consent.json` and show it using an `ORKTaskViewController` you can do the following.
+To read eligibility and consent data from a bundled consent called `Consent.json` you can do the following.
+It will first ask the user your eligibility questions, and – if they are met – presents the consent task as a modal view controller.
+If the user cancels or declines consent, the view controller is dismissed and the eligibility view controller popped from its navigation controller.
+If the user consents the consent view controller is likewise dismissed and you'll receive the `C3UserDidConsentNotification` notification.
+
+> TODO: proceed to app setup after successful consent
+
+You could use this method in combination with `setupUI()` shown in `StudyIntro/README.md`.
 This will also use the bundled file `Consent_full.html` to show a custom HTML page in the _“Agree”_ step instead of auto-generating that page from all consent sections.
 
 ```swift
-let controller = ConsentController(bundledContract: "Consent")
-controller.options.reviewConsentDocument = "Consent_full"
-let task = controller.createConsentTask()
+func startEligibilityAndConsent(intro: StudyIntroCollectionViewController) {
+    self.controller = ConsentController(bundledContract: "Consent")  // retain
+    controller.options.reviewConsentDocument = "Consent_full"
+    
+    let center = NSNotificationCenter.defaultCenter()
+    center.addObserver(self, selector: "userDidConsent",
+        name: C3UserDidConsentNotification, object: nil)
+    
+    let elig = controller.eligibilityStatusViewController(intro.config)
+    if let navi = intro.navigationController {
+        navi.pushViewController(elig)
+    }
+    else {
+        // you did not put the intro view controller on a navigation controller
+    }
+}
 
-let vc = ORKTaskViewController(task: task, taskRunUUID: NSUUID())
+func userDidConsent() {
+    // your user is consented
+}
 ```
 
 ### Consent Sections
@@ -170,4 +192,49 @@ consentController!.deIdentifyAndSignConsentWithPatient(patient, date: NSDate()) 
         }
     }
 }
+```
+
+
+## Manual Overrides
+
+If you don't want some of the automation, here are several points of entry that you can use to customize behavior.
+
+### Separating Eligibility and Consenting
+
+Sample code that could work this way on the app delegate, showing override points in the eligibility-consenting setup.
+You could call `eligibilityStatusViewController()` and push the received view controller onto a navigation controller.
+
+```swift
+func eligibilityStatusViewController(withConfiguration config: StudyIntroConfiguration?) -> EligibilityStatusViewController {
+  return consentController.eligibilityStatusViewController(config) { controller in
+    let root = self.window!.rootViewController!
+    root.presentViewController(self.consentViewController(), animated: true, completion: nil)
+  }
+}
+
+func consentViewController() -> ORKTaskViewController {
+  consentController.options.askForSharing = false
+  return consentController.consentViewController(
+    onUserDidConsent: { controller in
+      print("USER DID CONSENT, START APP SETUP")
+      controller.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    },
+    onUserDidDecline: { controller in
+      controller.navigationController?.popToRootViewControllerAnimated(false)
+      controller.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+  )
+}
+```
+
+### Manual Consenting Task
+
+To create a consenting task from a bundled consent called `Consent.json` and show it using an `ORKTaskViewController` you can do the following.
+
+```swift
+let controller = ConsentController(bundledContract: "Consent")
+let task = controller.createConsentTask()
+let vc = ORKTaskViewController(task: task, taskRunUUID: NSUUID())
+vc.delegate = <# your ORKTaskViewControllerDelegate #>
+// now present `vc` somewhere
 ```
