@@ -220,22 +220,30 @@ public class ConsentController
 	}
 	
 	func userDidFinishConsent(taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason) {
-		var signatureResult: ORKConsentSignatureResult?
-		if let results = taskViewController.result.results {
-			let sigParent = results.filter() { $0.identifier == "reviewStep" }.first as? ORKStepResult
-			signatureResult = sigParent?.results?.filter() { $0 is ORKConsentSignatureResult }.first as? ORKConsentSignatureResult
-		}
-		
-		// if we have a signature in the signature result, we're consented
-		if let signatureResult = signatureResult, let signature = signatureResult.signature where nil != signature.signatureImage {
-			// TODO: generate PDF
-			userDidConsent(taskViewController)
-		}
-		else if .Completed == reason {
-			userDidDeclineConsent(taskViewController)
+		if let task = taskViewController.task as? ConsentTask {
+			let signatureResult = taskViewController.result.stepResultForStepIdentifier(task.reviewStepName)?
+				.resultForIdentifier(task.participantSignatureName) as? ORKConsentSignatureResult
+			
+			// if we have a signature in the signature result, we're consented: create PDF and call the callbacks
+			if let signature = signatureResult?.signature where nil != signature.signatureImage {
+				if let document = task.consentDocument {
+					signConsentDocument(document, withSignature: signatureResult!)
+				}
+				else {
+					chip_warn("impossible error: the consent document could not be found on the consent task")
+				}
+				userDidConsent(taskViewController)
+			}
+			else if .Completed == reason {
+				userDidDeclineConsent(taskViewController)
+			}
+			else {
+				userDidDeclineConsent(taskViewController)		// TODO: room for a new "did-cancel-consent" method
+			}
 		}
 		else {
-			userDidDeclineConsent(taskViewController)		// TODO: room for a new "did-cancel-consent" method
+			chip_warn("user finished a consent that did not have a `ConsentTask` task; cannot handle, calling decline callback")
+			userDidDeclineConsent(taskViewController)
 		}
 		
 		onUserDidConsent = nil
@@ -324,16 +332,42 @@ public class ConsentController
 	// MARK: - Consent PDF
 	
 	/**
+	Asynchronously generates a consent PDF at `self.dynamicType.signedConsentPDFURL()`, containing the given signature.
+	
+	- parameter document: The consent document to sign, usually the one used in our consent task
+	- parameter withSignature: The signature to apply to the document
+	*/
+	func signConsentDocument(document: ORKConsentDocument, withSignature signature: ORKConsentSignatureResult) {
+		chip_logIfDebug("Writing consent PDF")
+		signature.applyToDocument(document)
+		document.makePDFWithCompletionHandler() { data, error in
+			if let data = data, let pdfURL = self.dynamicType.signedConsentPDFURL() {
+				data.writeToURL(pdfURL, atomically: true)
+				chip_logIfDebug("Consent PDF written to \(pdfURL)")
+			}
+			else {
+				chip_warn("failed to write consent PDF: \(error?.localizedDescription ?? (nil == data ? "no data" : "no url"))")
+			}
+		}
+	}
+	
+	/**
 	URL to the user-signed contract PDF.
 	
-	- parameter mustExist: If true will return nil if no file exists at the expected file URL
+	- parameter mustExist: If `true` will return nil if no file exists at the expected file URL. If `false` will return the desired URL,
+		which is pretty sure to return non-nil, so use that exclamation mark!
 	*/
 	public class func signedConsentPDFURL(mustExist: Bool = false) -> NSURL? {
-		if let first = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first {
-			let url = NSURL(fileURLWithPath: first).URLByAppendingPathComponent("consent-signed.pdf")
+		do {
+			let base = try NSFileManager.defaultManager()
+				.URLForDirectory(.DocumentDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true)
+			let url = base.URLByAppendingPathComponent("consent-signed.pdf")
 			if !mustExist || NSFileManager().fileExistsAtPath(url.path!) {
 				return url
 			}
+		}
+		catch let err {
+			chip_warn("\(err)")
 		}
 		return nil
 	}

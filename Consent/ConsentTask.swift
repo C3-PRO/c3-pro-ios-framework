@@ -25,6 +25,13 @@ public class ConsentTask: NSObject, ORKTask
 	
 	public internal(set) var steps: [ORKStep]?
 	
+	/// The identifier of the review step.
+	public internal(set) var reviewStepName = "reviewStep"
+	
+	/// The identifier for the participant's signature in results of the review step.
+	public internal(set) var participantSignatureName = "participant"
+	
+	/// The sharing step.
 	public internal(set) var sharingStep: ORKStep?
 	
 	public var teamName: String? {
@@ -89,9 +96,9 @@ public class ConsentTask: NSObject, ORKTask
 			// TODO: quiz?
 			
 			// consent review step
-			let signature = ORKConsentSignature(forPersonWithTitle: "Participant".localized, dateFormatString: nil, identifier: "participant")
+			let signature = ORKConsentSignature(forPersonWithTitle: "Participant".localized, dateFormatString: nil, identifier: participantSignatureName)
 			doc.addSignature(signature)
-			let review = ORKConsentReviewStep(identifier: "reviewStep", signature: signature, inDocument: doc)		// "reviewStep" for compatibility with AppCore
+			let review = ORKConsentReviewStep(identifier: reviewStepName, signature: signature, inDocument: doc)
 			review.reasonForConsent = options.reasonForConsent
 			steps.append(review)
 			
