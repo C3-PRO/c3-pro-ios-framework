@@ -49,19 +49,14 @@ Consent Workflow
 ----------------
 
 To read eligibility and consent data from a bundled consent called `Consent.json` you can do the following.
-It will first ask the user your eligibility questions, and – if they are met – presents the consent task as a modal view controller.
-If the user cancels or declines consent, the view controller is dismissed and the eligibility view controller popped from its navigation controller.
-If the user consents the consent view controller is likewise dismissed and you'll receive the `C3UserDidConsentNotification` notification.
-
-> TODO: proceed to app setup after successful consent
+It will also use the bundled file `Consent_full.html` to show a custom HTML page in the _“Agree”_ step instead of auto-generating that page from all consent sections; this is optional.
 
 You could use this method in combination with `setupUI()` shown in `StudyIntro/README.md`.
-This will also use the bundled file `Consent_full.html` to show a custom HTML page in the _“Agree”_ step instead of auto-generating that page from all consent sections.
 
 ```swift
 func startEligibilityAndConsent(intro: StudyIntroCollectionViewController) {
     self.controller = ConsentController(bundledContract: "Consent")  // retain
-    controller.options.reviewConsentDocument = "Consent_full"
+    controller.options.reviewConsentDocument = "Consent_full"     // optional
     
     let center = NSNotificationCenter.defaultCenter()
     center.addObserver(self, selector: "userDidConsent",
@@ -77,13 +72,22 @@ func startEligibilityAndConsent(intro: StudyIntroCollectionViewController) {
 }
 
 func userDidConsent() {
-    // your user is consented
+    // Your user is consented. A generated PDF will be written to
+    // `ConsentController.signedConsentPDFURL()` on a background queue, so
+    // might not yet be available. Usually, the user is now prompted for app
+    // setup (not yet provided by C3-PRO):
+    // - set a passcode
+    // - grant necessary permissions (notifications, HealthKit, Motion, ...)
 }
 ```
 
+First, the user will be asked your eligibility questions, and – if they are met – presents the consent task as a modal view controller.
+If the user cancels or declines consent, the view controller is dismissed and the eligibility view controller popped from its navigation controller.
+If the user consents the consent view controller is likewise dismissed and you'll receive the `C3UserDidConsentNotification` notification.
+
 ### Consent Sections
 
-To represent consent sections that can be shown on screen, we instantiate each `Contract.term` element as a `ORKConsentSection`.
+To represent consent sections that can be shown on screen, we usa a `Contract` resource and instantiate each `Contract.term` element as a `ORKConsentSection`.
 These sections are added to a `ORKConsentDocument`'s `section` property to represent the _"visual"_ consenting step.
 The properties to use are:
 
@@ -213,7 +217,6 @@ func eligibilityStatusViewController(withConfiguration config: StudyIntroConfigu
 }
 
 func consentViewController() -> ORKTaskViewController {
-  consentController.options.askForSharing = false
   return consentController.consentViewController(
     onUserDidConsent: { controller in
       print("USER DID CONSENT, START APP SETUP")
