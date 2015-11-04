@@ -34,6 +34,9 @@ public class ConsentTask: NSObject, ORKTask
 	/// The sharing step.
 	public internal(set) var sharingStep: ORKStep?
 	
+	/// The identifier of the sharing step.
+	public internal(set) var sharingStepName = "sharing"
+	
 	public var teamName: String? {
 		return contract.authority?.first?.resolved(Organization)?.name
 	}
@@ -76,8 +79,8 @@ public class ConsentTask: NSObject, ORKTask
 					do {
 						let learnMore = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
 						
-						let team = (nil != teamName) ? "the \(teamName!)" : options.shareTeamName
-						let sharing = ORKConsentSharingStep(identifier: "sharing",
+						let team = (nil != teamName) ? "The \(teamName!)" : options.shareTeamName
+						let sharing = ORKConsentSharingStep(identifier: sharingStepName,
 							investigatorShortDescription: team,
 							investigatorLongDescription: team,
 							localizedLearnMoreHTMLContent: learnMore)
@@ -89,7 +92,7 @@ public class ConsentTask: NSObject, ORKTask
 					}
 				}
 				else {
-					fatalError("You MUST adjust `sharingOptions.shareMoreInfoDocument` to the name of an HTML document (without extension) that is included in the app bundle. It's set to «\(more)» but this file could not be found in the bundle.")
+					fatalError("You MUST adjust `options.shareMoreInfoDocument` to the name of an HTML document (without extension) that is included in the app bundle. It's set to «\(more)» but this file could not be found in the bundle.\nAlternatively you can set `options.askForSharing` to false to not show the sharing step.")
 				}
 			}
 			

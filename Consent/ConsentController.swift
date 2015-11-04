@@ -19,15 +19,19 @@ public let C3UserDidConsentNotification = "C3UserDidConsentNotification"
 /// Name of notification sent when the user cancels or declines to consent.
 public let C3UserDidDeclineConsentNotification = "C3UserDidDeclineConsentNotification"
 
+/// User info dictionary key containing the consenting result in a `C3UserDidConsentNotification` notification.
+public let C3ConsentResultKey = "consent-result"
+
 
 let CHIPConsentingErrorKey = "CHIPConsentingError"
 
 
 /**
-	Struct to hold various options for consenting.
- */
-public struct ConsentTaskOptions
-{
+Struct to hold various options for consenting.
+*/
+public struct ConsentTaskOptions {
+	
+	/// Whether or not the participant should be asked if she wants to share her data worldwide or only with the study researchers.
 	public var askForSharing = true
 	
 	var shareTeamName = "the research team"
@@ -46,10 +50,10 @@ public struct ConsentTaskOptions
 
 
 /**
-    Controller to capture consent in a FHIR Contract resource.
- */
-public class ConsentController
-{
+Controller to capture consent in a FHIR Contract resource.
+*/
+public class ConsentController {
+	
 	/// The contract to be signed; if nil when signing, a new instance will be created.
 	public final var contract: Contract?
 	
@@ -59,7 +63,7 @@ public class ConsentController
 	
 	var consentDelegate: ConsentTaskViewControllerDelegate?
 	
-	var onUserDidConsent: ((controller: ORKTaskViewController) -> Void)?
+	var onUserDidConsent: ((controller: ORKTaskViewController, result: ConsentResult) -> Void)?
 	
 	var onUserDidDeclineConsent: ((controller: ORKTaskViewController) -> Void)?
 	
@@ -106,7 +110,7 @@ public class ConsentController
 			elig.onStartConsent = { viewController in
 				if let navi = viewController.navigationController {
 					let consent = self.consentViewController(
-						onUserDidConsent: { controller in
+						onUserDidConsent: { controller, result in
 							navi.dismissViewControllerAnimated(true, completion: nil)
 						},
 						onUserDidDecline: { controller in
@@ -205,7 +209,7 @@ public class ConsentController
 	- parameter onUserDidConsent: Block executed when the user completes and agrees to consent
 	- parameter onUserDidDecline: Block executed when the user cancels or actively declines consent
 	*/
-	public func consentViewController(onUserDidConsent onConsent: ((controller: ORKTaskViewController) -> Void), onUserDidDecline: ((controller: ORKTaskViewController) -> Void)) -> ORKTaskViewController {
+	public func consentViewController(onUserDidConsent onConsent: ((controller: ORKTaskViewController, result: ConsentResult) -> Void), onUserDidDecline: ((controller: ORKTaskViewController) -> Void)) -> ORKTaskViewController {
 		if nil != onUserDidConsent {
 			chip_warn("a `onUserDidConsent` block is already set on \(self), are you already presenting a consent view controller? This might have unintended consequences.")
 		}
@@ -226,13 +230,25 @@ public class ConsentController
 			
 			// if we have a signature in the signature result, we're consented: create PDF and call the callbacks
 			if let signature = signatureResult?.signature where nil != signature.signatureImage {
+				let result = ConsentResult(signature: signature)
 				if let document = task.consentDocument {
 					signConsentDocument(document, withSignature: signatureResult!)
 				}
 				else {
 					chip_warn("impossible error: the consent document could not be found on the consent task")
 				}
-				userDidConsent(taskViewController)
+				
+				// sharing choice
+				if let sharingResult = taskViewController.result.stepResultForStepIdentifier(task.sharingStepName),
+					let sharing = sharingResult.results?.first as? ORKChoiceQuestionResult,
+					let choice = sharing.choiceAnswers?.first as? Int {
+					result.shareWidely = (0 == choice)			// the first option, index 0, is "share worldwide"
+				}
+				else if options.askForSharing {
+					chip_warn("the sharing step has not returned the expected result, despite `options.askForSharing` being set to true")
+				}
+				
+				userDidConsent(taskViewController, result: result)
 			}
 			else if .Completed == reason {
 				userDidDeclineConsent(taskViewController)
@@ -254,11 +270,12 @@ public class ConsentController
 	/**
 	Called when the user successfully completes the consent task and agrees to all the things.
 	*/
-	public func userDidConsent(taskViewController: ORKTaskViewController) {
+	public func userDidConsent(taskViewController: ORKTaskViewController, result: ConsentResult) {
 		if let exec = onUserDidConsent {
-			exec(controller: taskViewController)
+			exec(controller: taskViewController, result: result)
 		}
-		NSNotificationCenter.defaultCenter().postNotificationName(C3UserDidConsentNotification, object: self)
+		let userInfo = [C3ConsentResultKey: result]
+		NSNotificationCenter.defaultCenter().postNotificationName(C3UserDidConsentNotification, object: self, userInfo: userInfo)
 	}
 	
 	/**

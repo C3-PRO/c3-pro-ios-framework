@@ -218,8 +218,9 @@ func eligibilityStatusViewController(withConfiguration config: StudyIntroConfigu
 
 func consentViewController() -> ORKTaskViewController {
   return consentController.consentViewController(
-    onUserDidConsent: { controller in
-      print("USER DID CONSENT, START APP SETUP")
+    onUserDidConsent: { controller, result in
+      // look at the consent result for participant's name, signature and sharing choice
+      print("\(result.participantFriendlyName) DID CONSENT, START APP SETUP")
       controller.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     },
     onUserDidDecline: { controller in
