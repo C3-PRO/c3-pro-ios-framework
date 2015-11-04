@@ -90,7 +90,7 @@ public class BorderedButton: UIButton {
 	
 	public override func intrinsicContentSize() -> CGSize {
 		let size = super.intrinsicContentSize()
-		return CGSize(width: max(size.width + 20, 100), height: max(size.height, 34))
+		return CGSize(width: max(size.width + 20, 100), height: max(size.height, 44))
 	}
 }
 
