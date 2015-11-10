@@ -14,16 +14,48 @@ This assumes you have a file `StudyOverview.json` with the proper structure in y
 
 ```swift
 func setupUI() {
-    let intro = try! StudyIntroCollectionViewController.fromStoryboard("StudyIntro")
-	intro.config = try! StudyIntroConfiguration(json: "StudyOverview")
-    intro.onJoinStudy = { viewController in
-        // Action to perform when user taps "Join Study"
-        // See `startEligibilityAndConsent()` in `Consent/README.md` on how
-        // you can proceed with eligibility and consenting
-        startEligibilityAndConsent(viewController)
+  let intro = try! StudyIntroCollectionViewController.fromStoryboard("StudyIntro")
+  intro.config = try! StudyIntroConfiguration(json: "StudyOverview")
+  intro.onJoinStudy = { viewController in
+    // Action to perform when user taps "Join Study"
+    // See `startEligibilityAndConsent()` in `Consent/README.md` on how
+    // you can proceed with eligibility and consenting
+    startEligibilityAndConsent(viewController)
+  }
+  let navi = UINavigationController(rootViewController: intro)
+  window?.rootViewController = navi
+}
+```
+
+`StudyOverview.json`
+```json
+{
+  "title": "My Research App",
+  "logo": "logo_disease_researchInstitute",
+  "items": [
+    {
+      "type": "welcome",
+      "title": "Welcome to My App",
+      "subtitle": "An Awesome Research Study",
+      "video": "VideoFile"
+    },
+    {
+      "type": "video",
+      "video": "VideoFile"
+    },
+    {
+      "title": "About this Study",
+      "filename": "Intro_about",
+    },
+    {
+      "title": "How this Study works",
+      "filename": "Intro_howstuffworks",
+    },
+    {
+      "title": "Who is Eligible to Participate",
+      "filename": "Intro_eligibility",
     }
-	let navi = UINavigationController(rootViewController: intro)
-	window?.rootViewController = navi
+  ]
 }
 ```
 
