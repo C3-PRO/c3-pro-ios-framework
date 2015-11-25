@@ -9,8 +9,6 @@
 import Foundation
 import SMART
 
-let CHIPDataQueueErrorKey = "CHIPDataQueueError"
-
 
 /**
     The (FIFO) DataQueue is a special FHIRServer implementation that will enqueue FHIR resources to disk if a first attempt at issuing a
@@ -39,17 +37,13 @@ public class DataQueue: Server
 	
 	override public init(baseURL: NSURL, auth: OAuth2JSON?) {
 		super.init(baseURL: baseURL, auth: auth)
-		if let dir = NSFileManager.defaultManager().chip_appLibraryDirectory() {
-			if let host = baseURL.host {
-				let full = ((dir as NSString).stringByAppendingPathComponent("DataQueue") as NSString).stringByAppendingPathComponent(host)
-				queueManager = DataQueueManager(fhirServer: self, directory: full)
-			}
-			else {
-				fatalError("DataQueue: Cannot initialize without host in baseURL")
-			}
+		let dir = try! NSFileManager.defaultManager().chip_appLibraryDirectory()
+		if let host = baseURL.host {
+			let full = ((dir as NSString).stringByAppendingPathComponent("DataQueue") as NSString).stringByAppendingPathComponent(host)
+			queueManager = DataQueueManager(fhirServer: self, directory: full)
 		}
 		else {
-			fatalError("DataQueue: Failed to determine App Library Directory")
+			fatalError("DataQueue: Cannot initialize without host in baseURL")
 		}
 	}
 	
@@ -106,13 +100,5 @@ public class DataQueue: Server
 			super.performPreparedRequest(request, handler: handler, callback: callback)
 		}
 	}
-}
-
-
-/**
-    Convenience function to create an NSError in our dataqueue error domain.
- */
-public func chip_genErrorDataQueue(message: String, code: Int = 0) -> NSError {
-	return NSError(domain: CHIPDataQueueErrorKey, code: code, userInfo: [NSLocalizedDescriptionKey: message])
 }
 

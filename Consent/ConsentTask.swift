@@ -47,69 +47,67 @@ public class ConsentTask: NSObject, ORKTask
 		super.init()
 	}
 	
-	func prepareWithOptions(options: ConsentTaskOptions) {
-		consentDocument = consentDocument ?? contract.chip_asConsentDocument()
-		if let doc = consentDocument {
-			let bundle = NSBundle.mainBundle()
-			
-			// full consent review document (override, if nil will automatically combine all consent sections)
-			if let reviewDoc = options.reviewConsentDocument {
-				if let url = bundle.URLForResource(reviewDoc, withExtension: "html") ?? bundle.URLForResource(reviewDoc, withExtension: "html", subdirectory: "HTMLContent") {
-					do {
-						doc.htmlReviewContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
-					}
-					catch let error {
-						chip_warn("Failed to read contents of file named «\(reviewDoc).html»: \(error)")
-					}
+	func prepareWithOptions(options: ConsentTaskOptions) throws {
+		if nil == consentDocument {
+			consentDocument = try contract.chip_asConsentDocument()
+		}
+		let doc = consentDocument!
+		let bundle = NSBundle.mainBundle()
+		
+		// full consent review document (override, if nil will automatically combine all consent sections)
+		if let reviewDoc = options.reviewConsentDocument {
+			if let url = bundle.URLForResource(reviewDoc, withExtension: "html") ?? bundle.URLForResource(reviewDoc, withExtension: "html", subdirectory: "HTMLContent") {
+				do {
+					doc.htmlReviewContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
 				}
-				else {
-					chip_warn("The bundle does not contain a file named «\(reviewDoc).html», ignoring")
+				catch let error {
+					chip_warn("Failed to read contents of file named «\(reviewDoc).html»: \(error)")
 				}
 			}
-			
-			// visual step for all consent sections
-			var steps = [ORKStep]()
-			let visual = ORKVisualConsentStep(identifier: "visual", document: doc)
-			steps.append(visual)
-			
-			// sharing step
-			if options.askForSharing {
-				let more = options.shareMoreInfoDocument
-				if let url = bundle.URLForResource(more, withExtension: "html") ?? bundle.URLForResource(more, withExtension: "html", subdirectory: "HTMLContent") {
-					do {
-						let learnMore = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
-						
-						let team = (nil != teamName) ? "The \(teamName!)" : options.shareTeamName
-						let sharing = ORKConsentSharingStep(identifier: sharingStepName,
-							investigatorShortDescription: team,
-							investigatorLongDescription: team,
-							localizedLearnMoreHTMLContent: learnMore)
-						steps.append(sharing)
-						sharingStep = sharing
-					}
-					catch let error {
-						chip_warn("Failed to read learn more content from «\(url)»: \(error)")
-					}
+			else {
+				chip_warn("The bundle does not contain a file named «\(reviewDoc).html», ignoring")
+			}
+		}
+		
+		// visual step for all consent sections
+		var steps = [ORKStep]()
+		let visual = ORKVisualConsentStep(identifier: "visual", document: doc)
+		steps.append(visual)
+		
+		// sharing step
+		if options.askForSharing {
+			let more = options.shareMoreInfoDocument
+			if let url = bundle.URLForResource(more, withExtension: "html") ?? bundle.URLForResource(more, withExtension: "html", subdirectory: "HTMLContent") {
+				do {
+					let learnMore = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
+					
+					let team = (nil != teamName) ? "The \(teamName!)" : options.shareTeamName
+					let sharing = ORKConsentSharingStep(identifier: sharingStepName,
+						investigatorShortDescription: team,
+						investigatorLongDescription: team,
+						localizedLearnMoreHTMLContent: learnMore)
+					steps.append(sharing)
+					sharingStep = sharing
 				}
-				else {
-					fatalError("You MUST adjust `options.shareMoreInfoDocument` to the name of an HTML document (without extension) that is included in the app bundle. It's set to «\(more)» but this file could not be found in the bundle.\nAlternatively you can set `options.askForSharing` to false to not show the sharing step.")
+				catch let error {
+					chip_warn("Failed to read learn more content from «\(url)»: \(error)")
 				}
 			}
-			
-			// TODO: quiz?
-			
-			// consent review step
-			let signature = ORKConsentSignature(forPersonWithTitle: "Participant".localized, dateFormatString: nil, identifier: participantSignatureName)
-			doc.addSignature(signature)
-			let review = ORKConsentReviewStep(identifier: reviewStepName, signature: signature, inDocument: doc)
-			review.reasonForConsent = options.reasonForConsent
-			steps.append(review)
-			
-			self.steps = steps
+			else {
+				fatalError("You MUST adjust `options.shareMoreInfoDocument` to the name of an HTML document (without extension) that is included in the app bundle. It's set to «\(more)» but this file could not be found in the bundle.\nAlternatively you can set `options.askForSharing` to false to not show the sharing step.")
+			}
 		}
-		else {
-			chip_warn("Failed to create a consent document from Contract")
-		}
+		
+		// TODO: quiz?
+		
+		// consent review step
+		let signature = ORKConsentSignature(forPersonWithTitle: "Participant".localized, dateFormatString: nil, identifier: participantSignatureName)
+		doc.addSignature(signature)
+		let review = ORKConsentReviewStep(identifier: reviewStepName, signature: signature, inDocument: doc)
+		review.reasonForConsent = options.reasonForConsent
+		steps.append(review)
+		
+		self.steps = steps
 	}
 	
 	

@@ -133,7 +133,7 @@ class DataQueueManager
 					this.flush(callback)
 				}
 				else {
-					callback(error: chip_genErrorDataQueue("Flush halted", code: 99))
+					callback(error: C3Error.DataQueueFlushHalted)
 				}
 			}
 			else {
@@ -150,7 +150,7 @@ class DataQueueManager
 	 */
 	func dequeueFirst(callback: ((didDequeue: Bool, error: ErrorType?) -> Void)) {
 		if nil != currentlyDequeueing {
-			chip_logIfDebug("Already dequeueing")
+			chip_warn("already dequeueing")
 			callback(didDequeue: false, error: nil)
 			return
 		}
@@ -176,7 +176,7 @@ class DataQueueManager
 				}
 			}
 			catch let error {
-				chip_logIfDebug("Failed to read resource data: \(error)")
+				chip_warn("failed to read resource data: \(error)")
 				// TODO: figure out what to do (file should be readable at this point)
 				callback(didDequeue: false, error: nil)
 			}
@@ -194,9 +194,10 @@ class DataQueueManager
 				do {
 					try manager.removeItemAtPath(path)
 					currentlyDequeueing = nil
-				} catch {
+				}
+				catch let error {
 					// TODO: figure out what to do
-					chip_logIfDebug("Failed to remove queued resource \(path)")
+					chip_warn("failed to remove queued resource \(path): \(error)")
 				}
 			}
 		}

@@ -43,10 +43,10 @@ public class QueuedResource
 				if nil != resource {
 					return
 				}
-				throw NSError(domain: "CHIPQueuedResource", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to instantiate from json"])
+				throw FHIRError.ResourceFailedToInstantiate(NSString(data: data, encoding: NSUTF8StringEncoding) as? String ?? "No data")
 			}
 		}
-		throw NSError(domain: "CHIPQueuedResource", code: 0, userInfo: [NSLocalizedDescriptionKey: "No path, cannot read from file"])
+		throw FHIRError.ResourceLocationUnknown
 	}
 }
 

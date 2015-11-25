@@ -16,6 +16,9 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 	case NotImplemented(String)
 	case MultipleErrors(Array<ErrorType>)
 	
+	case AppLibraryDirectoryNotPresent
+	case AppReceiptRefreshFailed
+	
 	case BundleFileNotFound(String)
 	case InvalidJSON(String)
 	case InvalidStoryboard(String)
@@ -23,6 +26,21 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 	case ExtensionMissing(String)
 	case ExtensionInvalidInContext
 	case ExtensionIncomplete(String)
+	
+	case ConsentNoPatientReference(ErrorType)
+	case ConsentContractNotPresent
+	case ConsentContractHasNoTerms
+	case ConsentSectionHasNoType
+	case ConsentSectionTypeUnknownToResearchKit(String)
+	
+	case DataQueueFlushHalted
+	
+	case EncryptionFailedWithStatus(OSStatus)
+	case EncryptionX509CertificateNotFound(String)
+	case EncryptionX509CertificateNotRead(String)
+	case EncryptionX509CertificateNotLoaded(String)
+	
+	case LocationServicesDisabled
 	
 	case QuestionnaireNotPresent
 	case QuestionnaireInvalidNoTopLevel
@@ -43,6 +61,11 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 			let summaries = errs.map() { "\($0)" }.reduce("") { $0 + (!$0.isEmpty ? "\n" : "") + $1 }
 			return "Multiple errors occurred:\n\(summaries)"
 		
+		case .AppLibraryDirectoryNotPresent:
+			return "The app library directory could not be found; this is likely fatal"
+		case .AppReceiptRefreshFailed:
+			return "App receipt refresh failed. Are you running on device?"
+		
 		case .BundleFileNotFound(let name):
 			return name
 		case .InvalidJSON(let reason):
@@ -56,6 +79,32 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 			return "This extension is not valid in this context"
 		case .ExtensionIncomplete(let reason):
 			return "This extension is incomplete: \(reason)"
+		
+		case .ConsentNoPatientReference(let underlying):
+			return "Failed to generate a relative reference for the patient: \(underlying)"
+		case .ConsentContractNotPresent:
+			return "No Contract resource, cannot continue"
+		case .ConsentContractHasNoTerms:
+			return "The Contract resource does not have any terms that can be used for consenting"
+		case .ConsentSectionHasNoType:
+			return "Looking for consent type in ContractTerm.type.coding but none was found"
+		case .ConsentSectionTypeUnknownToResearchKit(let type):
+			return "Unknown consent section type “\(type)”"
+		
+		case .DataQueueFlushHalted:
+			return "Flush halted"
+		
+		case .EncryptionFailedWithStatus(let status):
+			return "Failed to encrypt data with key: OSStatus \(status)"
+		case .EncryptionX509CertificateNotFound(let file):
+			return "Bundled X509 certificate «\(file).crt» not found"
+		case .EncryptionX509CertificateNotRead(let file):
+			return "Failed to read bundled X509 certificate «\(file).crt»"
+		case .EncryptionX509CertificateNotLoaded(let message):
+			return message
+		
+		case .LocationServicesDisabled:
+			return "Location services are disabled or have been restricted"
 		
 		case .QuestionnaireNotPresent:
 			return "I do not have a questionnaire just yet"

@@ -38,7 +38,7 @@ public class OAuth2DynRegAppStore: OAuth2DynReg
 			refreshAppReceipt() { error in
 				if let error = error {
 					if SKErrorDomain == error._domain && SKErrorUnknown == error._code {
-						callback(json: nil, error: chip_genErrorDataQueue("App receipt refresh failed. Are you running on device?"))
+						callback(json: nil, error: C3Error.AppReceiptRefreshFailed)
 					}
 					else {
 						callback(json: nil, error: error)

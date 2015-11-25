@@ -11,7 +11,7 @@ import SMART
 import ResearchKit
 
 
-public typealias ConsentSigningCallback = ((contract: Contract, patient: Patient, error: NSError?) -> Void)
+public typealias ConsentSigningCallback = ((contract: Contract, patient: Patient, error: ErrorType?) -> Void)
 
 /// Name of notification sent when the user completes and agrees to consent.
 public let C3UserDidConsentNotification = "C3UserDidConsentNotification"
@@ -21,9 +21,6 @@ public let C3UserDidDeclineConsentNotification = "C3UserDidDeclineConsentNotific
 
 /// User info dictionary key containing the consenting result in a `C3UserDidConsentNotification` notification.
 public let C3ConsentResultKey = "consent-result"
-
-
-let CHIPConsentingErrorKey = "CHIPConsentingError"
 
 
 /**
@@ -109,16 +106,21 @@ public class ConsentController {
 		else {
 			elig.onStartConsent = { viewController in
 				if let navi = viewController.navigationController {
-					let consent = self.consentViewController(
-						onUserDidConsent: { controller, result in
-							navi.dismissViewControllerAnimated(true, completion: nil)
-						},
-						onUserDidDecline: { controller in
-							navi.popToRootViewControllerAnimated(false)
-							navi.dismissViewControllerAnimated(true, completion: nil)
-						}
-					)
-					navi.presentViewController(consent, animated: true, completion: nil)
+					do {
+						let consent = try self.consentViewController(
+							onUserDidConsent: { controller, result in
+								navi.dismissViewControllerAnimated(true, completion: nil)
+							},
+							onUserDidDecline: { controller in
+								navi.popToRootViewControllerAnimated(false)
+								navi.dismissViewControllerAnimated(true, completion: nil)
+							}
+						)
+						navi.presentViewController(consent, animated: true, completion: nil)
+					}
+					catch let error {
+						chip_warn("failed to create consent view controller: \(error)")
+					}
 				}
 				else {
 					chip_warn("must embed eligibility status view controller in a navigation controller")
@@ -190,14 +192,13 @@ public class ConsentController {
 	
 	// MARK: - Consenting
 	
-	public func createConsentTask() -> ConsentTask? {
+	public func createConsentTask() throws -> ConsentTask {
 		if let contract = contract {
 			let task = ConsentTask(identifier: NSUUID().UUIDString, contract: contract)
-			task.prepareWithOptions(options)
+			try task.prepareWithOptions(options)
 			return task
 		}
-		chip_warn("no Contract, cannot create a consent task")
-		return nil
+		throw C3Error.ConsentContractNotPresent
 	}
 	
 	/**
@@ -209,7 +210,9 @@ public class ConsentController {
 	- parameter onUserDidConsent: Block executed when the user completes and agrees to consent
 	- parameter onUserDidDecline: Block executed when the user cancels or actively declines consent
 	*/
-	public func consentViewController(onUserDidConsent onConsent: ((controller: ORKTaskViewController, result: ConsentResult) -> Void), onUserDidDecline: ((controller: ORKTaskViewController) -> Void)) -> ORKTaskViewController {
+	public func consentViewController(onUserDidConsent onConsent: ((controller: ORKTaskViewController, result: ConsentResult) -> Void),
+		onUserDidDecline: ((controller: ORKTaskViewController) -> Void)) throws -> ORKTaskViewController {
+		
 		if nil != onUserDidConsent {
 			chip_warn("a `onUserDidConsent` block is already set on \(self), are you already presenting a consent view controller? This might have unintended consequences.")
 		}
@@ -217,7 +220,8 @@ public class ConsentController {
 		onUserDidDeclineConsent = onUserDidDecline
 		consentDelegate = ConsentTaskViewControllerDelegate(controller: self)
 		
-		let consentVC = ORKTaskViewController(task: createConsentTask(), taskRunUUID: NSUUID())
+		let task = try createConsentTask()
+		let consentVC = ORKTaskViewController(task: task, taskRunUUID: NSUUID())
 		consentVC.delegate = consentDelegate!
 		
 		return consentVC
@@ -294,12 +298,17 @@ public class ConsentController {
 	/**
 	Instantiates a new "Contract" resource and fills the properties to represent a consent signed by a participant referencing the given
 	patient.
+	
+	- parameter patient: The Patient resource to use to sign
+	- parameter date: The date at which the contract was signed
+	- returns: A signed Contract resource, usually the receiver's `contract` ivar
 	*/
-	public func signContractWithPatient(patient: Patient, date: NSDate, error: NSErrorPointer) -> Contract? {
+	public func signContractWithPatient(patient: Patient, date: NSDate) throws -> Contract {
 		if nil == patient.id {
 			patient.id = NSUUID().UUIDString
 		}
-		if let reference = patient.asRelativeReference() {
+		do {
+			let reference = try patient.asRelativeReference()
 			let myContract = contract ?? Contract(json: nil)
 			
 			// applicable period
@@ -319,12 +328,9 @@ public class ConsentController {
 			
 			return myContract
 		}
-		
-		if nil != error {
-			error.memory = chip_genErrorConsenting("Failed to generate a relative reference for the patient, hence cannot sign this consent")
+		catch let error {
+			throw C3Error.ConsentNoPatientReference(error)
 		}
-		chip_warn("failed to generate a relative reference for the patient, hence cannot sign this consent")
-		return nil
 	}
 	
 	/**
@@ -335,11 +341,12 @@ public class ConsentController {
 		deidentifier!.hipaaCompliantPatient(patient: patient) { patient in
 			self.deidentifier = nil
 			
-			var error: NSError?
-			if let contract = self.signContractWithPatient(patient, date: date, error: &error) {
+			do {
+				let contract = try self.signContractWithPatient(patient, date: date)
 				callback(contract: contract, patient: patient, error: nil)
 			}
-			else {
+			catch let error {
+				chip_warn("\(error)")
 				callback(contract: Contract(json: nil), patient: patient, error: error)
 			}
 		}
@@ -408,13 +415,5 @@ class ConsentTaskViewControllerDelegate: NSObject, ORKTaskViewControllerDelegate
 	func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
 		controller.userDidFinishConsent(taskViewController, reason: reason)
 	}
-}
-
-
-/**
-	Convenience function to create an NSError in the Consenting error domain.
- */
-public func chip_genErrorConsenting(message: String, code: Int = 0) -> NSError {
-	return NSError(domain: CHIPConsentingErrorKey, code: code, userInfo: [NSLocalizedDescriptionKey: message])
 }
 

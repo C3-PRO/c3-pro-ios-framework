@@ -8,8 +8,6 @@
 
 import Foundation
 
-let CHIPRSAErrorKey = "CHIPRSAError"
-
 
 /**
     RSA Encryption helper.
@@ -51,7 +49,7 @@ public class RSAUtility
 		if noErr == status {
 			return NSData(bytes:cipherBuffer!.bytes, length:Int(cipherBufferSizeResult))
 		}
-		throw chip_genErrorRSA("Failed to encrypt data with key: OSStatus \(status)")
+		throw C3Error.EncryptionFailedWithStatus(status)
 	}
 	
 	
@@ -67,9 +65,9 @@ public class RSAUtility
 				publicKey = key
 				return key
 			}
-			throw chip_genErrorRSA("Failed to read bundled X509 certificate «\(publicCertificateFile).crt»")
+			throw C3Error.EncryptionX509CertificateNotRead(publicCertificateFile)
 		}
-		throw chip_genErrorRSA("Bundled X509 certificate «\(publicCertificateFile).crt» not found")
+		throw C3Error.EncryptionX509CertificateNotFound(publicCertificateFile)
 	}
 	
 	/**
@@ -85,19 +83,11 @@ public class RSAUtility
 				if let key = SecTrustCopyPublicKey(trust) {
 					return key
 				}
-				throw chip_genErrorRSA("Failed to copy public key from SecTrust")
+				throw C3Error.EncryptionX509CertificateNotLoaded("Failed to copy public key from SecTrust")
 			}
-			throw chip_genErrorRSA("Failed to create a trust management object from X509 certificate: OSError \(status)")
+			throw C3Error.EncryptionX509CertificateNotLoaded("Failed to create a trust management object from X509 certificate: OSError \(status)")
 		}
-		throw chip_genErrorRSA("Failed to create SecCertificate from given data")
+		throw C3Error.EncryptionX509CertificateNotLoaded("Failed to create SecCertificate from given data")
 	}
-}
-
-
-/**
-    Convenience function to create an NSError in our questionnaire error domain.
- */
-public func chip_genErrorRSA(message: String, code: Int = 0) -> NSError {
-	return NSError(domain: CHIPRSAErrorKey, code: code, userInfo: [NSLocalizedDescriptionKey: message])
 }
 
