@@ -41,8 +41,8 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 	    have successfully been allocated still, so don't throw everything away just because you receive errors. Likely
 	    called on a background queue.
 	 */
-	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
-		var errors = [NSError]()
+	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
+		var errors = [ErrorType]()
 		var promises = [QuestionnairePromiseProto]()
 		
 		// create an introductory instruction step if we have a title or text
@@ -54,12 +54,12 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 		
 		// "enableWhen" requirements
 		var requirements = parentRequirements ?? [ResultRequirement]()
-		var error: NSError?
-		if let myreqs = group.chip_enableQuestionnaireElementWhen(&error) {
+		do {
+			let myreqs = try group.chip_enableQuestionnaireElementWhen()
 			requirements.appendContentsOf(myreqs)
 		}
-		else if nil != error {
-			errors.append(error!)
+		catch let error {
+			errors.append(error)
 		}
 		
 		// fulfill our subgroups or (!!) questions

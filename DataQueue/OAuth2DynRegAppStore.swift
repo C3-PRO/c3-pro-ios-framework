@@ -15,7 +15,7 @@ public class OAuth2DynRegAppStore: OAuth2DynReg
 	deinit {
 		if let delegate = refreshDelegate {
 			refreshRequest?.cancel()
-			delegate.callback(error: genSMARTError("App Store Receipt refresh cancelled [deinit]"))
+			delegate.callback(error: OAuth2Error.Generic("App Store Receipt refresh cancelled [deinit]"))
 		}
 	}
 	
@@ -30,14 +30,14 @@ public class OAuth2DynRegAppStore: OAuth2DynReg
 	var refreshDelegate: AppStoreRequestDelegate?
 	
 	
-	override public func register(callback: ((json: OAuth2JSON?, error: NSError?) -> Void)) {
+	override public func register(callback: ((json: OAuth2JSON?, error: ErrorType?) -> Void)) {
 		if ensureHasAppReceipt() {
 			super.register(callback)
 		}
 		else {
 			refreshAppReceipt() { error in
 				if let error = error {
-					if SKErrorDomain == error.domain && SKErrorUnknown == error.code {
+					if SKErrorDomain == error._domain && SKErrorUnknown == error._code {
 						callback(json: nil, error: chip_genErrorDataQueue("App receipt refresh failed. Are you running on device?"))
 					}
 					else {
@@ -70,10 +70,10 @@ public class OAuth2DynRegAppStore: OAuth2DynReg
 		return (nil != appReceipt)
 	}
 	
-	func refreshAppReceipt(callback: ((error: NSError?) -> Void)) {
+	func refreshAppReceipt(callback: ((error: ErrorType?) -> Void)) {
 		if let delegate = refreshDelegate {
 			refreshRequest?.cancel()
-			delegate.callback(error: genSMARTError("App Store Receipt refresh timeout"))
+			delegate.callback(error: OAuth2Error.Generic("App Store Receipt refresh timeout"))
 		}
 		refreshDelegate = AppStoreRequestDelegate(callback: { error in
 			callback(error: error)
@@ -94,9 +94,9 @@ public class OAuth2DynRegAppStore: OAuth2DynReg
  */
 class AppStoreRequestDelegate: NSObject, SKRequestDelegate
 {
-	let callback: ((error: NSError?) -> Void)
+	let callback: ((error: ErrorType?) -> Void)
 	
-	init(callback: ((error: NSError?) -> Void)) {
+	init(callback: ((error: ErrorType?) -> Void)) {
 		self.callback = callback
 	}
 	

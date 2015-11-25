@@ -66,7 +66,7 @@ public class DataQueue: Server
 	}
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
-	public func flush(callback: ((error: NSError?) -> Void)) {
+	public func flush(callback: ((error: ErrorType?) -> Void)) {
 		queueManager.flush(callback)
 	}
 	
@@ -88,7 +88,7 @@ public class DataQueue: Server
 					if let error = error {
 						self.queueManager.enqueueResourceInHandler(handler)
 						
-						let response = R.ResponseType.init(notSentBecause: error)
+						let response = R.ResponseType.init(error: error)
 						callback(response: response)
 					}
 					else {

@@ -42,14 +42,14 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 	    - parameter callback: The callback to be called when done; note that even when you get an error, some steps might
 	        have successfully been allocated still, so don't throw everything away just because you receive errors
 	 */
-	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [NSError]?) -> Void)) {
+	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
 		let linkId = question.linkId ?? NSUUID().UUIDString
 		let (title, text) = question.chip_bestTitleAndText()
 		
 		// resolve answer format, THEN resolve sub-groups, if any
 		question.chip_asAnswerFormat() { format, berror in
 			var steps = [ORKStep]()
-			var errors = [NSError]()
+			var errors = [ErrorType]()
 			var requirements = parentRequirements ?? [ResultRequirement]()
 			
 			if let fmt = format {
@@ -59,12 +59,12 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 				step.optional = !(self.question.required ?? false)
 				
 				// questions "enableWhen" requirements
-				var error: NSError?
-				if let myreqs = self.question.chip_enableQuestionnaireElementWhen(&error) {
+				do {
+					let myreqs = try self.question.chip_enableQuestionnaireElementWhen()
 					requirements.appendContentsOf(myreqs)
 				}
-				else if nil != error {
-					errors.append(error!)
+				catch let error {
+					errors.append(error)
 				}
 				
 				if !requirements.isEmpty {
@@ -73,7 +73,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 				steps.append(step)
 			}
 			else {
-				errors.append(berror ?? chip_genErrorQuestionnaire("Failed to map question type to ResearchKit answer format"))
+				errors.append(berror ?? C3Error.QuestionnaireQuestionTypeUnknownToResearchKit(self.question))
 			}
 			
 			// do we have sub-groups?
@@ -185,7 +185,7 @@ extension QuestionnaireGroupQuestion
 	[x] ORKTimeOfDayAnswerFormat:       "time"
 	[ ] ORKTimeIntervalAnswerFormat:
 	*/
-	func chip_asAnswerFormat(callback: ((format: ORKAnswerFormat?, error: NSError?) -> Void)) {
+	func chip_asAnswerFormat(callback: ((format: ORKAnswerFormat?, error: ErrorType?) -> Void)) {
 		let link = linkId ?? "<nil>"
 		if let type = type {
 			switch type {
@@ -219,7 +219,7 @@ extension QuestionnaireGroupQuestion
 			case "choice":
 				chip_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)» [linkId: \(link)]"))
+						callback(format: nil, error: error ?? C3Error.QuestionnaireNoChoicesInChoiceQuestion(self))
 					}
 					else {
 						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.chip_answerChoiceStyle(), textChoices: choices!), error: nil)
@@ -228,16 +228,16 @@ extension QuestionnaireGroupQuestion
 			case "open-choice":
 				chip_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? chip_genErrorQuestionnaire("There are no choices in question «\(self.text)» [linkId: \(link)]"))
+						callback(format: nil, error: error ?? C3Error.QuestionnaireNoChoicesInChoiceQuestion(self))
 					}
 					else {
 						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.chip_answerChoiceStyle(), textChoices: choices!), error: nil)
 					}
 				}
-				//case "attachment":	callback(format: nil, error: nil)
-				//case "reference":		callback(format: nil, error: nil)
+			//case "attachment":	callback(format: nil, error: nil)
+			//case "reference":		callback(format: nil, error: nil)
 			default:
-				callback(format: nil, error: chip_genErrorQuestionnaire("Cannot map question type \"\(type)\" to ResearchKit answer format [linkId: \(link)]"))
+				callback(format: nil, error: C3Error.QuestionnaireQuestionTypeUnknownToResearchKit(self))
 			}
 		}
 		else {
@@ -252,7 +252,7 @@ extension QuestionnaireGroupQuestion
 	The `value` property of the text choice is a combination of the coding system URL and the code, separated by a space. If no system URL
 	is provided, "https://fhir.smalthealthit.org" is used.
 	*/
-	func chip_resolveAnswerChoices(callback: ((choices: [ORKTextChoice]?, error: NSError?) -> Void)) {
+	func chip_resolveAnswerChoices(callback: ((choices: [ORKTextChoice]?, error: ErrorType?) -> Void)) {
 		options?.resolve(ValueSet.self) { valueSet in
 			var choices = [ORKTextChoice]()
 			
@@ -298,7 +298,7 @@ extension QuestionnaireGroupQuestion
 				callback(choices: choices, error: nil)
 			}
 			else {
-				callback(choices: nil, error: chip_genErrorQuestionnaire("Question «\(self.text)» does not specify choices in its ValueSet"))
+				callback(choices: nil, error: C3Error.QuestionnaireNoChoicesInChoiceQuestion(self))
 			}
 		}
 	}

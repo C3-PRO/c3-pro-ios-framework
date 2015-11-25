@@ -123,7 +123,7 @@ class DataQueueManager
 	}
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
-	func flush(callback: ((error: NSError?) -> Void)) {
+	func flush(callback: ((error: ErrorType?) -> Void)) {
 		dequeueFirst { [weak self] didDequeue, error in
 			if let error = error {
 				callback(error: error)
@@ -148,7 +148,7 @@ class DataQueueManager
 	    - parameter callback: The callback to call. "didDequeue" is true if the resource was successfully dequeued. "error" is nil on success or
 	    if there was no file to dequeue (in which case _didDequeue_ would be false)
 	 */
-	func dequeueFirst(callback: ((didDequeue: Bool, error: NSError?) -> Void)) {
+	func dequeueFirst(callback: ((didDequeue: Bool, error: ErrorType?) -> Void)) {
 		if nil != currentlyDequeueing {
 			chip_logIfDebug("Already dequeueing")
 			callback(didDequeue: false, error: nil)
