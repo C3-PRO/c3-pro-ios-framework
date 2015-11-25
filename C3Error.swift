@@ -23,7 +23,6 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 	case InvalidJSON(String)
 	case InvalidStoryboard(String)
 	
-	case ExtensionMissing(String)
 	case ExtensionInvalidInContext
 	case ExtensionIncomplete(String)
 	
@@ -73,12 +72,10 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 		case .InvalidStoryboard(let reason):
 			return "Invalid Storyboard: \(reason)"
 		
-		case .ExtensionMissing(let urlstr):
-			return "Extension not present: \(urlstr)"
 		case .ExtensionInvalidInContext:
 			return "This extension is not valid in this context"
 		case .ExtensionIncomplete(let reason):
-			return "This extension is incomplete: \(reason)"
+			return "Extension is incomplete: \(reason)"
 		
 		case .ConsentNoPatientReference(let underlying):
 			return "Failed to generate a relative reference for the patient: \(underlying)"

@@ -55,8 +55,9 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 		// "enableWhen" requirements
 		var requirements = parentRequirements ?? [ResultRequirement]()
 		do {
-			let myreqs = try group.chip_enableQuestionnaireElementWhen()
-			requirements.appendContentsOf(myreqs)
+			if let myreqs = try group.chip_enableQuestionnaireElementWhen() {
+				requirements.appendContentsOf(myreqs)
+			}
 		}
 		catch let error {
 			errors.append(error)

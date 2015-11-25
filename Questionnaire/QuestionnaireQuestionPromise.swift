@@ -60,8 +60,9 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 				
 				// questions "enableWhen" requirements
 				do {
-					let myreqs = try self.question.chip_enableQuestionnaireElementWhen()
-					requirements.appendContentsOf(myreqs)
+					if let myreqs = try self.question.chip_enableQuestionnaireElementWhen() {
+						requirements.appendContentsOf(myreqs)
+					}
 				}
 				catch let error {
 					errors.append(error)

@@ -16,7 +16,7 @@ extension FHIRElement {
 	Tries to find the "enableWhen" extension on questionnaire groups and questions, and if there are any instantiates ResultRequirements
 	representing those.
 	*/
-	func chip_enableQuestionnaireElementWhen() throws -> [ResultRequirement] {
+	func chip_enableQuestionnaireElementWhen() throws -> [ResultRequirement]? {
 		if let enableWhen = extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-enableWhen") {
 			var requirements = [ResultRequirement]()
 			
@@ -24,22 +24,20 @@ extension FHIRElement {
 				let question = when.extension_fhir?.filter() { return $0.url?.fragment == "question" }.first
 				let answer = when.extension_fhir?.filter() { return $0.url?.fragment == "answer" }.first
 				if let answer = answer, let questionIdentifier = question?.valueString {
-					do {
-						let result = try answer.chip_desiredResultForValueOfStep(questionIdentifier)
-						let req = ResultRequirement(step: questionIdentifier, result: result)
-						requirements.append(req)
-					}
-					catch let error {
-						chip_logIfDebug("Cannot process 'enableWhen' on \(self): \(error)")
-					}
+					let result = try answer.chip_desiredResultForValueOfStep(questionIdentifier)
+					let req = ResultRequirement(step: questionIdentifier, result: result)
+					requirements.append(req)
+				}
+				else if nil != answer {
+					throw C3Error.ExtensionIncomplete("'enableWhen' extension on \(self) has no #question.valueString as identifier")
 				}
 				else {
-					chip_logIfDebug("Found 'enableWhen' extension on \(self), but there is no question identifier")
+					throw C3Error.ExtensionIncomplete("'enableWhen' extension on \(self) has no #answer")
 				}
 			}
 			return requirements
 		}
-		throw C3Error.ExtensionMissing("http://hl7.org/fhir/StructureDefinition/questionnaire-enableWhen")
+		return nil
 	}
 }
 
