@@ -95,7 +95,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 			exec(controller: self)
 		}
 		else {
-			chip_warn("Tapped “Join Study” but `onSignUp` is not defined")
+			chip_warn("Tapped “Join Study” but `onJoinStudy` is not defined")
 		}
 	}
 	

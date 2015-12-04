@@ -30,6 +30,7 @@ public class BorderedButton: UIButton {
 	func customInit() {
 		layer.borderWidth = 1.0
 		layer.cornerRadius = 5.0
+		tintColorDidChange()
 	}
 	
 	

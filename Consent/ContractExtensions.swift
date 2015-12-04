@@ -66,7 +66,8 @@ public extension ContractTerm {
 					case "htmlContent":
 						section.htmlContent = sub.valueString
 					case "htmlContentFile":
-						if let name = sub.valueString, let url = NSBundle.mainBundle().URLForResource(name, withExtension: "html", subdirectory: "HTMLContent") {
+						let bundle = NSBundle.mainBundle()
+						if let name = sub.valueString, let url = bundle.URLForResource(name, withExtension: "html") ?? bundle.URLForResource(name, withExtension: "html", subdirectory: "HTMLContent") {
 							do {
 								section.htmlContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
 							}
@@ -75,7 +76,7 @@ public extension ContractTerm {
 							}
 						}
 						else {
-							chip_warn("HTML consent section with name «\(sub.valueString)» is not in main bundle's «HTMLContent» subdirectory")
+							chip_warn("HTML consent section with name «\(sub.valueString)» is not in main bundle nor in its «HTMLContent» subdirectory")
 						}
 					case "image":
 						if let name = sub.valueString, let image = UIImage(named: name) {
