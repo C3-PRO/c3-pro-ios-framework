@@ -57,7 +57,7 @@ You could use this method in combination with `setupUI()` shown in `StudyIntro/R
 ```swift
 func startEligibilityAndConsent(intro: StudyIntroCollectionViewController) {
     self.controller = ConsentController(bundledContract: "Consent")  // retain
-    controller.options.reviewConsentDocument = "Consent_full"     // optional
+    controller.options.reviewConsentDocument = "Consent_full"        // optional
     
     let center = NSNotificationCenter.defaultCenter()
     center.addObserver(self, selector: "userDidConsent",
@@ -65,7 +65,7 @@ func startEligibilityAndConsent(intro: StudyIntroCollectionViewController) {
     
     let elig = controller.eligibilityStatusViewController(intro.config)
     if let navi = intro.navigationController {
-        navi.pushViewController(elig)
+        navi.pushViewController(elig, animated: true)
     }
     else {
         // you did not put the intro view controller on a navigation controller

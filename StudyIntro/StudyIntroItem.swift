@@ -6,6 +6,8 @@
 //  Copyright © 2015 Boston Children's Hospital. All rights reserved.
 //
 
+import Foundation
+
 
 public protocol StudyIntroItem {
 	

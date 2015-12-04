@@ -39,7 +39,6 @@
 		EEEEAB891BDA97EE001F8B5C /* GroupExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEEAB881BDA97EE001F8B5C /* GroupExtensions.swift */; };
 		EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */; };
 		EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */; };
-		EEFA84C11AE5C18B00E61006 /* C3PRO.h in Headers */ = {isa = PBXBuildFile; fileRef = EEFA84C01AE5C18B00E61006 /* C3PRO.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EEFA84C71AE5C18B00E61006 /* C3PRO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */; };
 		EEFA84CE1AE5C18B00E61006 /* C3PROTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */; };
 		EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D71AE5C25500E61006 /* QuestionnaireGroupPromise.swift */; };
@@ -179,7 +178,6 @@
 		EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKTaskResult+FHIR.swift"; sourceTree = "<group>"; };
 		EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C3PRO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEFA84BF1AE5C18B00E61006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EEFA84C01AE5C18B00E61006 /* C3PRO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = C3PRO.h; path = ../Classes/C3PRO.h; sourceTree = "<group>"; };
 		EEFA84C61AE5C18B00E61006 /* C3PROTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C3PROTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEFA84CC1AE5C18B00E61006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C3PROTests.swift; sourceTree = "<group>"; };
@@ -362,7 +360,6 @@
 		EEFA84BE1AE5C18B00E61006 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				EEFA84C01AE5C18B00E61006 /* C3PRO.h */,
 				EEFA84BF1AE5C18B00E61006 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -403,7 +400,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEFA84C11AE5C18B00E61006 /* C3PRO.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

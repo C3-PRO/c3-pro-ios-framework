@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Boston Children's Hospital. All rights reserved.
 //
 
+import Foundation
 import SMART
 
 
