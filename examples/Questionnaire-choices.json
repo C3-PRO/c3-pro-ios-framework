@@ -1,0 +1,93 @@
+{
+	"id": "example-question-choice",
+	"resourceType": "Questionnaire",
+	"status": "draft",
+	"title": "Choice Answers Examples",
+	"date": "2015-12-04",
+	"group": {
+		"title": "Survey",
+		"text": "This survey will ask you questions about your relationship with HIT.",
+		"group": [
+			{
+				"question": [
+					{
+						"linkId": "choice-valueSet",
+						"options": {
+							"reference": "#SF36Answers3"
+						},
+						"text": "Limited by HIT",
+						"type": "choice",
+						"extension": [
+							{
+								"url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+								"valueString": "Are you limited by the current Healthcare Information Technologies on the market?"
+							}
+						]
+					},
+					{
+						"linkId": "choice-boolean-1",
+						"required": true,
+						"text": "Are you currently using SMART on FHIR?",
+						"type": "boolean"
+					},
+					{
+						"linkId": "choice-boolean-2",
+						"extension": [
+							{
+								"extension": [
+									{
+										"url": "#question",
+										"valueString": "choice-boolean-1"
+									},
+									{
+										"url": "#answer",
+										"valueBoolean": false
+									}
+								],
+								"url": "http://hl7.org/fhir/StructureDefinition/questionnaire-enableWhen"
+							}
+						],
+						"required": true,
+						"text": "Do you plan to start using SMART on FHIR in the foreseeable future?",
+						"type": "boolean"
+					},
+					{
+						"linkId": "choice-boolean-3",
+						"text": "Do you think modern, open standards are the way forward?",
+						"type": "boolean"
+					}
+				]
+			},
+			{
+				"title": "Thank you!",
+				"text": "Pressing “Done” will complete this survey."
+			}
+		]
+	},
+	"contained": [
+		{
+			"id": "SF36Answers3",
+			"resourceType": "ValueSet",
+			"codeSystem": {
+				"caseSensitive": false,
+				"concept": [
+					{
+						"code": "1",
+						"display": "Yes, limited a lot"
+					},
+					{
+						"code": "2",
+						"display": "Yes, limited a little"
+					},
+					{
+						"code": "3",
+						"display": "No, not limited at all"
+					}
+				],
+				"system": "http://sf-36.org/fhir/StructureDefinition/answers-3-levels"
+			},
+			"name": "SF-36 Physical Functioning Subscale answers",
+			"status": "active"
+		}
+	]
+}

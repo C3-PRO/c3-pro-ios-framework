@@ -6,7 +6,7 @@
 	"date": "2015-07-29",
 	"group": {
 		"title": "Survey",
-		"text": "This survey will ask you questions about medications you are taking and how hepatitis C is affecting your daily life.",
+		"text": "This survey will ask you questions about your relationship to FHIR.",
 		"question": [
 			{
 			    "linkId": "slider-integer",

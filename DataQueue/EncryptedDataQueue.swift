@@ -52,6 +52,10 @@ public class EncryptedDataQueue: DataQueue
 		super.init(baseURL: baseURL, auth: auth)
 	}
 	
+	required public init(baseURL: NSURL, auth: OAuth2JSON?) {
+	    fatalError("Cannot use init(baseURL:auth:), please use init(baseURL:auth:encBaseURL:publicCertificateFile:)")
+	}
+	
 	
 	// MARK: - Encryption
 	

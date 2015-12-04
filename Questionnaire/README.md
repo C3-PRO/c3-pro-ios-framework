@@ -13,8 +13,8 @@ This model implements the `ORKTaskViewControllerDelegate` protocol and holds on 
 let controller = QuestionnaireController()
 controller.questionnaire = <# FHIR Questionnaire #>
 
-controller.whenCompleted = { answers in
-    self.dismissViewControllerAnimated(true, completion: nil)
+controller.whenCompleted = { viewController, answers in
+    viewController.dismissViewControllerAnimated(true, completion: nil)
 	// `answers` is a FHIR "QuestionnaireResponse" resource if not nil
     // e.g. send to a SMART server:
     if let answers = answers {
@@ -24,8 +24,8 @@ controller.whenCompleted = { answers in
     }
 }
 
-controller.whenCancelledOrFailed = { error in
-    self.dismissViewControllerAnimated(true, completion: nil)
+controller.whenCancelledOrFailed = { viewController, error in
+    viewController.dismissViewControllerAnimated(true, completion: nil)
 	// check if `error` is not nil and handle
 }
 

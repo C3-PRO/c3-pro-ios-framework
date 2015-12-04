@@ -19,10 +19,10 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	public final var questionnaire: Questionnaire?
 	
 	/// Callback called when the user finishes the questionnaire without error.
-	public final var whenCompleted: ((answers: QuestionnaireResponse?) -> Void)?
+	public final var whenCompleted: ((viewController: ORKTaskViewController, answers: QuestionnaireResponse?) -> Void)?
 	
 	/// Callback to be called when the questionnaire is cancelled (error = nil) or finishes with an error.
-	public final var whenCancelledOrFailed: ((error: ErrorType?) -> Void)?
+	public final var whenCancelledOrFailed: ((viewController: ORKTaskViewController, error: ErrorType?) -> Void)?
 	
 	
 	// MARK: - Questionnaire
@@ -91,7 +91,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
 	public func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
 		if let error = error {
-			didFailWithError(error)
+			didFailWithError(taskViewController, error: error)
 		}
 		else {
 			didFinish(taskViewController, reason: reason)
@@ -104,19 +104,19 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	func didFinish(viewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason) {
 		switch reason {
 		case .Failed:
-			didFailWithError(C3Error.QuestionnaireFinishedWithError)
+			didFailWithError(viewController, error: C3Error.QuestionnaireFinishedWithError)
 		case .Completed:
-			whenCompleted?(answers: viewController.result.chip_asQuestionnaireResponseForTask(viewController.task))
+			whenCompleted?(viewController: viewController, answers: viewController.result.chip_asQuestionnaireResponseForTask(viewController.task))
 		case .Discarded:
-			didFailWithError(nil)
+			didFailWithError(viewController, error: nil)
 		case .Saved:
 			// TODO: support saving tasks
-			didFailWithError(nil)
+			didFailWithError(viewController, error: nil)
 		}
 	}
 	
-	func didFailWithError(error: ErrorType?) {
-		whenCancelledOrFailed?(error: error)
+	func didFailWithError(viewController: ORKTaskViewController, error: ErrorType?) {
+		whenCancelledOrFailed?(viewController: viewController, error: error)
 	}
 }
 
