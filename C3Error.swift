@@ -10,6 +10,10 @@ import Foundation
 import SMART
 
 
+/// The FHIR version used by this instance of the framework.
+public let C3PROFHIRVersion = "1.0.2"
+
+
 /**
 Errors thrown around when working with C3-PRO.
 */
@@ -119,3 +123,4 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 		}
 	}
 }
+

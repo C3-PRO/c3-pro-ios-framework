@@ -9,6 +9,7 @@ Subsequently, the contract can be signed when consenting completes successfully 
 There are additional utilities for _geolocation_, _de-identification_ and _data queueing_ that go well with a research app.
 
 The `master` branch currently supports _Swift 2.0_ and _FHIR 0.5.0_ and requires Xcode 7.
+The `develop` branch is on _FHIR 1.0.2_.
 For other versions see the [releases](releases) tab, for newer versions look for `feature/x` branches.
 
 See the [install instructions](Install.md), then use `C3PRO` in your code and start coding:

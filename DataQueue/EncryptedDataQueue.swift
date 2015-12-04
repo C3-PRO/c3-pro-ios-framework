@@ -10,8 +10,8 @@ import Foundation
 import SMART
 
 
-public protocol EncryptedDataQueueDelegate
-{
+public protocol EncryptedDataQueueDelegate {
+	
 	func encryptedDataQueue(queue: EncryptedDataQueue, wantsEncryptionForResource resource: FHIRResource, requestType: FHIRRequestType) -> Bool
 	
 	func keyIdentifierForEncryptedDataQueue(queue: EncryptedDataQueue) -> String?
@@ -59,6 +59,13 @@ public class EncryptedDataQueue: DataQueue
 	
 	// MARK: - Encryption
 	
+	/**
+	Encrypts the given data (which is presumed to be JSON data of a FHIR resource), then creates a JSON representation that also contains
+	the encrypted symmetric key and a FHIR version flag and returns data produced when serializing that JSON.
+	
+	- parameter data: The data to encrypt, presumed to be NSData of a JSON-serialized FHIR resource
+	- returns: NSData representing JSON
+	*/
 	public func encryptedData(data: NSData) throws -> NSData {
 		let encData = try aes.encrypt(data)
 		let encKey = try rsa.encrypt(aes.symmetricKeyData)
@@ -66,6 +73,7 @@ public class EncryptedDataQueue: DataQueue
 			"key_id": delegate?.keyIdentifierForEncryptedDataQueue(self) ?? "",
 			"symmetric_key": encKey.base64EncodedStringWithOptions([]),
 			"message": encData.base64EncodedStringWithOptions([]),
+			"version": C3PROFHIRVersion,
 		]
 		return try NSJSONSerialization.dataWithJSONObject(dict, options: [])
 	}
