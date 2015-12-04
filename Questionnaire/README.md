@@ -45,6 +45,12 @@ Examples
 
 Examples on how to achieve certain ResearchKit steps with FHIR.
 
+### Choice and Bool Questions
+
+There's a small sample Questionnaire [examples/Questionnaire-choices.json](examples/Questionnaire-choices.json) that has a `choice` and some `boolean` type questions.
+Notice how you can skip questions 1 and 4 but not 2 and 3.
+It also uses the `enableWhen` extension to conditionally show the 3rd question based on the answer to the 2nd question.
+
 ### Slider for Integers
 
 This will show the title “FHIR Likening”, a smaller instruction text and a slider going from 0-10, with 8 pre-selected.

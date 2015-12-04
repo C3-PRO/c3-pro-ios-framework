@@ -53,7 +53,7 @@
 					},
 					{
 						"linkId": "choice-boolean-3",
-						"text": "Do you think modern, open standards are the way forward?",
+						"text": "Do you think modern, open standards are the way forward in HIT?",
 						"type": "boolean"
 					}
 				]
