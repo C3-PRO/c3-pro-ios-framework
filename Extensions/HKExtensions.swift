@@ -9,22 +9,19 @@
 import HealthKit
 import SMART
 
-let CHIPHealthKitErrorKey = "CHIPHealthKitError"
 
-
-public extension HKHealthStore
-{
+public extension HKHealthStore {
 	/**
 	Convenience method to retrieve the latest sample of a given type.
 	*/
-	public func chip_latestSampleOfType(typeIdentifier: String, callback: ((quantity: HKQuantity?, error: NSError?) -> Void)) {
+	public func chip_latestSampleOfType(typeIdentifier: String, callback: ((quantity: HKQuantity?, error: ErrorType?) -> Void)) {
 		chip_samplesOfTypeBetween(typeIdentifier, start: NSDate.distantPast() , end: NSDate(), limit: 1) { results, error in
 			callback(quantity: results?.first?.quantity, error: error)
 		}
 	}
 	
 	/**
-	Convenience method to retrieve samples from a given period.
+	Convenience method to retrieve samples from a given period. Orders by end date, descending.
 	
 	- parameter typeIdentifier: The sample type to receivec
 	- parameter start: Start date
@@ -32,7 +29,7 @@ public extension HKHealthStore
 	- parameter limit: How many samples to retrieve at max
 	- parameter callback: Callback to call when query finishes
 	*/
-	public func chip_samplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, limit: Int, callback: ((results: [HKQuantitySample]?, error: NSError?) -> Void)) {
+	public func chip_samplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, limit: Int, callback: ((results: [HKQuantitySample]?, error: ErrorType?) -> Void)) {
 		if let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) {
 			let period = HKQuery.predicateForSamplesWithStartDate(start, endDate: end, options: .None)
 			let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
@@ -47,8 +44,7 @@ public extension HKHealthStore
 			executeQuery(query)
 		}
 		else {
-			let error = NSError(domain: CHIPHealthKitErrorKey, code: 1, userInfo: [NSLocalizedDescriptionKey: "There is no such HKSampleType: \(typeIdentifier)"])
-			callback(results: nil, error: error)
+			callback(results: nil, error: C3Error.NoSuchHKSampleType(typeIdentifier))
 		}
 	}
 }

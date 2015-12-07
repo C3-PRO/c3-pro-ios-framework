@@ -53,6 +53,11 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 	case QuestionnaireFinishedWithError
 	case QuestionnaireUnknownError
 	
+	case NoSuchHKSampleType(String)
+	
+	
+	// MARK: - Custom String Convertible
+	
 	/// A string representation of the error.
 	public var description: String {
 		switch self {
@@ -120,6 +125,9 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 			return "Unknown error finishing questionnaire"
 		case .QuestionnaireUnknownError:
 			return "Unknown error handling questionnaire"
+		
+		case .NoSuchHKSampleType(let typeIdentifier):
+			return "There is no HKSampleType “\(typeIdentifier)”"
 		}
 	}
 }
