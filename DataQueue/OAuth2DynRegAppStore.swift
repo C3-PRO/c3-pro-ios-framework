@@ -10,8 +10,11 @@ import SMART
 import StoreKit
 
 
-public class OAuth2DynRegAppStore: OAuth2DynReg
-{
+/**
+    Dynamic client registration based on the app's App Store receipt.
+ */
+public class OAuth2DynRegAppStore: OAuth2DynReg {
+	
 	deinit {
 		if let delegate = refreshDelegate {
 			refreshRequest?.cancel()
@@ -19,7 +22,8 @@ public class OAuth2DynRegAppStore: OAuth2DynReg
 		}
 	}
 	
-	/// Whether the sandbox environment should be used.
+	/// Whether the sandbox environment should be used. You can't set this during build-time since TestFlight is now sending out the same
+	/// binary as will end up in the App Store.
 	public var sandbox = false
 	
 	/// The App Receipt, read from file.
@@ -91,8 +95,8 @@ public class OAuth2DynRegAppStore: OAuth2DynReg
 /**
     Simple object used by `OAuth2DynRegAppStore` to use block-based callbacks on an SKRequest.
  */
-class AppStoreRequestDelegate: NSObject, SKRequestDelegate
-{
+class AppStoreRequestDelegate: NSObject, SKRequestDelegate {
+	
 	let callback: ((error: ErrorType?) -> Void)
 	
 	init(callback: ((error: ErrorType?) -> Void)) {

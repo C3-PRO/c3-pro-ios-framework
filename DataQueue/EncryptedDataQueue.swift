@@ -51,9 +51,9 @@ public class EncryptedDataQueue: DataQueue
 		rsa = RSAUtility(publicCertificateFile: publicCertificateFile)
 		super.init(baseURL: baseURL, auth: auth)
 	}
-	
-	required public init(baseURL: NSURL, auth: OAuth2JSON?) {
-	    fatalError("Cannot use init(baseURL:auth:), please use init(baseURL:auth:encBaseURL:publicCertificateFile:)")
+
+	public required init(baseURL: NSURL, auth: OAuth2JSON?) {
+	    fatalError("init(baseURL:auth:) cannot be used on `EncryptedDataQueue`, use init(baseURL:auth:encBaseURL:publicCertificateFile:)")
 	}
 	
 	

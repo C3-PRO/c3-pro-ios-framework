@@ -23,13 +23,15 @@ Only resources to-be-encrypted are sent to the "encrypt" endpoint.
 Usage
 -----
 
-You usually use `DataQueue` with a SMART client that can authorize without user authentication, like a _client_credentials_ flow, like so:
+You usually use `DataQueue` with a SMART client that can authorize without user authentication, like a _client_credentials_ flow, as follows.
+If you set `authorize_uri` manually, the client will not attempt to fetch the server's [Conformance statement](http://hl7.org/fhir/conformance.html) and uses the supplied endpoint insted.
 
 ```swift
 let baseURL = NSURL(string: "https://fhir-api-dstu2.smarthealthit.org")
 let auth = [
     "client_id": "{key}",
     "client_secret": "{secret}",
+    "authorize_uri": "{OAuth2 authorize endpoint URL}",
     "authorize_type": "client_credentials",
 ] as OAuth2JSON
 let dataQueue = DataQueue(baseURL: baseURL, auth: auth)
@@ -41,7 +43,7 @@ Next time a command is issued and the queue is not empty, the queue is first (at
 
 ```swift
 let questionnaire = Questionnaire(json: {some FHIRJSON})
-smart.authorize { patient, error in
+smart.authorize() { patient, error in
     if let error = error {
         // error authorizing
     }
@@ -56,7 +58,7 @@ smart.authorize { patient, error in
 You can also flush the queue manually:
 
 ```swift
-smart.authorize { patient, error in
+smart.authorize() { patient, error in
     if let error = error {
         // error authorizing
     }
@@ -74,3 +76,25 @@ Resources are enqueued automatically when a POST or PUT fails, but you can also 
 let questionnaire = Questionnaire(json: {some FHIRJSON})
 dataQueue.enqueueResource(questionnaire)
 ```
+
+
+Dynamic Client Registration
+---------------------------
+
+You probably want to protect your endpoint to only accept OAuth2-signed requests from registered clients.
+You can either ship your app with `client_id` and `client_secret` embedded, which may be possible to extract from your app binary, or you can use [dynamic client registration](https://tools.ietf.org/html/rfc7591) to register your app the first time it makes a request.
+The latter is automatically performed for you when you supply a `registration_uri` when instantiating the server handle.
+
+C3-PRO contains a dynamic client registration variant that allows client registration based on valid App Store receipts.
+Use as follows:
+
+```swift
+let queue = DataQueue(baseURL: baseURL, auth: auth)
+queue.onBeforeDynamicClientRegistration = { url in
+    return OAuth2DynRegAppStore()
+}
+smart = Client(server: queue)
+```
+
+The framework automatically attempts to register your app when you call `authorize()` if a) there **is no** client-id and b) there **is** a registration URL.
+Registration credentials are stored to the keychain.

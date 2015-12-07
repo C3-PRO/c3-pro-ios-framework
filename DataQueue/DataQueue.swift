@@ -35,7 +35,7 @@ public class DataQueue: Server
 		return NSDataWritingOptions.DataWritingFileProtectionCompleteUnlessOpen
 	}
 	
-	required public init(baseURL: NSURL, auth: OAuth2JSON?) {
+	public required init(baseURL: NSURL, auth: OAuth2JSON?) {
 		super.init(baseURL: baseURL, auth: auth)
 		let dir = try! NSFileManager.defaultManager().chip_appLibraryDirectory()
 		if let host = baseURL.host {

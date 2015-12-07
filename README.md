@@ -2,7 +2,7 @@ C3-PRO
 ======
 
 **iOS** framework, written in Swift, for our [C3-PRO][] research framework.
-Combining [🔥 FHIR][fhir] and [ResearchKit][] for data storage into [i2b2][], this framework allows you to use FHIR _Questionnaire_ resources directly with ResearchKit and will return FHIR _QuestionnaireAnswers_ to your server.
+Combining [🔥 FHIR][fhir] and [ResearchKit][] for data storage into [i2b2][], this framework allows you to use FHIR _Questionnaire_ resources directly with ResearchKit and will return FHIR _QuestionnaireResponse_ to your server.
 In addition, a FHIR _Contract_ resource can be used to carry trial eligibility requirements and define content to be shown during consenting.
 Subsequently, the contract can be signed when consenting completes successfully to indicate consent.
 
