@@ -23,7 +23,7 @@ public extension HKHealthStore {
 	/**
 	Convenience method to retrieve samples from a given period. Orders by end date, descending.
 	
-	- parameter typeIdentifier: The sample type to receivec
+	- parameter typeIdentifier: The type of samples to retrieve
 	- parameter start: Start date
 	- parameter end: End date
 	- parameter limit: How many samples to retrieve at max
@@ -45,6 +45,45 @@ public extension HKHealthStore {
 		}
 		else {
 			callback(results: nil, error: C3Error.NoSuchHKSampleType(typeIdentifier))
+		}
+	}
+	
+	/**
+	Retrieve a summed quantity of a given period. Uses `HKStatisticsCollectionQuery`, the callback will be called on a background queue.
+	
+	- parameter typeIdentifier: The type of samples to retrieve
+	- parameter start: Start date
+	- parameter end: End date
+	- parameter callback: Callback to call, on a background queueu, when query finishes, containing one HKQuantitySample spanning the whole
+	                      period or an error
+	*/
+	public func chip_summaryOfSamplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, callback: ((result: HKQuantitySample?, error: ErrorType?) -> Void)) {
+		if let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) {
+			let period = HKQuery.predicateForSamplesWithStartDate(start, endDate: end, options: .None)
+			let interval = NSCalendar.currentCalendar().components([.Day], fromDate: start, toDate: end, options: [])
+			
+			let query = HKStatisticsCollectionQuery(quantityType: sampleType, quantitySamplePredicate: period, options: [.CumulativeSum], anchorDate: start, intervalComponents: interval)
+			query.initialResultsHandler = { sampleQuery, results, error in
+				if let error = error {
+					callback(result: nil, error: error)
+				}
+				else {
+					var sample: HKQuantitySample?
+					if let results = results {
+						results.enumerateStatisticsFromDate(start, toDate: end) { statistics, stop in
+							if let sum = statistics.sumQuantity() {
+								sample = HKQuantitySample(type: sampleType, quantity: sum, startDate: start, endDate: end)
+								stop.memory = true
+							}
+						}
+					}
+					callback(result: sample, error: nil)
+				}
+			}
+			executeQuery(query)
+		}
+		else {
+			callback(result: nil, error: C3Error.NoSuchHKSampleType(typeIdentifier))
 		}
 	}
 }
