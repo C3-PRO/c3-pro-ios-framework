@@ -21,7 +21,8 @@ public extension HKHealthStore {
 	}
 	
 	/**
-	Convenience method to retrieve samples from a given period. Orders by end date, descending.
+	Convenience method to retrieve samples from a given period. Orders by end date, descending. Don't use this to get a total over a given
+	period, use `chip_summaryOfSamplesOfTypeBetween()` (which is using `HKStatisticsCollectionQuery`).
 	
 	- parameter typeIdentifier: The type of samples to retrieve
 	- parameter start: Start date
@@ -30,104 +31,71 @@ public extension HKHealthStore {
 	- parameter callback: Callback to call when query finishes
 	*/
 	public func chip_samplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, limit: Int, callback: ((results: [HKQuantitySample]?, error: ErrorType?) -> Void)) {
-		if let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) {
-			let period = HKQuery.predicateForSamplesWithStartDate(start, endDate: end, options: .None)
-			let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
-			let query = HKSampleQuery(sampleType: sampleType, predicate: period, limit: limit, sortDescriptors: [sortDescriptor]) { sampleQuery, results, error in
-				if let err = error {
-					callback(results: nil, error: err)
-				}
-				else {
-					callback(results: results as? [HKQuantitySample], error: nil)
-				}
-			}
-			executeQuery(query)
-		}
-		else {
+		guard let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) else {
 			callback(results: nil, error: C3Error.NoSuchHKSampleType(typeIdentifier))
+			return
 		}
+		
+		let period = HKQuery.predicateForSamplesWithStartDate(start, endDate: end, options: .None)
+		let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+		let query = HKSampleQuery(sampleType: sampleType, predicate: period, limit: limit, sortDescriptors: [sortDescriptor]) { sampleQuery, results, error in
+			if let err = error {
+				callback(results: nil, error: err)
+			}
+			else {
+				callback(results: results as? [HKQuantitySample], error: nil)
+			}
+		}
+		executeQuery(query)
 	}
 	
 	/**
-	Retrieve a summed quantity of a given period. Uses `HKStatisticsCollectionQuery`, the callback will be called on a background queue.
+	Retrieve a quantity summed over a given period. Uses `HKStatisticsCollectionQuery`, the callback will be called on a background queue.
 	
 	- parameter typeIdentifier: The type of samples to retrieve
 	- parameter start: Start date
 	- parameter end: End date
-	- parameter callback: Callback to call, on a background queueu, when query finishes, containing one HKQuantitySample spanning the whole
-	                      period or an error
+	- parameter callback: Callback to call, on a background queue, when the query finishes, containing one HKQuantitySample spanning the
+	                      whole period or an error
 	*/
 	public func chip_summaryOfSamplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, callback: ((result: HKQuantitySample?, error: ErrorType?) -> Void)) {
-		if let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) {
-			let period = HKQuery.predicateForSamplesWithStartDate(start, endDate: end, options: .None)
-			let interval = NSCalendar.currentCalendar().components([.Day], fromDate: start, toDate: end, options: [])
-			
-			let query = HKStatisticsCollectionQuery(quantityType: sampleType, quantitySamplePredicate: period, options: [.CumulativeSum], anchorDate: start, intervalComponents: interval)
-			query.initialResultsHandler = { sampleQuery, results, error in
-				if let error = error {
-					callback(result: nil, error: error)
-				}
-				else {
-					var sample: HKQuantitySample?
-					if let results = results {
-						results.enumerateStatisticsFromDate(start, toDate: end) { statistics, stop in
-							if let sum = statistics.sumQuantity() {
-								sample = HKQuantitySample(type: sampleType, quantity: sum, startDate: start, endDate: end)
-								stop.memory = true
-							}
+		guard let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) else {
+			callback(result: nil, error: C3Error.NoSuchHKSampleType(typeIdentifier))
+			return
+		}
+		
+		// we create one interval for the whole period between start and end dates
+		let interval = NSCalendar.currentCalendar().components([.Day, .Hour], fromDate: start, toDate: end, options: [])
+		guard interval.day + interval.hour > 0 else {
+			callback(result: nil, error: C3Error.IntervalTooSmall)
+			return
+		}
+		let period = HKQuery.predicateForSamplesWithStartDate(start, endDate: end, options: .None)
+		
+		let query = HKStatisticsCollectionQuery(quantityType: sampleType, quantitySamplePredicate: period, options: [.CumulativeSum], anchorDate: start, intervalComponents: interval)
+		query.initialResultsHandler = { sampleQuery, results, error in
+			if let error = error {
+				callback(result: nil, error: error)
+			}
+			else {
+				var sample: HKQuantitySample?
+				if let results = results {
+					results.enumerateStatisticsFromDate(start, toDate: end) { statistics, stop in
+						if let sum = statistics.sumQuantity() {
+							sample = HKQuantitySample(type: sampleType, quantity: sum, startDate: start, endDate: end)
+							stop.memory = true		// we only expect one summary
 						}
 					}
-					callback(result: sample, error: nil)
 				}
+				callback(result: sample, error: nil)
 			}
-			executeQuery(query)
 		}
-		else {
-			callback(result: nil, error: C3Error.NoSuchHKSampleType(typeIdentifier))
-		}
+		executeQuery(query)
 	}
 }
 
 
-public extension HKQuantitySample
-{
-	/**
-	Takes an array of quantity samples in the assumption that all samples are of the same type and returns one concatenated
-	`HKQuantitySample` object.
-	
-	TODO: would be cool as a failable initializer, but can't bail out without initializing all ivars first :P
-	
-	- parameter samples: An array of `HKQuantitySample` instances of the same type
-	- parameter unit: The unit to use in the resulting master quantity sample
-	- returns: An HKQuantitySample instance concatenating all given sample data
-	*/
-	public class func chip_concatenatedQuantitySamples(samples: [HKQuantitySample], unit: HKUnit) -> HKQuantitySample? {
-		var type: HKQuantityType?
-		var dateMin: NSDate?
-		var dateMax: NSDate?
-		var total = 0.0
-		
-		for sample in samples {
-			let quantity = sample.quantity
-			if nil == type {
-				type = sample.quantityType
-			}
-			dateMin = (nil != dateMin) ? dateMin?.earlierDate(sample.startDate) : sample.startDate
-			dateMax = (nil != dateMax) ? dateMax?.laterDate(sample.endDate) : sample.endDate
-			if !quantity.isCompatibleWithUnit(unit) {
-				chip_warn("sample \(sample) is not compatible with unit \(unit), not adding to quantity")
-			}
-			else {
-				total += quantity.doubleValueForUnit(unit)
-			}
-		}
-		
-		if let type = type {
-			let quantity = HKQuantity(unit: unit, doubleValue: total)
-			return HKQuantitySample(type: type, quantity: quantity, startDate: dateMin!, endDate: dateMax!)
-		}
-		return nil
-	}
+public extension HKQuantitySample {
 	
 	/**
 	Returns a FHIR "Quantity" element of the quantitiy contained in the receiver in the quantity type's preferred unit.
@@ -150,7 +118,7 @@ public extension HKQuantity
 	*/
 	public func chip_asFHIRQuantityInUnit(unit: HKUnit) -> Quantity? {
 		if isCompatibleWithUnit(unit) {
-			return Quantity(json: ["value": doubleValueForUnit(unit), "units": unit.unitString])
+			return Quantity(json: ["value": doubleValueForUnit(unit), "unit": unit.unitString])
 		}
 		chip_warn("not compatible with unit \(unit): \(self)")
 		return nil
