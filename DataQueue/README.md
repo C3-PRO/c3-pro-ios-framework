@@ -13,8 +13,17 @@ The queue can also be manually flushed.
 There is also an `EncryptedDataQueue` subclass.
 Instances of this class are capable of encrypting resources before sending them to a server.
 These resources are sent to a different endpoint and are, by default, AES encrypted with a random 32 byte key.
-The key itself is RSA encrypted using a public key in a X509 certificate.
-A request with a JSON body containing a key-identifier and base-64 encoded key and resource data is then sent to the encrypted endpoint.
+The key itself is RSA encrypted using a public key in a X509 certificate, identified by an id, that is generated server-side (and the server has the private key).
+A request with a JSON body containing a key-identifier and base-64 encoded key and resource data is then sent to the encrypted endpoint:
+
+```json
+{
+  "key_id": "{public-key-id}",
+  "symmetric_key": "{base64-encoded-RSA-encrypted-AES-key",
+  "message": "{base64-encoded-AES-encrypted-FHIR-resource",
+  "version": "1.0.2"
+}
+```
 
 You can implement a delegate to only encrypt certain resources, and the instance can handle two different endpoints so "normal" FHIR requests can be routed to a standard FHIR endpoint (just like `DataQueue` does).
 Only resources to-be-encrypted are sent to the "encrypt" endpoint.
