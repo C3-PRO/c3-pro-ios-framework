@@ -13,8 +13,8 @@ import SMART
 /**
 	Class to help in de-identifying patient data according to HIPAA's Safe Harbor guidelines.
  */
-public class DeIdentifier
-{
+public class DeIdentifier {
+	
 	var geocoder: Geocoder?
 	
 	public init() {  }
@@ -30,7 +30,7 @@ public class DeIdentifier
 	*/
 	public func hipaaCompliantPatient(patient inPatient: Patient, callback: ((patient: Patient) -> Void)) {
 		geocoder = Geocoder()
-		geocoder!.hipaaCompliantCurrentLocation { address, error in
+		geocoder!.hipaaCompliantCurrentAddress() { address, error in
 			self.geocoder = nil
 			
 			let patient = Patient(json: nil)
@@ -57,3 +57,4 @@ public class DeIdentifier
 		return Date(year: year, month: nil, day: nil)
 	}
 }
+

@@ -28,8 +28,8 @@ The user will see this string in an alert window the first time the geocoder is 
 ```swift
 geocoder = Geocoder()       // ivar on e.g. the App Delegate
 geocoder!.currentLocation() { current, error in
-println("Current location: \(current)")
-// <+37.33233141,-122.03121860> +/- 50.00m (speed -1.00 mps / course -1.00)
+  println("Current location: \(current)")
+  // <+37.33233141,-122.03121860> +/- 50.00m (speed -1.00 mps / course -1.00)
 }
 ```
 
@@ -41,9 +41,9 @@ For those areas where the 3-digit ZIP is not an acceptable form of de-identifica
 
 ```swift
 geocoder = Geocoder()       // ivar on e.g. the App Delegate
-geocoder!.hipaaCompliantCurrentLocation() { address, error in
-println("Current address: \(address)")
-// {"country": "United States", "postalCode": "950"}
+geocoder!.hipaaCompliantCurrentAddress() { address, error in
+  println("Current address: \(address)")
+  // {"country": "US", "postalCode": "950"}
 }
 ```
 
