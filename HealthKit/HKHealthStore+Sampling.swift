@@ -11,8 +11,12 @@ import SMART
 
 
 public extension HKHealthStore {
+	
 	/**
 	Convenience method to retrieve the latest sample of a given type.
+	
+	- parameter typeIdentifier: The type of samples to retrieve
+	- parameter callback: Callback to call when query finishes, comes back either with a quantity, an error or neither
 	*/
 	public func chip_latestSampleOfType(typeIdentifier: String, callback: ((quantity: HKQuantity?, error: ErrorType?) -> Void)) {
 		chip_samplesOfTypeBetween(typeIdentifier, start: NSDate.distantPast() , end: NSDate(), limit: 1) { results, error in
@@ -28,7 +32,7 @@ public extension HKHealthStore {
 	- parameter start: Start date
 	- parameter end: End date
 	- parameter limit: How many samples to retrieve at max
-	- parameter callback: Callback to call when query finishes
+	- parameter callback: Callback to call when query finishes, comes back either with an array of samples, an error or neither
 	*/
 	public func chip_samplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, limit: Int, callback: ((results: [HKQuantitySample]?, error: ErrorType?) -> Void)) {
 		guard let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) else {
@@ -56,7 +60,7 @@ public extension HKHealthStore {
 	- parameter start: Start date
 	- parameter end: End date
 	- parameter callback: Callback to call, on a background queue, when the query finishes, containing one HKQuantitySample spanning the
-	                      whole period or an error
+	                      whole period or an error (or neither)
 	*/
 	public func chip_summaryOfSamplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, callback: ((result: HKQuantitySample?, error: ErrorType?) -> Void)) {
 		guard let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) else {
@@ -91,64 +95,6 @@ public extension HKHealthStore {
 			}
 		}
 		executeQuery(query)
-	}
-}
-
-
-public extension HKQuantitySample {
-	
-	/**
-	Returns a FHIR "Quantity" element of the quantitiy contained in the receiver in the quantity type's preferred unit.
-	
-	- returns: A Quantity instance on success
-	*/
-	public func chip_asFHIRQuantity() -> Quantity? {
-		return quantity.chip_asFHIRQuantityInUnit(quantityType.chip_preferredUnit())
-	}
-}
-
-
-public extension HKQuantity
-{
-	/**
-	Returns a FHIR "Quantity" element with the given unit, **if** the quantity can be represented in that unit.
-	
-	- parameter unit: The unit to use
-	- returns: A Quantity instance on success
-	*/
-	public func chip_asFHIRQuantityInUnit(unit: HKUnit) -> Quantity? {
-		if isCompatibleWithUnit(unit) {
-			return Quantity(json: ["value": doubleValueForUnit(unit), "unit": unit.unitString])
-		}
-		chip_warn("not compatible with unit \(unit): \(self)")
-		return nil
-	}
-}
-
-
-public extension HKQuantityType
-{
-	/**
-	The preferred unit for a given quantity type; should be highly aligned with the ISO units.
-	*/
-	public func chip_preferredUnit() -> HKUnit {
-		switch identifier {
-		case HKQuantityTypeIdentifierActiveEnergyBurned:
-			return HKUnit.jouleUnitWithMetricPrefix(.Kilo)
-		case HKQuantityTypeIdentifierBodyMass:
-			return HKUnit.gramUnitWithMetricPrefix(.Kilo)
-		case HKQuantityTypeIdentifierBodyTemperature:
-			return HKUnit.degreeCelsiusUnit()
-		case HKQuantityTypeIdentifierHeight:
-			return HKUnit.meterUnit()
-		case HKQuantityTypeIdentifierFlightsClimbed:
-			return HKUnit.countUnit()
-		case HKQuantityTypeIdentifierStepCount:
-			return HKUnit.countUnit()
-		// TODO: add more
-		default:
-			return HKUnit.gramUnit()
-		}
 	}
 }
 

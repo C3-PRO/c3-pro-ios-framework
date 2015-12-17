@@ -54,6 +54,7 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 	case QuestionnaireUnknownError
 	
 	case NoSuchHKSampleType(String)
+	case QuantityNotCompatibleWithUnit
 	case IntervalTooSmall
 	
 	
@@ -129,6 +130,8 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 		
 		case .NoSuchHKSampleType(let typeIdentifier):
 			return "There is no HKSampleType “\(typeIdentifier)”"
+		case .QuantityNotCompatibleWithUnit:
+			return "The unit is not compatible with this quantity"
 		case .IntervalTooSmall:
 			return "The interval is too small"
 		}

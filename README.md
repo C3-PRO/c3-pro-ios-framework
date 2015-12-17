@@ -45,6 +45,11 @@ Also serves as return format of **activity data** collected on the phone.
 `DataQueue` is a FHIR server implementation used to move FHIR resources, created on device, to a FHIR server, without the need for user interaction nor -confirmation.  
 [➔ DataQueue](DataQueue)
 
+### HealthKit Extensions
+
+Extensions to _HealthKit_ classes to easily query for samples and to represent quantities in FHIR.  
+[➔ HealthKit](HealthKit)
+
 ### Encryption
 
 AES and RSA encryption facilities that come in handy.  
