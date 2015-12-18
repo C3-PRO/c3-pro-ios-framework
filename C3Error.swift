@@ -37,6 +37,7 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 	case ConsentSectionHasNoType
 	case ConsentSectionTypeUnknownToResearchKit(String)
 	
+	case ServerNotConfigured
 	case DataQueueFlushHalted
 	
 	case EncryptionFailedWithStatus(OSStatus)
@@ -100,6 +101,8 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 		case .ConsentSectionTypeUnknownToResearchKit(let type):
 			return "Unknown consent section type “\(type)”"
 		
+		case .ServerNotConfigured:
+			return "No server has been configured"
 		case .DataQueueFlushHalted:
 			return "Flush halted"
 		
