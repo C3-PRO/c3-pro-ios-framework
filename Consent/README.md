@@ -148,6 +148,33 @@ Example:
 ```
 
 
+### Passcode
+
+By default the user is asked to create a passcode right after signing on screen.
+This is controlled by `ConsentTaskOptions.askToCreatePasscode`.
+After the user has done so, you can use ResearchKit to show the passcode screen when the app launches:
+
+```swift
+import ResearchKit
+
+func applicationWillEnterForeground(application: UIApplication) {
+    if ORKPasscodeViewController.isPasscodeStoredInKeychain() {
+        let entry = ORKPasscodeViewController.
+            passcodeAuthenticationViewControllerWithText(nil, delegate: self)
+        <# vc #>.presentViewController(entry, animated: true, completion: nil)
+    }
+}
+
+func passcodeViewControllerDidFinishWithSuccess(viewController: UIViewController) {
+    ...
+    viewController.dismissViewControllerAnimated(true, completion: nil)
+}
+  
+func passcodeViewControllerDidFailAuthentication(viewController: UIViewController) {
+}
+```
+
+
 ### Sharing Options
 
 To populate the team name used when the user is asked if he's willing to share his data with qualified researchers worldwide or just the study researchers, the `authority.name` property of the Contract is consulted.

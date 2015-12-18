@@ -41,6 +41,9 @@ public struct ConsentTaskOptions {
 	
 	/// Shown when the user taps agree and she needs to confirm that she is in agreement.
 	public var reasonForConsent = NSLocalizedString("By agreeing you confirm that you read the consent and that you wish to take part in this research study.", comment: "")
+    
+    /// Whether the user should be prompted to create a passcode/PIN after consenting.
+    public var askToCreatePasscode = true
 	
 	public init() {  }
 }
@@ -229,36 +232,41 @@ public class ConsentController {
 	
 	func userDidFinishConsent(taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason) {
 		if let task = taskViewController.task as? ConsentTask {
-			let signatureResult = taskViewController.result.stepResultForStepIdentifier(task.reviewStepName)?
-				.resultForIdentifier(task.participantSignatureName) as? ORKConsentSignatureResult
-			
-			// if we have a signature in the signature result, we're consented: create PDF and call the callbacks
-			if let signature = signatureResult?.signature where nil != signature.signatureImage {
-				let result = ConsentResult(signature: signature)
-				if let document = task.consentDocument {
-					signConsentDocument(document, withSignature: signatureResult!)
-				}
-				else {
-					chip_warn("impossible error: the consent document could not be found on the consent task")
-				}
-				
-				// sharing choice
-				if let sharingResult = taskViewController.result.stepResultForStepIdentifier(task.sharingStepName),
-					let sharing = sharingResult.results?.first as? ORKChoiceQuestionResult,
-					let choice = sharing.choiceAnswers?.first as? Int {
-					result.shareWidely = (0 == choice)			// the first option, index 0, is "share worldwide"
-				}
-				else if options.askForSharing {
-					chip_warn("the sharing step has not returned the expected result, despite `options.askForSharing` being set to true")
-				}
-				
-				userDidConsent(taskViewController, result: result)
-			}
-			else if .Completed == reason {
+            if .Completed == reason {
+                let signatureResult = taskViewController.result.stepResultForStepIdentifier(task.reviewStepName)?
+                    .resultForIdentifier(task.participantSignatureName) as? ORKConsentSignatureResult
+                
+                // if we have a signature in the signature result, we're consented: create PDF and call the callbacks
+                if let signature = signatureResult?.signature where nil != signature.signatureImage {
+                    let result = ConsentResult(signature: signature)
+                    if let document = task.consentDocument {
+                        signConsentDocument(document, withSignature: signatureResult!)
+                    }
+                    else {
+                        chip_warn("impossible error: the consent document could not be found on the consent task")
+                    }
+                    
+                    // sharing choice
+                    if let sharingResult = taskViewController.result.stepResultForStepIdentifier(task.sharingStepName),
+                        let sharing = sharingResult.results?.first as? ORKChoiceQuestionResult,
+                        let choice = sharing.choiceAnswers?.first as? Int {
+                            result.shareWidely = (0 == choice)			// the first option, index 0, is "share worldwide"
+                    }
+                    else if options.askForSharing {
+                        chip_warn("the sharing step has not returned the expected result, despite `options.askForSharing` being set to true")
+                    }
+                    
+                    userDidConsent(taskViewController, result: result)
+                }
+                else {
+                    userDidDeclineConsent(taskViewController)
+                }
+            }
+			else if .Discarded == reason {
 				userDidDeclineConsent(taskViewController)
 			}
 			else {
-				userDidDeclineConsent(taskViewController)		// TODO: room for a new "did-cancel-consent" method
+				userDidDeclineConsent(taskViewController)
 			}
 		}
 		else {

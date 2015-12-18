@@ -15,8 +15,8 @@ import SMART
 
 	Data to be shown is read from the `Contract` resource, which will be converted into an `ORKConsentDocument`.
  */
-public class ConsentTask: NSObject, ORKTask
-{
+public class ConsentTask: NSObject, ORKTask {
+    
 	public let identifier: String
 	
 	public let contract: Contract
@@ -36,6 +36,9 @@ public class ConsentTask: NSObject, ORKTask
 	
 	/// The identifier of the sharing step.
 	public internal(set) var sharingStepName = "sharing"
+	
+	/// The identifier of the passcode/PIN step.
+	public internal(set) var pinStepName = "passcode"
 	
 	public var teamName: String? {
 		return contract.authority?.first?.resolved(Organization)?.name
@@ -107,6 +110,15 @@ public class ConsentTask: NSObject, ORKTask
 		review.reasonForConsent = options.reasonForConsent
 		steps.append(review)
 		
+		// set passcode step
+        if options.askToCreatePasscode {
+            let instruction = ORKInstructionStep(identifier: "passcodeInstruction")
+            instruction.title = NSLocalizedString("Passcode", comment: "")
+            instruction.text = NSLocalizedString("You will now be asked to create a passcode.\n\nThis protects your data from unauthorized access should you hand your phone to a friend.", comment: "Text shown before prompting to create a passcode")
+            steps.append(instruction)
+            steps.append(ORKPasscodeStep(identifier: pinStepName))
+        }
+        
 		self.steps = steps
 	}
 	
