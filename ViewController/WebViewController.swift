@@ -27,6 +27,9 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 		web.translatesAutoresizingMaskIntoConstraints = false
 		web.delegate = self
 		web.dataDetectorTypes = .All
+		if #available(iOS 9.0, *) {
+		    web.allowsLinkPreview = true
+		}
 		web.scrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
 		webView = web
 		
