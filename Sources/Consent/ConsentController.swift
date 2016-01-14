@@ -233,21 +233,20 @@ public class ConsentController {
 	func userDidFinishConsent(taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason) {
 		if let task = taskViewController.task as? ConsentTask {
             if .Completed == reason {
-                let signatureResult = taskViewController.result.stepResultForStepIdentifier(task.reviewStepName)?
-                    .resultForIdentifier(task.participantSignatureName) as? ORKConsentSignatureResult
-                
+				let taskResult = taskViewController.result
+				
                 // if we have a signature in the signature result, we're consented: create PDF and call the callbacks
-                if let signature = signatureResult?.signature where nil != signature.signatureImage {
+                if let signatureResult = task.signatureResult(taskResult), let signature = task.signatureInResult(signatureResult) {
                     let result = ConsentResult(signature: signature)
                     if let document = task.consentDocument {
-                        signConsentDocument(document, withSignature: signatureResult!)
+                        signConsentDocument(document, withSignature: signatureResult)
                     }
                     else {
                         chip_warn("impossible error: the consent document could not be found on the consent task")
                     }
                     
                     // sharing choice
-                    if let sharingResult = taskViewController.result.stepResultForStepIdentifier(task.sharingStepName),
+                    if let sharingResult = taskResult.stepResultForStepIdentifier(task.sharingStepName),
                         let sharing = sharingResult.results?.first as? ORKChoiceQuestionResult,
                         let choice = sharing.choiceAnswers?.first as? Int {
                             result.shareWidely = (0 == choice)			// the first option, index 0, is "share worldwide"

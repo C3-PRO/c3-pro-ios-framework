@@ -50,6 +50,14 @@ public class ConsentTask: NSObject, ORKTask {
 		super.init()
 	}
 	
+	
+	// MARK: - Prepare Task and Evaluate
+	
+	/**
+	Prepare the task with the given options. This method initializes the steps of the consent task.
+	
+	- parameter options: The options to consider when creating the task
+	*/
 	func prepareWithOptions(options: ConsentTaskOptions) throws {
 		if nil == consentDocument {
 			consentDocument = try contract.chip_asConsentDocument()
@@ -122,39 +130,84 @@ public class ConsentTask: NSObject, ORKTask {
 		self.steps = steps
 	}
 	
+	/**
+	Retrieves the signature result (identifier `participantSignatureName`) of the consent signature step (identifier `reviewStepName`).
+	
+	- parameter taskResult: The result of the consent task
+	- returns: The consent signature result, if the step has been completed yet
+	*/
+	public func signatureResult(taskResult: ORKTaskResult) -> ORKConsentSignatureResult? {
+		return taskResult.stepResultForStepIdentifier(reviewStepName)?
+			.resultForIdentifier(participantSignatureName) as? ORKConsentSignatureResult
+	}
+	
+	/**
+	Extracts the consent signature from the signature result, if it's there. If this method returns a signature, the patient has agreed to
+	the consent and signed on screen.
+	
+	- parameter result: The consent signature result to inspect
+	- returns: The consent signature, if it's there
+	*/
+	public func signatureInResult(result: ORKConsentSignatureResult) -> ORKConsentSignature? {
+		if let signature = result.signature where nil != signature.signatureImage {
+			return signature
+		}
+		return nil
+	}
+	
+	/**
+	Retrieve the consent signature found in the task result, if it's there, indicating the user consented.
+	
+	- parameter taskResult: The result of the consent task to inspect
+	- returns: The consent signature, if the user consented and signed
+	*/
+	public func signature(taskResult: ORKTaskResult) -> ORKConsentSignature? {
+		guard let result = signatureResult(taskResult) else {
+			return nil
+		}
+		return signatureInResult(result)
+	}
+	
 	
 	// MARK: - ORKTask Protocol
 	
 	public func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
-		if let step = step, let steps = steps {
-			var next = false
-			for hasStep in steps {
-				if next {
-					return hasStep
-				}
-				if hasStep == step {
-					next = true
-				}
-			}
+		guard let step = step, let steps = steps else {
+			return self.steps?.first
+		}
+		
+		// declined consent, stop here
+		if reviewStepName == step.identifier && nil == signature(result) {
 			return nil
 		}
-		return steps?.first
+		
+		// get next step
+		var next = false
+		for hasStep in steps {
+			if next {
+				return hasStep
+			}
+			if hasStep == step {
+				next = true
+			}
+		}
+		return nil
 	}
 	
 	public func stepBeforeStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
-		if let step = step, let steps = steps {
-			var prev = false
-			for hasStep in steps.reverse() {
-				if prev {
-					return hasStep
-				}
-				if hasStep == step {
-					prev = true
-				}
-			}
-			return nil
+		guard let step = step, let steps = steps else {
+			return self.steps?.last
 		}
-		return steps?.last
+		var prev = false
+		for hasStep in steps.reverse() {
+			if prev {
+				return hasStep
+			}
+			if hasStep == step {
+				prev = true
+			}
+		}
+		return nil
 	}
 }
 
