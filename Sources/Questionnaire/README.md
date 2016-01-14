@@ -47,7 +47,7 @@ Examples on how to achieve certain ResearchKit steps with FHIR.
 
 ### Choice and Bool Questions
 
-There's a small sample Questionnaire [examples/Questionnaire-choices.json](examples/Questionnaire-choices.json) that has a `choice` and some `boolean` type questions.
+There's a small sample Questionnaire [examples/Questionnaire-choices.json](../examples/Questionnaire-choices.json) that has a `choice` and some `boolean` type questions.
 Notice how you can skip questions 1 and 4 but not 2 and 3.
 It also uses the `enableWhen` extension to conditionally show the 3rd question based on the answer to the 2nd question.
 
@@ -91,5 +91,5 @@ If no default value is specified, the minimum value will be pre-selected.
 }
 ```
 
-Full: [examples/Questionnaire-sliders.json](examples/Questionnaire-sliders.json)
+Full: [examples/Questionnaire-sliders.json](../examples/Questionnaire-sliders.json)
 

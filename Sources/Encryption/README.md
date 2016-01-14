@@ -9,9 +9,9 @@ RSAUtility
 
 Can use a (bundled) X509 public key certificate to encrypt a symmetric key that can be used elsewhere (see below).
 Relies on `SecKeyEncrypt`, which comes with `Security.framework`, and is compatible with `RSA/ECB/OAEPWithSHA1AndMGF1Padding` padding.
-It does NOT require OpenSSL.
+It does **NOT** require to include OpenSSL in your app.
 
-Key pairs can be generated using OpenSSL like so:
+Key pairs can be generated using OpenSSL on your desktop like so:
 
 ```
 openssl req -x509 -days 3652 -out public.crt -outform DER -new -newkey rsa:2048 -keyout private.pem

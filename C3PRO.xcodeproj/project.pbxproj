@@ -158,7 +158,7 @@
 		EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentTask.swift; sourceTree = "<group>"; };
 		EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContractExtensions.swift; sourceTree = "<group>"; };
 		EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentResult.swift; sourceTree = "<group>"; };
-		EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeIdentifier.swift; path = Identity/DeIdentifier.swift; sourceTree = SOURCE_ROOT; };
+		EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeIdentifier.swift; sourceTree = "<group>"; };
 		EEB6DD221B5D3FD3006A3B9F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geocoder.swift; sourceTree = "<group>"; };
 		EEC3C95B1B83D37F0096D5BE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -170,7 +170,7 @@
 		EEEA7F4B1BD627570089BF85 /* StudyIntroItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroItem.swift; sourceTree = "<group>"; };
 		EEEA7F4F1BD64E040089BF85 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EEEA7F661BD68DFE0089BF85 /* StudyIntroConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroConfiguration.swift; sourceTree = "<group>"; };
-		EEEA7F681BD68E800089BF85 /* C3Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C3Error.swift; sourceTree = "<group>"; };
+		EEEA7F681BD68E800089BF85 /* C3Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = C3Error.swift; path = Sources/C3Error.swift; sourceTree = "<group>"; };
 		EEEA7FCA1BD784FA0089BF85 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		EEEA7FCC1BD785360089BF85 /* FHIRExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHIRExtensions.swift; sourceTree = "<group>"; };
 		EEEA7FCD1BD785360089BF85 /* FoundationExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationExtensions.swift; sourceTree = "<group>"; };
@@ -218,7 +218,8 @@
 				EE1AB3B51C23283100711108 /* HKHealthStore+Sampling.swift */,
 				EE1AB3B91C23286200711108 /* HKQuantity+FHIR.swift */,
 			);
-			path = HealthKit;
+			name = HealthKit;
+			path = Sources/HealthKit;
 			sourceTree = SOURCE_ROOT;
 		};
 		EE32BDF81B8396A100024E7A /* Products */ = {
@@ -244,7 +245,7 @@
 				EEEEAB881BDA97EE001F8B5C /* GroupExtensions.swift */,
 			);
 			name = "Consent & Eligibility";
-			path = Consent;
+			path = Sources/Consent;
 			sourceTree = "<group>";
 		};
 		EE5931681AEAD93F00A7C5E1 /* Products */ = {
@@ -268,7 +269,8 @@
 				EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */,
 				EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */,
 			);
-			path = DataQueue;
+			name = DataQueue;
+			path = Sources/DataQueue;
 			sourceTree = "<group>";
 		};
 		EEB6DD211B5D3FA3006A3B9F /* Identity */ = {
@@ -278,7 +280,8 @@
 				EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */,
 				EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */,
 			);
-			path = Identity;
+			name = Identity;
+			path = Sources/Identity;
 			sourceTree = "<group>";
 		};
 		EEC3C9531B83D3460096D5BE /* Encryption */ = {
@@ -288,7 +291,8 @@
 				EEC3C95C1B83D3C80096D5BE /* RSAUtility.swift */,
 				EEC3C95E1B83DA650096D5BE /* AESUtility.swift */,
 			);
-			path = Encryption;
+			name = Encryption;
+			path = Sources/Encryption;
 			sourceTree = "<group>";
 		};
 		EEEA7F3D1BD61E4B0089BF85 /* StudyIntro */ = {
@@ -301,7 +305,8 @@
 				EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */,
 				EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */,
 			);
-			path = StudyIntro;
+			name = StudyIntro;
+			path = Sources/StudyIntro;
 			sourceTree = "<group>";
 		};
 		EEEA7FC11BD784B20089BF85 /* ViewController & Views */ = {
@@ -311,7 +316,7 @@
 				EE851A641BD90DBC007EC6A9 /* BorderedButton.swift */,
 			);
 			name = "ViewController & Views";
-			path = ViewController;
+			path = Sources/ViewController;
 			sourceTree = "<group>";
 		};
 		EEEA7FC91BD784BA0089BF85 /* Extensions */ = {
@@ -320,7 +325,8 @@
 				EEEA7FCC1BD785360089BF85 /* FHIRExtensions.swift */,
 				EEEA7FCD1BD785360089BF85 /* FoundationExtensions.swift */,
 			);
-			path = Extensions;
+			name = Extensions;
+			path = Sources/Extensions;
 			sourceTree = "<group>";
 		};
 		EEFA84B11AE5C18B00E61006 = {
@@ -367,7 +373,8 @@
 				EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */,
 				EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */,
 			);
-			path = Questionnaire;
+			name = Questionnaire;
+			path = Sources/Questionnaire;
 			sourceTree = "<group>";
 		};
 		EEFA84BE1AE5C18B00E61006 /* Supporting Files */ = {
@@ -385,8 +392,7 @@
 				EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */,
 				EEFA84CB1AE5C18B00E61006 /* Supporting Files */,
 			);
-			name = Tests;
-			path = TestCases;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		EEFA84CB1AE5C18B00E61006 /* Supporting Files */ = {
@@ -801,7 +807,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = TestCases/Info.plist;
+				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = C3PROTests;
 			};
@@ -814,7 +820,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = TestCases/Info.plist;
+				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = C3PROTests;
 			};
