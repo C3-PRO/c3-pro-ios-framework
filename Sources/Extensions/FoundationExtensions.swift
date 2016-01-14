@@ -31,14 +31,3 @@ public extension NSFileManager {
 	}
 }
 
-
-func chip_logIfDebug(@autoclosure message: () -> String, function: String = __FUNCTION__, file: NSString = __FILE__, line: Int = __LINE__) {
-	#if DEBUG
-	print("[\(file.lastPathComponent):\(line)] \(function)  \(message())")
-	#endif
-}
-
-func chip_warn(@autoclosure message: () -> String, function: String = __FUNCTION__, file: NSString = __FILE__, line: Int = __LINE__) {
-	print("[\(file.lastPathComponent):\(line)] \(function)  WARNING: \(message())")
-}
-

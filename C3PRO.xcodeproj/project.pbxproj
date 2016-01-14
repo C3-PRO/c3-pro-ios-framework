@@ -170,7 +170,7 @@
 		EEEA7F4B1BD627570089BF85 /* StudyIntroItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroItem.swift; sourceTree = "<group>"; };
 		EEEA7F4F1BD64E040089BF85 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EEEA7F661BD68DFE0089BF85 /* StudyIntroConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroConfiguration.swift; sourceTree = "<group>"; };
-		EEEA7F681BD68E800089BF85 /* C3Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = C3Error.swift; path = Sources/C3Error.swift; sourceTree = "<group>"; };
+		EEEA7F681BD68E800089BF85 /* C3Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = C3Error.swift; path = Sources/Common/C3Error.swift; sourceTree = "<group>"; };
 		EEEA7FCA1BD784FA0089BF85 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		EEEA7FCC1BD785360089BF85 /* FHIRExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHIRExtensions.swift; sourceTree = "<group>"; };
 		EEEA7FCD1BD785360089BF85 /* FoundationExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationExtensions.swift; sourceTree = "<group>"; };

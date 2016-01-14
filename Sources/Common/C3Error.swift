@@ -141,3 +141,21 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 	}
 }
 
+
+/**
+Prints the given message to stdout if `DEBUG` is defined and true. Prepends filename, line number and method/function name.
+*/
+func chip_logIfDebug(@autoclosure message: () -> String, function: String = __FUNCTION__, file: NSString = __FILE__, line: Int = __LINE__) {
+	#if DEBUG
+		print("[\(file.lastPathComponent):\(line)] \(function)  \(message())")
+	#endif
+}
+
+
+/**
+Prints the given message to stdout. Prepends filename, line number, method/function name and "WARNING:".
+*/
+func chip_warn(@autoclosure message: () -> String, function: String = __FUNCTION__, file: NSString = __FILE__, line: Int = __LINE__) {
+	print("[\(file.lastPathComponent):\(line)] \(function)  WARNING: \(message())")
+}
+
