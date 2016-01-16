@@ -46,6 +46,7 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 	case EncryptionX509CertificateNotLoaded(String)
 	
 	case LocationServicesDisabled
+	case MicrophoneAccessDenied
 	
 	case QuestionnaireNotPresent
 	case QuestionnaireInvalidNoTopLevel
@@ -54,6 +55,7 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 	case QuestionnaireFinishedWithError
 	case QuestionnaireUnknownError
 	
+	case HealthKitNotAvailable
 	case NoSuchHKSampleType(String)
 	case QuantityNotCompatibleWithUnit
 	case IntervalTooSmall
@@ -117,6 +119,8 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 		
 		case .LocationServicesDisabled:
 			return "Location services are disabled or have been restricted"
+		case .MicrophoneAccessDenied:
+			return "Access to the microphone has been denied for this app"
 		
 		case .QuestionnaireNotPresent:
 			return "I do not have a questionnaire just yet"
@@ -131,12 +135,31 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 		case .QuestionnaireUnknownError:
 			return "Unknown error handling questionnaire"
 		
+		case .HealthKitNotAvailable:
+			return "HealthKit is not available on your device"
 		case .NoSuchHKSampleType(let typeIdentifier):
 			return "There is no HKSampleType “\(typeIdentifier)”"
 		case .QuantityNotCompatibleWithUnit:
 			return "The unit is not compatible with this quantity"
 		case .IntervalTooSmall:
 			return "The interval is too small"
+		}
+	}
+}
+
+
+/**
+Ensures that the given block is executed on the main queue.
+
+- parameter block: The block to execute on the main queue.
+*/
+public func c3_performOnMainQueue(block: (Void -> Void)) {
+	if NSThread.currentThread().isMainThread {
+		block()
+	}
+	else {
+		dispatch_async(dispatch_get_main_queue()) {
+			block()
 		}
 	}
 }

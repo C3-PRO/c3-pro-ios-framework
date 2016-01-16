@@ -200,6 +200,13 @@ Example:
 ```
 
 
+### Access to System Services
+
+You can easily prompt the user to grant access to HealthKit, CoreMotion, Notifications and others.
+Take a look at [`SystemServices`](../SystemServices); all you have to do is set `wantedServicePermissions` on the consent controller's options.
+By default the user is **not** prompted to give access.
+
+
 Signing
 -------
 

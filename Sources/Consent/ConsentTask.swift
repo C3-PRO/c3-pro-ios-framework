@@ -15,61 +15,79 @@ import SMART
 
 	Data to be shown is read from the `Contract` resource, which will be converted into an `ORKConsentDocument`.
  */
-public class ConsentTask: NSObject, ORKTask {
+public class ConsentTask: ORKOrderedTask {
     
-	public let identifier: String
-	
 	public let contract: Contract
 	
-	public internal(set) var consentDocument: ORKConsentDocument?
-	
-	public internal(set) var steps: [ORKStep]?
+	public let consentDocument: ORKConsentDocument
 	
 	/// The identifier of the review step.
-	public internal(set) var reviewStepName = "reviewStep"
+	public static let reviewStepName = "reviewStep"
 	
 	/// The identifier for the participant's signature in results of the review step.
-	public internal(set) var participantSignatureName = "participant"
+	public static let participantSignatureName = "participant"
 	
 	/// The sharing step.
-	public internal(set) var sharingStep: ORKStep?
+	public var sharingStep: ORKStep? {
+		return stepWithIdentifier(self.dynamicType.sharingStepName)
+	}
 	
 	/// The identifier of the sharing step.
-	public internal(set) var sharingStepName = "sharing"
+	public static let sharingStepName = "sharing"
 	
 	/// The identifier of the passcode/PIN step.
-	public internal(set) var pinStepName = "passcode"
+	public static let pinStepName = "passcode"
 	
 	public var teamName: String? {
 		return contract.authority?.first?.resolved(Organization)?.name
 	}
 	
-	public init(identifier: String, contract: Contract) {
-		self.identifier = identifier
+	/**
+	Designated initializer. Throws exceptions when step creation from the given contract fails.
+	
+	The fact that we need to initialize all stored properties before throwing is bonkers, fix it Swift!!
+	
+	- parameter identifier: The identifier for the task
+	- parameter contract: The Contract resource to use to create steps from
+	- parameter options: Options for the consenting task
+	*/
+	public init(identifier: String, contract: Contract, options: ConsentTaskOptions) throws {
 		self.contract = contract
-		super.init()
+		do {
+			let prepped = try self.dynamicType.stepsAndConsentFromContract(contract, options: options)
+			consentDocument = prepped.consent
+			super.init(identifier: identifier, steps: prepped.steps)
+		}
+		catch let error {
+			consentDocument = ORKConsentDocument()
+			super.init(identifier: identifier, steps: nil)
+			throw error
+		}
+	}
+	
+	public required init(coder aDecoder: NSCoder) {
+	    fatalError("init(coder:) has not been implemented")
 	}
 	
 	
-	// MARK: - Prepare Task and Evaluate
+	// MARK: - Task Preparation and Evaluation
 	
 	/**
-	Prepare the task with the given options. This method initializes the steps of the consent task.
+	Prepare the task with the given options, from the given contract.
 	
+	- parameter contract: The contract to use to create a) a consent document and b) all the steps to perform
 	- parameter options: The options to consider when creating the task
+	- returns: A named tuple returning the ORKConsentDocument and an array of ORKSteps
 	*/
-	func prepareWithOptions(options: ConsentTaskOptions) throws {
-		if nil == consentDocument {
-			consentDocument = try contract.chip_asConsentDocument()
-		}
-		let doc = consentDocument!
+	class func stepsAndConsentFromContract(contract: Contract, options: ConsentTaskOptions) throws -> (consent: ORKConsentDocument, steps: [ORKStep]) {
+		let consent = try contract.chip_asConsentDocument()
 		let bundle = NSBundle.mainBundle()
 		
 		// full consent review document (override, if nil will automatically combine all consent sections)
 		if let reviewDoc = options.reviewConsentDocument {
 			if let url = bundle.URLForResource(reviewDoc, withExtension: "html") ?? bundle.URLForResource(reviewDoc, withExtension: "html", subdirectory: "HTMLContent") {
 				do {
-					doc.htmlReviewContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
+					consent.htmlReviewContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
 				}
 				catch let error {
 					chip_warn("Failed to read contents of file named «\(reviewDoc).html»: \(error)")
@@ -82,7 +100,7 @@ public class ConsentTask: NSObject, ORKTask {
 		
 		// visual step for all consent sections
 		var steps = [ORKStep]()
-		let visual = ORKVisualConsentStep(identifier: "visual", document: doc)
+		let visual = ORKVisualConsentStep(identifier: "visual", document: consent)
 		steps.append(visual)
 		
 		// sharing step
@@ -91,14 +109,13 @@ public class ConsentTask: NSObject, ORKTask {
 			if let url = bundle.URLForResource(more, withExtension: "html") ?? bundle.URLForResource(more, withExtension: "html", subdirectory: "HTMLContent") {
 				do {
 					let learnMore = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
-					
+					let teamName = contract.authority?.first?.resolved(Organization)?.name
 					let team = (nil != teamName) ? "The \(teamName!)" : options.shareTeamName
 					let sharing = ORKConsentSharingStep(identifier: sharingStepName,
 						investigatorShortDescription: team,
 						investigatorLongDescription: team,
 						localizedLearnMoreHTMLContent: learnMore)
 					steps.append(sharing)
-					sharingStep = sharing
 				}
 				catch let error {
 					chip_warn("Failed to read learn more content from «\(url)»: \(error)")
@@ -113,8 +130,8 @@ public class ConsentTask: NSObject, ORKTask {
 		
 		// consent review step
 		let signature = ORKConsentSignature(forPersonWithTitle: "Participant".localized, dateFormatString: nil, identifier: participantSignatureName)
-		doc.addSignature(signature)
-		let review = ORKConsentReviewStep(identifier: reviewStepName, signature: signature, inDocument: doc)
+		consent.addSignature(signature)
+		let review = ORKConsentReviewStep(identifier: reviewStepName, signature: signature, inDocument: consent)
 		review.reasonForConsent = options.reasonForConsent
 		steps.append(review)
 		
@@ -126,8 +143,17 @@ public class ConsentTask: NSObject, ORKTask {
             steps.append(instruction)
             steps.append(ORKPasscodeStep(identifier: pinStepName))
         }
-        
-		self.steps = steps
+		
+		// request permissions step
+		if let services = options.wantedServicePermissions where !services.isEmpty {
+			let instruction = ORKInstructionStep(identifier: "permissionsInstruction")
+			instruction.title = NSLocalizedString("Permissions", comment: "")
+			instruction.text = NSLocalizedString("You will now be asked to grant the app access to certain system features. This allows us to show reminders and read health data from HealthKit, amongst others.", comment: "Text shown before prompting to enable app permissions")
+			steps.append(instruction)
+			steps.append(SystemPermissionStep(identifier: "permissions", permissions: services))
+		}
+		
+		return (consent: consent, steps: steps)
 	}
 	
 	/**
@@ -137,8 +163,8 @@ public class ConsentTask: NSObject, ORKTask {
 	- returns: The consent signature result, if the step has been completed yet
 	*/
 	public func signatureResult(taskResult: ORKTaskResult) -> ORKConsentSignatureResult? {
-		return taskResult.stepResultForStepIdentifier(reviewStepName)?
-			.resultForIdentifier(participantSignatureName) as? ORKConsentSignatureResult
+		return taskResult.stepResultForStepIdentifier(self.dynamicType.reviewStepName)?
+			.resultForIdentifier(self.dynamicType.participantSignatureName) as? ORKConsentSignatureResult
 	}
 	
 	/**
@@ -169,45 +195,18 @@ public class ConsentTask: NSObject, ORKTask {
 	}
 	
 	
-	// MARK: - ORKTask Protocol
+	// MARK: - Task Navigation
 	
-	public func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
-		guard let step = step, let steps = steps else {
-			return self.steps?.first
+	public override func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+		guard let step = step else {
+			return steps.first
 		}
 		
 		// declined consent, stop here
-		if reviewStepName == step.identifier && nil == signature(result) {
+		if self.dynamicType.reviewStepName == step.identifier && nil == signature(result) {
 			return nil
 		}
-		
-		// get next step
-		var next = false
-		for hasStep in steps {
-			if next {
-				return hasStep
-			}
-			if hasStep == step {
-				next = true
-			}
-		}
-		return nil
-	}
-	
-	public func stepBeforeStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
-		guard let step = step, let steps = steps else {
-			return self.steps?.last
-		}
-		var prev = false
-		for hasStep in steps.reverse() {
-			if prev {
-				return hasStep
-			}
-			if hasStep == step {
-				prev = true
-			}
-		}
-		return nil
+		return super.stepAfterStep(step, withResult: result)
 	}
 }
 

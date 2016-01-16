@@ -45,6 +45,10 @@ public struct ConsentTaskOptions {
     /// Whether the user should be prompted to create a passcode/PIN after consenting.
     public var askToCreatePasscode = true
 	
+	/// Which system permissions the user should be asked to grant during consenting.
+	public var wantedServicePermissions: [SystemService]? = nil
+	
+	
 	public init() {  }
 }
 
@@ -204,9 +208,7 @@ public class ConsentController {
 	
 	public func createConsentTask() throws -> ConsentTask {
 		if let contract = contract {
-			let task = ConsentTask(identifier: NSUUID().UUIDString, contract: contract)
-			try task.prepareWithOptions(options)
-			return task
+			return try ConsentTask(identifier: NSUUID().UUIDString, contract: contract, options: options)
 		}
 		throw C3Error.ConsentContractNotPresent
 	}
@@ -246,15 +248,10 @@ public class ConsentController {
                 // if we have a signature in the signature result, we're consented: create PDF and call the callbacks
                 if let signatureResult = task.signatureResult(taskResult), let signature = task.signatureInResult(signatureResult) {
                     let result = ConsentResult(signature: signature)
-                    if let document = task.consentDocument {
-                        signConsentDocument(document, withSignature: signatureResult)
-                    }
-                    else {
-                        chip_warn("impossible error: the consent document could not be found on the consent task")
-                    }
+					signConsentDocument(task.consentDocument, withSignature: signatureResult)                    
                     
                     // sharing choice
-                    if let sharingResult = taskResult.stepResultForStepIdentifier(task.sharingStepName),
+                    if let sharingResult = taskResult.stepResultForStepIdentifier(task.dynamicType.sharingStepName),
                         let sharing = sharingResult.results?.first as? ORKChoiceQuestionResult,
                         let choice = sharing.choiceAnswers?.first as? Int {
                             result.shareWidely = (0 == choice)			// the first option, index 0, is "share worldwide"

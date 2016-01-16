@@ -59,6 +59,12 @@ Also serves as return format of **activity data** collected on the phone.
 Extensions to _HealthKit_ classes to easily query for samples and to represent quantities in FHIR.  
 [➔ HealthKit](./Sources/HealthKit/)
 
+### System Service Permissions
+
+Facilities to request permission to send notifications, access HealthKit and others.
+These can be integrated into the Consent flow.  
+[➔ SystemServices](./Sources/SystemServices)
+
 ### Encryption
 
 AES and RSA encryption facilities that come in handy.
