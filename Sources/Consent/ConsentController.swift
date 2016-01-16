@@ -57,15 +57,22 @@ public class ConsentController {
 	/// The contract to be signed; if nil when signing, a new instance will be created.
 	public final var contract: Contract?
 	
+	/// Options to consider for the consenting task.
 	public var options = ConsentTaskOptions()
 	
 	var deidentifier: DeIdentifier?
 	
 	var consentDelegate: ConsentTaskViewControllerDelegate?
 	
+	/// The callback to call when the user consents.
 	var onUserDidConsent: ((controller: ORKTaskViewController, result: ConsentResult) -> Void)?
 	
+	/// The callback to call when the user declines (or aborts) consenting.
 	var onUserDidDeclineConsent: ((controller: ORKTaskViewController) -> Void)?
+	
+	/// Whether a PIN was present before; if not and consenting is cancelled, the PIN is cleared.
+	internal private(set) var pinPresentBefore = false
+	
 	
 	/**
 	Designated initializer.
@@ -226,6 +233,7 @@ public class ConsentController {
 		let task = try createConsentTask()
 		let consentVC = ORKTaskViewController(task: task, taskRunUUID: NSUUID())
 		consentVC.delegate = consentDelegate!
+		pinPresentBefore = ORKPasscodeViewController.isPasscodeStoredInKeychain()
 		
 		return consentVC
 	}
@@ -293,6 +301,9 @@ public class ConsentController {
 	Called when the user aborts consenting or actively declines consent.
 	*/
 	public func userDidDeclineConsent(taskViewController: ORKTaskViewController) {
+		if !pinPresentBefore {
+			ORKPasscodeViewController.removePasscodeFromKeychain()
+		}
 		if let exec = onUserDidDeclineConsent {
 			exec(controller: taskViewController)
 		}
