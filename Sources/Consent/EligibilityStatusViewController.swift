@@ -35,7 +35,7 @@ public class EligibilityStatusViewController: UIViewController {
 	}
 	
 	/// The title of the one and only action button, which appears at the bottom **if** `onActionButtonTap` is defined.
-	public var actionButtonTitle = NSLocalizedString("Start Consent", comment: "Start Consent button title")
+	public var actionButtonTitle = "Start Consent".c3_localized("Start Consent button title")
 	
 	/// Action to perform when the one and only action button is tapped.
 	public var onActionButtonTap: ((controller: UIViewController) -> Void)? {

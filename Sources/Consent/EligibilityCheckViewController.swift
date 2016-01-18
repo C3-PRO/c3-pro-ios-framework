@@ -41,7 +41,7 @@ public class EligibilityCheckViewController: UITableViewController {
 		tableView.estimatedRowHeight = 120.0
 		tableView.rowHeight = UITableViewAutomaticDimension
 		
-		let next = UIBarButtonItem(title: NSLocalizedString("Next", comment: "Next step"), style: .Plain, target: self, action: "verifyEligibility")
+		let next = UIBarButtonItem(title: "Next".c3_localized("Next step"), style: .Plain, target: self, action: "verifyEligibility")
 		next.enabled = false
 		navigationItem.rightBarButtonItem = next
 		nextButton = next
@@ -110,8 +110,8 @@ public class EligibilityCheckViewController: UITableViewController {
 	*/
 	public func showEligibleAnimated(animated: Bool) {
 		let vc = EligibilityStatusViewController()
-		vc.titleText = eligibleTitle ?? NSLocalizedString("You are eligible to join the study", comment: "")
-		vc.subText = eligibleMessage ?? NSLocalizedString("Tap the button below to begin the consent process", comment: "")
+		vc.titleText = eligibleTitle ?? "You are eligible to join the study".c3_localized
+		vc.subText = eligibleMessage ?? "Tap the button below to begin the consent process".c3_localized
 		vc.onActionButtonTap = { controller in
 			if let exec = self.onStartConsent {
 				exec(viewController: self)
@@ -128,7 +128,7 @@ public class EligibilityCheckViewController: UITableViewController {
 	*/
 	public func showIneligibleAnimated(animated: Bool) {
 		let vc = EligibilityStatusViewController()
-		vc.subText = ineligibleMessage ?? NSLocalizedString("Thank you for your interest!\nUnfortunately, you are not eligible to join this study at this time.", comment: "")
+		vc.subText = ineligibleMessage ?? "Thank you for your interest!\nUnfortunately, you are not eligible to join this study at this time.".c3_localized
 		
 		if let navi = navigationController {
 			var vcs = navi.viewControllers.filter() { !($0 is EligibilityStatusViewController || $0 is EligibilityCheckViewController) }
@@ -218,8 +218,8 @@ class EligibilityCell: UITableViewCell {
 		let desc = UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleBody)
 		yes.titleLabel?.font = UIFont(descriptor: desc, size: desc.pointSize * 2)
 		no.titleLabel?.font = UIFont(descriptor: desc, size: desc.pointSize * 2)
-		yes.setTitle(NSLocalizedString("Yes", comment: "Yes as in yes-i-meet-this-requirement"), forState: .Normal)
-		no.setTitle(NSLocalizedString("No", comment: "No as in no-i-dont-meet-this-requirement"), forState: .Normal)
+		yes.setTitle("Yes".c3_localized("Yes as in yes-i-meet-this-requirement"), forState: .Normal)
+		no.setTitle("No".c3_localized("No as in no-i-dont-meet-this-requirement"), forState: .Normal)
 		let sep = UIView()
 		sep.translatesAutoresizingMaskIntoConstraints = false
 		sep.backgroundColor = UIColor(white: 0.8, alpha: 1.0)

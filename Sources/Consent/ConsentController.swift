@@ -31,7 +31,7 @@ public struct ConsentTaskOptions {
 	/// Whether or not the participant should be asked if she wants to share her data worldwide or only with the study researchers.
 	public var askForSharing = true
 	
-	var shareTeamName = "the research team"
+	var shareTeamName = "the research team".c3_localized
 	
 	/// Name of a bundled HTML file (without extension) that contains more information about data sharing.
 	public var shareMoreInfoDocument = "Consent_sharing"
@@ -40,7 +40,7 @@ public struct ConsentTaskOptions {
 	public var reviewConsentDocument: String? = nil
 	
 	/// Shown when the user taps agree and she needs to confirm that she is in agreement.
-	public var reasonForConsent = NSLocalizedString("By agreeing you confirm that you read the consent and that you wish to take part in this research study.", comment: "")
+	public var reasonForConsent = "By agreeing you confirm that you read the consent and that you wish to take part in this research study.".c3_localized
     
     /// Whether the user should be prompted to create a passcode/PIN after consenting.
     public var askToCreatePasscode = true
@@ -107,10 +107,10 @@ public class ConsentController {
 	*/
 	public func eligibilityStatusViewController(config: StudyIntroConfiguration? = nil, onStartConsent: ((viewController: EligibilityCheckViewController) -> Void)? = nil) -> EligibilityStatusViewController {
 		let check = EligibilityStatusViewController()
-		check.title = NSLocalizedString("Eligibility", comment: "")
-		check.titleText = NSLocalizedString("Let's see if you may take part in this study", comment: "")
-		check.subText = NSLocalizedString("Tap the button below to begin the eligibility process", comment: "")
-		check.actionButtonTitle = NSLocalizedString("Start Eligibility", comment: "")
+		check.title = "Eligibility".c3_localized
+		check.titleText = "Let's see if you may take part in this study".c3_localized
+		check.subText = "Tap the button below to begin the eligibility process".c3_localized
+		check.actionButtonTitle = "Start Eligibility".c3_localized
 		
 		// the actual eligibility check view controller; configure to present on check's navigation controller if no block is provided
 		let elig = EligibilityCheckViewController(style: .Grouped)

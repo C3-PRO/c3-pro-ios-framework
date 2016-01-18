@@ -25,6 +25,7 @@
 		EE86C47E1C492F3C00B7D486 /* SystemPermissionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE86C47D1C492F3C00B7D486 /* SystemPermissionStep.swift */; };
 		EE86C4801C49327D00B7D486 /* SystemPermissionStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE86C47F1C49327D00B7D486 /* SystemPermissionStepViewController.swift */; };
 		EE86C48D1C4AB47500B7D486 /* PermissionRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE86C48C1C4AB47500B7D486 /* PermissionRequestTableViewCell.swift */; };
+		EE86C48F1C4AC1E500B7D486 /* String+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE86C48E1C4AC1E500B7D486 /* String+C3-PRO.swift */; };
 		EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */; };
 		EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */; };
 		EEA5CF191BEA5B5A00A6D4C9 /* ConsentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */; };
@@ -33,6 +34,7 @@
 		EEC3C95D1B83D3C80096D5BE /* RSAUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC3C95C1B83D3C80096D5BE /* RSAUtility.swift */; };
 		EEC3C95F1B83DA650096D5BE /* AESUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC3C95E1B83DA650096D5BE /* AESUtility.swift */; };
 		EEC6DC2B1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC6DC2A1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift */; };
+		EEC6DC3D1C4D4F0200A42E87 /* C3PRO.strings in Resources */ = {isa = PBXBuildFile; fileRef = EEC6DC3F1C4D4F0200A42E87 /* C3PRO.strings */; };
 		EEEA7F481BD61EA20089BF85 /* StudyIntroCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */; };
 		EEEA7F4A1BD624490089BF85 /* StudyIntroCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */; };
 		EEEA7F4C1BD627570089BF85 /* StudyIntroItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F4B1BD627570089BF85 /* StudyIntroItem.swift */; };
@@ -166,6 +168,7 @@
 		EE86C47D1C492F3C00B7D486 /* SystemPermissionStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemPermissionStep.swift; sourceTree = "<group>"; };
 		EE86C47F1C49327D00B7D486 /* SystemPermissionStepViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemPermissionStepViewController.swift; sourceTree = "<group>"; };
 		EE86C48C1C4AB47500B7D486 /* PermissionRequestTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermissionRequestTableViewCell.swift; sourceTree = "<group>"; };
+		EE86C48E1C4AC1E500B7D486 /* String+C3-PRO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+C3-PRO.swift"; path = "Sources/Common/String+C3-PRO.swift"; sourceTree = "<group>"; };
 		EE86C4901C4ADA6400B7D486 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentTask.swift; sourceTree = "<group>"; };
 		EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContractExtensions.swift; sourceTree = "<group>"; };
@@ -177,6 +180,7 @@
 		EEC3C95C1B83D3C80096D5BE /* RSAUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAUtility.swift; sourceTree = "<group>"; };
 		EEC3C95E1B83DA650096D5BE /* AESUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AESUtility.swift; sourceTree = "<group>"; };
 		EEC6DC2A1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemPermissionTableViewController.swift; sourceTree = "<group>"; };
+		EEC6DC3E1C4D4F0200A42E87 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/C3PRO.strings; sourceTree = "<group>"; };
 		EEEA7F451BD61E800089BF85 /* StudyIntro.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = StudyIntro.storyboard; sourceTree = "<group>"; };
 		EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroCollectionViewController.swift; sourceTree = "<group>"; };
 		EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -362,6 +366,8 @@
 			children = (
 				EE519B9C1B0CD3AC00036B96 /* README.md */,
 				EEEA7F681BD68E800089BF85 /* C3Error.swift */,
+				EE86C48E1C4AC1E500B7D486 /* String+C3-PRO.swift */,
+				EEC6DC3F1C4D4F0200A42E87 /* C3PRO.strings */,
 				EEEA7F3D1BD61E4B0089BF85 /* StudyIntro */,
 				EE519BA51B0CD69B00036B96 /* Consent & Eligibility */,
 				EEFA84BD1AE5C18B00E61006 /* Questionnaire */,
@@ -608,6 +614,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EEC6DC3D1C4D4F0200A42E87 /* C3PRO.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -649,6 +656,7 @@
 				EEEEAB891BDA97EE001F8B5C /* GroupExtensions.swift in Sources */,
 				EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */,
 				EE1AB3B71C23283100711108 /* HKHealthStore+Sampling.swift in Sources */,
+				EE86C48F1C4AC1E500B7D486 /* String+C3-PRO.swift in Sources */,
 				EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */,
 				EE86C47C1C490C4B00B7D486 /* SystemService.swift in Sources */,
 				EEC3C95F1B83DA650096D5BE /* AESUtility.swift in Sources */,
@@ -701,6 +709,17 @@
 			targetProxy = EEFA84F81AE5C2B300E61006 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EEC6DC3F1C4D4F0200A42E87 /* C3PRO.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EEC6DC3E1C4D4F0200A42E87 /* en */,
+			);
+			name = C3PRO.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		EEFA84CF1AE5C18B00E61006 /* Debug */ = {

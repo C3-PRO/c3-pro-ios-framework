@@ -138,8 +138,8 @@ public class ConsentTask: ORKOrderedTask {
 		// set passcode step
         if options.askToCreatePasscode {
             let instruction = ORKInstructionStep(identifier: "passcodeInstruction")
-            instruction.title = NSLocalizedString("Passcode", comment: "")
-            instruction.text = NSLocalizedString("You will now be asked to create a passcode.\n\nThis protects your data from unauthorized access should you hand your phone to a friend.", comment: "Text shown before prompting to create a passcode")
+            instruction.title = "Passcode".c3_localized
+            instruction.text = "You will now be asked to create a passcode.\n\nThis protects your data from unauthorized access should you hand your phone to a friend.".c3_localized
             steps.append(instruction)
             steps.append(ORKPasscodeStep(identifier: pinStepName))
         }
@@ -147,8 +147,8 @@ public class ConsentTask: ORKOrderedTask {
 		// request permissions step
 		if let services = options.wantedServicePermissions where !services.isEmpty {
 			let instruction = ORKInstructionStep(identifier: "permissionsInstruction")
-			instruction.title = NSLocalizedString("Permissions", comment: "")
-			instruction.text = NSLocalizedString("You will now be asked to grant the app access to certain system features. This allows us to show reminders and read health data from HealthKit, amongst others.", comment: "Text shown before prompting to enable app permissions")
+			instruction.title = "Permissions".c3_localized
+			instruction.text = "You will now be asked to grant the app access to certain system features. This allows us to show reminders and read health data from HealthKit, amongst others.".c3_localized
 			steps.append(instruction)
 			steps.append(SystemPermissionStep(identifier: "permissions", permissions: services))
 		}

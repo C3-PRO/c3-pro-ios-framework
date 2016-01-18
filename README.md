@@ -77,6 +77,13 @@ Helps creating de-identified patient resources, consistent with _HIPAA Safe Harb
 [➔ Identity](./Sources/Identity/)
 
 
+Localization
+------------
+
+The framework uses `NSLocalizedString` on the `C3PRO` table name, meaning it's looking at the C3PRO.strings file for string localization.
+There is an extension on _String_ so we can simply use `"My Text".c3_localized` in code; if you're looking in the code, search for this variable.
+
+
 License
 -------
 

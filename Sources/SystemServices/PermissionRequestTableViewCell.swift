@@ -35,7 +35,8 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 		didSet {
 			actionButton?.enabled = (nil != actionCallback)
 			if let button = actionButton {
-				button.setTitle(NSLocalizedString(button.enabled ? "Allow" : "Granted", comment: ""), forState: .Normal)
+				button.setTitle("Allow".c3_localized("Button to enable certain system services"), forState: .Normal)
+				button.setTitle("Granted".c3_localized("Disabled button when permissions were granted"), forState: .Disabled)
 			}
 		}
 	}
@@ -103,7 +104,7 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	public func indicateError(error: ErrorType, forService service: SystemService) {
 		commentLabel?.text = "\(error)."
 		commentLabel?.textColor = UIColor.redColor()
-		actionButton?.setTitle(NSLocalizedString("Try Again", comment: ""), forState: .Normal)
+		actionButton?.setTitle("Try Again".c3_localized("Button title"), forState: .Normal)
 		contentView.setNeedsLayout()
 		contentView.layoutIfNeeded()
 		
@@ -114,9 +115,9 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	
 	public func showRecoveryInstructionsForService(service: SystemService, fromViewController viewController: UIViewController) {
 		let alert = UIAlertController(title: service.description, message: service.localizedHowToReEnable, preferredStyle: .Alert)
-		alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .Cancel, handler: nil))
+		alert.addAction(UIAlertAction(title: "OK".c3_localized("Alert button title"), style: .Cancel, handler: nil))
 		if service.wantsAppSettingsPane, let url = NSURL(string: UIApplicationOpenSettingsURLString) {
-			alert.addAction(UIAlertAction(title: NSLocalizedString("Open Settings App", comment: ""), style: .Default) { action in
+			alert.addAction(UIAlertAction(title: "Open Settings App".c3_localized, style: .Default) { action in
 				UIApplication.sharedApplication().openURL(url)
 			})
 		}
@@ -158,7 +159,7 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 		if nil == actionButton {
 			let btn = BorderedButton()
 			btn.translatesAutoresizingMaskIntoConstraints = false
-			btn.setTitle(NSLocalizedString("Allow", comment: ""), forState: .Normal)
+			btn.setTitle("Allow".c3_localized, forState: .Normal)
 			btn.addTarget(self, action: "performAction:", forControlEvents: .TouchUpInside)
 			contentView.addSubview(btn)
 			contentView.addConstraint(NSLayoutConstraint(item: btn, attribute: .CenterX, relatedBy: .Equal, toItem: contentView, attribute: .CenterX, multiplier: 1, constant: 0))

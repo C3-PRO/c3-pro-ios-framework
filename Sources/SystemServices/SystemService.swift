@@ -40,17 +40,17 @@ public enum SystemService: CustomStringConvertible {
 	public var description: String {
 		switch self {
 		case .GeoLocationWhenUsing:
-			return NSLocalizedString("Location Services", comment: "")
+			return "Location Services".c3_localized
 		case .GeoLocationAlways:
-			return NSLocalizedString("Location Services", comment: "")
+			return "Location Services".c3_localized
 		case .LocalNotifications:
-			return NSLocalizedString("Notifications", comment: "")
+			return "Notifications".c3_localized
 		case .CoreMotion:
-			return NSLocalizedString("Motion Activity", comment: "")
+			return "Motion Activity".c3_localized
 		case .HealthKit:
-			return NSLocalizedString("HealthKit", comment: "")
+			return "HealthKit".c3_localized
 		case .Microphone:
-			return NSLocalizedString("Microphone", comment: "")
+			return "Microphone".c3_localized
 		}
 	}
 	
@@ -62,33 +62,33 @@ public enum SystemService: CustomStringConvertible {
 		case .GeoLocationAlways(let reason):
 			return reason
 		case .LocalNotifications:
-			return NSLocalizedString("Enabling notifications allows the app to show reminders.", comment: "")
+			return "Enabling notifications allows the app to show reminders.".c3_localized
 		case .CoreMotion:
-			return NSLocalizedString("Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease.", comment: "")
+			return "Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease.".c3_localized
 		case .HealthKit:
-			return NSLocalizedString("Individually specify which general health information the app may read from and write to HealthKit", comment: "")
+			return "Individually specify which general health information the app may read from and write to HealthKit".c3_localized
 		case .Microphone:
-			return NSLocalizedString("Access to microphone is required for your Voice Recording Activity.", comment: "")
+			return "Access to microphone is required for your Voice Recording Activity.".c3_localized
 		}
 	}
 	
 	/// Localized instructions telling how to re-enable the system service. Queries `CFBundleDisplayName` from the bundle's Info.plist to
 	/// substitute the app name.
 	public var localizedHowToReEnable: String {
-		let appName = (NSBundle.mainBundle().infoDictionary?["CFBundleDisplayName"] as? String ?? NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String) ?? NSLocalizedString("App Name", comment: "")
+		let appName = (NSBundle.mainBundle().infoDictionary?["CFBundleDisplayName"] as? String ?? NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String) ?? "App Name".c3_localized
 		switch self {
 		case .GeoLocationWhenUsing:
-			return NSLocalizedString("Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable.", comment: "")
+			return "Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable.".c3_localized
 		case .GeoLocationAlways:
-			return NSLocalizedString("Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable.", comment: "")
+			return "Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable.".c3_localized
 		case .LocalNotifications:
-			return NSLocalizedString("Please go to the Settings app ➔ “\(appName)” ➔ “Notifications” and turn “Allow Notifications” on.", comment: "")
+			return "Please go to the Settings app ➔ “\(appName)” ➔ “Notifications” and turn “Allow Notifications” on.".c3_localized
 		case .CoreMotion:
-			return NSLocalizedString("Please go to the Settings app ➔ “\(appName)” and turn “Motion & Fitness” on", comment: "")
+			return "Please go to the Settings app ➔ “\(appName)” and turn “Motion & Fitness” on".c3_localized
 		case .HealthKit:
-			return NSLocalizedString("Please go to the Settings app ➔ “Privacy ”➔ “Health” ➔ \(appName) to re-enable.", comment: "")
+			return "Please go to the Settings app ➔ “Privacy ”➔ “Health” ➔ \(appName) to re-enable.".c3_localized
 		case .Microphone:
-			return NSLocalizedString("Please go to the Settings app ➔ “\(appName)” and turn “Microphone” on", comment: "")
+			return "Please go to the Settings app ➔ “\(appName)” and turn “Microphone” on".c3_localized
 		}
 	}
 	

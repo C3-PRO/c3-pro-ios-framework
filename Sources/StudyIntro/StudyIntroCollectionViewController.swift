@@ -109,7 +109,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	public func showConsent() {
 		let pdfVC = PDFViewController()
 		if let url = self.dynamicType.bundledConsentPDFURL() {
-			pdfVC.title = NSLocalizedString("Consent", comment: "")
+			pdfVC.title = "Consent".c3_localized
 			pdfVC.hidesBottomBarWhenPushed = true
 			if let navi = navigationController {
 				navi.pushViewController(pdfVC, animated: true)

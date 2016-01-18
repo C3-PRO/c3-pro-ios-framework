@@ -35,7 +35,7 @@ public class StudyIntroWelcomeItem: StudyIntroItem {
 	public var videoName: String?
 	
 	/// Text at the bottom, informing the user about the possibility to swipe contents
-	public var swipeText = NSLocalizedString("Swipe to learn more", comment: "")
+	public var swipeText = "Swipe to learn more".c3_localized
 	
 	public init(title: String, subtitle: String?, video: String?) {
 		self.title = title
