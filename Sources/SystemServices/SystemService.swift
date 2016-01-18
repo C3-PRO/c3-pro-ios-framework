@@ -37,7 +37,7 @@ public enum SystemService: CustomStringConvertible {
 	// MARK: - Titles, Names and Strings
 	
 	/// The title or name of the service.
-	public var name: String {
+	public var description: String {
 		switch self {
 		case .GeoLocationWhenUsing:
 			return NSLocalizedString("Location Services", comment: "")
@@ -55,7 +55,7 @@ public enum SystemService: CustomStringConvertible {
 	}
 	
 	/// The description of what the service entails/why it's needed.
-	public var description: String {
+	public var usageReason: String {
 		switch self {
 		case .GeoLocationWhenUsing(let reason):
 			return reason
@@ -72,8 +72,34 @@ public enum SystemService: CustomStringConvertible {
 		}
 	}
 	
-	public func localizedHowToReEnable() -> String {
-		return ""
+	/// Localized instructions telling how to re-enable the system service. Queries `CFBundleDisplayName` from the bundle's Info.plist to
+	/// substitute the app name.
+	public var localizedHowToReEnable: String {
+		let appName = (NSBundle.mainBundle().infoDictionary?["CFBundleDisplayName"] as? String ?? NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String) ?? NSLocalizedString("App Name", comment: "")
+		switch self {
+		case .GeoLocationWhenUsing:
+			return NSLocalizedString("Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable.", comment: "")
+		case .GeoLocationAlways:
+			return NSLocalizedString("Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable.", comment: "")
+		case .LocalNotifications:
+			return NSLocalizedString("Please go to the Settings app ➔ “\(appName)” ➔ “Notifications” and turn “Allow Notifications” on.", comment: "")
+		case .CoreMotion:
+			return NSLocalizedString("Please go to the Settings app ➔ “\(appName)” and turn “Motion & Fitness” on", comment: "")
+		case .HealthKit:
+			return NSLocalizedString("Please go to the Settings app ➔ “Privacy ”➔ “Health” ➔ \(appName) to re-enable.", comment: "")
+		case .Microphone:
+			return NSLocalizedString("Please go to the Settings app ➔ “\(appName)” and turn “Microphone” on", comment: "")
+		}
+	}
+	
+	/// Whether the settings can be managed from within the app's settings pane (not a top-level pane, such as “Privacy”)
+	public var wantsAppSettingsPane: Bool {
+		switch self {
+		case .HealthKit:
+			return false
+		default:
+			return true
+		}
 	}
 }
 

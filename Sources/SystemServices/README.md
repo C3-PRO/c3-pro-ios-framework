@@ -52,3 +52,8 @@ let vc = consentController.eligibilityStatusViewController(...)
 ```
 
 
+### Permissions View Controller
+
+During consenting you use the `SystemPermissionStep` step, which will automatically show a `SystemPermissionStepViewController` when running the task.
+You can also use `SystemPermissionTableViewController`, configured with the services you'd like using its `services` property, and show it from anywhere inside the app.
+This is usually done from a profile page so the user may re-run the permissioning.

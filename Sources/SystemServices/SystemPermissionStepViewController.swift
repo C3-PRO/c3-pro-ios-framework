@@ -108,7 +108,7 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 		let cell = tableView.dequeueReusableCellWithIdentifier("MainCell", forIndexPath: indexPath) as! PermissionRequestTableViewCell
 		cell.selectionStyle = .None
 		if let service = serviceAtIndexPath(indexPath) {
-			cell.setupForService(service, permissioner: permissionRequester)
+			cell.setupForService(service, permissioner: permissionRequester, viewController: self)
 		}
 		return cell
 	}
