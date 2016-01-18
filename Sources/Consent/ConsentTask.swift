@@ -141,7 +141,7 @@ public class ConsentTask: ORKOrderedTask {
 		// TODO: quiz?
 		
 		// consent review step
-		let signature = ORKConsentSignature(forPersonWithTitle: "Participant".localized, dateFormatString: nil, identifier: participantSignatureName)
+		let signature = ORKConsentSignature(forPersonWithTitle: "Participant".c3_localized, dateFormatString: nil, identifier: participantSignatureName)
 		consent.addSignature(signature)
 		let review = ORKConsentReviewStep(identifier: reviewStepName, signature: signature, inDocument: consent)
 		review.reasonForConsent = options.reasonForConsent

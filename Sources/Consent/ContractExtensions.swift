@@ -31,9 +31,9 @@ public extension Contract {
 	public func chip_asConsentDocument() throws -> ORKConsentDocument {
 		let sections = try chip_termsAsConsentSections()
 		let document = ORKConsentDocument()
-		document.title = "Consent".localized
-		document.signaturePageTitle = "Consent".localized
-		document.signaturePageContent = "By agreeing you confirm that you read the consent and that you wish to take part in this research study.".localized
+		document.title = "Consent".c3_localized
+		document.signaturePageTitle = "Consent".c3_localized
+		document.signaturePageContent = "By agreeing you confirm that you read the consent and that you wish to take part in this research study.".c3_localized
 		document.sections = sections
 		
 		return document
