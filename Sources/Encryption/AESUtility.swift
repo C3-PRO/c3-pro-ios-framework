@@ -23,19 +23,21 @@ import CryptoSwift
 
 
 /**
-    Utility to work with symmetric AES encryption. Relies on `CryptoSwift`.
- */
-public class AESUtility
-{
-	/// Bytes of the key to use, 32 by default
+Utility to work with symmetric AES encryption. Relies on `CryptoSwift`.
+*/
+public class AESUtility {
+	
+	/// Bytes of the key to use, 32 by default.
 	public var keySize = 32
 	
+	/// NSData representation of the symmetric key.
 	public var symmetricKeyData: NSData {
 		return NSData.withBytes(symmetricKey)
 	}
 	
 	var symmetricKey: [UInt8]
 	
+	/** Designated initializer. Creates a random symmetric key. */
 	public init() {
 		symmetricKey = Cipher.randomIV(keySize)
 	}
@@ -55,6 +57,9 @@ public class AESUtility
 	
 	/**
 	Encrypt given data with the current symmetricKey and an IV parameter of all-zeroes.
+	
+	- parameter data: The data to encrypt using the receiver's symmetric key
+	- returns: Encryped data representation
 	*/
 	public func encrypt(data: NSData) throws -> NSData {
 		let aes = AES(key: symmetricKey)!		// this only fails if keySize is wrong
@@ -67,6 +72,9 @@ public class AESUtility
 	
 	/**
 	Decrypt given data with the current symmetricKey and an IV parameter of all-zeroes.
+	
+	- parameter encData: Encrypted data to decrypt using the receiver's symmetric key
+	- returns: Decrypted data
 	*/
 	public func decrypt(encData: NSData) throws -> NSData {
 		let aes = AES(key: symmetricKey)!		// this only fails if keySize is wrong

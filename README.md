@@ -13,10 +13,6 @@ There are additional utilities for _encryption_, _geolocation_, _de-identificati
 
 The iOS framework is built of components that can be used individually, meaning you can use only the parts you need.
 
-The `master` branch currently supports _Swift 2.0_ and _FHIR 0.5.0_ and requires Xcode 7.
-The `develop` branch is on _FHIR 1.0.2_.
-For other versions see the [releases](releases) tab, for newer versions look for `feature/x` branches.
-
 Taking a _pure Swift_ approach, you will not be able to use this framework with Objective-C alone.
 Instead, you can use Swift code in your app, using a [mix and match][mix-match] approach, to connect the C3-PRO components to the Objective-C bits in your app.
 
@@ -26,6 +22,19 @@ We also have a [sample app][] that demonstrates how some of the components can b
 ```swift
 import C3PRO
 ```
+
+#### Versions
+
+The `master` branch currently supports _Swift 2.0_ and _FHIR 0.5.0_ and requires Xcode 7.
+The `develop` branch is on _FHIR 1.0.2_.
+For other versions see the [releases](releases) tab, for newer versions look for `feature/x` branches.
+
+See [CHANGELOG.md](./CHANGELOG.md) for updates.
+Since this framework combines several versioned technologies, the releases support:
+
+ Version | Swift | ResearchKit |  FHIR
+---------|-------|-------------|------
+ **1.0** |   2.x |         1.3 | 1.0.2
 
 
 Components

@@ -22,15 +22,20 @@ import Foundation
 
 
 /**
-    RSA Encryption helper.
- */
-public class RSAUtility
-{
+RSA Encryption helper.
+*/
+public class RSAUtility {
+	
 	/// The name of the bundled X509 public key certificate (without the .crt part).
 	public let publicCertificateFile: String
 	
 	var publicKey: SecKey?
 	
+	/**
+	Designated initializer.
+	
+	- parameter publicCertificateFile: Name of the bundled X509 public key certificate (without the .crt extension)
+	*/
 	public init(publicCertificateFile certificateFile: String) {
 		publicCertificateFile = certificateFile
 	}
@@ -38,6 +43,12 @@ public class RSAUtility
 	
 	// MARK: - Encryption
 	
+	/**
+	Encrypt given data using the receiver's public key.
+	
+	- parameter data: The data to encrypt
+	- returns: Encrypted data
+	*/
 	public func encrypt(data: NSData) throws -> NSData {
 		if nil == publicKey {
 			try readBundledCertificate()
@@ -45,6 +56,13 @@ public class RSAUtility
 		return try encryptDataWithKey(data, key: publicKey!)
 	}
 	
+	/**
+	Encrypt given data with the provided public key.
+	
+	- parameter data: The data to encrypt
+	- parameter key: The key to use for encryption
+	- returns: Encrypted data
+	*/
 	public func encryptDataWithKey(data: NSData, key: SecKey) throws -> NSData {
 		let cipherBufferSize = SecKeyGetBlockSize(key)
 		let cipherBuffer = NSMutableData(length: Int(cipherBufferSize))
@@ -69,6 +87,8 @@ public class RSAUtility
 	
 	/**
 	Tries to read data from `publicCertificateFile`, then forwards to `loadPublicKey()` to instantiate a SecKey.
+	
+	- returns: The `SecKey` read from the bundled certificate
 	*/
 	func readBundledCertificate() throws -> SecKey {
 		if let keyURL = NSBundle.mainBundle().URLForResource(publicCertificateFile, withExtension: "crt") {
@@ -84,6 +104,9 @@ public class RSAUtility
 	
 	/**
 	Use given data, representing an X509 certificate, to instantiate a SecKey.
+	
+	- parameter data: Date representing a X509 certificate
+	- returns: The `SecKey` loaded from the given data
 	*/
 	func loadPublicKey(data: NSData) throws -> SecKey {
 		if let cert = SecCertificateCreateWithData(kCFAllocatorDefault, data) {
