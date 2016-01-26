@@ -96,7 +96,12 @@ There is an extension on _String_ so we can simply use `"My Text".c3_localized` 
 License
 -------
 
-This work is [Apache 2](LICENSE.txt) licensed.
+This work is [Apache 2](./LICENSE.txt) licensed.
+Be sure to take a look at the [NOTICE.txt](./NOTICE.txt) file, and don't forget to also add the licensing information of the two submodules somewhere in your product:
+
+- [ResearchKit](./ResearchKit/LICENSE)
+- [CryptoSwift](./CryptoSwift/LICENSE)
+
 
 [C3-PRO]: http://c3-pro.chip.org
 [fhir]: http://hl7.org/fhir/
