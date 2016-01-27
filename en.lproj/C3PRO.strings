@@ -1,0 +1,99 @@
+/* 
+  C3PRO.strings
+  C3PRO
+
+  Created by Pascal Pfiffner on 1/18/16.
+  Copyright © 2016 Boston Children's Hospital. All rights reserved.
+*/
+
+/* Why the microphone wants to be used */
+"Access to microphone is required for your Voice Recording Activity." = "Access to microphone is required for your Voice Recording Activity.";
+
+/* Button to enable certain system services */
+"Allow" = "Allow";
+
+/* When the app's actual name isn't known */
+"App Name" = "App Name";
+
+"By agreeing you confirm that you read the consent and that you wish to take part in this research study." = "By agreeing you confirm that you read the consent and that you wish to take part in this research study.";
+"Consent" = "Consent";
+"Eligibility" = "Eligibility";
+
+/* Why notifications want to be sent */
+"Enabling notifications allows the app to show reminders." = "Enabling notifications allows the app to show reminders.";
+
+/* Disabled button when permissions were granted */
+"Granted" = "Granted";
+
+"HealthKit" = "HealthKit";
+
+/* Why HealthKit wants to be used */
+"Individually specify which general health information the app may read from and write to HealthKit" = "Individually specify which general health information the app may read from and write to HealthKit";
+
+"Let's see if you may take part in this study" = "Let's see if you may take part in this study";
+"Location Services" = "Location Services";
+"Microphone" = "Microphone";
+"Motion Activity" = "Motion Activity";
+
+/* Next step */
+"Next" = "Next";
+
+/* No as in no-i-dont-meet-this-requirement */
+"No" = "No";
+
+"Notifications" = "Notifications";
+
+/* Alert button title */
+"OK" = "OK";
+
+/* Button to open settings */
+"Open Settings App" = "Open Settings App";
+
+"Participant" = "Participant";
+"Passcode" = "Passcode";
+"Permissions" = "Permissions";
+
+/* How to re-enable the microphone */
+"Please go to the Settings app ➔ “\(appName)” and turn “Microphone” on" = "Please go to the Settings app ➔ “\(appName)” and turn “Microphone” on";
+
+/* How to re-enable CoreMotion */
+"Please go to the Settings app ➔ “\(appName)” and turn “Motion & Fitness” on" = "Please go to the Settings app ➔ “\(appName)” and turn “Motion & Fitness” on";
+
+/* How to re-enable Geo-location */
+"Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable." = "Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable.";
+
+/* How to re-enable Local Notifications */
+"Please go to the Settings app ➔ “\(appName)” ➔ “Notifications” and turn “Allow Notifications” on." = "Please go to the Settings app ➔ “\(appName)” ➔ “Notifications” and turn “Allow Notifications” on.";
+
+/* How to re-enable HealthKit */
+"Please go to the Settings app ➔ “Privacy ”➔ “Health” ➔ \(appName) to re-enable." = "Please go to the Settings app ➔ “Privacy ”➔ “Health” ➔ \(appName) to re-enable.";
+
+/* Start Consent button title */
+"Start Consent" = "Start Consent";
+
+"Start Eligibility" = "Start Eligibility";
+"Swipe to learn more" = "Swipe to learn more";
+"Tap the button below to begin the consent process" = "Tap the button below to begin the consent process";
+"Tap the button below to begin the eligibility process" = "Tap the button below to begin the eligibility process";
+"Thank you for your interest!\nUnfortunately, you are not eligible to join this study at this time." = "Thank you for your interest!\nUnfortunately, you are not eligible to join this study at this time.";
+
+/* Default team name during consenting */
+"the research team" = "the research team";
+
+/* Button title */
+"Try Again" = "Try Again";
+
+/* Why CoreMotion wants to be used */
+"Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease." = "Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease.";
+
+/* Yes as in yes-i-meet-this-requirement */
+"Yes" = "Yes";
+
+"You are eligible to join the study" = "You are eligible to join the study";
+
+/* Text shown before prompting to create a passcode */
+"You will now be asked to create a passcode.\n\nThis protects your data from unauthorized access should you hand your phone to a friend." = "You will now be asked to create a passcode.\n\nThis protects your data from unauthorized access should you hand your phone to a friend.";
+
+/* Text shown before prompting to enable app permissions */
+"You will now be asked to grant the app access to certain system features. This allows us to show reminders and read health data from HealthKit, amongst others." = "You will now be asked to grant the app access to certain system features. This allows us to show reminders and read health data from HealthKit, amongst others.";
+
