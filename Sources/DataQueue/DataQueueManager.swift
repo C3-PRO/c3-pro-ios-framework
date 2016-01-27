@@ -25,8 +25,8 @@ import SMART
 /**
     Class to manage resources in a filesystem-based data queue.
  */
-class DataQueueManager
-{
+class DataQueueManager {
+	
 	/// The filename to prepend to the running queue position number.
 	static var prefix = "QueuedResource-"
 	
@@ -129,7 +129,7 @@ class DataQueueManager
 	
 	/** Convenience method for internal use; POST requests should be DataRequests so this should never fail. */
 	func enqueueResourceInHandler(handler: FHIRServerRequestHandler) {
-		if let resource = handler.resource as? Resource {
+		if let resource = handler.resource {
 			enqueueResource(resource)
 		}
 	}

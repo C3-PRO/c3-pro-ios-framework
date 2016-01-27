@@ -21,14 +21,24 @@
 import SMART
 
 
-extension FHIRElement
-{
-	/** Returns the extension defining the inclusive lower bound, if any. Use with "valueInteger", "valueDecimal" or other supported type. */
+extension Element {
+	
+	/**
+	Returns the extension defining the inclusive lower bound, if any, via "http://hl7.org/fhir/StructureDefinition/minValue".
+	Use with "valueInteger", "valueDecimal" or other supported type.
+	
+	- returns: A list of `Extension` resources for the _minValue_ extension
+	*/
 	final func chip_minValue() -> [Extension]? {
 		return extensionsFor("http://hl7.org/fhir/StructureDefinition/minValue")
 	}
 	
-	/** Returns the extension defining the inclusive upper bound, if any. Use with "valueInteger", "valueDecimal" or other supported type. */
+	/**
+	Returns the extension defining the inclusive upper bound, if any, via "http://hl7.org/fhir/StructureDefinition/maxValue".
+	Use with "valueInteger", "valueDecimal" or other supported type.
+	
+	- returns: A list of `Extension` resources for the _maxValue_ extension
+	*/
 	final func chip_maxValue() -> [Extension]? {
 		return extensionsFor("http://hl7.org/fhir/StructureDefinition/maxValue")
 	}

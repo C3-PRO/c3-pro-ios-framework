@@ -23,7 +23,7 @@ import SMART
 import ResearchKit
 
 
-extension FHIRElement {
+extension Element {
 	/**
 	Tries to find the "enableWhen" extension on questionnaire groups and questions, and if there are any instantiates ResultRequirements
 	representing those.

@@ -24,7 +24,7 @@ import SMART
 
 public protocol EncryptedDataQueueDelegate {
 	
-	func encryptedDataQueue(queue: EncryptedDataQueue, wantsEncryptionForResource resource: FHIRResource, requestType: FHIRRequestType) -> Bool
+	func encryptedDataQueue(queue: EncryptedDataQueue, wantsEncryptionForResource resource: Resource, requestType: FHIRRequestType) -> Bool
 	
 	func keyIdentifierForEncryptedDataQueue(queue: EncryptedDataQueue) -> String?
 }
@@ -33,8 +33,8 @@ public protocol EncryptedDataQueueDelegate {
 /**
     Data Queue that can encrypt resources before sending.
  */
-public class EncryptedDataQueue: DataQueue
-{
+public class EncryptedDataQueue: DataQueue {
+	
 	/// An optional delegate to ask when to encrypt a resource and when not; if not provided, all resources will be encrypted.
 	public var delegate: EncryptedDataQueueDelegate?
 	
@@ -93,7 +93,7 @@ public class EncryptedDataQueue: DataQueue
 	
 	// MARK: - Requests
 	
-	public override func handlerForRequestOfType(type: FHIRRequestType, resource: FHIRResource?) -> FHIRServerRequestHandler? {
+	public override func handlerForRequestOfType(type: FHIRRequestType, resource: Resource?) -> FHIRServerRequestHandler? {
 		if let resource = resource where nil == delegate || delegate!.encryptedDataQueue(self, wantsEncryptionForResource: resource, requestType: type) {
 			return EncryptedJSONRequestHandler(type, resource: resource, dataQueue: self)
 		}
@@ -109,11 +109,11 @@ public class EncryptedDataQueue: DataQueue
 }
 
 
-public class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler
-{
+public class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler {
+	
 	let dataQueue: EncryptedDataQueue
 	
-	init(_ type: FHIRRequestType, resource: FHIRResource?, dataQueue: EncryptedDataQueue) {
+	init(_ type: FHIRRequestType, resource: Resource?, dataQueue: EncryptedDataQueue) {
 		self.dataQueue = dataQueue
 		super.init(type, resource: resource)
 	}

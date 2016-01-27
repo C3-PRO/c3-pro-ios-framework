@@ -51,7 +51,7 @@ public class QueuedResource
 			do {
 				let data = try NSData(contentsOfFile: path, options: [])
 				let json = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? FHIRJSON
-				resource = FHIRElement.instantiateFrom(json, owner: nil) as? Resource
+				resource = Resource.instantiateFrom(json, owner: nil) as? Resource
 				if nil != resource {
 					return
 				}

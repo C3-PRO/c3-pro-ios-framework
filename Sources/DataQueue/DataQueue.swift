@@ -84,7 +84,7 @@ public class DataQueue: Server
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			
 			// are we currently dequeueing the resource we're trying to POST (and hence inside a `flush` call)?
-			if let resource = handler.resource as? Resource where queueManager.isDequeueing(resource) {
+			if let resource = handler.resource where queueManager.isDequeueing(resource) {
 				super.performPreparedRequest(request, handler: handler, callback: callback)
 			}
 			

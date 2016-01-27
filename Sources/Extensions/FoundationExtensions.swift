@@ -22,18 +22,31 @@ import Foundation
 
 
 extension String {
+	
+	/**
+	Concatenate multiple spaces into one.
+	
+	- returns: The receiver with multiple spaces stripped
+	*/
 	func chip_stripMultipleSpaces() -> String {
 		do {
 			let regEx = try NSRegularExpression(pattern: " +", options: [])
 			return regEx.stringByReplacingMatchesInString(self, options: [], range: NSMakeRange(0, self.characters.count), withTemplate: " ")
-		} catch {
+		}
+		catch {
 		}
 		return self
 	}
 }
 
 
-public extension NSFileManager {
+extension NSFileManager {
+	
+	/**
+	Return the path to the app's library directory.
+	
+	- returns: The path to the app library
+	*/
 	public func chip_appLibraryDirectory() throws -> String {
 		let paths = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true)
 		if let first = paths.first {
