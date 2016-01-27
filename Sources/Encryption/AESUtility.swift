@@ -39,7 +39,7 @@ public class AESUtility {
 	
 	/** Designated initializer. Creates a random symmetric key. */
 	public init() {
-		symmetricKey = Cipher.randomIV(keySize)
+		symmetricKey = AES.randomIV(keySize)
 	}
 	
 	
@@ -49,7 +49,7 @@ public class AESUtility {
 	Generate a new random key of `keySize` length.
 	*/
 	public func randomizeKey() {
-		symmetricKey = Cipher.randomIV(keySize)
+		symmetricKey = AES.randomIV(keySize)
 	}
 	
 	
@@ -62,7 +62,7 @@ public class AESUtility {
 	- returns: Encryped data representation
 	*/
 	public func encrypt(data: NSData) throws -> NSData {
-		let aes = AES(key: symmetricKey)!		// this only fails if keySize is wrong
+		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
 		let enc = try aes.encrypt(data.arrayOfBytes())
 		return NSData.withBytes(enc)
 	}
@@ -77,7 +77,7 @@ public class AESUtility {
 	- returns: Decrypted data
 	*/
 	public func decrypt(encData: NSData) throws -> NSData {
-		let aes = AES(key: symmetricKey)!		// this only fails if keySize is wrong
+		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
 		let dec = try aes.decrypt(encData.arrayOfBytes())
 		return NSData.withBytes(dec)
 	}
