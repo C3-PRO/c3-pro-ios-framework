@@ -11,7 +11,8 @@ There are additional utilities for _encryption_, _geolocation_, _de-identificati
 
 #### Usage
 
-The iOS framework is built of components that can be used individually, meaning you can use only the parts you need.
+The iOS framework contains individual components, meaning you can use only the parts you need.
+See below for what's included.
 
 Taking a _pure Swift_ approach, you will not be able to use this framework with Objective-C alone.
 Instead, you can use Swift code in your app, using a [mix and match][mix-match] approach, to connect the C3-PRO components to the Objective-C bits in your app.
@@ -25,12 +26,12 @@ import C3PRO
 
 #### Versions
 
-The `master` branch currently supports _Swift 2.0_ and _FHIR 0.5.0_ and requires Xcode 7.
-The `develop` branch is on _FHIR 1.0.2_.
-For other versions see the [releases](releases) tab, for newer versions look for `feature/x` branches.
+The `master` branch requires Xcode 7 and _should_ always be compatible with the latest version released.
+The `develop` branch may contain new developments and have different requirements.
+See the [releases](releases) tab for previous releases, for newer versions look for `feature/x` branches.
 
 See [CHANGELOG.md](./CHANGELOG.md) for updates.
-Since this framework combines several versioned technologies, the releases support:
+This framework combines several versioned technologies, here's an overview over what's included:
 
  Version | Swift | ResearchKit |  FHIR
 ---------|-------|-------------|------
@@ -90,7 +91,8 @@ Localization
 ------------
 
 The framework uses `NSLocalizedString` on the `C3PRO` table name, meaning it's looking at the C3PRO.strings file for string localization.
-There is an extension on _String_ so we can simply use `"My Text".c3_localized` in code; if you're looking in the code, search for this variable.
+There is an extension on _String_ so we can simply use `"My Text".c3_localized` in code.
+If you're looking for localizable strings in code, search for this variable.
 
 
 License
