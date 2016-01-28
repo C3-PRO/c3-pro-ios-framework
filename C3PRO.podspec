@@ -6,7 +6,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "C3PRO"
-  s.version      = "1.0.0"
+  s.version      = "1.0"
   s.summary      = "Combining 🔥 SMART on FHIR and ResearchKit for data storage into i2b2."
   s.description  = <<-DESC
     Combining 🔥 FHIR and ResearchKit for data storage into i2b2, this
@@ -19,18 +19,17 @@ Pod::Spec.new do |s|
   s.homepage     = "https://c3-pro.chip.org"
   s.license      = 'Apache 2'
   s.authors      = { "Pascal Pfiffner" => "phase.of.matter@gmail.com" }
-  s.source       = { :git => "https://github.com/p2/c3-pro-ios-framework.git", :recursive => true, :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/p2/c3-pro-ios-framework.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
-  s.source_files = 'Sources/*/*.swift', 'ResearchKit/ResearchKit/ResearchKit.h', 'ResearchKit/ResearchKit/*/*.{h,m}'
+  s.source_files = 'Sources/*/*.swift'
   s.resource_bundles = {
     'C3PRO' => ['*.lproj/C3PRO.strings']
   }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit', 'HealthKit'
   s.dependency 'SMART', '~> 2.2'
-  s.dependency 'CryptoSwift', '0.0.16'
+  s.dependency 'ResearchKit', '~> 1.3'
+  s.dependency 'CryptoSwift', '~> 0.2'
 end
