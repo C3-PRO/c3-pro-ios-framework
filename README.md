@@ -81,10 +81,10 @@ AES and RSA encryption facilities that come in handy.
 These work with facilities officially exposed by iOS, meaning you **don't need to add OpenSSL** to your app.  
 [➔ Encryption](./Sources/Encryption/)
 
-### Identity and De-Identification
+### De-Identification & Geocoder
 
-Helps creating de-identified patient resources, consistent with _HIPAA Safe Harbor_ guidelines, with birthdate and ZIP truncated accordingly.  
-[➔ Identity](./Sources/Identity/)
+Helps creating de-identified patient resources, consistent with _HIPAA Safe Harbor_ guidelines, with birthdate and ZIP (determined by _Geocoder_) truncated accordingly.  
+[➔ DeIdentifier](./Sources/DeIdentifier/)
 
 
 Localization
