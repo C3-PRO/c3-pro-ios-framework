@@ -29,16 +29,22 @@ let kORKTextChoiceMissingCodeCode = "⚠️"
 
 
 /**
-	A promise that can fulfill a questionnaire question into an ORKQuestionStep.
- */
-class QuestionnaireQuestionPromise: QuestionnairePromiseProto
-{
+A promise that can fulfill a questionnaire question into an ORKQuestionStep.
+*/
+class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
+	
 	/// The promises' question.
 	let question: QuestionnaireGroupQuestion
 	
 	/// The step(s), internally assigned after the promise has been successfully fulfilled.
 	internal(set) var steps: [ORKStep]?
 	
+	
+	/**
+	Designated initializer.
+	
+	- parameter question: The question the receiver represents
+	*/
 	init(question: QuestionnaireGroupQuestion) {
 		self.question = question
 	}
@@ -46,14 +52,16 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 	
 	// MARK: - Fulfilling
 	
-	/** Fulfill the promise.
-		
-	    Once the promise has been successfully fulfilled, the `step` property will be assigned. No guarantees as to on
-	    which queue the callback will be called.
-
-	    - parameter callback: The callback to be called when done; note that even when you get an error, some steps might
-	        have successfully been allocated still, so don't throw everything away just because you receive errors
-	 */
+	/**
+	Fulfill the promise.
+	
+	Once the promise has been successfully fulfilled, the `step` property will be assigned. No guarantees as to on which queue the callback
+	will be called.
+	
+	- parameter parentRequirements: Requirements from the parent that must be inherited
+	- parameter callback: The callback to be called when done; note that even when you get an error, some steps might have successfully been
+	                      allocated still, so don't throw everything away just because you receive errors
+	*/
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
 		let linkId = question.linkId ?? NSUUID().UUIDString
 		let (title, text) = question.chip_bestTitleAndText()
@@ -124,6 +132,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 	
 	// MARK: - Printable
 	
+	/// String representation of the receiver.
 	var description: String {
 		return NSString(format: "<QuestionnaireQuestionPromise %p>", unsafeAddressOf(self)) as String
 	}
@@ -133,8 +142,13 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto
 // MARK: -
 
 
-extension QuestionnaireGroupQuestion
-{
+extension QuestionnaireGroupQuestion {
+	
+	/**
+	Attempts to create a nice title and text from the various fields of the group.
+	
+	- returns: A tuple of strings for title and text
+	*/
 	func chip_bestTitleAndText() -> (String?, String?) {
 		let cDisplay = concept?.filter() { return nil != $0.display }.map() { return $0.display! }
 		let cCodes = concept?.filter() { return nil != $0.code }.map() { return $0.code! }

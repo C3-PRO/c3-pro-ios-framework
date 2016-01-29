@@ -24,16 +24,22 @@ import ResearchKit
 
 
 /**
-	A promise that can fulfill a questionnaire question into an ORKQuestionStep.
- */
-class QuestionnaireGroupPromise: QuestionnairePromiseProto
-{
+A promise that can fulfill a questionnaire question into an ORKQuestionStep.
+*/
+class QuestionnaireGroupPromise: QuestionnairePromiseProto {
+	
 	/// The promises' group.
 	let group: QuestionnaireGroup
 	
 	/// The group's steps, internally assigned after the promise has been successfully fulfilled.
 	internal(set) var steps: [ORKStep]?
 	
+	
+	/**
+	Designated initializer.
+	
+	- parameter group: The group to be represented by the receiver
+	*/
 	init(group: QuestionnaireGroup) {
 		self.group = group
 	}
@@ -49,10 +55,11 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 	TODO: Implement `repeats` for repeating groups.
 	TODO: Respect "http://hl7.org/fhir/StructureDefinition/questionnaire-sdc-specialGroup" extensions
 	
-	- parameter callback: The callback to be called when done; note that even when you get an error, some steps might
-	    have successfully been allocated still, so don't throw everything away just because you receive errors. Likely
-	    called on a background queue.
-	 */
+	- parameter parentRequirements: Requirements from the parent that must be inherited
+	- parameter callback: The callback to be called when done; note that even when you get an error, some steps might have successfully been
+	                      allocated still, so don't throw everything away just because you receive errors. Likely called on a background
+	                      queue.
+	*/
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
 		var errors = [ErrorType]()
 		var promises = [QuestionnairePromiseProto]()
@@ -125,6 +132,7 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 	
 	// MARK: - Printable
 	
+	/// String representation of the receiver.
 	var description: String {
 		return NSString(format: "<QuestionnaireGroupPromise %p>", unsafeAddressOf(self)) as String
 	}
@@ -134,8 +142,13 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto
 // MARK: -
 
 
-extension QuestionnaireGroup
-{
+extension QuestionnaireGroup {
+	
+	/**
+	Attempts to create a nice title and text from the various fields of the group.
+	
+	- returns: A tuple of strings for title and text
+	*/
 	func chip_bestTitleAndText() -> (String?, String?) {
 		var ttl = title
 		var txt = text

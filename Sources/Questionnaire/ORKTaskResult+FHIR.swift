@@ -23,46 +23,52 @@ import SMART
 
 
 /**
-    Extend ORKTaskResult to add functionality to convert to QuestionnaireResponse.
- */
-extension ORKTaskResult
-{
+Extend ORKTaskResult to add functionality to convert to QuestionnaireResponse.
+*/
+extension ORKTaskResult {
+	
+	/**
+	Extracts all results from the task and converts them to a FHIR QuestionnaireResponse.
+	
+	- parameter task: The task the receiver is a result for
+	- returns: A `QuestionnaireResponse` resource or nil
+	*/
 	func chip_asQuestionnaireResponseForTask(task: ORKTask?) -> QuestionnaireResponse? {
-		if let results = results as? [ORKStepResult] {
-			var groups = [QuestionnaireResponseGroup]()
-			
-			// loop results to collect groups
-			for result in results {
-				if let group = result.chip_questionAnswers(task) {
-					groups.append(group)
-				}
-			}
-			
-			// create top-level group to hold all groups
-			let master = QuestionnaireResponseGroup(json: nil)
-			master.group = groups
-			
-			// create and return questionnaire answers
-			let questionnaire = Reference(json: nil)
-			questionnaire.reference = identifier
-			
-			let answer = QuestionnaireResponse(status: "completed")
-			answer.questionnaire = questionnaire
-			answer.group = master
-			return answer
+		guard let results = results as? [ORKStepResult] else {
+			return nil
 		}
-		return nil
+		var groups = [QuestionnaireResponseGroup]()
+		
+		// loop results to collect groups
+		for result in results {
+			if let group = result.chip_questionAnswers(task) {
+				groups.append(group)
+			}
+		}
+		
+		// create top-level group to hold all groups
+		let master = QuestionnaireResponseGroup(json: nil)
+		master.group = groups
+		
+		// create and return questionnaire answers
+		let questionnaire = Reference(json: nil)
+		questionnaire.reference = identifier
+		
+		let answer = QuestionnaireResponse(status: "completed")
+		answer.questionnaire = questionnaire
+		answer.group = master
+		return answer
 	}
 }
 
 
-extension ORKStepResult
-{
+extension ORKStepResult {
+	
 	/**
 	Creates a QuestionnaireResponseGroup resource from all ORKSteps in the given ORKTask. Questions that do not have answers will be omitted,
 	and groups that do not have at least a single question with answer will likewise be omitted.
 	
-	- parameter task: The ORKTask to convert to a FHIR answer group
+	- parameter task: The ORKTask the result belongs to
 	- returns: A QuestionnaireResponseGroup element or nil
 	*/
 	func chip_questionAnswers(task: ORKTask?) -> QuestionnaireResponseGroup? {
@@ -94,13 +100,16 @@ extension ORKStepResult
 }
 
 
-extension ORKQuestionResult
-{
+extension ORKQuestionResult {
+	
 	/**
 	Instantiate a QuestionnaireResponse.group.question.answer element from the receiver's answer, if any.
 	
 	TODO: Cannot override methods defined in extensions, hence we need to check for the ORKQuestionResult subclass and then call the
 	method implemented in the extensions below.
+	
+	- parameter task: The ORKTask the result belongs to
+	- returns: An array of question answers or nil
 	*/
 	func chip_answerAsQuestionAnswersOfStep(step: ORKQuestionStep?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
 		let fhirType = (step as? ConditionalQuestionStep)?.fhirType
@@ -135,152 +144,201 @@ extension ORKQuestionResult
 }
 
 
-extension ORKChoiceQuestionResult
-{
+extension ORKChoiceQuestionResult {
+	
+	/**
+	Creates question answers of the receiver.
+	
+	- parameter fhirType: The FHIR answer type that's expected; ignored, always "coding"
+	- returns: An array of question answers or nil
+	*/
 	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
-		if let choices = choiceAnswers as? [String] {
-			var answers = [QuestionnaireResponseGroupQuestionAnswer]()
-			for choice in choices {
-				let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
-				let splat = choice.characters.split() { $0 == kORKTextChoiceSystemSeparator }.map() { String($0) }
-				let system = splat[0]
-				let code = (splat.count > 1) ? splat[1..<splat.endIndex].joinWithSeparator(String(kORKTextChoiceSystemSeparator)) : kORKTextChoiceMissingCodeCode
-				answer.valueCoding = Coding(json: ["system": system, "code": code])
-				answers.append(answer)
-			}
-			return answers
+		guard let choices = choiceAnswers as? [String] else {
+			chip_warn("expecting choice question results to be strings, but got: \(choiceAnswers)")
+			return nil
+		}
+		var answers = [QuestionnaireResponseGroupQuestionAnswer]()
+		for choice in choices {
+			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+			let splat = choice.characters.split() { $0 == kORKTextChoiceSystemSeparator }.map() { String($0) }
+			let system = splat[0]
+			let code = (splat.count > 1) ? splat[1..<splat.endIndex].joinWithSeparator(String(kORKTextChoiceSystemSeparator)) : kORKTextChoiceMissingCodeCode
+			answer.valueCoding = Coding(json: ["system": system, "code": code])
+			answers.append(answer)
+		}
+		return answers
+	}
+}
+
+
+extension ORKTextQuestionResult {
+	
+	/**
+	Creates question answers of the receiver.
+	
+	- parameter fhirType: The FHIR answer type that's expected; "url" or defaults to "string"
+	- returns: An array of question answers or nil
+	*/
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+		guard let text = textAnswer else {
+			return nil
+		}
+		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		if let fhir = fhirType where "url" == fhir {
+			answer.valueUri = NSURL(string: text)
 		}
 		else {
-			chip_warn("expecting choice question results to be strings, but got: \(choiceAnswers)")
+			answer.valueString = text
 		}
-		return nil
+		return [answer]
 	}
 }
 
 
-extension ORKTextQuestionResult
-{
+extension ORKNumericQuestionResult {
+	
+	/**
+	Creates question answers of the receiver.
+	
+	- parameter fhirType: The FHIR answer type that's expected; "quantity", "integer" or defaults to "number"
+	- returns: An array of question answers or nil
+	*/
 	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
-		if let text = textAnswer {
-			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
-			if let fhir = fhirType where "url" == fhir {
-				answer.valueUri = NSURL(string: text)
-			}
-			else {
-				answer.valueString = text
-			}
-			return [answer]
+		guard let numeric = numericAnswer else {
+			return nil
 		}
-		return nil
-	}
-}
-
-
-extension ORKNumericQuestionResult
-{
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
-		if let numeric = numericAnswer {
-			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
-			if let fhir = fhirType where "quantity" == fhir {
-				answer.valueQuantity = Quantity(json: ["value": numeric])
-				answer.valueQuantity!.unit = unit
-			}
-			else if let fhir = fhirType where "integer" == fhir {
-				answer.valueInteger = numeric.integerValue
-			}
-			else {
-				answer.valueDecimal = NSDecimalNumber(json: numeric)
-			}
-			return [answer]
+		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		if let fhir = fhirType where "quantity" == fhir {
+			answer.valueQuantity = Quantity(json: ["value": numeric])
+			answer.valueQuantity!.unit = unit
 		}
-		return nil
-	}
-}
-
-
-extension ORKScaleQuestionResult
-{
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
-		if let numeric = scaleAnswer {
-			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		else if let fhir = fhirType where "integer" == fhir {
+			answer.valueInteger = numeric.integerValue
+		}
+		else {
 			answer.valueDecimal = NSDecimalNumber(json: numeric)
-			return [answer]
 		}
+		return [answer]
+	}
+}
+
+
+extension ORKScaleQuestionResult {
+	
+	/**
+	Creates question answers of the receiver.
+	
+	- parameter fhirType: The FHIR answer type that's expected; ignored, always "number"
+	- returns: An array of question answers or nil
+	*/
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+		guard let numeric = scaleAnswer else {
+			return nil
+		}
+		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		answer.valueDecimal = NSDecimalNumber(json: numeric)
+		return [answer]
+	}
+}
+
+
+extension ORKBooleanQuestionResult {
+	
+	/**
+	Creates question answers of the receiver.
+	
+	- parameter fhirType: The FHIR answer type that's expected; ignored, always "boolean"
+	- returns: An array of question answers or nil
+	*/
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+		guard let boolean = booleanAnswer?.boolValue else {
+			return nil
+		}
+		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		answer.valueBoolean = boolean
+		return [answer]
+	}
+}
+
+
+extension ORKTimeOfDayQuestionResult {
+	
+	/**
+	Creates question answers of the receiver.
+	
+	- parameter fhirType: The FHIR answer type that's expected; ignored, always "time"
+	- returns: An array of question answers or nil
+	*/
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+		guard let components = dateComponentsAnswer else {
+			return nil
+		}
+		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		answer.valueTime = Time(hour: UInt8(components.hour), minute: UInt8(components.minute), second: 0.0)
+		return [answer]
+	}
+}
+
+
+extension ORKTimeIntervalQuestionResult {
+	
+	/**
+	Creates question answers of the receiver.
+	
+	TODO: implement!
+	
+	- parameter fhirType: The FHIR answer type that's expected; ignored, always "interval"
+	- returns: An array of question answers or nil
+	*/
+	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+		guard let interval = intervalAnswer else {
+			return nil
+		}
+		//let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		// TODO: support interval answers
+		print("--->  \(interval) for FHIR type “\(fhirType)”")
 		return nil
 	}
 }
 
 
-extension ORKBooleanQuestionResult
-{
+extension ORKDateQuestionResult {
+	
+	/**
+	Creates question answers of the receiver.
+	
+	- parameter fhirType: The FHIR answer type that's expected; supports "date", "dateTime" (default) and "instant"
+	- returns: An array of question answers or nil
+	*/
 	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
-		if let boolean = booleanAnswer?.boolValue {
-			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
-			answer.valueBoolean = boolean
-			return [answer]
+		guard let date = dateAnswer else {
+			return nil
 		}
-		return nil
-	}
-}
-
-
-extension ORKTimeOfDayQuestionResult
-{
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
-		if let components = dateComponentsAnswer {
-			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
-			answer.valueTime = Time(hour: UInt8(components.hour), minute: UInt8(components.minute), second: 0.0)
-			return [answer]
+		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		switch fhirType ?? "dateTime" {
+		case "date":
+			answer.valueDate = date.fhir_asDate()
+		case "dateTime":
+			let dateTime = date.fhir_asDateTime()
+//			if let tz = timeZone {
+//				dateTime.timeZone = tz			// TODO: reported NSDate is in UTC, convert to the given time zone
+//			}
+			answer.valueDateTime = dateTime
+		case "instant":
+			let instant = date.fhir_asInstant()
+//			if let tz = timeZone {
+//				instant.timeZone = tz
+//			}
+			answer.valueInstant = instant
+		default:
+			chip_warn("unknown date-time FHIR type “\(fhirType!)”, treating as dateTime")
+			let dateTime = date.fhir_asDateTime()
+//			if let tz = timeZone {
+//				dateTime.timeZone = tz
+//			}
+			answer.valueDateTime = dateTime
 		}
-		return nil
-	}
-}
-
-
-extension ORKTimeIntervalQuestionResult
-{
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
-		if let interval = intervalAnswer {
-			//let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
-			// TODO: support interval answers
-			print("--->  \(interval) for FHIR type “\(fhirType)”")
-		}
-		return nil
-	}
-}
-
-
-extension ORKDateQuestionResult
-{
-	func chip_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
-		if let date = dateAnswer {
-			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
-			switch fhirType ?? "dateTime" {
-			case "date":
-				answer.valueDate = date.fhir_asDate()
-			case "dateTime":
-				let dateTime = date.fhir_asDateTime()
-//				if let tz = timeZone {
-//					dateTime.timeZone = tz			// TODO: reported NSDate is in UTC, convert to the given time zone
-//				}
-				answer.valueDateTime = dateTime
-			case "instant":
-				let instant = date.fhir_asInstant()
-//				if let tz = timeZone {
-//					instant.timeZone = tz
-//				}
-				answer.valueInstant = instant
-			default:
-				chip_warn("unknown date-time FHIR type “\(fhirType!)”, treating as dateTime")
-				let dateTime = date.fhir_asDateTime()
-//				if let tz = timeZone {
-//					dateTime.timeZone = tz
-//				}
-				answer.valueDateTime = dateTime
-			}
-			return [answer]
-		}
-		return nil
+		return [answer]
 	}
 }
 

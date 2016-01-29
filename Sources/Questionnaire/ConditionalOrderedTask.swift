@@ -23,11 +23,11 @@ import ResearchKit
 
 
 /**
-	An ordered task subclass that can inspect `ConditionalQuestionStep` instances' requirements and skip past questions
-	in case the requirements are not met.
- */
-class ConditionalOrderedTask: ORKOrderedTask
-{
+An ordered task subclass that can inspect `ConditionalQuestionStep` instances' requirements and skip past questions in case the requirements
+are not met.
+*/
+class ConditionalOrderedTask: ORKOrderedTask {
+	
 	override func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
 		let serialNext = super.stepAfterStep(step, withResult: result)
 		
@@ -64,8 +64,8 @@ class ConditionalOrderedTask: ORKOrderedTask
 }
 
 
-class ConditionalQuestionStep: ORKQuestionStep
-{
+class ConditionalQuestionStep: ORKQuestionStep {
+	
 	/// The original "type", specified in the FHIR Questionnaire.
 	var fhirType: String?
 	
@@ -73,6 +73,13 @@ class ConditionalQuestionStep: ORKQuestionStep
 	var requirements: [ResultRequirement]?
 	
 	
+	/**
+	Designated initializer.
+	
+	- parameter identifier: The step identifier
+	- parameter title: The step's title
+	- parameter answer: The step's answer format
+	*/
 	init(identifier: String, title ttl: String?, answer: ORKAnswerFormat) {
 		super.init(identifier: identifier)
 		title = ttl
@@ -98,17 +105,19 @@ class ConditionalQuestionStep: ORKQuestionStep
 		}
 	}
 	
-	/** If the step has requirements, checks if all of them are fulfilled in step results in the given task result.
+	/**
+	If the step has requirements, checks if all of them are fulfilled in step results in the given task result.
 	
-	    - returns: A bool indicating success or failure, nil if there are no requirements
-	 */
+	- parameter result: The result to use for the checks
+	- returns: A bool indicating success or failure, nil if there are no requirements
+	*/
 	func requirementsAreSatisfiedBy(result: ORKTaskResult) -> Bool? {
-		if nil == requirements {
+		guard let requirements = requirements else {
 			return nil
 		}
 		
 		// check each requirement and drop out early if one fails
-		for requirement in requirements! {
+		for requirement in requirements {
 			if let stepResult = result.resultForIdentifier(requirement.questionIdentifier as String) as? ORKStepResult {
 				if let questionResults = stepResult.results as? [ORKQuestionResult] {
 					var ok = false
@@ -157,11 +166,21 @@ class ConditionalQuestionStep: ORKQuestionStep
 }
 
 
-class ConditionalInstructionStep: ORKInstructionStep
-{
+/**
+A conditional instruction step, to be used in the conditional ordered task.
+*/
+class ConditionalInstructionStep: ORKInstructionStep {
+	
 	/// Requirements to fulfil for the step to show up, if any.
 	var requirements: [ResultRequirement]?
 	
+	/**
+	Designated initializer.
+	
+	- parameter identifier: The step's identifier
+	- parameter title: The step's title
+	- parameter text: The instruction text
+	*/
 	init(identifier: String, title ttl: String?, text txt: String?) {
 		super.init(identifier: identifier)
 		title = ttl
@@ -193,12 +212,12 @@ class ConditionalInstructionStep: ORKInstructionStep
 	- returns: A bool indicating success or failure, nil if there are no requirements
 	*/
 	func requirementsAreSatisfiedBy(result: ORKTaskResult) -> Bool? {
-		if nil == requirements {
+		guard let requirements = requirements else {
 			return nil
 		}
 		
 		// check each requirement and drop out early if one fails
-		for requirement in requirements! {
+		for requirement in requirements {
 			if let stepResult = result.resultForIdentifier(requirement.questionIdentifier as String) as? ORKStepResult {
 				if let questionResults = stepResult.results as? [ORKQuestionResult] {
 					var ok = false
@@ -247,8 +266,11 @@ class ConditionalInstructionStep: ORKInstructionStep
 }
 
 
-public class ResultRequirement: NSObject, NSCopying, NSSecureCoding
-{
+/**
+Encapsulates requirements for a result, to be used in the conditional task.
+*/
+public class ResultRequirement: NSObject, NSCopying, NSSecureCoding {
+	
 	/// The step identifier of the question we have an answer for.
 	public var questionIdentifier: NSString
 	
@@ -256,6 +278,12 @@ public class ResultRequirement: NSObject, NSCopying, NSSecureCoding
 	public var result: ORKQuestionResult
 	
 	
+	/**
+	Designated initializer.
+	
+	- parameter step: The step's identifier the receiver should be checked against
+	- parameter result: The result to validate
+	*/
 	public init(step: String, result rslt: ORKQuestionResult) {
 		questionIdentifier = step as NSString
 		result = rslt
@@ -290,9 +318,14 @@ public class ResultRequirement: NSObject, NSCopying, NSSecureCoding
 
 // MARK: -
 
-
-extension ORKQuestionResult
-{
+extension ORKQuestionResult {
+	
+	/**
+	Checks whether the receiver is the same result as the other result.
+	
+	- parameter other: The result to compare against
+	- returns: A boold indicating whether the results are the same
+	*/
 	func chip_hasSameAnswer(other: ORKQuestionResult) -> Bool {
 		if let myAnswer: AnyObject = answer {
 			if let otherAnswer: AnyObject = other.answer {

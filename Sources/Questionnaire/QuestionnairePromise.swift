@@ -24,10 +24,10 @@ import ResearchKit
 
 
 /**
-    Protocol for our questionnaire promise architecture.
- */
-protocol QuestionnairePromiseProto: CustomStringConvertible
-{
+Protocol for our questionnaire promise architecture.
+*/
+protocol QuestionnairePromiseProto: CustomStringConvertible {
+	
 	var steps: [ORKStep]? { get }
 	
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void))
@@ -35,10 +35,10 @@ protocol QuestionnairePromiseProto: CustomStringConvertible
 
 
 /**
-    A promise that can turn a FHIR Questionnaire into an ORKOrderedTask.
- */
-public class QuestionnairePromise: QuestionnairePromiseProto
-{
+A promise that can turn a FHIR Questionnaire into an ORKOrderedTask.
+*/
+public class QuestionnairePromise: QuestionnairePromiseProto {
+	
 	/// The promises' questionnaire.
 	let questionnaire: Questionnaire
 	
@@ -87,6 +87,7 @@ public class QuestionnairePromise: QuestionnairePromiseProto
 	
 	// MARK: - Printable
 	
+	/// String representation of the receiver.
 	public var description: String {
 		return NSString(format: "<QuestionnairePromise %p>", unsafeAddressOf(self)) as String
 	}

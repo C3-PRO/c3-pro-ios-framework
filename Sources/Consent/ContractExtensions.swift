@@ -28,6 +28,11 @@ public let kContractTermConsentSectionType = "http://researchkit.org/docs/Consta
 
 public extension Contract {
 	
+	/**
+	Converts the receiver into a ResearchKit consent document.
+	
+	- returns: An `ORKConsentDocument` created from the receiver
+	*/
 	public func chip_asConsentDocument() throws -> ORKConsentDocument {
 		let sections = try chip_termsAsConsentSections()
 		let document = ORKConsentDocument()
@@ -39,24 +44,29 @@ public extension Contract {
 		return document
 	}
 	
+	/**
+	Creates ResearchKit consent sections from the receiver's `term`s.
+	
+	- returns: An array of `ORKConsentSection`
+	*/
 	public func chip_termsAsConsentSections() throws -> [ORKConsentSection] {
-		if let terms = term {
-			var sections = [ORKConsentSection]()
-			for term in terms {
-				do {
-					let section = try term.chip_asConsentSection()
-					sections.append(section)
-				}
-				catch let error {
-					chip_warn("Contract `term` section \(term) cannot be used for consenting: \(error)")
-				}
-			}
-			if sections.isEmpty {
-				throw C3Error.ConsentContractHasNoTerms
-			}
-			return sections
+		guard let terms = term else {
+			throw C3Error.ConsentContractHasNoTerms
 		}
-		throw C3Error.ConsentContractHasNoTerms
+		var sections = [ORKConsentSection]()
+		for term in terms {
+			do {
+				let section = try term.chip_asConsentSection()
+				sections.append(section)
+			}
+			catch let error {
+				chip_warn("Contract `term` section \(term) cannot be used for consenting: \(error)")
+			}
+		}
+		if sections.isEmpty {
+			throw C3Error.ConsentContractHasNoTerms
+		}
+		return sections
 	}
 }
 

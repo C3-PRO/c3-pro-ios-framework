@@ -24,10 +24,11 @@ import SMART
 
 
 /**
-    Instances of this class can prepare questionnaires and get a callback when preparation has finished.
- */
+Instances of this class can prepare questionnaires and get a callback when preparation has finished.
+*/
 public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
+	/// The questionnaire the controller represents.
 	public final var questionnaire: Questionnaire?
 	
 	/// Callback called when the user finishes the questionnaire without error.

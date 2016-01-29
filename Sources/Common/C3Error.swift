@@ -30,46 +30,125 @@ public let C3PROFHIRVersion = "1.0.2"
 Errors thrown around when working with C3-PRO.
 */
 public enum C3Error: ErrorType, CustomStringConvertible {
+	
+	/// The mentioned feature is not implemented.
 	case NotImplemented(String)
+	
+	/// An error holding on to multiple other errors.
 	case MultipleErrors(Array<ErrorType>)
 	
+	
+	// MARK: App
+	
+	/// The app's /Library directory is not present.
 	case AppLibraryDirectoryNotPresent
+	
+	/// Failed to refreish the App Store receipt.
 	case AppReceiptRefreshFailed
 	
+	/// The respective file was not found in the app bundle.
 	case BundleFileNotFound(String)
+	
+	/// A JSON file does not have the expected structure.
 	case InvalidJSON(String)
+	
+	/// The layout of the storyboard is not as expected.
 	case InvalidStoryboard(String)
 	
+	
+	// MARK: FHIR
+	
+	/// A FHIR extension is invalid in the respective context.
 	case ExtensionInvalidInContext
+	
+	/// A FHIR extension is incomplete.
 	case ExtensionIncomplete(String)
 	
+	
+	// MARK: Consent
+	
+	/// The consent is lacking a patient reference.
 	case ConsentNoPatientReference(ErrorType)
+	
+	/// The necessary contract is not present.
 	case ConsentContractNotPresent
+	
+	/// The Contract resource does not have any `term`s that can be used for consenting.
 	case ConsentContractHasNoTerms
+	
+	/// No ContractTerm.type.coding was found.
 	case ConsentSectionHasNoType
+	
+	/// The given consent section type is not known to ResearchKit.
 	case ConsentSectionTypeUnknownToResearchKit(String)
 	
+	
+	// MARK: Server
+	
+	/// No server is configured.
 	case ServerNotConfigured
+	
+	/// Data queue flushing was halted.
 	case DataQueueFlushHalted
 	
+	
+	// MARK: Encryption
+	
+	/// The given error occurred during encryption.
 	case EncryptionFailedWithStatus(OSStatus)
+	
+	/// The X509 certificate is not present at the given location.
 	case EncryptionX509CertificateNotFound(String)
+	
+	/// The X509 certificate could not be read from the given location.
 	case EncryptionX509CertificateNotRead(String)
+	
+	/// The X509 certificate could not be loaded for the given reason.
 	case EncryptionX509CertificateNotLoaded(String)
 	
+	
+	// MARK: Services
+	
+	/// Geolocation services are disabled or restricted.
 	case LocationServicesDisabled
+	
+	/// Access to the microphone is disabled.
 	case MicrophoneAccessDenied
 	
+	
+	// MARK: Questionnaire
+	
+	/// The questionnaire is not present.
 	case QuestionnaireNotPresent
+	
+	/// The questionnaire does not have a top level item.
 	case QuestionnaireInvalidNoTopLevel
+	
+	/// The given questionnaire question type cannot be represented in ResearchKit.
 	case QuestionnaireQuestionTypeUnknownToResearchKit(QuestionnaireGroupQuestion)
+	
+	/// The given question should provide choices but there are none.
 	case QuestionnaireNoChoicesInChoiceQuestion(QuestionnaireGroupQuestion)
+	
+	/// The questionnaire finished with an error (i.e. was not completed).
 	case QuestionnaireFinishedWithError
+	
+	/// Unknown error handling questionnaire.
 	case QuestionnaireUnknownError
 	
+	
+	// MARK: HealthKit
+	
+	/// Access to HealthKit was not granted.
 	case HealthKitNotAvailable
+	
+	/// There is no HealthKit sample of the given type.
 	case NoSuchHKSampleType(String)
+	
+	/// The respective HealthKit quantity cannot be converted to the desired unit.
 	case QuantityNotCompatibleWithUnit
+	
+	/// The interval to query data is too small.
 	case IntervalTooSmall
 	
 	
@@ -91,7 +170,6 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 			return "The app library directory could not be found; this is likely fatal"
 		case .AppReceiptRefreshFailed:
 			return "App receipt refresh failed. Are you running on device?"
-		
 		case .BundleFileNotFound(let name):
 			return name
 		case .InvalidJSON(let reason):
