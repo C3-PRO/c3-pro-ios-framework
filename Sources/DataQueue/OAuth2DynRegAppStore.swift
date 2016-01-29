@@ -23,8 +23,8 @@ import StoreKit
 
 
 /**
-    Dynamic client registration based on the app's App Store receipt.
- */
+Dynamic client registration based on the app's App Store receipt.
+*/
 public class OAuth2DynRegAppStore: OAuth2DynReg {
 	
 	deinit {
@@ -76,6 +76,11 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 	
 	// MARK: - App Store Receipt
 	
+	/**
+	Reads from `appStoreReceiptURL` if `appReceipt` is nil
+	
+	- returns: A bool indicating the present of the App Store receipt
+	*/
 	func ensureHasAppReceipt() -> Bool {
 		if nil == appReceipt, let receiptURL = NSBundle.mainBundle().appStoreReceiptURL {
 			if let receipt = NSData(contentsOfURL: receiptURL) {
@@ -85,6 +90,13 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 		return (nil != appReceipt)
 	}
 	
+	/**
+	Asks the OS to refresh the App Store receipt.
+	
+	Uses `SKReceiptRefreshRequest` with `AppStoreRequestDelegate`, which the receiver is holding on to.
+	
+	- parameter callback: The callback to call, containing an optional error when refresh is done
+	*/
 	func refreshAppReceipt(callback: ((error: ErrorType?) -> Void)) {
 		if let delegate = refreshDelegate {
 			refreshRequest?.cancel()
@@ -105,15 +117,25 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 
 
 /**
-    Simple object used by `OAuth2DynRegAppStore` to use block-based callbacks on an SKRequest.
- */
+Simple object used by `OAuth2DynRegAppStore` to use block-based callbacks on an SKRequest.
+*/
 class AppStoreRequestDelegate: NSObject, SKRequestDelegate {
 	
+	/// The callback to call when done or on error.
 	let callback: ((error: ErrorType?) -> Void)
 	
+	
+	/**
+	Designated initializer.
+	
+	- parameter callback: The callback the instance should hold on to
+	*/
 	init(callback: ((error: ErrorType?) -> Void)) {
 		self.callback = callback
 	}
+	
+	
+	// MARK: - Delegate Methods
 	
 	func requestDidFinish(request: SKRequest) {
 		callback(error: nil)

@@ -23,29 +23,15 @@ import SMART
 
 
 /**
-    The (FIFO) DataQueue is a special FHIRServer implementation that will enqueue FHIR resources to disk if a first attempt at issuing a
-    `create` command fails. The queue can subsequently be flushed to re-attempt creating the resources on the FHIR server, in their original
-    order.
- */
-public class DataQueue: Server
-{
-	/// The filename to prepend to the running queue position number.
-	static var prefix = "QueuedResource-"
-	
-	/// The file extension, likely "json".
-	static var fileExtension = "json"
+The (FIFO) DataQueue is a special FHIRServer implementation that will enqueue FHIR resources to disk if a first attempt at issuing a
+`create` command fails. The queue can subsequently be flushed to re-attempt creating the resources on the FHIR server, in their original
+order.
+*/
+public class DataQueue: Server {
 	
 	/// The manager for the data queue
 	var queueManager: DataQueueManager!
 	
-	/** The filename of a resource at the given queue position. */
-	func fileNameForSequence(seq: Int) -> String {
-		return ("\(self.dynamicType.prefix)\(seq)" as NSString).stringByAppendingPathExtension(self.dynamicType.fileExtension)!
-	}
-	
-	var fileProtection: NSDataWritingOptions {
-		return NSDataWritingOptions.DataWritingFileProtectionCompleteUnlessOpen
-	}
 	
 	public required init(baseURL: NSURL, auth: OAuth2JSON?) {
 		super.init(baseURL: baseURL, auth: auth)
@@ -63,10 +49,10 @@ public class DataQueue: Server
 	// MARK: - Queue Manager
 	
 	/**
-	    Enqueues the given resource.
+	Enqueues the given resource.
 	
-	    - parameter resource: The FHIR Resource to enqueue
-	 */
+	- parameter resource: The FHIR Resource to enqueue
+	*/
 	public func enqueueResource(resource: Resource) {
 		queueManager.enqueueResource(resource)
 	}

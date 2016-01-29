@@ -23,8 +23,8 @@ import SMART
 
 
 /**
-    Class to manage resources in a filesystem-based data queue.
- */
+Class to manage resources in a filesystem-based data queue.
+*/
 class DataQueueManager {
 	
 	/// The filename to prepend to the running queue position number.
@@ -51,6 +51,7 @@ class DataQueueManager {
 		return ("\(self.dynamicType.prefix)\(seq)" as NSString).stringByAppendingPathExtension(self.dynamicType.fileExtension)!
 	}
 	
+	/// The data writing options when storing a resource to the queue.
 	var fileProtection: NSDataWritingOptions {
 		return NSDataWritingOptions.DataWritingFileProtectionCompleteUnlessOpen
 	}
@@ -81,7 +82,12 @@ class DataQueueManager {
 		}
 	}
 	
-	/** Looks at all resources in the queue and returns the lowest and highest position, if any. */
+	/**
+	Looks at all resources in the queue and returns the lowest and highest position, if any.
+	
+	- parameter manager: The NSFileManager to use
+	- returns: A tuple of (min, max) indices
+	*/
 	func currentQueueRange(manager: NSFileManager) -> (min: Int, max: Int)? {
 		var myMin: Int?
 		var myMax: Int?
@@ -105,10 +111,10 @@ class DataQueueManager {
 	// MARK: - Queue Management
 	
 	/**
-	    Enqueues the given resource.
+	Enqueues the given resource.
 	
-	    - parameter resource: The FHIR Resource to enqueue
-	 */
+	- parameter resource: The FHIR Resource to enqueue
+	*/
 	func enqueueResource(resource: Resource) {
 		ensureHasDirectory()
 		
@@ -155,11 +161,11 @@ class DataQueueManager {
 	}
 	
 	/**
-	    Looks and deserializes the first resource in the queue, then issues a `create` command to POST it to the server.
+	Looks and deserializes the first resource in the queue, then issues a `create` command to POST it to the server.
 	
-	    - parameter callback: The callback to call. "didDequeue" is true if the resource was successfully dequeued. "error" is nil on success or
-	    if there was no file to dequeue (in which case _didDequeue_ would be false)
-	 */
+	- parameter callback: The callback to call. "didDequeue" is true if the resource was successfully dequeued. "error" is nil on success or
+	if there was no file to dequeue (in which case _didDequeue_ would be false)
+	*/
 	func dequeueFirst(callback: ((didDequeue: Bool, error: ErrorType?) -> Void)) {
 		if nil != currentlyDequeueing {
 			chip_warn("already dequeueing")
@@ -200,24 +206,24 @@ class DataQueueManager {
 	
 	/** Deletes the resource in `currentlyDequeueing` from the queue. */
 	func clearCurrentlyDequeueing() {
-		if let resource = currentlyDequeueing {
-			if let path = resource.path {
-				let manager = NSFileManager()
-				do {
-					try manager.removeItemAtPath(path)
-					currentlyDequeueing = nil
-				}
-				catch let error {
-					// TODO: figure out what to do
-					chip_warn("failed to remove queued resource \(path): \(error)")
-				}
+		if let path = currentlyDequeueing?.path {
+			let manager = NSFileManager()
+			do {
+				try manager.removeItemAtPath(path)
+				currentlyDequeueing = nil
+			}
+			catch let error {
+				// TODO: figure out what to do
+				chip_warn("failed to remove queued resource \(path): \(error)")
 			}
 		}
 	}
 	
 	/**
-	    Returns the first resource in the queue, but **only** if it is readable.
-	 */
+	Returns the first resource in the queue, but **only** if it is readable.
+	
+	- returns: The first resource in the queue, as `QueuedResource`
+	*/
 	final func firstInQueue() -> QueuedResource? {
 		let manager = NSFileManager()
 		if let first = currentQueueRange(manager)?.min {
@@ -229,6 +235,5 @@ class DataQueueManager {
 		}
 		return nil
 	}
-	
 }
 

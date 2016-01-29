@@ -22,17 +22,24 @@ import Foundation
 import SMART
 
 
+/**
+Protocol for delegates to the encrypted data queue.
+*/
 public protocol EncryptedDataQueueDelegate {
 	
+	/** Method called to determine whether the respective resource should be encrypted. */
 	func encryptedDataQueue(queue: EncryptedDataQueue, wantsEncryptionForResource resource: Resource, requestType: FHIRRequestType) -> Bool
 	
+	/** Method that asks for the identifier of the key that should be used for encryption. */
 	func keyIdentifierForEncryptedDataQueue(queue: EncryptedDataQueue) -> String?
 }
 
 
 /**
-    Data Queue that can encrypt resources before sending.
- */
+Data Queue that can encrypt resources before sending.
+
+This class is a subclass of `DataQueue`, an implementation of a `FHIRServer`.
+*/
 public class EncryptedDataQueue: DataQueue {
 	
 	/// An optional delegate to ask when to encrypt a resource and when not; if not provided, all resources will be encrypted.
@@ -63,7 +70,8 @@ public class EncryptedDataQueue: DataQueue {
 		rsa = RSAUtility(publicCertificateFile: publicCertificateFile)
 		super.init(baseURL: baseURL, auth: auth)
 	}
-
+	
+	/** You CANNOT use this initializer on the encrypted data queue, use `init(baseURL:auth:encBaseURL:publicCertificateFile:)`. */
 	public required init(baseURL: NSURL, auth: OAuth2JSON?) {
 	    fatalError("init(baseURL:auth:) cannot be used on `EncryptedDataQueue`, use init(baseURL:auth:encBaseURL:publicCertificateFile:)")
 	}
@@ -109,15 +117,28 @@ public class EncryptedDataQueue: DataQueue {
 }
 
 
+/**
+A request handler for encrypted JSON data, to be used with `EncryptedDataQueue`.
+
+Its `prepareData()` method asks its dataQueue to encrypt the resource.
+*/
 public class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler {
 	
 	let dataQueue: EncryptedDataQueue
 	
+	/**
+	Designated initializer.
+	
+	- parameter type: The type of the request
+	- parameter resource: The resource to send with this request
+	- parameter dataQueue: The `EncryptedDataQueue` instance that's sending this request
+	*/
 	init(_ type: FHIRRequestType, resource: Resource?, dataQueue: EncryptedDataQueue) {
 		self.dataQueue = dataQueue
 		super.init(type, resource: resource)
 	}
 	
+	/** This implementation asks `dataQueue` to handle resource encryption by calling its `encryptedData()` method. */
 	public override func prepareData() throws {
 		data = nil					// to avoid double-encryption
 		try super.prepareData()
