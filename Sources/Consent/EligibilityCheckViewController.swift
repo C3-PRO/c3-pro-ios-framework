@@ -117,8 +117,13 @@ public class EligibilityCheckViewController: UITableViewController {
 		return true
 	}
 	
-	/** Eligible. Push `EligibilityStatusViewController` informing about eligibility and presenting the “Start Consent” button that will
-	execute the `onStartConsent` block.
+	/**
+	Eligible.
+	
+	Push `EligibilityStatusViewController` informing about eligibility and presenting the “Start Consent” button that will execute the
+	`onStartConsent` block.
+	
+	- parameter animated: Whether to animate the push
 	*/
 	public func showEligibleAnimated(animated: Bool) {
 		let vc = EligibilityStatusViewController()
@@ -135,8 +140,13 @@ public class EligibilityCheckViewController: UITableViewController {
 		navigationController?.pushViewController(vc, animated: true)
 	}
 	
-	/** Ineligible. Push EligibilityStatusViewController informing about non-eligibility, removing the other status and check view
-	controllers from the stack so that if pressing "< Back", the user lands back at where eligibility checking started.
+	/**
+	Ineligible.
+	
+	Push EligibilityStatusViewController informing about non-eligibility, removing the other status and check view controllers from the
+	stack so that if pressing "< Back", the user lands back at where eligibility checking started.
+	
+	- parameter animated: Whether to animate the push
 	*/
 	public func showIneligibleAnimated(animated: Bool) {
 		let vc = EligibilityStatusViewController()

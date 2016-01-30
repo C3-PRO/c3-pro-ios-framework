@@ -26,6 +26,8 @@ public let kContractTermConsentSectionExtension = "http://fhir-registry.smarthea
 
 public let kContractTermConsentSectionType = "http://researchkit.org/docs/Constants/ORKConsentSectionType"
 
+
+/** Extending `Contract` for usage with ResearchKit. */
 public extension Contract {
 	
 	/**
@@ -71,8 +73,14 @@ public extension Contract {
 }
 
 
+/** Extending `ContractTerm` for usage with ResearchKit. */
 public extension ContractTerm {
 	
+	/**
+	Creates a ResearchKit consent section from the receiver.
+	
+	- returns: An ORKConsentSection representing the receiver
+	*/
 	public func chip_asConsentSection() throws -> ORKConsentSection {
 		let type = try chip_consentSectionType()
 		let section = ORKConsentSection(type: type)
@@ -126,6 +134,11 @@ public extension ContractTerm {
 		return section
 	}
 	
+	/**
+	Determines the ResearchKit consent section type the receiver wants for representation.
+	
+	- returns: A matching ORKConsentSectionType
+	*/
 	public func chip_consentSectionType() throws -> ORKConsentSectionType {
 		if let codings = type?.coding {
 			for code in codings {

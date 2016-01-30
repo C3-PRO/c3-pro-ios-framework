@@ -1,0 +1,92 @@
+# C3-PRO Jazzy config
+module_name: C3PRO
+
+author_name: C3-PRO
+author_url:  http://c3-pro.chip.org
+
+root_url:    http://chb.github.io/c3-pro-ios-framework
+github_url:  https://github.com/chb/c3-pro-ios-framework.git
+
+custom_categories:
+  - name: Common
+    children:
+    - C3Error
+
+  - name: Study Intro
+    children:
+    - StudyIntroConfiguration
+    - StudyIntroItem
+    - StudyIntroWelcomeItem
+    - StudyIntroHTMLItem
+    - StudyIntroVideoItem
+    - StudyIntroCollectionViewController
+
+  - name: Eligibility & Consent
+    children:
+    - ConsentController
+    - ConsentTask
+    - ConsentTaskOptions
+    - ConsentResult
+    - EligibilityRequirement
+    - EligibilityStatusViewController
+    - EligibilityCheckViewController
+    - GroupCharacteristic
+
+  - name: Questionnaire
+    children:
+    - QuestionnaireController
+    - QuestionnairePromise
+    - QuestionnaireGroupPromise
+    - QuestionnaireQuestionPromise
+    - ConditionalOrderedTask
+    - ResultRequirement
+
+  - name: Data Queue
+    children:
+    - QueuedResource
+    - DataQueue
+    - EncryptedDataQueue
+    - EncryptedDataQueueDelegate
+    - EncryptedJSONRequestHandler
+    - OAuth2DynRegAppStore
+
+  - name: HealthKit
+    children:
+    - HealthKitTypes
+    - HKHealthStore
+    - HKQuantity
+    - HKQuantitySample
+    - HKQuantityType
+
+  - name: System Services
+    children:
+    - SystemService
+    - SystemServicePermissioner
+    - SystemPermissionStep
+
+  - name: Encryption
+    children:
+    - AESUtility
+    - RSAUtility
+
+  - name: De-Identifier
+    children:
+    - DeIdentifier
+    - Geocoder
+
+  - name: View Controller
+    children:
+    - WebViewController
+    - PDFViewController
+    - PermissionRequestTableViewController
+    - SystemPermissionTableViewController
+    - SystemPermissionStepViewController
+
+  - name: Table Cells & Views
+    children:
+    - BorderedButton
+    - EligibilityCell
+    - PermissionRequestTableViewCell
+    - StudyIntroHTMLCell
+    - StudyIntroVideoCell
+    - StudyIntroWelcomeCell

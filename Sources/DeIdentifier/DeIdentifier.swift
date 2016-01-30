@@ -23,12 +23,13 @@ import SMART
 
 
 /**
-	Class to help in de-identifying patient data according to HIPAA's Safe Harbor guidelines.
- */
+Class to help in de-identifying patient data according to HIPAA's Safe Harbor guidelines.
+*/
 public class DeIdentifier {
 	
 	var geocoder: Geocoder?
 	
+	/** Designated initializer. */
 	public init() {  }
 	
 	

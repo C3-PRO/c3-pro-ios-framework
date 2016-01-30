@@ -21,6 +21,9 @@
 import SMART
 
 
+/**
+Extension to `SMART.GroupCharacteristic` so they can easily be used as an eligibility requirement.
+*/
 public extension GroupCharacteristic {
 	
 	/**

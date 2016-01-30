@@ -304,9 +304,9 @@
 			isa = PBXGroup;
 			children = (
 				EE5F4F7E1B18E2B100DB38B3 /* README.md */,
+				EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */,
 				EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */,
 				EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */,
-				EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */,
 				EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */,
 				EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */,
 			);
@@ -356,8 +356,8 @@
 			children = (
 				EEEA7F4F1BD64E040089BF85 /* README.md */,
 				EEEA7F451BD61E800089BF85 /* StudyIntro.storyboard */,
-				EEEA7F4B1BD627570089BF85 /* StudyIntroItem.swift */,
 				EEEA7F661BD68DFE0089BF85 /* StudyIntroConfiguration.swift */,
+				EEEA7F4B1BD627570089BF85 /* StudyIntroItem.swift */,
 				EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */,
 				EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */,
 			);

@@ -66,7 +66,10 @@ public struct ConsentTaskOptions {
 
 
 /**
-Controller to capture consent in a FHIR Contract resource.
+The consent controller helps using a FHIR `Contract` resource to capture consent.
+
+The controller can read a bundled `Contract` resource and return view controllers that can be used for eligibility checking
+(use `eligibilityStatusViewController(config:onStartConsent:)`) and/or consenting (use `consentViewController(onUserDidConsent:onUserDidDecline:)`).
 */
 public class ConsentController {
 	
@@ -186,7 +189,7 @@ public class ConsentController {
 	Resolves the contract's first subject to a Group. This Group is expected to have characteristics that represent eligibility criteria.
 	
 	- parameter callback: The callback that is called when the group is resolved (or resolution fails); may be on any thread but may be
-	called immediately in case of embedded resources.
+	                      called immediately in case of embedded resources.
 	*/
 	public func eligibilityRequirements(callback: ((requirements: [EligibilityRequirement]?) -> Void)) {
 		if let group = contract?.subject?.first {
@@ -218,6 +221,12 @@ public class ConsentController {
 	
 	// MARK: - Consenting
 	
+	/**
+	Creates the consent task from the receiver's contract.
+	
+	- throws: `C3Error.ConsentContractNotPresent` when the contract is not present
+	- returns: A `ConsentTask` that can be presented using ResearchKit
+	*/
 	public func createConsentTask() throws -> ConsentTask {
 		if let contract = contract {
 			return try ConsentTask(identifier: NSUUID().UUIDString, contract: contract, options: options)
@@ -233,6 +242,7 @@ public class ConsentController {
 	
 	- parameter onUserDidConsent: Block executed when the user completes and agrees to consent
 	- parameter onUserDidDecline: Block executed when the user cancels or actively declines consent
+	- throws: Re-throws from `createConsentTask()`
 	*/
 	public func consentViewController(onUserDidConsent onConsent: ((controller: ORKTaskViewController, result: ConsentResult) -> Void),
 		onUserDidDecline: ((controller: ORKTaskViewController) -> Void)) throws -> ORKTaskViewController {
@@ -328,6 +338,7 @@ public class ConsentController {
 	
 	- parameter patient: The Patient resource to use to sign
 	- parameter date: The date at which the contract was signed
+	- throws: `C3Error` when referencing the patient resource fails
 	- returns: A signed Contract resource, usually the receiver's `contract` ivar
 	*/
 	public func signContractWithPatient(patient: Patient, date: NSDate) throws -> Contract {
@@ -406,7 +417,7 @@ public class ConsentController {
 	URL to the user-signed contract PDF.
 	
 	- parameter mustExist: If `true` will return nil if no file exists at the expected file URL. If `false` will return the desired URL,
-		which is pretty sure to return non-nil, so use that exclamation mark!
+	                       which is pretty sure to return non-nil, so use that exclamation mark!
 	*/
 	public class func signedConsentPDFURL(mustExist: Bool = false) -> NSURL? {
 		do {
@@ -424,6 +435,7 @@ public class ConsentController {
 	}
 	
 	/**
+	The local URL to the bundled consent; looks for «consent.pdf» in the main bundle.
 	*/
 	public class func bundledConsentPDFURL() -> NSURL? {
 		return NSBundle.mainBundle().URLForResource("consent", withExtension: "pdf")

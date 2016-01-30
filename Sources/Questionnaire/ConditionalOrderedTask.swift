@@ -64,6 +64,9 @@ class ConditionalOrderedTask: ORKOrderedTask {
 }
 
 
+/**
+A conditional question step, for use with the conditional ordered task.
+*/
 class ConditionalQuestionStep: ORKQuestionStep {
 	
 	/// The original "type", specified in the FHIR Questionnaire.

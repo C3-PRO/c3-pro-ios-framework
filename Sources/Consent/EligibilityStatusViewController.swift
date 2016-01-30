@@ -29,6 +29,7 @@ Simple implementation, you must assign all properties before the view is loaded,
 */
 public class EligibilityStatusViewController: UIViewController {
 	
+	/// The image to show at the top, defaults to "logo_disease".
 	public var imageName = "logo_disease"
 	
 	/// Text to show at the top, bold.

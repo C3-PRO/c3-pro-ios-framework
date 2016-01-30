@@ -21,13 +21,20 @@
 import UIKit
 
 
+/**
+A web view controller, built on `UIWebView`, to display bundled HTML content.
+*/
 public class WebViewController : UIViewController, UIWebViewDelegate {
 	
+	/// The web view.
 	public internal(set) var webView: UIWebView?
 	
+	/// Whether links should open in the receiver or open in Safari (default).
 	public var openLinksExternally = true
 	
+	/// The URL to load on view instantiation.
 	public var startURL: NSURL?
+	
 	
 	override public func viewDidLoad() {
 		super.viewDidLoad()
@@ -62,6 +69,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	
 	static var _appStyle: String?
 	
+	/// The CSS style to apply.
 	var appStyle: String {
 		if nil == self.dynamicType._appStyle {
 			if let styleURL = NSBundle.mainBundle().URLForResource("Intro", withExtension: "css") ?? NSBundle.mainBundle().URLForResource("Intro", withExtension: "css", subdirectory: "HTMLContent") {
@@ -74,6 +82,12 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 		return self.dynamicType._appStyle ?? ""
 	}
 	
+	/**
+	Wraps given HTML content in a full <html> document, applying `appStyle`.
+	
+	- parameter content: The HTML Body content, wrapped into `<body><div>...</div></body>`.
+	- returns: A full HTML document string
+	*/
 	public func htmlDocWithContent(content: String) -> String {
 		return "<!DOCTYPE html><html><head><style>\(appStyle)</style></head><body><div style=\"padding:20px 15px;\">\(content)</div></body></html>"
 	}
@@ -81,6 +95,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	
 	// MARK: - Content
 	
+	/** Make `webView` load `startURL`. */
 	public func loadStartURL() {
 		if let startURL = startURL, let webView = webView {
 			let request = NSURLRequest(URL: startURL)
@@ -101,6 +116,9 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 }
 
 
+/**
+A PDF view controller, built on `UIWebView`, to display bundled PDF files.
+*/
 public class PDFViewController : WebViewController, UIDocumentInteractionControllerDelegate {
 	
 	var shareButton: UIBarButtonItem?
@@ -133,6 +151,11 @@ public class PDFViewController : WebViewController, UIDocumentInteractionControl
 		}
 	}
 	
+	/**
+	Loads PDF data from the given url.
+	
+	- parameter url: The URL to load PDF data from
+	*/
 	public func loadPDFDataFrom(url: NSURL) {
 		PDFURL = url
 		if let web = webView {
@@ -144,12 +167,14 @@ public class PDFViewController : WebViewController, UIDocumentInteractionControl
 	
 	// MARK: - Sharing
 	
+	/**
+	Display a `UIDocumentInteractionController` so the user can share the PDF.
+	*/
 	public func share() {
 		if let url = PDFURL {
 			documentInteraction = UIDocumentInteractionController(URL: url)
 			documentInteraction!.delegate = self;
 			documentInteraction!.name = self.title;
-			
 			documentInteraction!.presentOptionsMenuFromBarButtonItem(shareButton!, animated: true)
 		}
 	}

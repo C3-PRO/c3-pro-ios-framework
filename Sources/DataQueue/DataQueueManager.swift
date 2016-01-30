@@ -38,9 +38,18 @@ class DataQueueManager {
 	/// The absolute path to the receiver's queue directory; individual per the receiver's host.
 	let queueDirectory: String
 	
-	init(fhirServer: Server ,directory: String) {
+	init(fhirServer: Server, directory: String) {
 		server = fhirServer
 		queueDirectory = directory
+		#if DEBUG
+		let manager = NSFileManager()
+		if let iterator = manager.enumeratorAtPath(queueDirectory) {
+			chip_logIfDebug("-->  Initialized data queue at «\(queueDirectory)»")
+			for item in iterator {
+				chip_logIfDebug("--->  \(item)")
+			}
+		}
+		#endif
 	}
 	
 	
@@ -76,7 +85,8 @@ class DataQueueManager {
 		if !manager.fileExistsAtPath(queueDirectory, isDirectory: &isDir) || !isDir {
 			do {
 				try manager.createDirectoryAtPath(queueDirectory, withIntermediateDirectories: true, attributes: nil)
-			} catch let error {
+			}
+			catch let error {
 				fatalError("DataQueue: Failed to create queue directory: \(error)")
 			}
 		}
@@ -100,7 +110,8 @@ class DataQueueManager {
 				myMin = min(myMin ?? pure.integerValue, pure.integerValue)
 				myMax = max(myMax ?? pure.integerValue, pure.integerValue)
 			}
-		} catch let error {
+		}
+		catch let error {
 			chip_logIfDebug("Failed to read current queue: \(error)")
 		}
 		
@@ -128,7 +139,8 @@ class DataQueueManager {
 			let data = try NSJSONSerialization.dataWithJSONObject(resource.asJSON(), options: [])
 			try data.writeToFile(path, options: fileProtection)
 			chip_logIfDebug("Enqueued resource at \(path)")
-		} catch let error {
+		}
+		catch let error {
 			chip_logIfDebug("Failed to serialize or enqueue JSON: \(error)")
 		}
 	}

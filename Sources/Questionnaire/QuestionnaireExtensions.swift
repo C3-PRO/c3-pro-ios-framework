@@ -23,6 +23,7 @@ import SMART
 import ResearchKit
 
 
+/** Extending `SMART.Element` for use with ResearchKit. */
 extension Element {
 	/**
 	Tries to find the "enableWhen" extension on questionnaire groups and questions, and if there are any instantiates ResultRequirements
@@ -54,6 +55,7 @@ extension Element {
 }
 
 
+/** Extending `SMART.Extension` for use with ResearchKit. */
 extension Extension {
 	/**
 	If this is an "answer" extension in questionnaire "enableWhen" extensions, returns the result that is required for the parent element to

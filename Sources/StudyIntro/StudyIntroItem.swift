@@ -21,8 +21,16 @@
 import Foundation
 
 
+/**
+Study intro items represent one section to be shown on the introduction screen. Future participants can swipe between intro items to learn
+more about the study.
+
+Typically, each concrete study item is represented by a different type of collection view cell, hence the static `cellReuseIdentifier`
+property.
+*/
 public protocol StudyIntroItem {
 	
+	/// The cell reuse identifier to be used for items.
 	static var cellReuseIdentifier: String { get }
 }
 
@@ -83,6 +91,7 @@ public class StudyIntroHTMLItem: StudyIntroItem {
 
 	public static var cellReuseIdentifier = "WebCell"
 	
+	/// The item's title.
 	public var title: String?
 	
 	/// The name of the file included in the bundle, either at the top level or in a `HTMLContent` subdirectory.
