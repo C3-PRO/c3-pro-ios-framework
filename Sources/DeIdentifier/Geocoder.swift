@@ -31,8 +31,8 @@ public typealias GeocoderAddressCallback = ((address: Address?, error: ErrorType
 
 
 /**
-	Class to ease geocoding tasks. Primarily designed to retrieve current location, e.g. to obtain a ZIP code.
- */
+Class to ease geocoding tasks. Primarily designed to retrieve current location, e.g. to obtain a ZIP code.
+*/
 public class Geocoder {
 	
 	var locationManager: CLLocationManager?
@@ -45,6 +45,8 @@ public class Geocoder {
 	
 	var isReverseGeocoding = false
 	
+	
+	/** Designated initializer. */
 	public init() {  }
 	
 	
@@ -286,6 +288,7 @@ public class Geocoder {
 }
 
 
+/** Delegate to `Geocoder` implementing the `CLLocationManagerDelegate` delegate methods. */
 class LocationManagerDelegate: NSObject, CLLocationManagerDelegate {
 	
 	var didChangeAuthCallback: ((status: CLAuthorizationStatus) -> Void)?

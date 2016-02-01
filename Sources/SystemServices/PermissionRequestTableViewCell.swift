@@ -109,10 +109,20 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 		}
 	}
 	
+	/** Perform the action assigned to the button; you normally don't need to use this method yourself. */
 	public func performAction(sender: UIButton) {
 		actionCallback?(button: sender)
 	}
 	
+	/**
+	Indicated that something went wrong when requesting for permission to a given service.
+	
+	This method renders the error in place of the system service description, turning the text red, and calling
+	`showRecoveryInstructionsForService(service:fromViewController)` to show next steps.
+	
+	- parameter error: The error that occurred
+	- parameter forService: The system service affected
+	*/
 	public func indicateError(error: ErrorType, forService service: SystemService) {
 		commentLabel?.text = "\(error)."
 		commentLabel?.textColor = UIColor.redColor()
@@ -125,6 +135,12 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 		}
 	}
 	
+	/**
+	Show how to recover from failure to enable a certain service.
+	
+	- parameter service: The system service that was affected
+	- parameter fromViewController: The view controller to use for instruction presentation
+	*/
 	public func showRecoveryInstructionsForService(service: SystemService, fromViewController viewController: UIViewController) {
 		let alert = UIAlertController(title: service.description, message: service.localizedHowToReEnable, preferredStyle: .Alert)
 		alert.addAction(UIAlertAction(title: "OK".c3_localized("Alert button title"), style: .Cancel, handler: nil))

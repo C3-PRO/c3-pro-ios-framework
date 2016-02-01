@@ -22,6 +22,12 @@ import UIKit
 import HealthKit
 
 
+/**
+Enum describing various system services such as geo-location, local notifications, CoreMotion and HealthKit.
+
+The items have a `usageReason` attached to them which can be shown to users for explanation when requesting access. There's also a
+`localizedHowToReEnable` string that instructs users on how to re-enable the respective service.
+*/
 public enum SystemService: CustomStringConvertible {
 	
 	/// Access to the user's location while using the app. Must provide the reason why you want access.
@@ -116,14 +122,27 @@ public enum SystemService: CustomStringConvertible {
 }
 
 
+/**
+Allows to specify different types of data from HealthKit that wants to be read or written.
+*/
 public struct HealthKitTypes {
 	
+	/// HealthKit characteristics, such as gender and date of birth, to be read from HealthKit.
 	public var characteristicTypesToRead = Set<HKCharacteristicType>()
 	
+	/// HealthKit quantities to be read.
 	public var quantityTypesToRead = Set<HKQuantityType>()
 	
+	/// HealthKit quantities to be written.
 	public var quantityTypesToWrite = Set<HKQuantityType>()
 	
+	/**
+	Designated initializer.
+	
+	- parameter readCharacteristics: characteristics, such as gender and date of birth, to be read from HealthKit
+	- parameter readQuantities: quantities to be read
+	- parameter writeQuantities: quantities to be written
+	*/
 	public init(readCharacteristics: Set<HKCharacteristicType>, readQuantities: Set<HKQuantityType>, writeQuantities: Set<HKQuantityType>) {
 		characteristicTypesToRead = readCharacteristics
 		quantityTypesToRead = readQuantities
@@ -131,6 +150,7 @@ public struct HealthKitTypes {
 	}
 	
 	
+	/// Returns false if no type has been specified.
 	public var isEmpty: Bool {
 		return (0 == characteristicTypesToRead.count + quantityTypesToRead.count + quantityTypesToWrite.count)
 	}

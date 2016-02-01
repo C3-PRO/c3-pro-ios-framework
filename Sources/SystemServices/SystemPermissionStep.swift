@@ -26,13 +26,21 @@ This step can be used to prompt the user for permissions to system services, suc
 */
 public class SystemPermissionStep: ORKStep {
 	
+	/// The services to be requested during this step.
 	public var services: [SystemService]?
 	
 	
+	/** Designated initializer. */
 	public override required init(identifier: String) {
 		super.init(identifier: identifier)
 	}
 	
+	/**
+	Initialize the step with the given services.
+	
+	- parameter identifier: The step identifier
+	- parameter permissions: The system services to which to request permission
+	*/
 	public convenience init(identifier: String, permissions: [SystemService]) {
 		self.init(identifier: identifier)
 		self.services = permissions
@@ -49,6 +57,11 @@ public class SystemPermissionStep: ORKStep {
 	}
 	
 	
+	/**
+	The view controller class that's used by this step.
+	
+	- returns: The `SystemPermissionStepViewController` class
+	*/
 	public class func stepViewControllerClass() -> AnyClass {
 		return SystemPermissionStepViewController.self
 	}
