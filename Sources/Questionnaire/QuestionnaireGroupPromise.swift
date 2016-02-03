@@ -66,7 +66,7 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto {
 		
 		// create an introductory instruction step if we have a title or text
 		var intro: ConditionalInstructionStep?
-		let (title, text) = group.chip_bestTitleAndText()
+		let (title, text) = group.c3_bestTitleAndText()
 		if (nil != title && !title!.isEmpty) || (nil != text && !text!.isEmpty) {
 			intro = ConditionalInstructionStep(identifier: group.linkId ?? NSUUID().UUIDString, title: title, text: text)
 		}
@@ -74,7 +74,7 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto {
 		// "enableWhen" requirements
 		var requirements = parentRequirements ?? [ResultRequirement]()
 		do {
-			if let myreqs = try group.chip_enableQuestionnaireElementWhen() {
+			if let myreqs = try group.c3_enableQuestionnaireElementWhen() {
 				requirements.appendContentsOf(myreqs)
 			}
 		}
@@ -149,7 +149,7 @@ extension QuestionnaireGroup {
 	
 	- returns: A tuple of strings for title and text
 	*/
-	func chip_bestTitleAndText() -> (String?, String?) {
+	func c3_bestTitleAndText() -> (String?, String?) {
 		var ttl = title
 		var txt = text
 		
@@ -165,7 +165,7 @@ extension QuestionnaireGroup {
 			}
 		}
 		
-		return (ttl?.chip_stripMultipleSpaces(), txt?.chip_stripMultipleSpaces())
+		return (ttl?.c3_stripMultipleSpaces(), txt?.c3_stripMultipleSpaces())
 	}
 }
 

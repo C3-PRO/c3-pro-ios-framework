@@ -64,10 +64,10 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
 	*/
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
 		let linkId = question.linkId ?? NSUUID().UUIDString
-		let (title, text) = question.chip_bestTitleAndText()
+		let (title, text) = question.c3_bestTitleAndText()
 		
 		// resolve answer format, THEN resolve sub-groups, if any
-		question.chip_asAnswerFormat() { format, berror in
+		question.c3_asAnswerFormat() { format, berror in
 			var steps = [ORKStep]()
 			var errors = [ErrorType]()
 			var requirements = parentRequirements ?? [ResultRequirement]()
@@ -80,7 +80,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
 				
 				// questions "enableWhen" requirements
 				do {
-					if let myreqs = try self.question.chip_enableQuestionnaireElementWhen() {
+					if let myreqs = try self.question.c3_enableQuestionnaireElementWhen() {
 						requirements.appendContentsOf(myreqs)
 					}
 				}
@@ -149,7 +149,7 @@ extension QuestionnaireGroupQuestion {
 	
 	- returns: A tuple of strings for title and text
 	*/
-	func chip_bestTitleAndText() -> (String?, String?) {
+	func c3_bestTitleAndText() -> (String?, String?) {
 		let cDisplay = concept?.filter() { return nil != $0.display }.map() { return $0.display! }
 		let cCodes = concept?.filter() { return nil != $0.code }.map() { return $0.code! }
 		
@@ -161,33 +161,33 @@ extension QuestionnaireGroupQuestion {
 			txt = nil
 		}
 		if nil == txt {
-			txt = chip_questionInstruction() ?? chip_questionHelpText()		// even if the title is still nil, we won't want to populate the title with help text
+			txt = c3_questionInstruction() ?? c3_questionHelpText()		// even if the title is still nil, we won't want to populate the title with help text
 		}
 		
-		return (ttl?.chip_stripMultipleSpaces(), txt?.chip_stripMultipleSpaces())
+		return (ttl?.c3_stripMultipleSpaces(), txt?.c3_stripMultipleSpaces())
 	}
 	
-	func chip_questionMinOccurs() -> Int? {
+	func c3_questionMinOccurs() -> Int? {
 		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger
 	}
 	
-	func chip_questionMaxOccurs() -> Int? {
+	func c3_questionMaxOccurs() -> Int? {
 		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger
 	}
 	
-	func chip_questionInstruction() -> String? {
+	func c3_questionInstruction() -> String? {
 		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString
 	}
 	
-	func chip_questionHelpText() -> String? {
+	func c3_questionHelpText() -> String? {
 		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString
 	}
 	
-	func chip_numericAnswerUnit() -> String? {
+	func c3_numericAnswerUnit() -> String? {
 		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
 	}
 	
-	func chip_defaultAnswer() -> Extension? {
+	func c3_defaultAnswer() -> Extension? {
 		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue")?.first
 	}
 	
@@ -196,7 +196,7 @@ extension QuestionnaireGroupQuestion {
 	Determine ResearchKit's answer format for the question type.
 	
 	Questions are multiple choice if "repeats" is set to true and the "max-occurs" extension is either not defined or larger than 1. See
-	`chip_answerChoiceStyle`.
+	`c3_answerChoiceStyle`.
 	
 	TODO: "open-choice" allows to choose an option OR to give a textual response: implement
 	
@@ -212,21 +212,21 @@ extension QuestionnaireGroupQuestion {
 	[x] ORKTimeOfDayAnswerFormat:       "time"
 	[ ] ORKTimeIntervalAnswerFormat:
 	*/
-	func chip_asAnswerFormat(callback: ((format: ORKAnswerFormat?, error: ErrorType?) -> Void)) {
+	func c3_asAnswerFormat(callback: ((format: ORKAnswerFormat?, error: ErrorType?) -> Void)) {
 		let link = linkId ?? "<nil>"
 		if let type = type {
 			switch type {
 			case "boolean":		callback(format: ORKAnswerFormat.booleanAnswerFormat(), error: nil)
 			case "decimal":		callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(nil), error: nil)
 			case "integer":
-				let minVals = chip_minValue()
-				let maxVals = chip_maxValue()
+				let minVals = c3_minValue()
+				let maxVals = c3_maxValue()
 				let minVal = minVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger
 				let maxVal = maxVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger
 				if let minVal = minVal, maxVal = maxVal where maxVal > minVal {
 					let minDesc = minVals?.filter() { return $0.valueString != nil }.first?.valueString
 					let maxDesc = maxVals?.filter() { return $0.valueString != nil }.first?.valueString
-					let defVal = chip_defaultAnswer()?.valueInteger ?? minVal
+					let defVal = c3_defaultAnswer()?.valueInteger ?? minVal
 					let format = ORKAnswerFormat.scaleAnswerFormatWithMaximumValue(maxVal, minimumValue: minVal, defaultValue: defVal,
 						step: 1, vertical: (maxVal - minVal > 5),
 						maximumValueDescription: maxDesc, minimumValueDescription: minDesc)
@@ -236,7 +236,7 @@ extension QuestionnaireGroupQuestion {
 				else {
 					callback(format: ORKAnswerFormat.integerAnswerFormatWithUnit(nil), error: nil)
 				}
-			case "quantity":	callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(chip_numericAnswerUnit()), error: nil)
+			case "quantity":	callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(c3_numericAnswerUnit()), error: nil)
 			case "date":		callback(format: ORKAnswerFormat.dateAnswerFormat(), error: nil)
 			case "dateTime":	callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
 			case "instant":		callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
@@ -244,21 +244,21 @@ extension QuestionnaireGroupQuestion {
 			case "string":		callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
 			case "url":			callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
 			case "choice":
-				chip_resolveAnswerChoices() { choices, error in
+				c3_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
 						callback(format: nil, error: error ?? C3Error.QuestionnaireNoChoicesInChoiceQuestion(self))
 					}
 					else {
-						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.chip_answerChoiceStyle(), textChoices: choices!), error: nil)
+						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.c3_answerChoiceStyle(), textChoices: choices!), error: nil)
 					}
 				}
 			case "open-choice":
-				chip_resolveAnswerChoices() { choices, error in
+				c3_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
 						callback(format: nil, error: error ?? C3Error.QuestionnaireNoChoicesInChoiceQuestion(self))
 					}
 					else {
-						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.chip_answerChoiceStyle(), textChoices: choices!), error: nil)
+						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.c3_answerChoiceStyle(), textChoices: choices!), error: nil)
 					}
 				}
 			//case "attachment":	callback(format: nil, error: nil)
@@ -279,7 +279,7 @@ extension QuestionnaireGroupQuestion {
 	The `value` property of the text choice is a combination of the coding system URL and the code, separated by a space. If no system URL
 	is provided, "https://fhir.smalthealthit.org" is used.
 	*/
-	func chip_resolveAnswerChoices(callback: ((choices: [ORKTextChoice]?, error: ErrorType?) -> Void)) {
+	func c3_resolveAnswerChoices(callback: ((choices: [ORKTextChoice]?, error: ErrorType?) -> Void)) {
 		options?.resolve(ValueSet.self) { valueSet in
 			var choices = [ORKTextChoice]()
 			
@@ -334,8 +334,8 @@ extension QuestionnaireGroupQuestion {
 	For `choice` type questions, inspect if the given question is single or multiple choice. Questions are multiple choice if "repeats" is
 	true and the "max-occurs" extension is either not defined or larger than 1.
 	*/
-	func chip_answerChoiceStyle() -> ORKChoiceAnswerStyle {
-		let multiple = repeats ?? ((chip_questionMaxOccurs() ?? 1) > 1)
+	func c3_answerChoiceStyle() -> ORKChoiceAnswerStyle {
+		let multiple = repeats ?? ((c3_questionMaxOccurs() ?? 1) > 1)
 		let style: ORKChoiceAnswerStyle = multiple ? .MultipleChoice : .SingleChoice
 		return style
 	}

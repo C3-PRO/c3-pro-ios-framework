@@ -104,7 +104,7 @@ public class ConsentController {
 				contract = try NSBundle.mainBundle().fhir_bundledResource(name) as? Contract
 			}
 			catch let error {
-				chip_warn("failed to read bundled Contract resource: \(error)")
+				c3_warn("failed to read bundled Contract resource: \(error)")
 			}
 		}
 	}
@@ -148,11 +148,11 @@ public class ConsentController {
 						navi.presentViewController(consent, animated: true, completion: nil)
 					}
 					catch let error {
-						chip_warn("failed to create consent view controller: \(error)")
+						c3_warn("failed to create consent view controller: \(error)")
 					}
 				}
 				else {
-					chip_warn("must embed eligibility status view controller in a navigation controller")
+					c3_warn("must embed eligibility status view controller in a navigation controller")
 				}
 			}
 		}
@@ -179,7 +179,7 @@ public class ConsentController {
 				navi.pushViewController(elig, animated: true)
 			}
 			else {
-				chip_warn("must embed eligibility status view controller in a navigation controller")
+				c3_warn("must embed eligibility status view controller in a navigation controller")
 			}
 		}
 		return check
@@ -197,23 +197,23 @@ public class ConsentController {
 				if let characteristics = group?.characteristic {
 					var criteria = [EligibilityRequirement]()
 					for characteristic in characteristics {
-						if let req = characteristic.chip_asEligibilityRequirement() {
+						if let req = characteristic.c3_asEligibilityRequirement() {
 							criteria.append(req)
 						}
 						else {
-							chip_warn("this characteristic failed to return an eligibility requirement: \(characteristic.asJSON())")
+							c3_warn("this characteristic failed to return an eligibility requirement: \(characteristic.asJSON())")
 						}
 					}
 					callback(requirements: criteria)
 				}
 				else {
-					chip_warn("failed to resolve the contract's subject group or there are no characteristics, hence no eligibility criteria")
+					c3_warn("failed to resolve the contract's subject group or there are no characteristics, hence no eligibility criteria")
 					callback(requirements: nil)
 				}
 			}
 		}
 		else {
-			chip_logIfDebug("the contract does not have a subject, hence no eligibility criteria")
+			c3_logIfDebug("the contract does not have a subject, hence no eligibility criteria")
 			callback(requirements: nil)
 		}
 	}
@@ -248,7 +248,7 @@ public class ConsentController {
 		onUserDidDecline: ((controller: ORKTaskViewController) -> Void)) throws -> ORKTaskViewController {
 		
 		if nil != onUserDidConsent {
-			chip_warn("a `onUserDidConsent` block is already set on \(self), are you already presenting a consent view controller? This might have unintended consequences.")
+			c3_warn("a `onUserDidConsent` block is already set on \(self), are you already presenting a consent view controller? This might have unintended consequences.")
 		}
 		onUserDidConsent = onConsent
 		onUserDidDeclineConsent = onUserDidDecline
@@ -279,7 +279,7 @@ public class ConsentController {
                             result.shareWidely = (0 == choice)			// the first option, index 0, is "share worldwide"
                     }
                     else if options.askForSharing {
-                        chip_warn("the sharing step has not returned the expected result, despite `options.askForSharing` being set to true")
+                        c3_warn("the sharing step has not returned the expected result, despite `options.askForSharing` being set to true")
                     }
                     
                     userDidConsent(taskViewController, result: result)
@@ -296,7 +296,7 @@ public class ConsentController {
 			}
 		}
 		else {
-			chip_warn("user finished a consent that did not have a `ConsentTask` task; cannot handle, calling decline callback")
+			c3_warn("user finished a consent that did not have a `ConsentTask` task; cannot handle, calling decline callback")
 			userDidDeclineConsent(taskViewController)
 		}
 		
@@ -384,7 +384,7 @@ public class ConsentController {
 				callback(contract: contract, patient: patient, error: nil)
 			}
 			catch let error {
-				chip_warn("\(error)")
+				c3_warn("\(error)")
 				callback(contract: Contract(json: nil), patient: patient, error: error)
 			}
 		}
@@ -400,15 +400,15 @@ public class ConsentController {
 	- parameter withSignature: The signature to apply to the document
 	*/
 	func signConsentDocument(document: ORKConsentDocument, withSignature signature: ORKConsentSignatureResult) {
-		chip_logIfDebug("Writing consent PDF")
+		c3_logIfDebug("Writing consent PDF")
 		signature.applyToDocument(document)
 		document.makePDFWithCompletionHandler() { data, error in
 			if let data = data, let pdfURL = self.dynamicType.signedConsentPDFURL() {
 				data.writeToURL(pdfURL, atomically: true)
-				chip_logIfDebug("Consent PDF written to \(pdfURL)")
+				c3_logIfDebug("Consent PDF written to \(pdfURL)")
 			}
 			else {
-				chip_warn("failed to write consent PDF: \(error?.localizedDescription ?? (nil == data ? "no data" : "no url"))")
+				c3_warn("failed to write consent PDF: \(error?.localizedDescription ?? (nil == data ? "no data" : "no url"))")
 			}
 		}
 	}
@@ -429,7 +429,7 @@ public class ConsentController {
 			}
 		}
 		catch let err {
-			chip_warn("\(err)")
+			c3_warn("\(err)")
 		}
 		return nil
 	}

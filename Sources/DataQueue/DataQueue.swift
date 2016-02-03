@@ -35,7 +35,7 @@ public class DataQueue: Server {
 	
 	public required init(baseURL: NSURL, auth: OAuth2JSON?) {
 		super.init(baseURL: baseURL, auth: auth)
-		let dir = try! NSFileManager.defaultManager().chip_appLibraryDirectory()
+		let dir = try! NSFileManager.defaultManager().c3_appLibraryDirectory()
 		if let host = baseURL.host {
 			let full = ((dir as NSString).stringByAppendingPathComponent("DataQueue") as NSString).stringByAppendingPathComponent(host)
 			queueManager = DataQueueManager(fhirServer: self, directory: full)

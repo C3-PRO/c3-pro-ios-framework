@@ -29,8 +29,8 @@ public extension HKQuantitySample {
 	
 	- returns: A Quantity instance on success
 	*/
-	public func chip_asFHIRQuantity() throws -> Quantity {
-		return try quantity.chip_asFHIRQuantityInUnit(quantityType.chip_preferredUnit())
+	public func c3_asFHIRQuantity() throws -> Quantity {
+		return try quantity.c3_asFHIRQuantityInUnit(quantityType.c3_preferredUnit())
 	}
 }
 
@@ -43,7 +43,7 @@ public extension HKQuantity {
 	- parameter unit: The unit to use
 	- returns: A Quantity instance on success
 	*/
-	public func chip_asFHIRQuantityInUnit(unit: HKUnit) throws -> Quantity {
+	public func c3_asFHIRQuantityInUnit(unit: HKUnit) throws -> Quantity {
 		if isCompatibleWithUnit(unit) {
 			return Quantity(json: ["value": doubleValueForUnit(unit), "unit": unit.unitString])
 		}
@@ -57,7 +57,7 @@ public extension HKQuantityType {
 	/**
 	The preferred unit for a given quantity type; should be highly aligned with the ISO units.
 	*/
-	public func chip_preferredUnit() -> HKUnit {
+	public func c3_preferredUnit() -> HKUnit {
 		switch identifier {
 		case HKQuantityTypeIdentifierActiveEnergyBurned:
 			return HKUnit.jouleUnitWithMetricPrefix(.Kilo)

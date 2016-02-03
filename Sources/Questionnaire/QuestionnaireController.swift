@@ -57,7 +57,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 					
 					if let tsk = promise.task {
 						if let errors = multiErrors {
-							chip_logIfDebug("Successfully prepared questionnaire but encountered errors:\n\(errors)")
+							c3_logIfDebug("Successfully prepared questionnaire but encountered errors:\n\(errors)")
 						}
 						callback(task: tsk, error: multiErrors)
 					}
@@ -119,7 +119,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 		case .Failed:
 			didFailWithError(viewController, error: C3Error.QuestionnaireFinishedWithError)
 		case .Completed:
-			whenCompleted?(viewController: viewController, answers: viewController.result.chip_asQuestionnaireResponseForTask(viewController.task))
+			whenCompleted?(viewController: viewController, answers: viewController.result.c3_asQuestionnaireResponseForTask(viewController.task))
 		case .Discarded:
 			didFailWithError(viewController, error: nil)
 		case .Saved:

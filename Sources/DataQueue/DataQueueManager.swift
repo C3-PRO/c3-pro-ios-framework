@@ -44,9 +44,9 @@ class DataQueueManager {
 		#if DEBUG
 		let manager = NSFileManager()
 		if let iterator = manager.enumeratorAtPath(queueDirectory) {
-			chip_logIfDebug("-->  Initialized data queue at «\(queueDirectory)»")
+			c3_logIfDebug("-->  Initialized data queue at «\(queueDirectory)»")
 			for item in iterator {
-				chip_logIfDebug("--->  \(item)")
+				c3_logIfDebug("--->  Waiting: \(item)")
 			}
 		}
 		#endif
@@ -112,7 +112,7 @@ class DataQueueManager {
 			}
 		}
 		catch let error {
-			chip_logIfDebug("Failed to read current queue: \(error)")
+			c3_logIfDebug("Failed to read current queue: \(error)")
 		}
 		
 		return (nil != myMin) ? (min: myMin!, max: myMax!) : nil
@@ -138,10 +138,10 @@ class DataQueueManager {
 		do {
 			let data = try NSJSONSerialization.dataWithJSONObject(resource.asJSON(), options: [])
 			try data.writeToFile(path, options: fileProtection)
-			chip_logIfDebug("Enqueued resource at \(path)")
+			c3_logIfDebug("Enqueued resource at \(path)")
 		}
 		catch let error {
-			chip_logIfDebug("Failed to serialize or enqueue JSON: \(error)")
+			c3_logIfDebug("Failed to serialize or enqueue JSON: \(error)")
 		}
 	}
 	
@@ -180,13 +180,13 @@ class DataQueueManager {
 	*/
 	func dequeueFirst(callback: ((didDequeue: Bool, error: ErrorType?) -> Void)) {
 		if nil != currentlyDequeueing {
-			chip_warn("already dequeueing")
+			c3_warn("already dequeueing")
 			callback(didDequeue: false, error: nil)
 			return
 		}
 		
 		if let first = firstInQueue() {
-			chip_logIfDebug("Dequeueing first in queue: \(first.path)")
+			c3_logIfDebug("Dequeueing first in queue: \(first.path)")
 			do {
 				try first.readFromFile()
 				currentlyDequeueing = first
@@ -206,7 +206,7 @@ class DataQueueManager {
 				}
 			}
 			catch let error {
-				chip_warn("failed to read resource data: \(error)")
+				c3_warn("failed to read resource data: \(error)")
 				// TODO: figure out what to do (file should be readable at this point)
 				callback(didDequeue: false, error: nil)
 			}
@@ -226,7 +226,7 @@ class DataQueueManager {
 			}
 			catch let error {
 				// TODO: figure out what to do
-				chip_warn("failed to remove queued resource \(path): \(error)")
+				c3_warn("failed to remove queued resource \(path): \(error)")
 			}
 		}
 	}
@@ -243,7 +243,7 @@ class DataQueueManager {
 			if manager.isReadableFileAtPath(path) {
 				return QueuedResource(path: path)
 			}
-			chip_logIfDebug("Have file in queue but it is not readable, waiting for next call")
+			c3_logIfDebug("Have file in queue but it is not readable, waiting for next call")
 		}
 		return nil
 	}

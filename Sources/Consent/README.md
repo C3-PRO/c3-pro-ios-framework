@@ -232,7 +232,7 @@ do {
     }
 }
 catch let error {
-    chip_warn("Failed signing contract: \(error)")
+    c3_warn("Failed signing contract: \(error)")
 }
 ```
 
@@ -278,7 +278,7 @@ func eligibilityStatusViewController(withConfiguration config: StudyIntroConfigu
       root.presentViewController(consentVC, animated: true, completion: nil)
     }
     catch let error {
-      chip_warn("Failed to create consent view controller: \(error)")
+      c3_warn("Failed to create consent view controller: \(error)")
     }
   }
 }

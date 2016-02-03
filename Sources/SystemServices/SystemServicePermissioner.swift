@@ -143,7 +143,7 @@ public class SystemServicePermissioner {
 			return
 		}
 		if nil != locationManager {
-			chip_warn("Location permission request is already ongoing, not requesting again")
+			c3_warn("Location permission request is already ongoing, not requesting again")
 			c3_performOnMainQueue() {
 				callback(error: nil)
 			}
@@ -190,7 +190,7 @@ public class SystemServicePermissioner {
 	*/
 	func requestCoreMotionPermissions(callback: ((error: ErrorType?) -> Void)) {
 		if nil != coreMotionManager {
-			chip_warn("CoreMotion permission request is already ongoing, not requesting again")
+			c3_warn("CoreMotion permission request is already ongoing, not requesting again")
 			c3_performOnMainQueue() {
 				callback(error: nil)
 			}

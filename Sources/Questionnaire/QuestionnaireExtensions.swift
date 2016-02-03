@@ -29,7 +29,7 @@ extension Element {
 	Tries to find the "enableWhen" extension on questionnaire groups and questions, and if there are any instantiates ResultRequirements
 	representing those.
 	*/
-	func chip_enableQuestionnaireElementWhen() throws -> [ResultRequirement]? {
+	func c3_enableQuestionnaireElementWhen() throws -> [ResultRequirement]? {
 		if let enableWhen = extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-enableWhen") {
 			var requirements = [ResultRequirement]()
 			
@@ -37,7 +37,7 @@ extension Element {
 				let question = when.extension_fhir?.filter() { return $0.url?.fragment == "question" }.first
 				let answer = when.extension_fhir?.filter() { return $0.url?.fragment == "answer" }.first
 				if let answer = answer, let questionIdentifier = question?.valueString {
-					let result = try answer.chip_desiredResultForValueOfStep(questionIdentifier)
+					let result = try answer.c3_desiredResultForValueOfStep(questionIdentifier)
 					let req = ResultRequirement(step: questionIdentifier, result: result)
 					requirements.append(req)
 				}
@@ -66,7 +66,7 @@ extension Extension {
 	- parameter stepIdentifier: The identifier of the step this extension applies to
 	- returns: An ORKQuestionResult representing the result that is required for the Group or Question to be shown
 	*/
-	func chip_desiredResultForValueOfStep(stepIdentifier: String) throws -> ORKQuestionResult {
+	func c3_desiredResultForValueOfStep(stepIdentifier: String) throws -> ORKQuestionResult {
 		if "answer" != url?.fragment {
 			throw C3Error.ExtensionInvalidInContext
 		}

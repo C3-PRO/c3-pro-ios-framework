@@ -59,7 +59,7 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 			}
 		}
 		else {
-			chip_warn("No `SystemPermissionStep` is associated with \(self)")
+			c3_warn("No `SystemPermissionStep` is associated with \(self)")
 		}
 		return nil
 	}

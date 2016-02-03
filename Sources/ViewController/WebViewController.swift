@@ -76,7 +76,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 				self.dynamicType._appStyle = (try? NSString(contentsOfFile: styleURL.path!, encoding: NSUTF8StringEncoding)) as? String
 			}
 			else {
-				chip_warn("Please include a CSS stylesheet called «Intro.css» in the app bundle")
+				c3_warn("Please include a CSS stylesheet called «Intro.css» in the app bundle")
 			}
 		}
 		return self.dynamicType._appStyle ?? ""

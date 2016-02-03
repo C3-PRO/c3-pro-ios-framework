@@ -29,7 +29,7 @@ extension Element {
 	
 	- returns: A list of `Extension` resources for the _minValue_ extension
 	*/
-	final func chip_minValue() -> [Extension]? {
+	final func c3_minValue() -> [Extension]? {
 		return extensionsFor("http://hl7.org/fhir/StructureDefinition/minValue")
 	}
 	
@@ -39,7 +39,7 @@ extension Element {
 	
 	- returns: A list of `Extension` resources for the _maxValue_ extension
 	*/
-	final func chip_maxValue() -> [Extension]? {
+	final func c3_maxValue() -> [Extension]? {
 		return extensionsFor("http://hl7.org/fhir/StructureDefinition/maxValue")
 	}
 }

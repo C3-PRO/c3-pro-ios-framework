@@ -33,7 +33,7 @@ public extension GroupCharacteristic {
 	represented. If `valueBoolean` is true and `exclude` is also true, a classic _exclusion_ criterion is represented. `valueBoolean` is
 	false, the meaning reverses.
 	*/
-	public func chip_asEligibilityRequirement() -> EligibilityRequirement? {
+	public func c3_asEligibilityRequirement() -> EligibilityRequirement? {
 		if let text = code?.text, let exclude = exclude {
 			let include = valueBoolean ?? true
 			return EligibilityRequirement(title: text, mustBeMet: include != exclude)

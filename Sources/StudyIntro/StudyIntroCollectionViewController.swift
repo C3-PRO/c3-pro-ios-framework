@@ -107,7 +107,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 			exec(controller: self)
 		}
 		else {
-			chip_warn("Tapped “Join Study” but `onJoinStudy` is not defined")
+			c3_warn("Tapped “Join Study” but `onJoinStudy` is not defined")
 		}
 	}
 	
@@ -127,7 +127,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 				navi.pushViewController(pdfVC, animated: true)
 			}
 			else {
-				chip_logIfDebug("Hint: if you put the intro collection view controller into a navigation controller, the consent document will be pushed instead of shown modally")
+				c3_logIfDebug("Hint: if you put the intro collection view controller into a navigation controller, the consent document will be pushed instead of shown modally")
 				let navi = UINavigationController(rootViewController: pdfVC)
 				let done = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "dismissModal")
 				pdfVC.navigationItem.rightBarButtonItem = done
@@ -139,7 +139,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 			}
 		}
 		else {
-			chip_warn("failed to locate consent PDF")
+			c3_warn("failed to locate consent PDF")
 		}
 	}
 	
@@ -151,7 +151,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 			presentViewController(player, animated: true, completion: nil)
 		}
 		else {
-			chip_warn("Video named «\(name).mp4» not found in app bundle")
+			c3_warn("Video named «\(name).mp4» not found in app bundle")
 		}
 	}
 	

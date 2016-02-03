@@ -30,15 +30,15 @@ public extension HKHealthStore {
 	- parameter typeIdentifier: The type of samples to retrieve
 	- parameter callback: Callback to call when query finishes, comes back either with a quantity, an error or neither
 	*/
-	public func chip_latestSampleOfType(typeIdentifier: String, callback: ((quantity: HKQuantity?, error: ErrorType?) -> Void)) {
-		chip_samplesOfTypeBetween(typeIdentifier, start: NSDate.distantPast() , end: NSDate(), limit: 1) { results, error in
+	public func c3_latestSampleOfType(typeIdentifier: String, callback: ((quantity: HKQuantity?, error: ErrorType?) -> Void)) {
+		c3_samplesOfTypeBetween(typeIdentifier, start: NSDate.distantPast() , end: NSDate(), limit: 1) { results, error in
 			callback(quantity: results?.first?.quantity, error: error)
 		}
 	}
 	
 	/**
 	Convenience method to retrieve samples from a given period. Orders by end date, descending. Don't use this to get a total over a given
-	period, use `chip_summaryOfSamplesOfTypeBetween()` (which is using `HKStatisticsCollectionQuery`).
+	period, use `c3_summaryOfSamplesOfTypeBetween()` (which is using `HKStatisticsCollectionQuery`).
 	
 	- parameter typeIdentifier: The type of samples to retrieve
 	- parameter start: Start date
@@ -46,7 +46,7 @@ public extension HKHealthStore {
 	- parameter limit: How many samples to retrieve at max
 	- parameter callback: Callback to call when query finishes, comes back either with an array of samples, an error or neither
 	*/
-	public func chip_samplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, limit: Int, callback: ((results: [HKQuantitySample]?, error: ErrorType?) -> Void)) {
+	public func c3_samplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, limit: Int, callback: ((results: [HKQuantitySample]?, error: ErrorType?) -> Void)) {
 		guard let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) else {
 			callback(results: nil, error: C3Error.NoSuchHKSampleType(typeIdentifier))
 			return
@@ -74,7 +74,7 @@ public extension HKHealthStore {
 	- parameter callback: Callback to call, on a background queue, when the query finishes, containing one HKQuantitySample spanning the
 	                      whole period or an error (or neither)
 	*/
-	public func chip_summaryOfSamplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, callback: ((result: HKQuantitySample?, error: ErrorType?) -> Void)) {
+	public func c3_summaryOfSamplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, callback: ((result: HKQuantitySample?, error: ErrorType?) -> Void)) {
 		guard let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) else {
 			callback(result: nil, error: C3Error.NoSuchHKSampleType(typeIdentifier))
 			return

@@ -125,8 +125,8 @@ class ConditionalQuestionStep: ORKQuestionStep {
 				if let questionResults = stepResult.results as? [ORKQuestionResult] {
 					var ok = false
 					for questionResult in questionResults {
-						//chip_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.chip_hasSameAnswer(requirement.result))")
-						if questionResult.chip_hasSameAnswer(requirement.result) {
+						//c3_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.c3_hasSameAnswer(requirement.result))")
+						if questionResult.c3_hasSameAnswer(requirement.result) {
 							ok = true
 						}
 					}
@@ -135,11 +135,11 @@ class ConditionalQuestionStep: ORKQuestionStep {
 					}
 				}
 				else {
-					chip_logIfDebug("Expecting Array<ORKQuestionResult> but got \(stepResult.results)")
+					c3_logIfDebug("Expecting Array<ORKQuestionResult> but got \(stepResult.results)")
 				}
 			}
 			else {
-				chip_logIfDebug("Next step \(identifier) has a condition on \(requirement.questionIdentifier), but the latter has no result yet")
+				c3_logIfDebug("Next step \(identifier) has a condition on \(requirement.questionIdentifier), but the latter has no result yet")
 			}
 		}
 		return true
@@ -225,8 +225,8 @@ class ConditionalInstructionStep: ORKInstructionStep {
 				if let questionResults = stepResult.results as? [ORKQuestionResult] {
 					var ok = false
 					for questionResult in questionResults {
-						//chip_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.chip_hasSameAnswer(requirement.result))")
-						if questionResult.chip_hasSameAnswer(requirement.result) {
+						//c3_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.c3_hasSameAnswer(requirement.result))")
+						if questionResult.c3_hasSameAnswer(requirement.result) {
 							ok = true
 						}
 					}
@@ -235,11 +235,11 @@ class ConditionalInstructionStep: ORKInstructionStep {
 					}
 				}
 				else {
-					chip_logIfDebug("Expecting Array<ORKQuestionResult> but got \(stepResult.results)")
+					c3_logIfDebug("Expecting Array<ORKQuestionResult> but got \(stepResult.results)")
 				}
 			}
 			else {
-				chip_logIfDebug("Next step \(identifier) has a condition on \(requirement.questionIdentifier), but the latter has no result yet")
+				c3_logIfDebug("Next step \(identifier) has a condition on \(requirement.questionIdentifier), but the latter has no result yet")
 			}
 		}
 		return true
@@ -329,7 +329,7 @@ extension ORKQuestionResult {
 	- parameter other: The result to compare against
 	- returns: A boold indicating whether the results are the same
 	*/
-	func chip_hasSameAnswer(other: ORKQuestionResult) -> Bool {
+	func c3_hasSameAnswer(other: ORKQuestionResult) -> Bool {
 		if let myAnswer: AnyObject = answer {
 			if let otherAnswer: AnyObject = other.answer {
 				return myAnswer.isEqual(otherAnswer)

@@ -92,7 +92,7 @@ public class ConsentTask: ORKOrderedTask {
 	- returns: A named tuple returning the ORKConsentDocument and an array of ORKSteps
 	*/
 	class func stepsAndConsentFromContract(contract: Contract, options: ConsentTaskOptions) throws -> (consent: ORKConsentDocument, steps: [ORKStep]) {
-		let consent = try contract.chip_asConsentDocument()
+		let consent = try contract.c3_asConsentDocument()
 		let bundle = NSBundle.mainBundle()
 		
 		// full consent review document (override, if nil will automatically combine all consent sections)
@@ -102,11 +102,11 @@ public class ConsentTask: ORKOrderedTask {
 					consent.htmlReviewContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
 				}
 				catch let error {
-					chip_warn("Failed to read contents of file named «\(reviewDoc).html»: \(error)")
+					c3_warn("Failed to read contents of file named «\(reviewDoc).html»: \(error)")
 				}
 			}
 			else {
-				chip_warn("The bundle does not contain a file named «\(reviewDoc).html», ignoring")
+				c3_warn("The bundle does not contain a file named «\(reviewDoc).html», ignoring")
 			}
 		}
 		
@@ -130,7 +130,7 @@ public class ConsentTask: ORKOrderedTask {
 					steps.append(sharing)
 				}
 				catch let error {
-					chip_warn("Failed to read learn more content from «\(url)»: \(error)")
+					c3_warn("Failed to read learn more content from «\(url)»: \(error)")
 				}
 			}
 			else {

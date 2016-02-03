@@ -134,7 +134,7 @@ public class EligibilityCheckViewController: UITableViewController {
 				exec(viewController: self)
 			}
 			else {
-				chip_warn("Tapped “Start Consent” but `onStartConsent` is not defined")
+				c3_warn("Tapped “Start Consent” but `onStartConsent` is not defined")
 			}
 		}
 		navigationController?.pushViewController(vc, animated: true)
@@ -158,7 +158,7 @@ public class EligibilityCheckViewController: UITableViewController {
 			navi.setViewControllers(vcs, animated: true)
 		}
 		else {
-			chip_warn("Incredible error, my navigation controller disappeared! I'm \(self)")
+			c3_warn("Incredible error, my navigation controller disappeared! I'm \(self)")
 		}
 	}
 	

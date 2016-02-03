@@ -69,7 +69,7 @@ public class StudyIntroWelcomeCell: UICollectionViewCell {
 			exec()
 		}
 		else {
-			chip_warn("Have not yet assigned `onConsentTap`")
+			c3_warn("Have not yet assigned `onConsentTap`")
 		}
 	}
 	
@@ -78,7 +78,7 @@ public class StudyIntroWelcomeCell: UICollectionViewCell {
 			exec(name: video)
 		}
 		else {
-			chip_warn("Have not assigned `onVideoTap` or the welcome item does not define `videoName`")
+			c3_warn("Have not assigned `onVideoTap` or the welcome item does not define `videoName`")
 		}
 	}
 }
@@ -112,7 +112,7 @@ public class StudyIntroVideoCell: UICollectionViewCell {
 			exec(name: video)
 		}
 		else {
-			chip_warn("Have not assigned `onVideoTap` or the video item does not define `videoName`")
+			c3_warn("Have not assigned `onVideoTap` or the video item does not define `videoName`")
 		}
 	}
 }

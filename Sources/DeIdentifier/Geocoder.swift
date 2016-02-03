@@ -92,11 +92,11 @@ public class Geocoder {
 	}
 	
 	func locationManagerAuthorize(manager: CLLocationManager) {
-		chip_logIfDebug("Authorizing location determination")
+		c3_logIfDebug("Authorizing location determination")
 		if let delegate = manager.delegate as? LocationManagerDelegate {
 			delegate.didChangeAuthCallback = { status in
 				if .NotDetermined == status {
-					chip_logIfDebug("Status is \"Not Determined\"; did you set `NSLocationWhenInUseUsageDescription` in your plist?")
+					c3_logIfDebug("Status is \"Not Determined\"; did you set `NSLocationWhenInUseUsageDescription` in your plist?")
 				}
 				self.startManager(manager, isRetry: true)
 			}
@@ -106,7 +106,7 @@ public class Geocoder {
 	
 	/** Calls `startUpdatingLocation` and `stopUpdatingLocation`, then calls the callback with the current/latest location. */
 	func locationManagerStart(manager: CLLocationManager) {
-		chip_logIfDebug("Starting location determination")
+		c3_logIfDebug("Starting location determination")
 		locationDelegate!.didUpdateLocations = { locations in
 			self.locationManager?.stopUpdatingLocation()
 			self.locationManagerDidReceiveLocations(locations)
@@ -115,7 +115,7 @@ public class Geocoder {
 	}
 	
 	func locationManagerDidReceiveLocations(locations: [CLLocation]) {
-		chip_logIfDebug("Location determination completed")
+		c3_logIfDebug("Location determination completed")
 		locationCallback?(location: locations.last, error: nil)
 		locationCallback = nil
 		locationDelegate = nil
@@ -123,7 +123,7 @@ public class Geocoder {
 	}
 	
 	func locationManagerDidFail(error: ErrorType?) {
-		chip_logIfDebug("Location determination failed with error: \(error)")
+		c3_logIfDebug("Location determination failed with error: \(error)")
 		locationCallback?(location: nil, error: error)
 		locationCallback = nil
 		locationDelegate = nil
@@ -161,11 +161,11 @@ public class Geocoder {
 	- parameter callback: The callback to call when done, supplies either a CLPlacemark or an error or neither (on abort)
 	*/
 	public func reverseGeocodeLocation(location: CLLocation, callback: GeocoderPlacemarkCallback) {
-		chip_logIfDebug("Starting reverse geocoding")
+		c3_logIfDebug("Starting reverse geocoding")
 		isReverseGeocoding = true
 		geocoder = CLGeocoder()
 		geocoder!.reverseGeocodeLocation(location) { placemarks, error in
-			chip_logIfDebug("Reverse geocoding completed")
+			c3_logIfDebug("Reverse geocoding completed")
 			self.isReverseGeocoding = false
 			if nil != error || nil == placemarks {
 				callback(placemark: nil, error: error)

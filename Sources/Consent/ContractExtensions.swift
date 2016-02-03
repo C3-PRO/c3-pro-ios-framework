@@ -35,8 +35,8 @@ public extension Contract {
 	
 	- returns: An `ORKConsentDocument` created from the receiver
 	*/
-	public func chip_asConsentDocument() throws -> ORKConsentDocument {
-		let sections = try chip_termsAsConsentSections()
+	public func c3_asConsentDocument() throws -> ORKConsentDocument {
+		let sections = try c3_termsAsConsentSections()
 		let document = ORKConsentDocument()
 		document.title = "Consent".c3_localized
 		document.signaturePageTitle = "Consent".c3_localized
@@ -51,18 +51,18 @@ public extension Contract {
 	
 	- returns: An array of `ORKConsentSection`
 	*/
-	public func chip_termsAsConsentSections() throws -> [ORKConsentSection] {
+	public func c3_termsAsConsentSections() throws -> [ORKConsentSection] {
 		guard let terms = term else {
 			throw C3Error.ConsentContractHasNoTerms
 		}
 		var sections = [ORKConsentSection]()
 		for term in terms {
 			do {
-				let section = try term.chip_asConsentSection()
+				let section = try term.c3_asConsentSection()
 				sections.append(section)
 			}
 			catch let error {
-				chip_warn("Contract `term` section \(term) cannot be used for consenting: \(error)")
+				c3_warn("Contract `term` section \(term) cannot be used for consenting: \(error)")
 			}
 		}
 		if sections.isEmpty {
@@ -81,8 +81,8 @@ public extension ContractTerm {
 	
 	- returns: An ORKConsentSection representing the receiver
 	*/
-	public func chip_asConsentSection() throws -> ORKConsentSection {
-		let type = try chip_consentSectionType()
+	public func c3_asConsentSection() throws -> ORKConsentSection {
+		let type = try c3_consentSectionType()
 		let section = ORKConsentSection(type: type)
 		section.summary = text
 		
@@ -102,18 +102,18 @@ public extension ContractTerm {
 								section.htmlContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
 							}
 							catch let error {
-								chip_warn("Failed to read from bundled file «\(url)»: \(error)")
+								c3_warn("Failed to read from bundled file «\(url)»: \(error)")
 							}
 						}
 						else {
-							chip_warn("HTML consent section with name «\(sub.valueString)» is not in main bundle nor in its «HTMLContent» subdirectory")
+							c3_warn("HTML consent section with name «\(sub.valueString)» is not in main bundle nor in its «HTMLContent» subdirectory")
 						}
 					case "image":
 						if let name = sub.valueString, let image = UIImage(named: name) {
 							section.customImage = image
 						}
 						else {
-							chip_warn("Custom consent image named «\(sub.valueString)» is not in main bundle")
+							c3_warn("Custom consent image named «\(sub.valueString)» is not in main bundle")
 						}
 					case "animation":
 						let multi = (UIScreen.mainScreen().scale >= 3.0) ? "@3x" : "@2x"
@@ -121,7 +121,7 @@ public extension ContractTerm {
 							section.customAnimationURL = url
 						}
 						else {
-							chip_warn("Custom animation named «\(sub.valueString)» is not in main bundle")
+							c3_warn("Custom animation named «\(sub.valueString)» is not in main bundle")
 						}
 					default:
 						break
@@ -139,11 +139,11 @@ public extension ContractTerm {
 	
 	- returns: A matching ORKConsentSectionType
 	*/
-	public func chip_consentSectionType() throws -> ORKConsentSectionType {
+	public func c3_consentSectionType() throws -> ORKConsentSectionType {
 		if let codings = type?.coding {
 			for code in codings {
 				if let url = code.system?.absoluteString where url != kContractTermConsentSectionType {
-					chip_logIfDebug("Ignoring consent section system “\(url)” (expecting “\(kContractTermConsentSectionType)”)")
+					c3_logIfDebug("Ignoring consent section system “\(url)” (expecting “\(kContractTermConsentSectionType)”)")
 					continue
 				}
 				if nil == code.code {
