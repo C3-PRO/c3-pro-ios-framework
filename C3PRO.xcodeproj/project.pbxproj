@@ -29,6 +29,7 @@
 		EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */; };
 		EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */; };
 		EEA5CF191BEA5B5A00A6D4C9 /* ConsentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */; };
+		EEA85BEA1C624482009FFBB7 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE32BDFE1B8396A100024E7A /* CryptoSwift.framework */; };
 		EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */; };
 		EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */; };
 		EEC3C95D1B83D3C80096D5BE /* RSAUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC3C95C1B83D3C80096D5BE /* RSAUtility.swift */; };
@@ -233,6 +234,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EEA85BEA1C624482009FFBB7 /* CryptoSwift.framework in Frameworks */,
 				EE5931771AEAD9AF00A7C5E1 /* SMART.framework in Frameworks */,
 				EEFA84FA1AE5C2BC00E61006 /* ResearchKit.framework in Frameworks */,
 			);
