@@ -209,6 +209,7 @@ class EligibilityCell: UITableViewCell {
 	
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
+		selectionStyle = .None
 		
 		// title label
 		let title = UILabel()
