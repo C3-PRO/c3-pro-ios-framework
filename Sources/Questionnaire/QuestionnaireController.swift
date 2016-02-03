@@ -25,6 +25,15 @@ import SMART
 
 /**
 Instances of this class can prepare questionnaires and get a callback when preparation has finished.
+
+Use `prepareQuestionnaireViewController()`, which fulfills any questionnaire dependencies before calling the callback, in which you get a
+handle to a `ORKTaskViewController` view controller that you can present on the UI.
+
+The `whenCompleted` callback is called when the user completes the questionnaire without cancelling nor error and provides the responses in
+a `QuestionnaireResponse` resource.
+The `whenCancelledOrFailed` callback is called when the questionnaire is cancelled (error = nil) or finishes with an error.
+
+See [Questionnaire/README.md](./README.md) for detailed instructions.
 */
 public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
@@ -36,6 +45,16 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
 	/// Callback to be called when the questionnaire is cancelled (error = nil) or finishes with an error.
 	public final var whenCancelledOrFailed: ((viewController: ORKTaskViewController, error: ErrorType?) -> Void)?
+	
+	
+	/**
+	Designated initializer.
+	
+	- parameter questionnaire: The `Questionnaire` the receiver should handle
+	*/
+	public init(questionnaire: Questionnaire) {
+		self.questionnaire = questionnaire
+	}
 	
 	
 	// MARK: - Questionnaire

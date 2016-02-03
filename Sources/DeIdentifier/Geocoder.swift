@@ -23,15 +23,33 @@ import CoreLocation
 import SMART
 
 
+/** Callback called when geocoding finishes. Supplies `location` (`CLLocation`), if determined, or `error`. */
 public typealias GeocoderLocationCallback = ((location: CLLocation?, error: ErrorType?) -> Void)
 
+/** Callback called when geocoding finishes. Supplies `placemark` (`CLPlacemark`), if determined, or `error`. */
 public typealias GeocoderPlacemarkCallback = ((placemark: CLPlacemark?, error: ErrorType?) -> Void)
 
+/** Callback called when geocoding finishes. Supplies `address` (`SMART.Address`), if determined, or `error`. */
 public typealias GeocoderAddressCallback = ((address: Address?, error: ErrorType?) -> Void)
 
 
 /**
 Class to ease geocoding tasks. Primarily designed to retrieve current location, e.g. to obtain a ZIP code.
+
+If you geocode, do not forget to set `NSLocationWhenInUseUsageDescription` in your Info.plist. See [DeIdentifier/README.md](./README.md).
+
+You probably want to use one of these methods for geocoding:
+
+- `currentAddress()`:               Returning the current `Address`
+- `hipaaCompliantCurrentAddress()`: Returning the current `Address` to HIPAA specs
+- `geocodeCurrentLocation()`:       A `CLPlacemark` of the current location
+- `currentLocation()`:              A `CLLocation` of the current location
+
+For conversions from one thing to another:
+
+- `hipaaCompliantAddress()`:  Make the given `Address` HIPAA-compliant
+- `addressFromPlacemark()`:   Convert `CLPlacemark` to `Address`
+- `reverseGeocodeLocation()`: Retrieve a `CLPlacemark` from `CLLocation`
 */
 public class Geocoder {
 	
@@ -51,33 +69,6 @@ public class Geocoder {
 	
 	
 	// MARK: - Location Manager
-	
-	/**
-	Determines the current location and, on success, presents a "CLLocation" instance in the callback.
-	
-	- parameter callback: The callback to call after geocoding, supplies either a CLLocation instance, an error or neither (on abort)
-	*/
-	public func currentLocation(callback inCallback: GeocoderLocationCallback) {
-		if let cb = locationCallback {
-			cb(location: nil, error: nil)
-			locationCallback = nil
-		}
-		
-		// exit early if location services are disabled or denied/restricted
-		if !CLLocationManager.locationServicesEnabled() || .Denied == CLLocationManager.authorizationStatus() || .Restricted == CLLocationManager.authorizationStatus() {
-			inCallback(location: nil, error: C3Error.LocationServicesDisabled)
-			return
-		}
-		
-		// setup and start location manager
-		locationCallback = inCallback
-		locationDelegate = LocationManagerDelegate()
-		locationManager = CLLocationManager()
-		locationManager!.delegate = locationDelegate
-		locationManager!.desiredAccuracy = kCLLocationAccuracyKilometer
-		
-		startManager(locationManager!)
-	}
 	
 	func startManager(manager: CLLocationManager, isRetry: Bool = false) {
 		if .NotDetermined == CLLocationManager.authorizationStatus() {
@@ -137,6 +128,33 @@ public class Geocoder {
 	
 	
 	// MARK: - Geocoding
+	
+	/**
+	Determines the current location and, on success, presents a "CLLocation" instance in the callback.
+	
+	- parameter callback: The callback to call after geocoding, supplies either a CLLocation instance, an error or neither (on abort)
+	*/
+	public func currentLocation(callback inCallback: GeocoderLocationCallback) {
+		if let cb = locationCallback {
+			cb(location: nil, error: nil)
+			locationCallback = nil
+		}
+		
+		// exit early if location services are disabled or denied/restricted
+		if !CLLocationManager.locationServicesEnabled() || .Denied == CLLocationManager.authorizationStatus() || .Restricted == CLLocationManager.authorizationStatus() {
+			inCallback(location: nil, error: C3Error.LocationServicesDisabled)
+			return
+		}
+		
+		// setup and start location manager
+		locationCallback = inCallback
+		locationDelegate = LocationManagerDelegate()
+		locationManager = CLLocationManager()
+		locationManager!.delegate = locationDelegate
+		locationManager!.desiredAccuracy = kCLLocationAccuracyKilometer
+		
+		startManager(locationManager!)
+	}
 	
 	/**
 	Determines and reverse-geocodes the phone's current location. Calls `currentLocation()`, then geocodes that location.
@@ -256,7 +274,7 @@ public class Geocoder {
 	
 	- returns: A sparsely populated FHIR "Address" element
 	*/
-	func hipaaCompliantAddress(address: Address) -> Address {
+	public func hipaaCompliantAddress(address: Address) -> Address {
 		let hipaa = Address(json: nil)
 		hipaa.country = address.country
 		

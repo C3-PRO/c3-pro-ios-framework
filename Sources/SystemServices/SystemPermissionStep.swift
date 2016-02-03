@@ -23,6 +23,12 @@ import ResearchKit
 
 /**
 This step can be used to prompt the user for permissions to system services, such as CoreMotion, HealthKit and Notifications.
+
+Use an array of `SystemService` instances during the step's initialization (or manually assign to its `services` property), then use the
+step during any `ORKTask`.
+
+You presumably want to use the step in combination with a `ConsentTask`, in which case you do not need to manually interact with this class
+but define `wantedServicePermissions` on the `ConsentTaskOptions` provided to your `ConsentController`.
 */
 public class SystemPermissionStep: ORKStep {
 	

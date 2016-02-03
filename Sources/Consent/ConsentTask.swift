@@ -23,10 +23,10 @@ import SMART
 
 
 /**
-	An ORKTask-implementing class that can be fed to an ORKTaskViewController to guide a user through consenting.
+An ORKTask-implementing class that can be fed to an ORKTaskViewController to guide a user through consenting.
 
-	Data to be shown is read from the `Contract` resource, which will be converted into an `ORKConsentDocument`.
- */
+Data to be shown is read from the `Contract` resource, which will be converted into an `ORKConsentDocument`.
+*/
 public class ConsentTask: ORKOrderedTask {
     
 	public let contract: Contract

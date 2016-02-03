@@ -22,6 +22,9 @@ import HealthKit
 import SMART
 
 
+/**
+Extending `HKQuantitySample` to enable easy conversion into a FHIR `Quantity` resource.
+*/
 public extension HKQuantitySample {
 	
 	/**
@@ -35,6 +38,9 @@ public extension HKQuantitySample {
 }
 
 
+/**
+Extending `HKQuantity` to enable easy conversion into a FHIR `Quantity` resource.
+*/
 public extension HKQuantity {
 	
 	/**
@@ -52,6 +58,9 @@ public extension HKQuantity {
 }
 
 
+/**
+Extending `HKQuantityType` with a method to return the preferred unit of the quantity type.
+*/
 public extension HKQuantityType {
 	
 	/**

@@ -21,6 +21,9 @@
 import Foundation
 
 
+/**
+Extending _String_ to provide for easy framework localization.
+*/
 extension String {
 	
 	/// Convenience getter for localized strings, uses `NSLocalizedString` internally on the main bundle and the "C3PRO" table.
@@ -28,7 +31,12 @@ extension String {
 		return NSLocalizedString(self, tableName: "C3PRO", bundle: NSBundle.mainBundle(), value: self, comment: "")
 	}
 	
-	/** Convenience method for string localizations that have a comment. */
+	/**
+	Convenience method for string localizations that have a comment. Looks for the "C3PRO" table in the main bundle, i.e. `C3PRO.strings`.
+	
+	- parameter comment: The comment for localizers
+	- returns: A localized string, if found in the "C3PRO" table
+	*/
 	public func c3_localized(comment: String) -> String {
 		return NSLocalizedString(self, tableName: "C3PRO", bundle: NSBundle.mainBundle(), value: self, comment: comment)
 	}

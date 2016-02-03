@@ -1,6 +1,18 @@
 De-Identification
 =================
 
+### Module Interface
+
+#### IN
+- `Patient` resource or `Date` element for de-identification.
+- `CLLocation` for reverse geocoding.
+- `CLPlacemark` for conversion to FHIR `Address`.
+
+#### OUT
+- `Patient` resource or `Date` element, de-identified per HIPAA guidelines.
+- `CLLocation`, `CLPlacemark` or FHIR `Address` describing current location.
+- FHIR `Address` resource, converted from `CLPlacemark`.
+
 
 DeIdentifier
 ------------

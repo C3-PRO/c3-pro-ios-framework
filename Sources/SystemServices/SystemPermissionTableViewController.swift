@@ -24,6 +24,8 @@ import UIKit
 /**
 Table view controller displaying one cell per system service that access to should be granted. Each cell shows an active "Allow" button
 or a disabled "Granted" button for the services you define, allowing users to grant access to select system services.
+
+Assign an array of `SystemService` instances to your controller's `services` property, then present the view controller to the user.
 */
 public class SystemPermissionTableViewController: UITableViewController {
 	

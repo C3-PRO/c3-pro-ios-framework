@@ -3,6 +3,19 @@ Study Introduction
 
 These classes allow to display the standard _“Welcome to my study”_ screen that is shown to new users and allows them to inform themselves before joining your study.
 
+### Module Interface
+
+#### IN
+- `StudyIntro.storyboard`, use the one provided and alter it, if needed.
+- `StudyIntroConfiguration`, read from local JSON, for customization.
+
+#### OUT
+- `StudyIntroCollectionViewController`, ready to be shown.
+
+
+Study Intro Collection View Controller
+--------------------------------------
+
 You start by instantiating a `StudyIntroCollectionViewController` and configuring it to your liking.
 Then simply show it as the root view controller and your app already looks like a basic ResearchKit app.
 
@@ -59,7 +72,8 @@ func setupUI() {
 }
 ```
 
-### Consent
+Consent
+-------
 
 Add your blank consent PDF named `Consent.pdf` to the app bundle to make it accessible from a _welcome_ intro item.
 

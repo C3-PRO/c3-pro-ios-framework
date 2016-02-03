@@ -23,6 +23,9 @@ import SMART
 import ResearchKit
 
 
+/**
+Callback used when signing the consent. Provides `contract`, `patient` and an optional `error`.
+*/
 public typealias ConsentSigningCallback = ((contract: Contract, patient: Patient, error: ErrorType?) -> Void)
 
 /// Name of notification sent when the user completes and agrees to consent.
@@ -37,6 +40,8 @@ public let C3ConsentResultKey = "consent-result"
 
 /**
 Struct to hold various options for consenting.
+
+There are default values to all properties, so you only need to override what you want to change.
 */
 public struct ConsentTaskOptions {
 	

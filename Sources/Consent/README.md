@@ -4,6 +4,18 @@ Eligibility & Consent
 A FHIR `Contract` resource constitutes a consent document that can be rendered using a `ORKTaskViewController` view controller and can be signed with a patient reference.
 It can also contain eligibility criteria which a participant must answer first in order to be able to start consenting.
 
+### Module Interface
+
+#### IN
+- `Contract` resource for eligibility determination and the consent task.
+- `StudyIntroConfiguration`, read from JSON file, to optionally change eligibility messages.
+
+#### OUT
+- `ConsentTask` (an `ORKOrderedTask` subclass) to let ResearchKit guide through consent.
+- `ORKConsentDocument` and an `ORKSteps` array.
+- `Contract` resource signed with a `Patient` reference.
+- Local URL to the **consent PDF** containing signature and date.
+
 
 Eligibility
 -----------

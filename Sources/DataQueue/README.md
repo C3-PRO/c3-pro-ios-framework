@@ -3,24 +3,40 @@ DataQueue
 
 `DataQueue` is a FHIRServer implementation primarily used to move FHIR resources, created on device, to a FHIR server, without the need for user interaction nor -confirmation.
 
+### Module Interface
+
+#### IN
+- Any FHIR `Resource` that needs to be sent to a FHIR server.
+- OAuth2 Dynamic Client Registration:
+    + With additional App Receipt payload
+
+#### OUT
+- _Unencrypted_: performs any standard FHIR request using JSON.
+- _Encrypted_: encrypts, creates a simple JSON body with keys `key_id`, `symmetric_key`, `message` and `version` (see below) and performs a request against a separate endpoint in a FHIR-like manner.
+
+Data Queue
+----------
+
 The idea is that data collection tasks do not need to inform the user whether a file was uploaded or not.
 The queue acts like a standard SMART on FHIR server class, except that it automatically enqueues resources to disk when a POST fails.
 Issuing a POST later on first clears the queue, if needed, before issuing the intended POST, to ensure creation order of all resources intended for the respective server.
 The queue can also be manually flushed.
 
-### Encrypted Queue
+
+Encrypted Queue
+---------------
 
 There is also an `EncryptedDataQueue` subclass.
-Instances of this class are capable of encrypting resources before sending them to a server.
-These resources are sent to a different endpoint and are, by default, AES encrypted with a random 32 byte key.
-The key itself is RSA encrypted using a public key in a X509 certificate, identified by an id, that is generated server-side (and the server has the private key).
+Instances of this class are capable of encrypting resources before sending them to a server, keeping track of a standard FHIR endpoint and an additional encrypted data endpoint.
+Resources-to-encrypt are, by default, AES encrypted with a random 32 byte key.
+The random key itself is RSA encrypted using a public key in a X509 certificate, identified by an id, that is generated server-side (and the server has the private key).
 A request with a JSON body containing a key-identifier and base-64 encoded key and resource data is then sent to the encrypted endpoint:
 
 ```json
 {
   "key_id": "{public-key-id}",
-  "symmetric_key": "{base64-encoded-RSA-encrypted-AES-key",
-  "message": "{base64-encoded-AES-encrypted-FHIR-resource",
+  "symmetric_key": "{base64-encoded-RSA-encrypted-AES-key}",
+  "message": "{base64-encoded-AES-encrypted-FHIR-resource}",
   "version": "1.0.2"
 }
 ```
@@ -38,7 +54,7 @@ If you set `authorize_uri` manually, the client will not attempt to fetch the se
 ```swift
 let baseURL = NSURL(string: "https://fhir-api-dstu2.smarthealthit.org")
 let auth = [
-    "client_id": "{key}",
+    "client_id": "{key}",         // or use dyn reg, see below
     "client_secret": "{secret}",
     "authorize_uri": "{OAuth2 authorize endpoint URL}",
     "authorize_type": "client_credentials",
@@ -105,5 +121,9 @@ queue.onBeforeDynamicClientRegistration = { url in
 smart = Client(server: queue)
 ```
 
-The framework automatically attempts to register your app when you call `authorize()` if a) there **is no** client-id and b) there **is** a registration URL.
+The framework automatically attempts to register your app when you call `authorize()` if
+
+1. there **is no** client-id and
+2. there **is** a registration URL.
+
 Registration credentials are stored to the keychain.

@@ -7,6 +7,8 @@ author_url:  http://c3-pro.chip.org
 root_url:    http://chb.github.io/c3-pro-ios-framework
 github_url:  https://github.com/chb/c3-pro-ios-framework.git
 
+sdk:         iphone
+
 custom_categories:
   - name: Common
     children:
@@ -15,11 +17,11 @@ custom_categories:
   - name: Study Intro
     children:
     - StudyIntroConfiguration
+    - StudyIntroCollectionViewController
     - StudyIntroItem
     - StudyIntroWelcomeItem
     - StudyIntroHTMLItem
     - StudyIntroVideoItem
-    - StudyIntroCollectionViewController
 
   - name: Eligibility & Consent
     children:
@@ -27,6 +29,7 @@ custom_categories:
     - ConsentTask
     - ConsentTaskOptions
     - ConsentResult
+    - ConsentSigningCallback
     - EligibilityRequirement
     - EligibilityStatusViewController
     - EligibilityCheckViewController
@@ -73,6 +76,9 @@ custom_categories:
     children:
     - DeIdentifier
     - Geocoder
+    - GeocoderAddressCallback
+    - GeocoderPlacemarkCallback
+    - GeocoderLocationCallback
 
   - name: View Controller
     children:

@@ -4,6 +4,19 @@ System Service Permissions
 These classes provide facilities to prompt the user to allow certain system services, such as access to HealthKit, the device's current location, notifications and others.
 These are represented as `SystemService` enums, some of which have associated values.
 
+### Module Interface
+
+#### IN
+- Array of `SystemService` instances
+
+#### OUT
+- `SystemPermissionStepViewController`, for use during a ResarchKit task, giving the user the option to give access to desired services.
+- `SystemPermissionTableViewController`, a UITableView subclass, giving the user the option to give access to desired services.
+
+
+System Services
+---------------
+
 **Before consenting**, the desired system services can be specified, in which case an additional step will be added to the consenting task, prompting the user to give access to some system services. Here's an example requesting access to:
 
 - Local Notifications

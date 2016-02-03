@@ -4,6 +4,16 @@ Encryption
 Encryption facilities that come in handy.
 These can be used **without an additional OpenSSL library**, meaning you don't need to add OpenSSL to your app; these facilities rely solely on methods officially exposed by iOS's `Security.framework`.
 
+### Module Interface
+
+#### IN
+- `NSData`, to be encrypted or decrypted using _RSA_ or _AES_ algorithms.
+- **X509 public key certificate** file to use for _RSA_ encryption.
+- `NSData` containing symmetric key data for _AES_ en- and decryption.
+
+#### OUT
+- `NSData`, encrypted using _RSA_ or _AES_ algorithms.
+- `NSData`, decrypted using _AES_ algorithm.
 
 RSAUtility
 ----------

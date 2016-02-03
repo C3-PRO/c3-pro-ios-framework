@@ -1,8 +1,16 @@
 HealthKit Extensions
 ====================
 
-Extensions of HealthKit classes for convenience.
+Extensions for _HealthKit_ classes for convenience.
 
+### Module Interface
+
+#### IN
+- `HKQuantity` or `HKQuantitySample` to convert to FHIR.
+
+#### OUT
+- `Quantity` FHIR resource.
+- `HKQuantity` instance(s) queried from `HKHealthStore`.
 
 HKHealthStore
 -------------

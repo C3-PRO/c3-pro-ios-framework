@@ -2,17 +2,30 @@ Questionnaires
 ==============
 
 You can use a FHIR `Questionnaire` resource in combination with a `QuestionnaireController` instance.
+When the user completes the survey/questionnaire, rendered by ResearchKit, you'll get a `QuestionnaireResponse` back.
+
+### Module Interface
+
+#### IN
+- `Questionnaire` FHIR resource.
+
+#### OUT
+- `QuestionnaireResponse` FHIR resource.
+- `ORKTaskViewController` configured with a task representing the questionnaire.
+
+
+QuestionnaireController
+-----------------------
+
 This model implements the `ORKTaskViewControllerDelegate` protocol and holds on to a callback block:
 
-- `prepareQuestionnaireViewController()` to fulfill any questionnaire dependencies before calling the callback, in which you get a handle to a `ORKTaskViewController` view controller that you can present on the UI
-- `whenCompleted` is called when the user completes the questionnaire without cancelling nor error
-- `whenCancelledOrFailed` is called when the questionnaire is cancelled (error = nil) or finishes with an error.
+- Use `prepareQuestionnaireViewController()`, which fulfills any questionnaire dependencies before calling the callback, in which you get a handle to a `ORKTaskViewController` view controller that you can present on the UI.
+- `whenCompleted` is called when the user completes the questionnaire without cancelling nor error and provides the responses in a `QuestionnaireResponse` resource
+- `whenCancelledOrFailed` is called when the questionnaire is cancelled (error = nil) or finishes with an error
 
 
 ```swift
-let controller = QuestionnaireController()
-controller.questionnaire = <# FHIR Questionnaire #>
-
+let controller = QuestionnaireController(questionnaire: <# FHIR Questionnaire #>)
 controller.whenCompleted = { viewController, answers in
     viewController.dismissViewControllerAnimated(true, completion: nil)
 	// `answers` is a FHIR "QuestionnaireResponse" resource if not nil

@@ -22,6 +22,14 @@ import HealthKit
 import SMART
 
 
+/**
+Extend `HKHealthStore` with methods that query the store for samples:
+
+- `c3_latestSampleOfType()`:            retrieve the latest sample of the given type.
+- `c3_samplesOfTypeBetween()`:          retrieve all samples of a given type between two dates.
+- `c3_summaryOfSamplesOfTypeBetween()`: return a summary of all samples of a given type. Use this to get an **aggregate count** of something
+                                        over a given period
+*/
 public extension HKHealthStore {
 	
 	/**
