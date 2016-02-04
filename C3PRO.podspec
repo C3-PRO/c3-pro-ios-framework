@@ -9,11 +9,12 @@ Pod::Spec.new do |s|
   s.version      = "1.0"
   s.summary      = "Combining 🔥 SMART on FHIR and ResearchKit for data storage into i2b2."
   s.description  = <<-DESC
-    Combining 🔥 FHIR and ResearchKit for data storage into i2b2, this
+    Combining 🔥 FHIR and ResearchKit for data storage into i2b2, the C3-PRO iOS
     framework allows you to use FHIR Contract and Questionnaire resources
-    directly with ResearchKit and will return FHIR QuestionnaireAnswers to your
-    server. There are additional utilities for encryption, geolocation, de-
-    identification and data queueing that go well with a research app.
+    directly with ResearchKit and will return FHIR QuestionnaireResponse to your
+    server. There are additional utilities for encryption, geolocation, system
+    service access, de-identification, data queueing and HealthKit that go well
+    with a research app.
   DESC
 
   s.homepage     = "https://c3-pro.chip.org"
