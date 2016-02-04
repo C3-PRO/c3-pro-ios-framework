@@ -1,5 +1,4 @@
-C3-PRO
-======
+<img src="./assets/Logo.png" srcset="./assets/Logo@2x.png 2x, ./assets/Logo@3x.png 3x" alt="C3-PRO">
 
 This is the **iOS** framework, written in Swift, for our [C3-PRO][] research framework.
 
