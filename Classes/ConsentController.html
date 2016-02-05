@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ConsentController Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/ConsentController" class="dashAnchor"></a>
+
+    <a title="ConsentController Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          C3PRO Docs
+        </a>
+         (69% documented)
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/chb/c3-pro-ios-framework.git">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="dash-feed://http%3A%2F%2Fchb%2Egithub%2Eio%2Fdocsets%2FC3PRO%2Exml">
+            <img class="header-icon" src="../img/dash.png"/>
+            Install in Dash
+          </a>
+        </p>
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">C3PRO Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      ConsentController Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Common.html">Common</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/C3Error.html">C3Error</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Study Intro.html">Study Intro</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StudyIntroConfiguration.html">StudyIntroConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StudyIntroCollectionViewController.html">StudyIntroCollectionViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/StudyIntroItem.html">StudyIntroItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StudyIntroWelcomeItem.html">StudyIntroWelcomeItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StudyIntroHTMLItem.html">StudyIntroHTMLItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StudyIntroVideoItem.html">StudyIntroVideoItem</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Eligibility &amp; Consent.html">Eligibility &amp; Consent</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/ConsentController.html">ConsentController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/ConsentTask.html">ConsentTask</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/ConsentTaskOptions.html">ConsentTaskOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/ConsentResult.html">ConsentResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Eligibility &amp; Consent.html#/s:5C3PRO22ConsentSigningCallback">ConsentSigningCallback</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/EligibilityRequirement.html">EligibilityRequirement</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/EligibilityStatusViewController.html">EligibilityStatusViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/EligibilityCheckViewController.html">EligibilityCheckViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/GroupCharacteristic.html">GroupCharacteristic</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Questionnaire.html">Questionnaire</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/QuestionnaireController.html">QuestionnaireController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/QuestionnairePromise.html">QuestionnairePromise</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/ResultRequirement.html">ResultRequirement</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Data Queue.html">Data Queue</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/QueuedResource.html">QueuedResource</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/DataQueue.html">DataQueue</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/EncryptedDataQueue.html">EncryptedDataQueue</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/EncryptedDataQueueDelegate.html">EncryptedDataQueueDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/EncryptedJSONRequestHandler.html">EncryptedJSONRequestHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/OAuth2DynRegAppStore.html">OAuth2DynRegAppStore</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../HealthKit.html">HealthKit</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthKitTypes.html">HealthKitTypes</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/HKHealthStore.html">HKHealthStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/HKQuantity.html">HKQuantity</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/HKQuantitySample.html">HKQuantitySample</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/HKQuantityType.html">HKQuantityType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../System Services.html">System Services</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/SystemService.html">SystemService</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SystemServicePermissioner.html">SystemServicePermissioner</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SystemPermissionStep.html">SystemPermissionStep</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Encryption.html">Encryption</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/AESUtility.html">AESUtility</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/RSAUtility.html">RSAUtility</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../De-Identifier.html">De-Identifier</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/DeIdentifier.html">DeIdentifier</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Geocoder.html">Geocoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../De-Identifier.html#/s:5C3PRO23GeocoderAddressCallback">GeocoderAddressCallback</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../De-Identifier.html#/s:5C3PRO25GeocoderPlacemarkCallback">GeocoderPlacemarkCallback</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../De-Identifier.html#/s:5C3PRO24GeocoderLocationCallback">GeocoderLocationCallback</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../View Controller.html">View Controller</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/WebViewController.html">WebViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PDFViewController.html">PDFViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SystemPermissionTableViewController.html">SystemPermissionTableViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SystemPermissionStepViewController.html">SystemPermissionStepViewController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Table Cells &amp; Views.html">Table Cells &amp; Views</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/BorderedButton.html">BorderedButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PermissionRequestTableViewCell.html">PermissionRequestTableViewCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StudyIntroHTMLCell.html">StudyIntroHTMLCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StudyIntroVideoCell.html">StudyIntroVideoCell</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/StudyIntroWelcomeCell.html">StudyIntroWelcomeCell</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Other Global Variables.html">Other Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Global Variables.html#/s:v5C3PRO18C3ConsentResultKeySS">C3ConsentResultKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Global Variables.html#/s:v5C3PRO16C3PROFHIRVersionSS">C3PROFHIRVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Global Variables.html#/s:v5C3PRO28C3UserDidConsentNotificationSS">C3UserDidConsentNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Global Variables.html#/s:v5C3PRO35C3UserDidDeclineConsentNotificationSS">C3UserDidDeclineConsentNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Global Variables.html#/s:v5C3PRO36kContractTermConsentSectionExtensionSS">kContractTermConsentSectionExtension</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Global Variables.html#/s:v5C3PRO31kContractTermConsentSectionTypeSS">kContractTermConsentSectionType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Other Extensions.html">Other Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSFileManager.html">NSFileManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/String.html">String</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Other Functions.html">Other Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Functions.html#/s:F5C3PRO21c3_performOnMainQueueFFT_T_T_">c3_performOnMainQueue(_:)</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>ConsentController</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ConsentController</span></code></pre>
+
+                </div>
+              </div>
+            <p>The consent controller helps using a FHIR <code>Contract</code> resource to capture consent.</p>
+
+<p>The controller can read a bundled <code>Contract</code> resource and return view controllers that can be used for eligibility checking
+(use <code>eligibilityStatusViewController(config:onStartConsent:)</code>) and/or consenting (use <code>consentViewController(onUserDidConsent:onUserDidDecline:)</code>).</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC5C3PRO17ConsentController8contractERR"></a>
+                    <a name="//apple_ref/swift/Property/contract" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC5C3PRO17ConsentController8contractERR">contract</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The contract to be signed; if nil when signing, a new instance will be created.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="k">var</span> <span class="nv">contract</span><span class="p">:</span> <span class="kt">Contract</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC5C3PRO17ConsentController7optionsVS_18ConsentTaskOptions"></a>
+                    <a name="//apple_ref/swift/Property/options" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC5C3PRO17ConsentController7optionsVS_18ConsentTaskOptions">options</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Options to consider for the consenting task.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">options</span> <span class="o">=</span> <span class="kt">ConsentTaskOptions</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC5C3PRO17ConsentControllercFMS0_FT15bundledContractGSqSS__S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(bundledContract:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC5C3PRO17ConsentControllercFMS0_FT15bundledContractGSqSS__S0_">init(bundledContract:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Designated initializer.</p>
+
+<p>You can optionally supply the name of a bundled JSON file (without extension) that represents a serialized FHIR Contract resource.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">bundledContract</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Eligibility"></a>
+                <a name="//apple_ref/swift/Section/Eligibility" class="dashAnchor"></a>
+                <a href="#/Eligibility">
+                  <h3 class="section-name">Eligibility</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC5C3PRO17ConsentController31eligibilityStatusViewControllerFS0_FTGSqCS_23StudyIntroConfiguration_14onStartConsentGSqFT14viewControllerCS_30EligibilityCheckViewController_T___CS_31EligibilityStatusViewController"></a>
+                    <a name="//apple_ref/swift/Method/eligibilityStatusViewController(_:onStartConsent:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC5C3PRO17ConsentController31eligibilityStatusViewControllerFS0_FTGSqCS_23StudyIntroConfiguration_14onStartConsentGSqFT14viewControllerCS_30EligibilityCheckViewController_T___CS_31EligibilityStatusViewController">eligibilityStatusViewController(_:onStartConsent:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Instantiates a controller prompting the user to press “Start Eligibility”. Pressing that button pushes an EligibilityCheckViewController
+onto the navigation stack, which carries the actual eligibility criteria.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">eligibilityStatusViewController</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="kt">StudyIntroConfiguration</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">onStartConsent</span><span class="p">:</span> <span class="p">((</span><span class="nv">viewController</span><span class="p">:</span> <span class="kt">EligibilityCheckViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EligibilityStatusViewController</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>config</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An optional <code>StudyIntroConfiguration</code> instance that carries custom eligible/ineligible texts</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onStartConsent</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The block to execute when all eligibility criteria are met and the participant wants to start consent. Leave nil to automatically present (and dismiss) the consent task view controller that will be returned by <code>consentViewController()</code>.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC5C3PRO17ConsentController23eligibilityRequirementsFS0_FFT12requirementsGSqGSaCS_22EligibilityRequirement___T_T_"></a>
+                    <a name="//apple_ref/swift/Method/eligibilityRequirements(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC5C3PRO17ConsentController23eligibilityRequirementsFS0_FFT12requirementsGSqGSaCS_22EligibilityRequirement___T_T_">eligibilityRequirements(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Resolves the contract&rsquo;s first subject to a Group. This Group is expected to have characteristics that represent eligibility criteria.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">eligibilityRequirements</span><span class="p">(</span><span class="nv">callback</span><span class="p">:</span> <span class="p">((</span><span class="nv">requirements</span><span class="p">:</span> <span class="p">[</span><span class="kt">EligibilityRequirement</span><span class="p">]?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">))</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>callback</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The callback that is called when the group is resolved (or resolution fails); may be on any thread but may be called immediately in case of embedded resources.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Consenting"></a>
+                <a name="//apple_ref/swift/Section/Consenting" class="dashAnchor"></a>
+                <a href="#/Consenting">
+                  <h3 class="section-name">Consenting</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC5C3PRO17ConsentController17createConsentTaskFS0_FzT_CS_11ConsentTask"></a>
+                    <a name="//apple_ref/swift/Method/createConsentTask()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC5C3PRO17ConsentController17createConsentTaskFS0_FzT_CS_11ConsentTask">createConsentTask()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates the consent task from the receiver&rsquo;s contract.</p>
+
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code><a href="../Enums/C3Error.html#/s:FO5C3PRO7C3Error25ConsentContractNotPresentFMS0_S0_">C3Error.ConsentContractNotPresent</a></code> when the contract is not present
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">createConsentTask</span><span class="p">()</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">ConsentTask</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A <code><a href="../Classes/ConsentTask.html">ConsentTask</a></code> that can be presented using ResearchKit</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC5C3PRO17ConsentController21consentViewControllerERR"></a>
+                    <a name="//apple_ref/swift/Method/consentViewController(onUserDidConsent:onUserDidDecline:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC5C3PRO17ConsentController21consentViewControllerERR">consentViewController(onUserDidConsent:onUserDidDecline:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A consent view controller, preconfigured with the consenting task, that can be presented to have the user go through consent.</p>
+
+<p>You are given two blocks, one of them will be called when the user finishes or exits consenting, never both. They are deallocated after
+either has been called.</p>
+
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    Re-throws from <code><a href="../Classes/ConsentController.html#/s:FC5C3PRO17ConsentController17createConsentTaskFS0_FzT_CS_11ConsentTask">createConsentTask()</a></code>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">consentViewController</span><span class="p">(</span><span class="n">onUserDidConsent</span> <span class="nv">onConsent</span><span class="p">:</span> <span class="p">((</span><span class="nv">controller</span><span class="p">:</span> <span class="kt">ORKTaskViewController</span><span class="p">,</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">ConsentResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">),</span>
+		<span class="nv">onUserDidDecline</span><span class="p">:</span> <span class="p">((</span><span class="nv">controller</span><span class="p">:</span> <span class="kt">ORKTaskViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">))</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">ORKTaskViewController</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onUserDidConsent</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Block executed when the user completes and agrees to consent</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onUserDidDecline</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Block executed when the user cancels or actively declines consent</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC5C3PRO17ConsentController14userDidConsentERR"></a>
+                    <a name="//apple_ref/swift/Method/userDidConsent(_:result:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC5C3PRO17ConsentController14userDidConsentERR">userDidConsent(_:result:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when the user successfully completes the consent task and agrees to all the things.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">userDidConsent</span><span class="p">(</span><span class="nv">taskViewController</span><span class="p">:</span> <span class="kt">ORKTaskViewController</span><span class="p">,</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">ConsentResult</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC5C3PRO17ConsentController21userDidDeclineConsentERR"></a>
+                    <a name="//apple_ref/swift/Method/userDidDeclineConsent(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC5C3PRO17ConsentController21userDidDeclineConsentERR">userDidDeclineConsent(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when the user aborts consenting or actively declines consent.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">userDidDeclineConsent</span><span class="p">(</span><span class="nv">taskViewController</span><span class="p">:</span> <span class="kt">ORKTaskViewController</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Consent%20Signing"></a>
+                <a name="//apple_ref/swift/Section/Consent Signing" class="dashAnchor"></a>
+                <a href="#/Consent%20Signing">
+                  <h3 class="section-name">Consent Signing</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC5C3PRO17ConsentController23signContractWithPatientERR"></a>
+                    <a name="//apple_ref/swift/Method/signContractWithPatient(_:date:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC5C3PRO17ConsentController23signContractWithPatientERR">signContractWithPatient(_:date:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Instantiates a new <q>Contract</q> resource and fills the properties to represent a consent signed by a participant referencing the given
+patient.</p>
+
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code><a href="../Enums/C3Error.html">C3Error</a></code> when referencing the patient resource fails
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">signContractWithPatient</span><span class="p">(</span><span class="nv">patient</span><span class="p">:</span> <span class="kt">Patient</span><span class="p">,</span> <span class="nv">date</span><span class="p">:</span> <span class="kt">NSDate</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Contract</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>patient</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The Patient resource to use to sign</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>date</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The date at which the contract was signed</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A signed Contract resource, usually the receiver&rsquo;s <code><a href="../Classes/ConsentController.html#/s:vC5C3PRO17ConsentController8contractERR">contract</a></code> ivar</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC5C3PRO17ConsentController35deIdentifyAndSignConsentWithPatientERR"></a>
+                    <a name="//apple_ref/swift/Method/deIdentifyAndSignConsentWithPatient(_:date:callback:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC5C3PRO17ConsentController35deIdentifyAndSignConsentWithPatientERR">deIdentifyAndSignConsentWithPatient(_:date:callback:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Reverse geocodes and de-identifies the patient, then uses the new Patient resource to sign the contract.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">deIdentifyAndSignConsentWithPatient</span><span class="p">(</span><span class="nv">patient</span><span class="p">:</span> <span class="kt">Patient</span><span class="p">,</span> <span class="nv">date</span><span class="p">:</span> <span class="kt">NSDate</span><span class="p">,</span> <span class="nv">callback</span><span class="p">:</span> <span class="kt">ConsentSigningCallback</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Consent%20PDF"></a>
+                <a name="//apple_ref/swift/Section/Consent PDF" class="dashAnchor"></a>
+                <a href="#/Consent%20PDF">
+                  <h3 class="section-name">Consent PDF</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFC5C3PRO17ConsentController19signedConsentPDFURLFMS0_FTSb_GSqCSo5NSURL_"></a>
+                    <a name="//apple_ref/swift/Method/signedConsentPDFURL(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFC5C3PRO17ConsentController19signedConsentPDFURLFMS0_FTSb_GSqCSo5NSURL_">signedConsentPDFURL(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>URL to the user-signed contract PDF.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">signedConsentPDFURL</span><span class="p">(</span><span class="nv">mustExist</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSURL</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mustExist</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If <code>true</code> will return nil if no file exists at the expected file URL. If <code>false</code> will return the desired URL, which is pretty sure to return non-nil, so use that exclamation mark!</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZFC5C3PRO17ConsentController20bundledConsentPDFURLFMS0_FT_GSqCSo5NSURL_"></a>
+                    <a name="//apple_ref/swift/Method/bundledConsentPDFURL()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZFC5C3PRO17ConsentController20bundledConsentPDFURLFMS0_FT_GSqCSo5NSURL_">bundledConsentPDFURL()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The local URL to the bundled consent; looks for «consent.pdf» in the main bundle.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">bundledConsentPDFURL</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">NSURL</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2016 <a class="link" href="http://c3-pro.chip.org" target="_blank" rel="external">C3-PRO</a>. All rights reserved. (Last updated: 2016-02-05)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

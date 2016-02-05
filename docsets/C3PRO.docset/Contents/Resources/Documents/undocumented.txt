@@ -1,0 +1,132 @@
+DataQueue.swift
+	public required init(baseURL: NSURL, auth: OAuth2JSON?)
+	override public func performPreparedRequest<R : FHIRServerRequestHandler>(request: NSMutableURLRequest, handler: R, callback: ((response: FHIRServerResponse) -> Void))
+StudyIntroCollectionViewController.swift
+	public required init?(coder aDecoder: NSCoder)
+	@IBAction public func joinStudy()
+	@IBAction public func switchPage()
+	public func showConsent()
+	public func showVideo(name: String)
+	public override func viewDidLoad()
+	public override func viewDidLayoutSubviews()
+	public override func viewWillAppear(animated: Bool)
+	public override func viewWillDisappear(animated: Bool)
+	public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int
+	public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+	public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
+	public func scrollViewDidEndDecelerating(scrollView: UIScrollView)
+BorderedButton.swift
+	public required init?(coder aDecoder: NSCoder)
+	public override var enabled: Bool
+	public override var highlighted: Bool
+	public override var selected: Bool
+	public override func tintColorDidChange()
+	public override func intrinsicContentSize() -> CGSize
+EncryptedDataQueue.swift
+	public override func handlerForRequestOfType(type: FHIRRequestType, resource: Resource?) -> FHIRServerRequestHandler?
+	public override func absoluteURLForPath(path: String, handler: FHIRServerRequestHandler) -> NSURL?
+StudyIntroItem.swift
+	public static var cellReuseIdentifier = "WelcomeCell"
+	public init(title: String, subtitle: String?, video: String?)
+	public static var cellReuseIdentifier = "VideoCell"
+	public init(video: String)
+	public static var cellReuseIdentifier = "WebCell"
+	public init(title: String, filename: String)
+StudyIntroCollectionViewCell.swift
+	public class StudyIntroWelcomeCell: UICollectionViewCell
+	@IBOutlet public var image: UIImageView?
+	@IBOutlet public var titleLabel: UILabel?
+	@IBOutlet public var subtitleLabel: UILabel?
+	@IBOutlet public var consentButton: UIButton?
+	@IBOutlet public var videoButton: UIButton?
+	@IBOutlet public var swipeLabel: UILabel?
+	public var onConsentTap: (Void -> Void)?
+	public var onVideoTap: ((name: String) -> Void)?
+	public var item: StudyIntroWelcomeItem?
+	public override func prepareForReuse()
+	public class StudyIntroVideoCell: UICollectionViewCell
+	@IBOutlet public var titleLabel: UILabel?
+	@IBOutlet public var videoButton: UIButton?
+	@IBOutlet public var videoMessage: UILabel?
+	public var onVideoTap: ((name: String) -> Void)?
+	public var item: StudyIntroVideoItem?
+	public class StudyIntroHTMLCell: UICollectionViewCell, UIWebViewDelegate
+	@IBOutlet public var webView: UIWebView?
+	public var item: StudyIntroHTMLItem?
+	public func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool
+	public func webViewDidFinishLoad(webView: UIWebView)
+ConsentTask.swift
+	public let contract: Contract
+	public let consentDocument: ORKConsentDocument
+	public var teamName: String?
+	public required init(coder aDecoder: NSCoder)
+	public override func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep?
+SystemPermissionStep.swift
+	public required init(coder aDecoder: NSCoder)
+	public override func copyWithZone(zone: NSZone) -> AnyObject
+ConsentController.swift
+	public init() {  }
+QuestionnaireController.swift
+	public func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?)
+EligibilityStatusViewController.swift
+	public override func loadView()
+WebViewController.swift
+	override public func viewDidLoad()
+	override public func viewWillAppear(animated: Bool)
+	public func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool
+	override public func viewDidLoad()
+	public func documentInteractionControllerDidDismissOpenInMenu(controller: UIDocumentInteractionController)
+OAuth2DynRegAppStore.swift
+	override public func registerClient(client: OAuth2, callback: ((json: OAuth2JSON?, error: ErrorType?) -> Void))
+	override public func registrationBody(client: OAuth2) -> OAuth2JSON
+SystemPermissionStepViewController.swift
+	public override init(step: ORKStep?)
+	public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
+	public required init?(coder aDecoder: NSCoder)
+	public override func viewDidLoad()
+	public override func viewWillAppear(animated: Bool)
+	public func numberOfSectionsInTableView(tableView: UITableView) -> Int
+	public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+	public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+StudyIntroConfiguration.swift
+	public internal(set) var title: String?
+	public internal(set) var logoName: String?
+	public internal(set) var items: [StudyIntroItem]?
+	public internal(set) var eligibleLetsCheckMessage: String?
+	public internal(set) var eligibleTitle: String?
+	public internal(set) var eligibleMessage: String?
+	public internal(set) var ineligibleMessage: String?
+	public init(json filename: String, inBundle: NSBundle? = nil) throws
+EligibilityCheckViewController.swift
+	public override func viewDidLoad()
+	public override func viewWillAppear(animated: Bool)
+	public override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+	public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+	public override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+ConsentResult.swift
+	public init(signature: ORKConsentSignature)
+ConditionalOrderedTask.swift
+	public func copyWithZone(zone: NSZone) -> AnyObject
+	public class func supportsSecureCoding() -> Bool
+	required public init?(coder aDecoder: NSCoder)
+	public func encodeWithCoder(aCoder: NSCoder)
+ContractExtensions.swift
+	public let kContractTermConsentSectionExtension = "http://fhir-registry.smarthealthit.org/StructureDefinition/ORKConsentSection"
+	public let kContractTermConsentSectionType = "http://researchkit.org/docs/Constants/ORKConsentSectionType"
+PermissionRequestTableViewCell.swift
+	public var actionCallback: ((button: UIButton) -> Void)?
+	public override init(style: UITableViewCellStyle, reuseIdentifier: String?)
+	public required init?(coder aDecoder: NSCoder)
+	public override func prepareForReuse()
+QuestionnairePromise.swift
+	public init(questionnaire: Questionnaire)
+SystemPermissionTableViewController.swift
+	public override init(style: UITableViewStyle)
+	public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
+	public required init?(coder aDecoder: NSCoder)
+	public override func viewDidLoad()
+	public override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+	public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+	public override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+EligibilityRequirement.swift
+	public init(title: String, mustBeMet: Bool = true)
