@@ -314,7 +314,9 @@ See below for what&rsquo;s included.</p>
 <p>Taking a <em>pure Swift</em> approach, you will not be able to use this framework with Objective-C alone.
 Instead, you can use Swift code in your app, using a <a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html">mix and match</a> approach, to connect the C3-PRO components to the Objective-C bits in your app.</p>
 
-<p>See the <a href="https://github.com/chb/c3-pro-ios-framework/Install.md">install instructions</a>, then use <code>C3PRO</code> in your code and start coding.
+<p>See the <a href="https://github.com/chb/c3-pro-ios-framework/blob/master/Install.md">install instructions</a>, then use <code>C3PRO</code> in your code and start coding.
+Below is a short overview of the components, click the links to get more information about what the component can do for you.
+The <a href="http://chb.github.io/c3-pro-ios-framework/">technical documentation</a> is available as well.
 We also have a <a href="https://github.com/chb/c3-pro-demo-ios">sample app</a> that demonstrates how some of the components can be used.</p>
 <pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">C3PRO</span>
 </code></pre>
@@ -322,9 +324,9 @@ We also have a <a href="https://github.com/chb/c3-pro-demo-ios">sample app</a> t
 
 <p>The <code>master</code> branch requires Xcode 7 and <em>should</em> always be compatible with the latest version released.
 The <code>develop</code> branch may contain new developments and have different requirements.
-See the <a href="releases">releases</a> tab for previous releases, for newer versions look for <code>feature/x</code> branches.</p>
+See the <a href="https://github.com/chb/c3-pro-ios-framework/releases">releases</a> tab for previous releases, for newer versions look for <code>feature/x</code> branches.</p>
 
-<p>See <a href="https://github.com/chb/c3-pro-ios-framework/./CHANGELOG.md">CHANGELOG.md</a> for updates.
+<p>See <a href="https://github.com/chb/c3-pro-ios-framework/blob/master/CHANGELOG.md">CHANGELOG.md</a> for updates.
 This framework combines several versioned technologies, here&rsquo;s an overview over what&rsquo;s included:</p>
 
 <table><thead>
@@ -348,38 +350,38 @@ This framework combines several versioned technologies, here&rsquo;s an overview
 <a href='#study_introduction' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='study_introduction'>Study Introduction</h3>
 
 <p>Shows the well-known <em>“Welcome to my study”</em> screens that allows users to inform themselves before joining your study.<br>
-<a href="https://github.com/chb/c3-pro-ios-framework/tree/master/Sources/StudyIntro/">➔ Study Intro</a></p>
+<a href="https://github.com/chb/c3-pro-ios-framework/blob/master/Sources/StudyIntro/">➔ Study Intro</a></p>
 <a href='#eligibility_amp_consent' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='eligibility_amp_consent'>Eligibility &amp; Consent</h3>
 
 <p>Using a FHIR <code>Contract</code> resource representing the <strong>consent document</strong>, can render eligibility questions and the consenting workflow.<br>
-<a href="https://github.com/chb/c3-pro-ios-framework/tree/master/Sources/Consent/">➔ Consent</a></p>
+<a href="https://github.com/chb/c3-pro-ios-framework/blob/master/Sources/Consent/">➔ Consent</a></p>
 <a href='#questionnaires' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='questionnaires'>Questionnaires</h3>
 
 <p>Enables use of a FHIR <code>Questionnaire</code> resource as direct input to a ResearchKit <strong>survey</strong> task and return the encoded answers as a FHIR resource.
 Also serves as return format of <strong>activity data</strong> collected on the phone.<br>
-<a href="https://github.com/chb/c3-pro-ios-framework/tree/master/Sources/Questionnaire/">➔ Questionnaire</a></p>
+<a href="https://github.com/chb/c3-pro-ios-framework/blob/master/Sources/Questionnaire/">➔ Questionnaire</a></p>
 <a href='#dataqueue' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='dataqueue'>DataQueue</h3>
 
 <p><code>DataQueue</code> is a FHIR server implementation used to move FHIR resources, created on device, to a FHIR server, without the need for user interaction nor -confirmation.<br>
-<a href="https://github.com/chb/c3-pro-ios-framework/tree/master/Sources/DataQueue/">➔ DataQueue</a></p>
+<a href="https://github.com/chb/c3-pro-ios-framework/blob/master/Sources/DataQueue/">➔ DataQueue</a></p>
 <a href='#healthkit_extensions' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='healthkit_extensions'>HealthKit Extensions</h3>
 
 <p>Extensions to <em>HealthKit</em> classes to easily query for samples and to represent quantities in FHIR.<br>
-<a href="https://github.com/chb/c3-pro-ios-framework/tree/master/Sources/HealthKit/">➔ HealthKit</a></p>
+<a href="https://github.com/chb/c3-pro-ios-framework/blob/master/Sources/HealthKit/">➔ HealthKit</a></p>
 <a href='#system_service_permissions' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='system_service_permissions'>System Service Permissions</h3>
 
 <p>Facilities to request permission to send notifications, access HealthKit and others.
 These can be integrated into the Consent flow.<br>
-<a href="https://github.com/chb/c3-pro-ios-framework/tree/master/Sources/SystemServices">➔ SystemServices</a></p>
+<a href="https://github.com/chb/c3-pro-ios-framework/blob/master/Sources/SystemServices">➔ SystemServices</a></p>
 <a href='#encryption' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='encryption'>Encryption</h3>
 
 <p>AES and RSA encryption facilities that come in handy.
 These work with facilities officially exposed by iOS, meaning you <strong>don&rsquo;t need to add OpenSSL</strong> to your app.<br>
-<a href="https://github.com/chb/c3-pro-ios-framework/tree/master/Sources/Encryption/">➔ Encryption</a></p>
+<a href="https://github.com/chb/c3-pro-ios-framework/blob/master/Sources/Encryption/">➔ Encryption</a></p>
 <a href='#de_identification_amp_geocoder' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='de_identification_amp_geocoder'>De-Identification &amp; Geocoder</h3>
 
 <p>Helps creating de-identified patient resources, consistent with <em>HIPAA Safe Harbor</em> guidelines, with birthdate and ZIP (determined by <em>Geocoder</em>) truncated accordingly.<br>
-<a href="https://github.com/chb/c3-pro-ios-framework/tree/master/Sources/DeIdentifier/">➔ DeIdentifier</a></p>
+<a href="https://github.com/chb/c3-pro-ios-framework/blob/master/Sources/DeIdentifier/">➔ DeIdentifier</a></p>
 <a href='#localization' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='localization'>Localization</h2>
 
 <p>The framework uses <code>NSLocalizedString</code> on the <code>C3PRO</code> table name, meaning it&rsquo;s looking at the C3PRO.strings file for string localization.
