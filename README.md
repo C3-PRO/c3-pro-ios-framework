@@ -17,6 +17,8 @@ Taking a _pure Swift_ approach, you will not be able to use this framework with 
 Instead, you can use Swift code in your app, using a [mix and match][mix-match] approach, to connect the C3-PRO components to the Objective-C bits in your app.
 
 See the [install instructions](Install.md), then use `C3PRO` in your code and start coding.
+Below is a short overview of the components, click the links to get more information about what the component can do for you.
+The [technical documentation][docs] is available as well.
 We also have a [sample app][] that demonstrates how some of the components can be used.
 
 ```swift
@@ -27,9 +29,9 @@ import C3PRO
 
 The `master` branch requires Xcode 7 and _should_ always be compatible with the latest version released.
 The `develop` branch may contain new developments and have different requirements.
-See the [releases](releases) tab for previous releases, for newer versions look for `feature/x` branches.
+See the [releases][] tab for previous releases, for newer versions look for `feature/x` branches.
 
-See [CHANGELOG.md](./CHANGELOG.md) for updates.
+See [CHANGELOG.md](CHANGELOG.md) for updates.
 This framework combines several versioned technologies, here's an overview over what's included:
 
  Version | Swift | ResearchKit |  FHIR
@@ -109,4 +111,6 @@ Be sure to take a look at the [NOTICE.txt](./NOTICE.txt) file, and don't forget 
 [researchkit]: http://researchkit.github.io
 [i2b2]: https://www.i2b2.org
 [mix-match]: https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html
+[docs]: http://chb.github.io/c3-pro-ios-framework/
 [sample app]: https://github.com/chb/c3-pro-demo-ios
+[releases]: https://github.com/chb/c3-pro-ios-framework/releases

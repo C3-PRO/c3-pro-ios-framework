@@ -3,7 +3,7 @@ Installation
 
 There are two ways to use the _C3-PRO_ iOS framework: install via _CocoaPods_ or a manual install.
 
-The CocoaPods install is **not yet functional** since the ResearchKit version that is needed (at least 1.3) has not yet been published.
+The CocoaPods install is **not yet functional**, hope to resolve issues with it soon.
 
 
 CocoaPods
