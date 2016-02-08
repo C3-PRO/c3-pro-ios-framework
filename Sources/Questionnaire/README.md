@@ -25,12 +25,15 @@ This model implements the `ORKTaskViewControllerDelegate` protocol and holds on 
 
 
 ```swift
-let controller = QuestionnaireController(questionnaire: <# FHIR Questionnaire #>)
+// Let's assume you have a Questionnaire "Survey.json" in your app bundle
+// You can use other means, such as `Questionnaire.read(id:server:callback:)`
+let questionnaire = NSBundle.mainBundle().fhir_bundledResource("<# Survey #>")
+let controller = QuestionnaireController(questionnaire: questionnaire)
 controller.whenCompleted = { viewController, answers in
     viewController.dismissViewControllerAnimated(true, completion: nil)
 	// `answers` is a FHIR "QuestionnaireResponse" resource if not nil
-    // e.g. send to a SMART server:
     if let answers = answers {
+        // e.g. send to a SMART server:
         answers.create(<# smart.server #>) { error in
             // check if `error` is not nil and handle
         }

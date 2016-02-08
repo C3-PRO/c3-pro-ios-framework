@@ -7,19 +7,16 @@ In addition, a FHIR _Contract_ resource can be used to carry trial eligibility r
 Subsequently, the contract can be “signed” with a FHIR _Patient_ resource and returned to your server, indicating consent.
 
 There are additional utilities for _encryption_, _geolocation_, _de-identification_ and _data queueing_ that go well with a research app.
+These are individual modules, meaning you can use only the parts you need.
+See below for what's included.
 
 #### Usage
-
-The iOS framework contains individual components, meaning you can use only the parts you need.
-See below for what's included.
 
 Taking a _pure Swift_ approach, you will not be able to use this framework with Objective-C alone.
 Instead, you can use Swift code in your app, using a [mix and match][mix-match] approach, to connect the C3-PRO components to the Objective-C bits in your app.
 
 See the [install instructions](Install.md), then use `C3PRO` in your code and start coding.
-Below is a short overview of the components, click the links to get more information about what the component can do for you.
-The [technical documentation][docs] is available as well.
-We also have a [sample app][] that demonstrates how some of the components can be used.
+We also have a [sample app][] that demonstrates how some of the modules can be used.
 
 ```swift
 import C3PRO
@@ -29,9 +26,9 @@ import C3PRO
 
 The `master` branch requires Xcode 7 and _should_ always be compatible with the latest version released.
 The `develop` branch may contain new developments and have different requirements.
-See the [releases][] tab for previous releases, for newer versions look for `feature/x` branches.
+See the [releases](releases) tab for previous releases, for newer versions look for `feature/x` branches.
 
-See [CHANGELOG.md](CHANGELOG.md) for updates.
+See [CHANGELOG.md](./CHANGELOG.md) for updates.
 This framework combines several versioned technologies, here's an overview over what's included:
 
  Version | Swift | ResearchKit |  FHIR
@@ -39,10 +36,10 @@ This framework combines several versioned technologies, here's an overview over 
  **1.0** |   2.x |         1.3 | 1.0.2
 
 
-Components
-----------
+Modules
+-------
 
-The framework consists of several components that complement each other.
+The framework consists of several modules that complement each other.
 
 ### Study Introduction
 
@@ -106,11 +103,9 @@ Be sure to take a look at the [NOTICE.txt](./NOTICE.txt) file, and don't forget 
 - [CryptoSwift](./CryptoSwift/LICENSE)
 
 
-[C3-PRO]: http://c3-pro.chip.org
+[C3-PRO]: http://c3-pro.org
 [fhir]: http://hl7.org/fhir/
 [researchkit]: http://researchkit.github.io
 [i2b2]: https://www.i2b2.org
 [mix-match]: https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html
-[docs]: http://chb.github.io/c3-pro-ios-framework/
 [sample app]: https://github.com/chb/c3-pro-demo-ios
-[releases]: https://github.com/chb/c3-pro-ios-framework/releases

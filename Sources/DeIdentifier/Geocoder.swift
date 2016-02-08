@@ -36,7 +36,9 @@ public typealias GeocoderAddressCallback = ((address: Address?, error: ErrorType
 /**
 Class to ease geocoding tasks. Primarily designed to retrieve current location, e.g. to obtain a ZIP code.
 
-If you geocode, do not forget to set `NSLocationWhenInUseUsageDescription` in your Info.plist. See [DeIdentifier/README.md](./README.md).
+If you use the geocoder you **must include** a short description of why you're accessing the user's location under the key
+`NSLocationWhenInUseUsageDescription` in the app's Info.plist. Otherwise you will never receive the location callback. The user will see
+this string in an alert window the first time the geocoder is used.
 
 You probably want to use one of these methods for geocoding:
 
