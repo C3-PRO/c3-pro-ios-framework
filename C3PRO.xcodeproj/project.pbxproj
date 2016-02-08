@@ -36,6 +36,7 @@
 		EEC3C95F1B83DA650096D5BE /* AESUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC3C95E1B83DA650096D5BE /* AESUtility.swift */; };
 		EEC6DC2B1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC6DC2A1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift */; };
 		EEC6DC3D1C4D4F0200A42E87 /* C3PRO.strings in Resources */ = {isa = PBXBuildFile; fileRef = EEC6DC3F1C4D4F0200A42E87 /* C3PRO.strings */; };
+		EEE60CD31C68999E00F381B7 /* ConditionalStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE60CD21C68999E00F381B7 /* ConditionalStep.swift */; };
 		EEEA7F481BD61EA20089BF85 /* StudyIntroCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */; };
 		EEEA7F4A1BD624490089BF85 /* StudyIntroCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */; };
 		EEEA7F4C1BD627570089BF85 /* StudyIntroItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F4B1BD627570089BF85 /* StudyIntroItem.swift */; };
@@ -203,6 +204,7 @@
 		EEC3C95E1B83DA650096D5BE /* AESUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AESUtility.swift; sourceTree = "<group>"; };
 		EEC6DC2A1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemPermissionTableViewController.swift; sourceTree = "<group>"; };
 		EEC6DC3E1C4D4F0200A42E87 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/C3PRO.strings; sourceTree = "<group>"; };
+		EEE60CD21C68999E00F381B7 /* ConditionalStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionalStep.swift; sourceTree = "<group>"; };
 		EEEA7F451BD61E800089BF85 /* StudyIntro.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = StudyIntro.storyboard; sourceTree = "<group>"; };
 		EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroCollectionViewController.swift; sourceTree = "<group>"; };
 		EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -431,6 +433,7 @@
 				EEFA84D71AE5C25500E61006 /* QuestionnaireGroupPromise.swift */,
 				EEFA84D91AE5C25500E61006 /* QuestionnaireQuestionPromise.swift */,
 				EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */,
+				EEE60CD21C68999E00F381B7 /* ConditionalStep.swift */,
 				EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */,
 				EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */,
 			);
@@ -713,6 +716,7 @@
 				EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */,
 				EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */,
 				EEA5CF191BEA5B5A00A6D4C9 /* ConsentResult.swift in Sources */,
+				EEE60CD31C68999E00F381B7 /* ConditionalStep.swift in Sources */,
 				EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */,
 				EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */,
 				EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */,

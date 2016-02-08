@@ -141,6 +141,21 @@ extension ORKQuestionResult {
 		c3_warn("I don't understand ORKQuestionResult answer from \(self)")
 		return nil
 	}
+	
+	/**
+	Checks whether the receiver is the same result as the other result.
+	
+	- parameter other: The result to compare against
+	- returns: A boold indicating whether the results are the same
+	*/
+	func c3_hasSameAnswer(other: ORKQuestionResult) -> Bool {
+		if let myAnswer: AnyObject = answer {
+			if let otherAnswer: AnyObject = other.answer {
+				return myAnswer.isEqual(otherAnswer)
+			}
+		}
+		return false
+	}
 }
 
 
