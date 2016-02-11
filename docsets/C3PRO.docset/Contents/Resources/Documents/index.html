@@ -299,34 +299,32 @@
             
             <p><img src="./assets/Logo.png" srcset="./assets/Logo@2x.png 2x, ./assets/Logo@3x.png 3x" alt="C3-PRO"></p>
 
-<p>This is the <strong>iOS</strong> framework, written in Swift, for our <a href="http://c3-pro.chip.org">C3-PRO</a> research framework.</p>
+<p>This is the <strong>iOS</strong> framework, written in Swift, for our <a href="http://c3-pro.org">C3-PRO</a> research framework.</p>
 
 <p>Combining <a href="http://hl7.org/fhir/">🔥 FHIR</a> and <a href="http://researchkit.github.io">ResearchKit</a>, usually for data storage into <a href="https://www.i2b2.org">i2b2</a>, this framework allows you to use FHIR <em>Questionnaire</em> resources directly with ResearchKit and will return FHIR <em>QuestionnaireResponse</em> that you can send to your server.
 In addition, a FHIR <em>Contract</em> resource can be used to carry trial eligibility requirements and define content to be shown during consenting.
 Subsequently, the contract can be “signed” with a FHIR <em>Patient</em> resource and returned to your server, indicating consent.</p>
 
-<p>There are additional utilities for <em>encryption</em>, <em>geolocation</em>, <em>de-identification</em> and <em>data queueing</em> that go well with a research app.</p>
-<a href='#usage' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h4 id='usage'>Usage</h4>
-
-<p>The iOS framework contains individual components, meaning you can use only the parts you need.
+<p>There are additional utilities for <em>encryption</em>, <em>geolocation</em>, <em>de-identification</em> and <em>data queueing</em> that go well with a research app.
+These are individual modules, meaning you can use only the parts you need.
 See below for what&rsquo;s included.</p>
+<a href='#usage' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h4 id='usage'>Usage</h4>
 
 <p>Taking a <em>pure Swift</em> approach, you will not be able to use this framework with Objective-C alone.
 Instead, you can use Swift code in your app, using a <a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html">mix and match</a> approach, to connect the C3-PRO components to the Objective-C bits in your app.</p>
 
-<p>See the <a href="Install.md">install instructions</a>, then use <code>C3PRO</code> in your code and start coding.
-Below is a short overview of the components, click the links to get more information about what the component can do for you.
-The <a href="http://chb.github.io/c3-pro-ios-framework/">technical documentation</a> is available as well.
-We also have a <a href="https://github.com/chb/c3-pro-demo-ios">sample app</a> that demonstrates how some of the components can be used.</p>
+<p><a href="Install.md">⤵️ Installation</a><br>
+<a href="https://github.com/chb/c3-pro-demo-ios">📱 Sample App</a><br>
+<a href="http://chb.github.io/c3-pro-ios-framework/">📖 Technical Documentation</a></p>
 <pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">C3PRO</span>
 </code></pre>
 <a href='#versions' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h4 id='versions'>Versions</h4>
 
 <p>The <code>master</code> branch requires Xcode 7 and <em>should</em> always be compatible with the latest version released.
 The <code>develop</code> branch may contain new developments and have different requirements.
-See the <a href="https://github.com/chb/c3-pro-ios-framework/releases">releases</a> tab for previous releases, for newer versions look for <code>feature/x</code> branches.</p>
+See the <a href="releases">releases</a> tab for previous releases, for newer versions look for <code>feature/x</code> branches.</p>
 
-<p>See <a href="CHANGELOG.md">CHANGELOG.md</a> for updates.
+<p>See <a href="./CHANGELOG.md">CHANGELOG.md</a> for updates.
 This framework combines several versioned technologies, here&rsquo;s an overview over what&rsquo;s included:</p>
 
 <table><thead>
@@ -344,9 +342,9 @@ This framework combines several versioned technologies, here&rsquo;s an overview
 <td>1.0.2</td>
 </tr>
 </tbody></table>
-<a href='#components' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='components'>Components</h2>
+<a href='#modules' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='modules'>Modules</h2>
 
-<p>The framework consists of several components that complement each other.</p>
+<p>The framework consists of several modules that complement each other.</p>
 <a href='#study_introduction' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='study_introduction'>Study Introduction</h3>
 
 <p>Shows the well-known <em>“Welcome to my study”</em> screens that allows users to inform themselves before joining your study.<br>
@@ -404,7 +402,7 @@ Be sure to take a look at the <a href="./NOTICE.txt">NOTICE.txt</a> file, and do
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2016 <a class="link" href="http://c3-pro.chip.org" target="_blank" rel="external">C3-PRO</a>. All rights reserved. (Last updated: 2016-02-05)</p>
+      <p>&copy; 2016 <a class="link" href="http://c3-pro.chip.org" target="_blank" rel="external">C3-PRO</a>. All rights reserved. (Last updated: 2016-02-11)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
