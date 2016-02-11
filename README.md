@@ -15,12 +15,14 @@ See below for what's included.
 Taking a _pure Swift_ approach, you will not be able to use this framework with Objective-C alone.
 Instead, you can use Swift code in your app, using a [mix and match][mix-match] approach, to connect the C3-PRO components to the Objective-C bits in your app.
 
-See the [install instructions](Install.md), then use `C3PRO` in your code and start coding.
-We also have a [sample app][] that demonstrates how some of the modules can be used.
+[⤵️ Installation](Install.md)  
+[📱 Sample App][sample app]  
+[📖 Technical Documentation][docs]
 
 ```swift
 import C3PRO
 ```
+
 
 #### Versions
 
@@ -109,3 +111,4 @@ Be sure to take a look at the [NOTICE.txt](./NOTICE.txt) file, and don't forget 
 [i2b2]: https://www.i2b2.org
 [mix-match]: https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html
 [sample app]: https://github.com/chb/c3-pro-demo-ios
+[docs]: http://chb.github.io/c3-pro-ios-framework/
