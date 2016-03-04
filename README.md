@@ -15,7 +15,7 @@ See below for what's included.
 Taking a _pure Swift_ approach, you will not be able to use this framework with Objective-C alone.
 Instead, you can use Swift code in your app, using a [mix and match][mix-match] approach, to connect the C3-PRO components to the Objective-C bits in your app.
 
-[⤵️ Installation](Install.md)  
+[⤵️ Installation](INSTALL.md)  
 [📱 Sample App][sample app]  
 [📖 Technical Documentation][docs]
 
