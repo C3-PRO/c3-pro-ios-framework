@@ -1,0 +1,37 @@
+{
+	"id": "example-question-dates",
+	"resourceType": "Questionnaire",
+	"status": "draft",
+	"title": "Sample Survey",
+	"date": "2016-03-09",
+	"group": {
+		"title": "Sample Survey",
+		"text": "This survey contains samples to show how date and time FHIR Questionnaires translate to ResearchKit surveys",
+		"group": [
+			{
+				"fhir_comments": "Note how groups without text will not show an individual instruction step",
+				"question": [
+					{
+						"linkId": "dateDate",
+						"text": "When were you born?",
+						"type": "date"
+					},
+					{
+						"linkId": "dateDateTime",
+						"text": "Choose a date and a time",
+						"type": "dateTime"
+					},
+					{
+						"linkId": "dateTimeOfDay",
+						"text": "What time did you wake up today?",
+						"type": "time"
+					}
+				]
+			},
+			{
+				"title": "Final Step",
+				"text": "Pressing “Done” will complete this survey."
+			}
+		]
+	}
+}

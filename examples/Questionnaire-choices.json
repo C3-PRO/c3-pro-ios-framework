@@ -5,8 +5,8 @@
 	"title": "Choice Answers Examples",
 	"date": "2015-12-04",
 	"group": {
-		"title": "Survey",
-		"text": "This survey will ask you questions about your relationship with HIT.",
+		"title": "Sample Survey",
+		"text": "This survey contains samples to show how choices in FHIR Questionnaires translate to ResearchKit surveys",
 		"group": [
 			{
 				"question": [
@@ -15,19 +15,19 @@
 						"options": {
 							"reference": "#SF36Answers3"
 						},
-						"text": "Limited by HIT",
+						"text": "A Simple Choice",
 						"type": "choice",
 						"extension": [
 							{
 								"url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
-								"valueString": "Are you limited by the current Healthcare Information Technologies on the market?"
+								"valueString": "A “choice” question with possible answers in a referenced ValueSet"
 							}
 						]
 					},
 					{
 						"linkId": "choice-boolean-1",
 						"required": true,
-						"text": "Are you currently using SMART on FHIR?",
+						"text": "Skip the Last Question?",
 						"type": "boolean"
 					},
 					{
@@ -45,21 +45,20 @@
 									}
 								],
 								"url": "http://hl7.org/fhir/StructureDefinition/questionnaire-enableWhen"
+							},
+							{
+								"url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+								"valueString": "And it has this additional instructional text."
 							}
 						],
 						"required": true,
-						"text": "Do you plan to start using SMART on FHIR in the foreseeable future?",
-						"type": "boolean"
-					},
-					{
-						"linkId": "choice-boolean-3",
-						"text": "Do you think modern, open standards are the way forward in HIT?",
+						"text": "Unskippable Yes/No question",
 						"type": "boolean"
 					}
 				]
 			},
 			{
-				"title": "Thank you!",
+				"title": "Final Step",
 				"text": "Pressing “Done” will complete this survey."
 			}
 		]

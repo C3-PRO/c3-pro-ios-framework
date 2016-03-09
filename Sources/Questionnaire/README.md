@@ -61,15 +61,21 @@ Examples
 
 Examples on how to achieve certain ResearchKit steps with FHIR.
 
+As of DSTU-2, questionnaire groups can contain other groups and questions.
+If you add a `title` or `text` to a group, it will automatically insert an instruction step.
+Otherwise the group will be transparent, only its questions will show up.
+
 ### Choice and Bool Questions
 
 There's a small sample Questionnaire [examples/Questionnaire-choices.json](../../examples/Questionnaire-choices.json) that has a `choice` and some `boolean` type questions.
-Notice how you can skip questions 1 and 4 but not 2 and 3.
+Notice how you can skip questions 1 and 4 but not 2 and 3 in the sample questionnaire.
 It also uses the `enableWhen` extension to conditionally show the 3rd question based on the answer to the 2nd question.
 
-### Slider for Integers
+### Text and Values, Slider for Integers
 
-This will show the title “FHIR Likening”, a smaller instruction text and a slider going from 0-10, with 8 pre-selected.
+The [examples/Questionnaire-textvalue.json](../../examples/Questionnaire-textvalue.json) example contains samples for textual and numerical input.
+
+The following will show the title “FHIR Likening”, a smaller instruction text and a slider going from 0-10, with 8 pre-selected.
 Sliders with more than 5 steps will render vertically instead of horizontally.
 If no default value is specified, the minimum value will be pre-selected.
 
@@ -107,5 +113,7 @@ If no default value is specified, the minimum value will be pre-selected.
 }
 ```
 
-Full: [examples/Questionnaire-sliders.json](../../examples/Questionnaire-sliders.json)
+### Date and Time
+
+The [examples/Questionnaire-dates.json](../../examples/Questionnaire-dates.json) example contains samples for date and time input.
 
