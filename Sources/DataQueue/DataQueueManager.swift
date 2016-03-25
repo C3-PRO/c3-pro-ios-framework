@@ -131,7 +131,7 @@ class DataQueueManager {
 		
 		// get next sequence number
 		var seq = currentQueueRange(NSFileManager())?.max ?? 0
-		seq++
+		seq += 1
 		
 		// store new resoure to queue
 		let path = (queueDirectory as NSString).stringByAppendingPathComponent(fileNameForSequence(seq))

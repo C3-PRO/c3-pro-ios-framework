@@ -52,7 +52,7 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 		else {
 			refreshAppReceipt() { error in
 				if let error = error {
-					if SKErrorDomain == error._domain && SKErrorUnknown == error._code {
+					if SKErrorDomain == error._domain && SKErrorCode.Unknown.rawValue == error._code {
 						callback(json: nil, error: C3Error.AppReceiptRefreshFailed)
 					}
 					else {

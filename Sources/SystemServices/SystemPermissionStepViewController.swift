@@ -77,11 +77,11 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 		super.viewWillAppear(animated)
 		if hasNextStep() {
 			let title = ORKBundle().localizedStringForKey("BUTTON_NEXT", value: "BUTTON_NEXT", table: "ResearchKit")
-			let next = UIBarButtonItem(title: title, style: .Plain, target: self, action: "goForward")
+			let next = UIBarButtonItem(title: title, style: .Plain, target: self, action: #selector(UIWebView.goForward))
 			self.navigationItem.rightBarButtonItem = next
 		}
 		else {
-			let done = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "goForward")
+			let done = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(UIWebView.goForward))
 			self.navigationItem.rightBarButtonItem = done
 		}
 	}

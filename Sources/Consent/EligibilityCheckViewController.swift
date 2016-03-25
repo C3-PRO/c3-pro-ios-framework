@@ -53,7 +53,7 @@ public class EligibilityCheckViewController: UITableViewController {
 		tableView.estimatedRowHeight = 120.0
 		tableView.rowHeight = UITableViewAutomaticDimension
 		
-		let next = UIBarButtonItem(title: "Next".c3_localized("Next step"), style: .Plain, target: self, action: "verifyEligibility")
+		let next = UIBarButtonItem(title: "Next".c3_localized("Next step"), style: .Plain, target: self, action: #selector(EligibilityCheckViewController.verifyEligibility))
 		next.enabled = false
 		navigationItem.rightBarButtonItem = next
 		nextButton = next
@@ -235,8 +235,8 @@ class EligibilityCell: UITableViewCell {
 		no.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
 		yes.setTitleColor(self.tintColor, forState: .Selected)
 		no.setTitleColor(self.tintColor, forState: .Selected)
-		yes.addTarget(self, action: "buttonDidPress:", forControlEvents: .TouchUpInside)
-		no.addTarget(self, action: "buttonDidPress:", forControlEvents: .TouchUpInside)
+		yes.addTarget(self, action: #selector(EligibilityCell.buttonDidPress(_:)), forControlEvents: .TouchUpInside)
+		no.addTarget(self, action: #selector(EligibilityCell.buttonDidPress(_:)), forControlEvents: .TouchUpInside)
 		
 		let desc = UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleBody)
 		yes.titleLabel?.font = UIFont(descriptor: desc, size: desc.pointSize * 2)
