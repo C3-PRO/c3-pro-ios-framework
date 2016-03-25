@@ -135,7 +135,7 @@ public class PDFViewController : WebViewController, UIDocumentInteractionControl
 		super.viewDidLoad()
 		
 		// create share button
-		let share = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "share")
+		let share = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(PDFViewController.share))
 		share.enabled = nil != PDFURL
 		shareButton = share
 		

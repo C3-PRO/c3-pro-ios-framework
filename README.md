@@ -26,16 +26,17 @@ import C3PRO
 
 #### Versions
 
-The `master` branch requires Xcode 7 and _should_ always be compatible with the latest version released.
+The `master` branch requires Xcode 7.3 and _should_ always be compatible with the latest version released.
 The `develop` branch may contain new developments and have different requirements.
 See the [releases](releases) tab for previous releases, for newer versions look for `feature/x` branches.
 
 See [CHANGELOG.md](./CHANGELOG.md) for updates.
 This framework combines several versioned technologies, here's an overview over what's included:
 
- Version | Swift | ResearchKit |  FHIR
----------|-------|-------------|------
- **1.0** |   2.x |         1.3 | 1.0.2
+   Version |   Swift | ResearchKit |  FHIR
+-----------|---------|-------------|------
+ **1.0.1** |     2.2 |         1.3 | 1.0.2
+   **1.0** | 2.0-2.2 |         1.3 | 1.0.2
 
 
 Modules

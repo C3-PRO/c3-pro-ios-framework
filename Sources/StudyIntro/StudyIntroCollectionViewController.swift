@@ -129,7 +129,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 			else {
 				c3_logIfDebug("Hint: if you put the intro collection view controller into a navigation controller, the consent document will be pushed instead of shown modally")
 				let navi = UINavigationController(rootViewController: pdfVC)
-				let done = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "dismissModal")
+				let done = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(StudyIntroCollectionViewController.dismissModal))
 				pdfVC.navigationItem.rightBarButtonItem = done
 				presentViewController(navi, animated: true, completion: nil)
 			}

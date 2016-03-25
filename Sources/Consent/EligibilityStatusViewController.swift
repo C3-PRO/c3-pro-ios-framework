@@ -123,7 +123,7 @@ public class EligibilityStatusViewController: UIViewController {
 		button.setTitle(actionButtonTitle, forState: .Normal)
 		button.hidden = nil == onActionButtonTap
 		button.enabled = !waitingForAction
-		button.addTarget(self, action: "didTapActionButton:", forControlEvents: .TouchUpInside)
+		button.addTarget(self, action: #selector(EligibilityStatusViewController.didTapActionButton(_:)), forControlEvents: .TouchUpInside)
 		actionButton = button
 		
 		// main layout

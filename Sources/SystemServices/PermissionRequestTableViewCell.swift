@@ -188,7 +188,7 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 			let btn = BorderedButton()
 			btn.translatesAutoresizingMaskIntoConstraints = false
 			btn.setTitle("Allow".c3_localized, forState: .Normal)
-			btn.addTarget(self, action: "performAction:", forControlEvents: .TouchUpInside)
+			btn.addTarget(self, action: #selector(PermissionRequestTableViewCell.performAction(_:)), forControlEvents: .TouchUpInside)
 			contentView.addSubview(btn)
 			contentView.addConstraint(NSLayoutConstraint(item: btn, attribute: .CenterX, relatedBy: .Equal, toItem: contentView, attribute: .CenterX, multiplier: 1, constant: 0))
 			contentView.addConstraint(NSLayoutConstraint(item: btn, attribute: .Width, relatedBy: .GreaterThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 150))
