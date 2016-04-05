@@ -52,9 +52,8 @@
 		EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */; };
 		EEFA84C71AE5C18B00E61006 /* C3PRO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */; };
 		EEFA84CE1AE5C18B00E61006 /* C3PROTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */; };
-		EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D71AE5C25500E61006 /* QuestionnaireGroupPromise.swift */; };
 		EEFA84DB1AE5C25500E61006 /* QuestionnairePromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */; };
-		EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D91AE5C25500E61006 /* QuestionnaireQuestionPromise.swift */; };
+		EEFA84DC1AE5C25500E61006 /* QuestionnaireItemPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D91AE5C25500E61006 /* QuestionnaireItemPromise.swift */; };
 		EEFA84FA1AE5C2BC00E61006 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84F31AE5C29100E61006 /* ResearchKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -183,6 +182,8 @@
 		EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueue.swift; sourceTree = "<group>"; };
 		EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueuedResource.swift; sourceTree = "<group>"; };
 		EE5F4F7E1B18E2B100DB38B3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EE65DBDC1CB3F6F900E25C72 /* MIGRATION.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = MIGRATION.md; sourceTree = "<group>"; };
+		EE65DBDD1CB3F9CD00E25C72 /* MIGRATION.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = MIGRATION.md; sourceTree = "<group>"; };
 		EE7A43921B0D08DE00B30D17 /* ConsentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentController.swift; sourceTree = "<group>"; };
 		EE851A541BD90984007EC6A9 /* EligibilityStatusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EligibilityStatusViewController.swift; sourceTree = "<group>"; };
 		EE851A641BD90DBC007EC6A9 /* BorderedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BorderedButton.swift; sourceTree = "<group>"; };
@@ -225,9 +226,8 @@
 		EEFA84C61AE5C18B00E61006 /* C3PROTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C3PROTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEFA84CC1AE5C18B00E61006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C3PROTests.swift; sourceTree = "<group>"; };
-		EEFA84D71AE5C25500E61006 /* QuestionnaireGroupPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireGroupPromise.swift; sourceTree = "<group>"; };
 		EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnairePromise.swift; sourceTree = "<group>"; };
-		EEFA84D91AE5C25500E61006 /* QuestionnaireQuestionPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireQuestionPromise.swift; sourceTree = "<group>"; };
+		EEFA84D91AE5C25500E61006 /* QuestionnaireItemPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireItemPromise.swift; sourceTree = "<group>"; };
 		EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -269,8 +269,8 @@
 			children = (
 				EE32BDFE1B8396A100024E7A /* CryptoSwift.framework */,
 				EE1EAD621C5BD631000A0BD4 /* CryptoSwift.framework */,
-				EE1EAD641C5BD631000A0BD4 /* CryptoSwift.framework */,
 				EE1EAD661C5BD631000A0BD4 /* CryptoSwift.framework */,
+				EE1EAD641C5BD631000A0BD4 /* CryptoSwift.framework */,
 				EE32BE001B8396A100024E7A /* CryptoSwiftTests.xctest */,
 			);
 			name = Products;
@@ -280,6 +280,7 @@
 			isa = PBXGroup;
 			children = (
 				EE519BA61B0CD6C500036B96 /* README.md */,
+				EE65DBDD1CB3F9CD00E25C72 /* MIGRATION.md */,
 				EE7A43921B0D08DE00B30D17 /* ConsentController.swift */,
 				EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */,
 				EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */,
@@ -428,10 +429,10 @@
 			isa = PBXGroup;
 			children = (
 				EE519BA41B0CD4A500036B96 /* README.md */,
+				EE65DBDC1CB3F6F900E25C72 /* MIGRATION.md */,
 				EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */,
 				EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */,
-				EEFA84D71AE5C25500E61006 /* QuestionnaireGroupPromise.swift */,
-				EEFA84D91AE5C25500E61006 /* QuestionnaireQuestionPromise.swift */,
+				EEFA84D91AE5C25500E61006 /* QuestionnaireItemPromise.swift */,
 				EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */,
 				EEE60CD21C68999E00F381B7 /* ConditionalStep.swift */,
 				EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */,
@@ -704,7 +705,7 @@
 				EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */,
 				EE86C4801C49327D00B7D486 /* SystemPermissionStepViewController.swift in Sources */,
 				EEEEAB891BDA97EE001F8B5C /* GroupExtensions.swift in Sources */,
-				EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */,
+				EEFA84DC1AE5C25500E61006 /* QuestionnaireItemPromise.swift in Sources */,
 				EE1AB3B71C23283100711108 /* HKHealthStore+Sampling.swift in Sources */,
 				EE86C48F1C4AC1E500B7D486 /* String+C3-PRO.swift in Sources */,
 				EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */,
@@ -717,7 +718,6 @@
 				EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */,
 				EEA5CF191BEA5B5A00A6D4C9 /* ConsentResult.swift in Sources */,
 				EEE60CD31C68999E00F381B7 /* ConditionalStep.swift in Sources */,
-				EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */,
 				EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */,
 				EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */,
 				EE86C48D1C4AB47500B7D486 /* PermissionRequestTableViewCell.swift in Sources */,

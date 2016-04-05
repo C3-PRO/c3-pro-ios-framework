@@ -37,7 +37,7 @@ extension ORKTaskResult {
 		guard let results = results as? [ORKStepResult] else {
 			return nil
 		}
-		var groups = [QuestionnaireResponseGroup]()
+		var groups = [QuestionnaireResponseItem]()
 		
 		// loop results to collect groups
 		for result in results {
@@ -46,17 +46,13 @@ extension ORKTaskResult {
 			}
 		}
 		
-		// create top-level group to hold all groups
-		let master = QuestionnaireResponseGroup(json: nil)
-		master.group = groups
-		
 		// create and return questionnaire answers
 		let questionnaire = Reference(json: nil)
 		questionnaire.reference = identifier
 		
 		let answer = QuestionnaireResponse(status: "completed")
 		answer.questionnaire = questionnaire
-		answer.group = master
+		answer.item = groups
 		return answer
 	}
 }
@@ -65,22 +61,22 @@ extension ORKTaskResult {
 extension ORKStepResult {
 	
 	/**
-	Creates a QuestionnaireResponseGroup resource from all ORKSteps in the given ORKTask. Questions that do not have answers will be omitted,
+	Creates a QuestionnaireResponseItem resource from all ORKSteps in the given ORKTask. Questions that do not have answers will be omitted,
 	and groups that do not have at least a single question with answer will likewise be omitted.
 	
 	- parameter task: The ORKTask the result belongs to
-	- returns: A QuestionnaireResponseGroup element or nil
+	- returns: A QuestionnaireResponseItem element or nil
 	*/
-	func c3_questionAnswers(task: ORKTask?) -> QuestionnaireResponseGroup? {
+	func c3_questionAnswers(task: ORKTask?) -> QuestionnaireResponseItem? {
 		if let results = results {
-			let group = QuestionnaireResponseGroup(json: nil)
-			var questions = [QuestionnaireResponseGroupQuestion]()
+			let group = QuestionnaireResponseItem(json: nil)
+			var questions = [QuestionnaireResponseItem]()
 			
 			// loop results to collect answers; omit questions that do not have answers
 			for result in results {
 				if let result = result as? ORKQuestionResult,
 					let answers = result.c3_answerAsQuestionAnswersOfStep(task?.stepWithIdentifier?(result.identifier) as? ORKQuestionStep) {
-						let question = QuestionnaireResponseGroupQuestion(json: nil)
+						let question = QuestionnaireResponseItem(json: nil)
 						question.linkId = result.identifier
 						question.answer = answers
 						questions.append(question)
@@ -91,7 +87,7 @@ extension ORKStepResult {
 			}
 			
 			if questions.count > 0 {
-				group.question = questions
+				group.item = questions
 				return group
 			}
 		}
@@ -111,7 +107,7 @@ extension ORKQuestionResult {
 	- parameter task: The ORKTask the result belongs to
 	- returns: An array of question answers or nil
 	*/
-	func c3_answerAsQuestionAnswersOfStep(step: ORKQuestionStep?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+	func c3_answerAsQuestionAnswersOfStep(step: ORKQuestionStep?) -> [QuestionnaireResponseItemAnswer]? {
 		let fhirType = (step as? ConditionalQuestionStep)?.fhirType
 		
 		if let this = self as? ORKChoiceQuestionResult {
@@ -167,14 +163,14 @@ extension ORKChoiceQuestionResult {
 	- parameter fhirType: The FHIR answer type that's expected; ignored, always "coding"
 	- returns: An array of question answers or nil
 	*/
-	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseItemAnswer]? {
 		guard let choices = choiceAnswers as? [String] else {
 			c3_warn("expecting choice question results to be strings, but got: \(choiceAnswers)")
 			return nil
 		}
-		var answers = [QuestionnaireResponseGroupQuestionAnswer]()
+		var answers = [QuestionnaireResponseItemAnswer]()
 		for choice in choices {
-			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+			let answer = QuestionnaireResponseItemAnswer(json: nil)
 			let splat = choice.characters.split() { $0 == kORKTextChoiceSystemSeparator }.map() { String($0) }
 			let system = splat[0]
 			let code = (splat.count > 1) ? splat[1..<splat.endIndex].joinWithSeparator(String(kORKTextChoiceSystemSeparator)) : kORKTextChoiceMissingCodeCode
@@ -194,11 +190,11 @@ extension ORKTextQuestionResult {
 	- parameter fhirType: The FHIR answer type that's expected; "url" or defaults to "string"
 	- returns: An array of question answers or nil
 	*/
-	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseItemAnswer]? {
 		guard let text = textAnswer else {
 			return nil
 		}
-		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		let answer = QuestionnaireResponseItemAnswer(json: nil)
 		if let fhir = fhirType where "url" == fhir {
 			answer.valueUri = NSURL(string: text)
 		}
@@ -218,11 +214,11 @@ extension ORKNumericQuestionResult {
 	- parameter fhirType: The FHIR answer type that's expected; "quantity", "integer" or defaults to "number"
 	- returns: An array of question answers or nil
 	*/
-	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseItemAnswer]? {
 		guard let numeric = numericAnswer else {
 			return nil
 		}
-		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		let answer = QuestionnaireResponseItemAnswer(json: nil)
 		if let fhir = fhirType where "quantity" == fhir {
 			answer.valueQuantity = Quantity(json: ["value": numeric])
 			answer.valueQuantity!.unit = unit
@@ -246,11 +242,11 @@ extension ORKScaleQuestionResult {
 	- parameter fhirType: The FHIR answer type that's expected; ignored, always "number"
 	- returns: An array of question answers or nil
 	*/
-	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseItemAnswer]? {
 		guard let numeric = scaleAnswer else {
 			return nil
 		}
-		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		let answer = QuestionnaireResponseItemAnswer(json: nil)
 		answer.valueDecimal = NSDecimalNumber(json: numeric)
 		return [answer]
 	}
@@ -265,11 +261,11 @@ extension ORKBooleanQuestionResult {
 	- parameter fhirType: The FHIR answer type that's expected; ignored, always "boolean"
 	- returns: An array of question answers or nil
 	*/
-	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseItemAnswer]? {
 		guard let boolean = booleanAnswer?.boolValue else {
 			return nil
 		}
-		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		let answer = QuestionnaireResponseItemAnswer(json: nil)
 		answer.valueBoolean = boolean
 		return [answer]
 	}
@@ -284,11 +280,11 @@ extension ORKTimeOfDayQuestionResult {
 	- parameter fhirType: The FHIR answer type that's expected; ignored, always "time"
 	- returns: An array of question answers or nil
 	*/
-	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseItemAnswer]? {
 		guard let components = dateComponentsAnswer else {
 			return nil
 		}
-		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		let answer = QuestionnaireResponseItemAnswer(json: nil)
 		answer.valueTime = Time(hour: UInt8(components.hour), minute: UInt8(components.minute), second: 0.0)
 		return [answer]
 	}
@@ -305,11 +301,11 @@ extension ORKTimeIntervalQuestionResult {
 	- parameter fhirType: The FHIR answer type that's expected; ignored, always "interval"
 	- returns: An array of question answers or nil
 	*/
-	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseItemAnswer]? {
 		guard let interval = intervalAnswer else {
 			return nil
 		}
-		//let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		//let answer = QuestionnaireResponseItemAnswer(json: nil)
 		// TODO: support interval answers
 		print("--->  \(interval) for FHIR type “\(fhirType)”")
 		return nil
@@ -325,11 +321,11 @@ extension ORKDateQuestionResult {
 	- parameter fhirType: The FHIR answer type that's expected; supports "date", "dateTime" (default) and "instant"
 	- returns: An array of question answers or nil
 	*/
-	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseGroupQuestionAnswer]? {
+	func c3_asQuestionAnswers(fhirType: String?) -> [QuestionnaireResponseItemAnswer]? {
 		guard let date = dateAnswer else {
 			return nil
 		}
-		let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
+		let answer = QuestionnaireResponseItemAnswer(json: nil)
 		switch fhirType ?? "dateTime" {
 		case "date":
 			answer.valueDate = date.fhir_asDate()

@@ -1,5 +1,5 @@
 //
-//  QuestionnaireQuestionPromise.swift
+//  QuestionnaireItemPromise.swift
 //  C3PRO
 //
 //  Created by Pascal Pfiffner on 4/20/15.
@@ -31,10 +31,10 @@ let kORKTextChoiceMissingCodeCode = "⚠️"
 /**
 A promise that can fulfill a questionnaire question into an ORKQuestionStep.
 */
-class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
+class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	
-	/// The promises' question.
-	let question: QuestionnaireGroupQuestion
+	/// The promises' item.
+	let item: QuestionnaireItem
 	
 	/// The step(s), internally assigned after the promise has been successfully fulfilled.
 	internal(set) var steps: [ORKStep]?
@@ -45,8 +45,8 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
 	
 	- parameter question: The question the receiver represents
 	*/
-	init(question: QuestionnaireGroupQuestion) {
-		self.question = question
+	init(item: QuestionnaireItem) {
+		self.item = item
 	}
 	
 	
@@ -63,24 +63,24 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
 	                      allocated still, so don't throw everything away just because you receive errors
 	*/
 	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
-		let linkId = question.linkId ?? NSUUID().UUIDString
-		let (title, text) = question.c3_bestTitleAndText()
+		let linkId = item.linkId ?? NSUUID().UUIDString
+		let (title, text) = item.c3_bestTitleAndText()
 		
 		// resolve answer format, THEN resolve sub-groups, if any
-		question.c3_asAnswerFormat() { format, berror in
+		item.c3_asAnswerFormat() { format, berror in
 			var steps = [ORKStep]()
 			var errors = [ErrorType]()
 			var requirements = parentRequirements ?? [ResultRequirement]()
 			
 			if let fmt = format {
 				let step = ConditionalQuestionStep(identifier: linkId, title: title, answer: fmt)
-				step.fhirType = self.question.type
+				step.fhirType = self.item.type
 				step.text = text
-				step.optional = !(self.question.required ?? false)
+				step.optional = !(self.item.required ?? false)
 				
 				// questions "enableWhen" requirements
 				do {
-					if let myreqs = try self.question.c3_enableQuestionnaireElementWhen() {
+					if let myreqs = try self.item.c3_enableQuestionnaireElementWhen() {
 						requirements.appendContentsOf(myreqs)
 					}
 				}
@@ -94,18 +94,18 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
 				steps.append(step)
 			}
 			else {
-				errors.append(berror ?? C3Error.QuestionnaireQuestionTypeUnknownToResearchKit(self.question))
+				errors.append(berror ?? C3Error.QuestionnaireQuestionTypeUnknownToResearchKit(self.item))
 			}
 			
 			// do we have sub-groups?
-			if let subgroups = self.question.group {
-				let gpromises = subgroups.map() { QuestionnaireGroupPromise(group: $0) }
+			if let subitems = self.item.item {
+				let subpromises = subitems.map() { QuestionnaireItemPromise(item: $0) }
 				
 				// fulfill all group promises
 				let queueGroup = dispatch_group_create()
-				for gpromise in gpromises {
+				for subpromise in subpromises {
 					dispatch_group_enter(queueGroup)
-					gpromise.fulfill(requirements) { berrors in
+					subpromise.fulfill(requirements) { berrors in
 						if nil != berrors {
 							errors.appendContentsOf(berrors!)
 						}
@@ -115,7 +115,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
 				
 				// all done
 				dispatch_group_notify(queueGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
-					let gsteps = gpromises.filter() { return nil != $0.steps }.flatMap() { return $0.steps! }
+					let gsteps = subpromises.filter() { return nil != $0.steps }.flatMap() { return $0.steps! }
 					steps.appendContentsOf(gsteps)
 					
 					self.steps = steps
@@ -134,7 +134,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
 	
 	/// String representation of the receiver.
 	var description: String {
-		return NSString(format: "<QuestionnaireQuestionPromise %p>", unsafeAddressOf(self)) as String
+		return NSString(format: "QuestionnaireItemPromise <%p>", unsafeAddressOf(self)) as String
 	}
 }
 
@@ -142,7 +142,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
 // MARK: -
 
 
-extension QuestionnaireGroupQuestion {
+extension QuestionnaireItem {
 	
 	/**
 	Attempts to create a nice title and text from the various fields of the group.
@@ -294,16 +294,16 @@ extension QuestionnaireGroupQuestion {
 				}
 			}
 			
-			// valueset defines its own concepts
-			else if let options = valueSet?.codeSystem?.concept {
-				let system = valueSet?.codeSystem?.system?.absoluteString ?? kORKTextChoiceDefaultSystem
-				for option in options {
-					let code = option.code ?? kORKTextChoiceMissingCodeCode			// code is a required property, so SHOULD always be present
-					let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-					let text = ORKTextChoice(text: option.display ?? code, value: value)
-					choices.append(text)
-				}
-			}
+			// valueset defines its own concepts (this is gone in FHIR 1.4 in favor of a `CodeSystem` resource, which is not (yet?) on questionnaire)
+//			else if let options = valueSet?.codeSystem?.concept {
+//				let system = valueSet?.codeSystem?.system?.absoluteString ?? kORKTextChoiceDefaultSystem
+//				for option in options {
+//					let code = option.code ?? kORKTextChoiceMissingCodeCode			// code is a required property, so SHOULD always be present
+//					let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
+//					let text = ORKTextChoice(text: option.display ?? code, value: value)
+//					choices.append(text)
+//				}
+//			}
 			
 			// valueset includes codes
 			else if let options = valueSet?.compose?.include {		// TODO: also support `import`

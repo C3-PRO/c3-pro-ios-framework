@@ -122,13 +122,13 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 	case QuestionnaireNotPresent
 	
 	/// The questionnaire does not have a top level item.
-	case QuestionnaireInvalidNoTopLevel
+	case QuestionnaireInvalidNoTopLevelItem
 	
 	/// The given questionnaire question type cannot be represented in ResearchKit.
-	case QuestionnaireQuestionTypeUnknownToResearchKit(QuestionnaireGroupQuestion)
+	case QuestionnaireQuestionTypeUnknownToResearchKit(QuestionnaireItem)
 	
 	/// The given question should provide choices but there are none.
-	case QuestionnaireNoChoicesInChoiceQuestion(QuestionnaireGroupQuestion)
+	case QuestionnaireNoChoicesInChoiceQuestion(QuestionnaireItem)
 	
 	/// The questionnaire finished with an error (i.e. was not completed).
 	case QuestionnaireFinishedWithError
@@ -214,8 +214,8 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 		
 		case .QuestionnaireNotPresent:
 			return "I do not have a questionnaire just yet"
-		case .QuestionnaireInvalidNoTopLevel:
-			return "Invalid questionnaire, does not contain a top level group item"
+		case .QuestionnaireInvalidNoTopLevelItem:
+			return "Invalid questionnaire, does not contain a top level item"
 		case .QuestionnaireQuestionTypeUnknownToResearchKit(let question):
 			return "Failed to map question type “\(question.type ?? "<nil>")” to ResearchKit answer format [linkId: \(question.linkId ?? "<nil>")]"
 		case .QuestionnaireNoChoicesInChoiceQuestion(let question):

@@ -359,14 +359,24 @@ public class ConsentController {
 			period.start = date.fhir_asDateTime()
 			myContract.applies = period
 			
-			// the participant/patient is the signer
+			// the participant/patient is the signer/consenter
 			let signer = ContractSigner(json: nil)
 			signer.type = Coding(json: nil)
-			signer.type!.display = "Consent"
-			signer.type!.code = "1.2.840.10065.1.12.1.7"
-			signer.type!.system = NSURL(string: "http://hl7.org/fhir/vs/contract-signer-type")
+			signer.type!.display = "consenter"
+			signer.type!.code = "CONSENTER"
+			signer.type!.system = NSURL(string: "http://hl7.org/fhir/ValueSet/contract-signer-type")
 			signer.party = reference
-			signer.signature = patient.id
+			
+			let signatureCode = Coding(json: nil)
+			signatureCode.system = NSURL(string: "http://hl7.org/fhir/ValueSet/signature-type")
+			signatureCode.code = "1.2.840.10065.1.12.1.7"
+			signatureCode.display = "Consent Signature"
+			
+			let signature = Signature(json: nil)
+			signature.type = [signatureCode]
+			signature.when = date.fhir_asInstant()
+			
+			signer.signature = [signature]
 			myContract.signer = [signer]
 			
 			return myContract

@@ -65,11 +65,18 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 	- parameter callback: Callback to be called upon promise fulfillment with a list of errors, if any. Called on the main thread.
 	*/
 	public func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
-		if let toplevel = questionnaire.group {
-			let identifier = questionnaire.id ?? (questionnaire.identifier?.first?.value ?? "questionnaire-task")
-			let gpromise = QuestionnaireGroupPromise(group: toplevel)
-			gpromise.fulfill(parentRequirements) { errors in
-				if let steps = gpromise.steps {
+		guard let item = questionnaire.item where item.count > 0 else {
+			callback(errors: [C3Error.QuestionnaireInvalidNoTopLevelItem])
+			return
+		}
+		
+		let topItem = QuestionnaireItem(type: "group")
+		topItem.item = questionnaire.item
+		let promise = QuestionnaireItemPromise(item: topItem)
+		promise.fulfill(parentRequirements) { errors in
+			let identifier = self.questionnaire.id ?? (self.questionnaire.identifier?.first?.value ?? "questionnaire-task")
+			promise.fulfill(parentRequirements) { errors in
+				if let steps = promise.steps {
 					self.steps = steps
 					self.task = ConditionalOrderedTask(identifier: identifier, steps: steps)
 					callback(errors: errors)
@@ -79,9 +86,6 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 				}
 			}
 		}
-		else {
-			callback(errors: [C3Error.QuestionnaireInvalidNoTopLevel])
-		}
 	}
 	
 	
@@ -89,7 +93,7 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 	
 	/// String representation of the receiver.
 	public var description: String {
-		return NSString(format: "<QuestionnairePromise %p>", unsafeAddressOf(self)) as String
+		return NSString(format: "QuestionnairePromise <%p>", unsafeAddressOf(self)) as String
 	}
 }
 
