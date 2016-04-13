@@ -1,113 +1,117 @@
 {
-	"id": "example-question-text-and-values",
-	"resourceType": "Questionnaire",
-	"status": "draft",
-	"title": "Sample Survey",
-	"date": "2016-03-09",
-	"group": {
-		"title": "Sample Survey",
-		"text": "This survey contains samples to show how text and values in FHIR Questionnaires translate to ResearchKit surveys",
-		"group": [
-			{
-				"question": [
-					{
-						"linkId": "valText",
-						"text": "Plain Text Entry",
-						"type": "string"
-					},
-					{
-						"linkId": "valInteger",
-						"text": "Which integer is your favorite?",
-						"type": "integer",
-						"required": false
-					},
-					{
-						"linkId": "valDecimal",
-						"text": "Please enter a decimal value",
-						"type": "decimal",
-						"required": true,
-					},
-					{
-						"linkId": "valQuantity",
-						"extension": [
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/questionnaire-units",
-								"valueString": "hours"
-							}
-						],
-						"text": "Quantity (hours)",
-						"type": "quantity"
-					}
-				]
-			},
-			{
-				"title": "On to Sliders",
-				"fhir_comments": "Adding a `title` or `title` to a group will add an instruction step",
-				"question": [
-					{
-						"linkId": "intSlider1",
-						"extension": [
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
-								"valueString": "This slider goes from 1 - 4 and renders horizontally"
-							},
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/minValue",
-								"valueInteger": 1
-							},
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/minValue",
-								"valueString": "The label describing the minumum value on the left label. Long text is wrapping"
-							},
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-								"valueInteger": 4
-							},
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-								"valueString": "The right label"
-							}
-						],
-						"text": "A Slider from 0 to 10",
-						"type": "integer"
-					},
-					{
-						"linkId": "intSlider2",
-						"extension": [
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
-								"valueString": "This slider goes from 0 - 10, renders vertically and pre-selects the value 8. All sliders with more than 5 steps will render vertically."
-							},
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/minValue",
-								"valueInteger": 0
-							},
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/minValue",
-								"valueString": "The minimum"
-							},
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-								"valueInteger": 10
-							},
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/maxValue",
-								"valueString": "A long label explaining what the maximum value means and why you might choose a high value"
-							},
-							{
-								"url": "http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue",
-								"valueInteger": 8
-							}
-						],
-						"text": "A Slider from 0 to 10",
-						"type": "integer"
-					}
-				]
-			},
-			{
-				"title": "Final Step",
-				"text": "Pressing “Done” will complete this survey."
-			}
-		]
-	}
+  "id": "example-question-text-and-values",
+  "resourceType": "Questionnaire",
+  "status": "draft",
+  "title": "This survey contains samples to show how text and values in FHIR Questionnaires translate to ResearchKit surveys",
+  "date": "2016-04-13",
+  "item": [
+    {
+      "type": "group",
+      "item": [
+        {
+          "linkId": "valText",
+          "text": "Plain Text Entry",
+          "type": "string"
+        },
+        {
+          "linkId": "valInteger",
+          "text": "Which integer is your favorite?",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "linkId": "valDecimal",
+          "text": "Please enter a decimal value",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "linkId": "valQuantity",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-units",
+              "valueString": "hours"
+            }
+          ],
+          "text": "Quantity (hours)",
+          "type": "quantity"
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "text": "On to Sliders",
+      "fhir_comments": "Adding a `title` or `title` to a group will add an instruction step",
+      "item": [
+        {
+          "linkId": "intSlider1",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+              "valueString": "This slider goes from 1 - 4 and renders horizontally"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+              "valueInteger": 1
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+              "valueString": "The label describing the minumum value on the left label. Long text is wrapping"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+              "valueInteger": 4
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+              "valueString": "The right label"
+            }
+          ],
+          "text": "A Slider from 0 to 10",
+          "type": "integer"
+        },
+        {
+          "linkId": "intSlider2",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+              "valueString": "This slider goes from 0 - 10, renders vertically and pre-selects the value 8. All sliders with more than 5 steps will render vertically."
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+              "valueInteger": 0
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/minValue",
+              "valueString": "The minimum"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+              "valueInteger": 10
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/maxValue",
+              "valueString": "A long label explaining what the maximum value means and why you might choose a high value"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue",
+              "valueInteger": 8
+            }
+          ],
+          "text": "A Slider from 0 to 10",
+          "type": "integer"
+        }
+      ]
+    },
+    {
+      "text": "Final Step",
+      "type": "display",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+          "valueString": "Pressing “Done” will complete this survey."
+        }
+      ]
+    }
+  ]
 }
