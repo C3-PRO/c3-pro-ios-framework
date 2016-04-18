@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-## 1.x (2016-03-24)
+## 1.0.1 (2016-04-18)
 
 - Updates to silence Swift 2.2 warnings ➔ now requires Xcode 7.3
 
