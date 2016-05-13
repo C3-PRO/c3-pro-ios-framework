@@ -101,11 +101,11 @@ public class EncryptedDataQueue: DataQueue {
 	
 	// MARK: - Requests
 	
-	public override func handlerForRequestOfType(type: FHIRRequestType, resource: Resource?) -> FHIRServerRequestHandler? {
+	public override func handlerForRequestOfType(type: FHIRRequestType, resource: Resource?, headers: FHIRRequestHeaders?) -> FHIRServerRequestHandler? {
 		if let resource = resource where nil == delegate || delegate!.encryptedDataQueue(self, wantsEncryptionForResource: resource, requestType: type) {
 			return EncryptedJSONRequestHandler(type, resource: resource, dataQueue: self)
 		}
-		return super.handlerForRequestOfType(type, resource: resource)
+		return super.handlerForRequestOfType(type, resource: resource, headers: headers)
 	}
 	
 	public override func absoluteURLForPath(path: String, handler: FHIRServerRequestHandler) -> NSURL? {
