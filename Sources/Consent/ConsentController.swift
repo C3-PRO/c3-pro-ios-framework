@@ -109,7 +109,7 @@ public class ConsentController {
 	public init(bundledContract: String? = nil) {
 		if let name = bundledContract {
 			do {
-				contract = try NSBundle.mainBundle().fhir_bundledResource(name) as? Contract
+				contract = try NSBundle.mainBundle().fhir_bundledResource(name, type: Contract.self)
 			}
 			catch let error {
 				c3_warn("failed to read bundled Contract resource: \(error)")
