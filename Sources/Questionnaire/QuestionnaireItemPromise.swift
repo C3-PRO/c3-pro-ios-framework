@@ -67,11 +67,12 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 		let (title, text) = item.c3_bestTitleAndText()
 		
 		// resolve answer format, THEN resolve sub-groups, if any
-		item.c3_asAnswerFormat() { format, berror in
+		item.c3_asAnswerFormat() { format, error in
 			var steps = [ORKStep]()
 			var errors = [ErrorType]()
 			var requirements = parentRequirements ?? [ResultRequirement]()
 			
+			// we know the answer format, create a conditional step
 			if let fmt = format {
 				let step = ConditionalQuestionStep(identifier: linkId, title: title, answer: fmt)
 				step.fhirType = self.item.type
@@ -93,12 +94,12 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				}
 				steps.append(step)
 			}
-			else if let error = berror {
+			else if let error = error {
 				errors.append(error)
 			}
 				
-			// no error and no answer format - must be "display" or "group" item!
-			else {
+			// no error and no answer format but title and text - must be "display" or "group" item that has something to show!
+			else if nil != title || nil != text {
 				let step = ConditionalInstructionStep(identifier: linkId, title: title, text: text)
 				steps.append(step)
 			}

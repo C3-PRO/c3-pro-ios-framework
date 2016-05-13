@@ -75,15 +75,13 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 		let promise = QuestionnaireItemPromise(item: topItem)
 		promise.fulfill(parentRequirements) { errors in
 			let identifier = self.questionnaire.id ?? (self.questionnaire.identifier?.first?.value ?? "questionnaire-task")
-			promise.fulfill(parentRequirements) { errors in
-				if let steps = promise.steps {
-					self.steps = steps
-					self.task = ConditionalOrderedTask(identifier: identifier, steps: steps)
-					callback(errors: errors)
-				}
-				else {
-					callback(errors: errors ?? [C3Error.QuestionnaireUnknownError])
-				}
+			if let steps = promise.steps {
+				self.steps = steps
+				self.task = ConditionalOrderedTask(identifier: identifier, steps: steps)
+				callback(errors: errors)
+			}
+			else {
+				callback(errors: errors ?? [C3Error.QuestionnaireUnknownError])
 			}
 		}
 	}

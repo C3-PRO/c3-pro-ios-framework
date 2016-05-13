@@ -49,6 +49,10 @@ class QuestionnaireChoiceTests: XCTestCase {
 				XCTAssertEqual(step2?.text, "And this is additional, very useful, instructional text.")
 				XCTAssertTrue(step2?.answerFormat is ORKBooleanAnswerFormat)
 				
+				let step3 = task?.stepWithIdentifier!("display-step") as? ConditionalInstructionStep
+				XCTAssertNotNil(step3, "Should have found step 3 and made it an instruction step")
+				XCTAssertEqual(step3?.text, "Pressing “Done” will complete this survey!")
+				
 				exp.fulfill()
 			}
 			self.waitForExpectationsWithTimeout(4, handler: nil)
@@ -96,6 +100,10 @@ class QuestionnaireChoiceTests: XCTestCase {
 				XCTAssertNotNil(step2, "Should have found step 2 and made it a conditional question step")
 				XCTAssertEqual(step2?.text, "And it has this additional instructional text.")
 				XCTAssertTrue(step2?.answerFormat is ORKBooleanAnswerFormat)
+				
+				let step3 = task?.stepWithIdentifier!("display-step") as? ConditionalInstructionStep
+				XCTAssertNotNil(step3, "Should have found step 3 and made it an instruction step")
+				XCTAssertEqual(step3?.text, "Pressing “Done” will complete this survey.")
 				
 				exp.fulfill()
 			}

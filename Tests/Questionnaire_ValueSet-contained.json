@@ -45,10 +45,11 @@
     {
       "text": "Final Step",
       "type": "display",
+      "linkId": "display-step",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
-          "valueString": "Pressing “Done” will complete this survey."
+          "valueString": "Pressing “Done” will complete this survey!"
         }
       ]
     }
