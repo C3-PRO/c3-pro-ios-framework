@@ -1,0 +1,27 @@
+{
+  "id": "SF36Answers3",
+  "resourceType": "ValueSet",
+  "compose": {
+    "include": [
+      {
+        "concept": [
+          {
+            "code": "1",
+            "display": "Yes, limited a lot"
+          },
+          {
+            "code": "2",
+            "display": "Yes, limited a little"
+          },
+          {
+            "code": "3",
+            "display": "No, not limited at all"
+          }
+        ],
+        "system": "http://sf-36.org/fhir/StructureDefinition/answers-3-levels"
+      }
+    ]
+  },
+  "name": "SF-36 Physical Functioning Subscale answers",
+  "status": "active"
+}

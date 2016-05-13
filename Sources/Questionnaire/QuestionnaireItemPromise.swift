@@ -93,8 +93,14 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				}
 				steps.append(step)
 			}
+			else if let error = berror {
+				errors.append(error)
+			}
+				
+			// no error and no answer format - must be "display" or "group" item!
 			else {
-				errors.append(berror ?? C3Error.QuestionnaireQuestionTypeUnknownToResearchKit(self.item))
+				let step = ConditionalInstructionStep(identifier: linkId, title: title, text: text)
+				steps.append(step)
 			}
 			
 			// do we have sub-groups?
@@ -216,8 +222,8 @@ extension QuestionnaireItem {
 		let link = linkId ?? "<nil>"
 		if let type = type {
 			switch type {
-			case "boolean":		callback(format: ORKAnswerFormat.booleanAnswerFormat(), error: nil)
-			case "decimal":		callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(nil), error: nil)
+			case "boolean":	  callback(format: ORKAnswerFormat.booleanAnswerFormat(), error: nil)
+			case "decimal":	  callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(nil), error: nil)
 			case "integer":
 				let minVals = c3_minValue()
 				let maxVals = c3_maxValue()
@@ -236,13 +242,13 @@ extension QuestionnaireItem {
 				else {
 					callback(format: ORKAnswerFormat.integerAnswerFormatWithUnit(nil), error: nil)
 				}
-			case "quantity":	callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(c3_numericAnswerUnit()), error: nil)
-			case "date":		callback(format: ORKAnswerFormat.dateAnswerFormat(), error: nil)
-			case "dateTime":	callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
-			case "instant":		callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
-			case "time":		callback(format: ORKAnswerFormat.timeOfDayAnswerFormat(), error: nil)
-			case "string":		callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
-			case "url":			callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
+			case "quantity":  callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(c3_numericAnswerUnit()), error: nil)
+			case "date":      callback(format: ORKAnswerFormat.dateAnswerFormat(), error: nil)
+			case "dateTime":  callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
+			case "instant":   callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
+			case "time":      callback(format: ORKAnswerFormat.timeOfDayAnswerFormat(), error: nil)
+			case "string":    callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
+			case "url":       callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
 			case "choice":
 				c3_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
@@ -263,6 +269,10 @@ extension QuestionnaireItem {
 				}
 			//case "attachment":	callback(format: nil, error: nil)
 			//case "reference":		callback(format: nil, error: nil)
+			case "display":
+				callback(format: nil, error: nil)
+			case "group":
+				callback(format: nil, error: nil)
 			default:
 				callback(format: nil, error: C3Error.QuestionnaireQuestionTypeUnknownToResearchKit(self))
 			}

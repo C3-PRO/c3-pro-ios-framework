@@ -1,0 +1,56 @@
+{
+  "id": "ValueSet-relative",
+  "resourceType": "Questionnaire",
+  "status": "draft",
+  "title": "This survey contains samples to show how choices in FHIR Questionnaires translate to ResearchKit surveys",
+  "date": "2016-05-13",
+  "item": [
+    {
+      "type": "group",
+      "item": [
+        {
+          "linkId": "choice-valueSet",
+          "options": {
+            "reference": "ValueSet/SF36"
+          },
+          "text": "A Limited Choice?",
+          "type": "choice",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+              "valueString": "A “choice” question with possible answers in a referenced ValueSet"
+            }
+          ]
+        },
+        {
+          "linkId": "choice-boolean",
+          "enableWhen": [
+            {
+              "question": "choice-valueSet",
+              "answerString": "http://sf-36.org/fhir/StructureDefinition/answers-3-levels#3"
+            }
+          ],
+          "required": true,
+          "text": "Unskippable Yes/No question",
+          "type": "boolean",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+              "valueString": "And it has this additional instructional text."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Final Step",
+      "type": "display",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+          "valueString": "Pressing “Done” will complete this survey."
+        }
+      ]
+    }
+  ]
+}

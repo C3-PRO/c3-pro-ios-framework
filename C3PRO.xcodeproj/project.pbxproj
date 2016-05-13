@@ -10,6 +10,10 @@
 		EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */; };
 		EE1AB3B71C23283100711108 /* HKHealthStore+Sampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1AB3B51C23283100711108 /* HKHealthStore+Sampling.swift */; };
 		EE1AB3BA1C23286200711108 /* HKQuantity+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1AB3B91C23286200711108 /* HKQuantity+FHIR.swift */; };
+		EE2A9D6D1CE5FB3E00FB2B4F /* QuestionnaireTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2A9D6C1CE5FB3E00FB2B4F /* QuestionnaireTests.swift */; };
+		EE2A9D7E1CE61F2500FB2B4F /* Questionnaire_ValueSet-contained.json in Resources */ = {isa = PBXBuildFile; fileRef = EE2A9D7B1CE61F2500FB2B4F /* Questionnaire_ValueSet-contained.json */; };
+		EE2A9D7F1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json in Resources */ = {isa = PBXBuildFile; fileRef = EE2A9D7C1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json */; };
+		EE2A9D801CE61F2500FB2B4F /* ValueSet_SF36.json in Resources */ = {isa = PBXBuildFile; fileRef = EE2A9D7D1CE61F2500FB2B4F /* ValueSet_SF36.json */; };
 		EE2D8DE51B87764200D044B4 /* EncryptedDataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */; };
 		EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */; };
 		EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */; };
@@ -170,6 +174,10 @@
 		EE1AB3B51C23283100711108 /* HKHealthStore+Sampling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HKHealthStore+Sampling.swift"; sourceTree = "<group>"; };
 		EE1AB3B61C23283100711108 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE1AB3B91C23286200711108 /* HKQuantity+FHIR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HKQuantity+FHIR.swift"; sourceTree = "<group>"; };
+		EE2A9D6C1CE5FB3E00FB2B4F /* QuestionnaireTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireTests.swift; sourceTree = "<group>"; };
+		EE2A9D7B1CE61F2500FB2B4F /* Questionnaire_ValueSet-contained.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Questionnaire_ValueSet-contained.json"; sourceTree = "<group>"; };
+		EE2A9D7C1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Questionnaire_ValueSet-relative.json"; sourceTree = "<group>"; };
+		EE2A9D7D1CE61F2500FB2B4F /* ValueSet_SF36.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ValueSet_SF36.json; sourceTree = "<group>"; };
 		EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncryptedDataQueue.swift; sourceTree = "<group>"; };
 		EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CryptoSwift.xcodeproj; path = CryptoSwift/CryptoSwift.xcodeproj; sourceTree = "<group>"; };
 		EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueueManager.swift; sourceTree = "<group>"; };
@@ -455,6 +463,7 @@
 			isa = PBXGroup;
 			children = (
 				EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */,
+				EE2A9D6C1CE5FB3E00FB2B4F /* QuestionnaireTests.swift */,
 				EEFA84CB1AE5C18B00E61006 /* Supporting Files */,
 			);
 			path = Tests;
@@ -463,6 +472,9 @@
 		EEFA84CB1AE5C18B00E61006 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				EE2A9D7B1CE61F2500FB2B4F /* Questionnaire_ValueSet-contained.json */,
+				EE2A9D7C1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json */,
+				EE2A9D7D1CE61F2500FB2B4F /* ValueSet_SF36.json */,
 				EEFA84CC1AE5C18B00E61006 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -673,6 +685,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE2A9D801CE61F2500FB2B4F /* ValueSet_SF36.json in Resources */,
+				EE2A9D7E1CE61F2500FB2B4F /* Questionnaire_ValueSet-contained.json in Resources */,
+				EE2A9D7F1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,6 +748,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EEFA84CE1AE5C18B00E61006 /* C3PROTests.swift in Sources */,
+				EE2A9D6D1CE5FB3E00FB2B4F /* QuestionnaireTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
