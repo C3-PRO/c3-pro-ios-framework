@@ -46,6 +46,9 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	/// Callback to be called when the questionnaire is cancelled (error = nil) or finishes with an error.
 	public final var whenCancelledOrFailed: ((viewController: ORKTaskViewController, error: ErrorType?) -> Void)?
 	
+	/// The logger to use, if any.
+	public var logger: OAuth2Logger?
+	
 	
 	/**
 	Designated initializer.
@@ -66,6 +69,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	*/
 	func prepareQuestionnaire(callback: ((task: ORKTask?, error: ErrorType?) -> Void)) {
 		if let questionnaire = questionnaire {
+			logger?.trace("C3-PRO", msg: "Fulfilling promise for \(questionnaire)")
 			let promise = QuestionnairePromise(questionnaire: questionnaire)
 			promise.fulfill(nil) { errors in
 				dispatch_async(dispatch_get_main_queue()) {
@@ -76,12 +80,14 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 					
 					if let tsk = promise.task {
 						if let errors = multiErrors {
-							c3_logIfDebug("Successfully prepared questionnaire but encountered errors:\n\(errors)")
+							self.logger?.debug("C3-PRO", msg: "Successfully prepared questionnaire but encountered errors:\n\(errors)")
 						}
+						self.logger?.trace("C3-PRO", msg: "Promise for \(questionnaire) fulfilled")
 						callback(task: tsk, error: multiErrors)
 					}
 					else {
 						let err = multiErrors ?? C3Error.QuestionnaireUnknownError
+						self.logger?.trace("C3-PRO", msg: "Promise for \(questionnaire) fulfilled with error \(err)")
 						callback(task: nil, error: err)
 					}
 				}

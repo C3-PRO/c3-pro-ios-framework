@@ -97,6 +97,9 @@ public class ConsentController {
 	/// Whether a PIN was present before; if not and consenting is cancelled, the PIN is cleared.
 	internal private(set) var pinPresentBefore = false
 	
+	/// The logger to use, if any.
+	public var logger: OAuth2Logger?
+	
 	
 	/**
 	Designated initializer.
@@ -218,7 +221,7 @@ public class ConsentController {
 			}
 		}
 		else {
-			c3_logIfDebug("the contract does not have a subject, hence no eligibility criteria")
+			logger?.debug("C3-PRO", msg: "the contract does not have a subject, hence no eligibility criteria")
 			callback(requirements: nil)
 		}
 	}
@@ -405,12 +408,12 @@ public class ConsentController {
 	- parameter withSignature: The signature to apply to the document
 	*/
 	func signConsentDocument(document: ORKConsentDocument, withSignature signature: ORKConsentSignatureResult) {
-		c3_logIfDebug("Writing consent PDF")
+		logger?.debug("C3-PRO", msg: "Writing consent PDF")
 		signature.applyToDocument(document)
 		document.makePDFWithCompletionHandler() { data, error in
 			if let data = data, let pdfURL = self.dynamicType.signedConsentPDFURL() {
 				data.writeToURL(pdfURL, atomically: true)
-				c3_logIfDebug("Consent PDF written to \(pdfURL)")
+				self.logger?.debug("C3-PRO", msg: "Consent PDF written to \(pdfURL)")
 			}
 			else {
 				c3_warn("failed to write consent PDF: \(error?.localizedDescription ?? (nil == data ? "no data" : "no url"))")
