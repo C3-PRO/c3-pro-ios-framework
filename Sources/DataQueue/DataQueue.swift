@@ -32,6 +32,13 @@ public class DataQueue: Server {
 	/// The manager for the data queue
 	var queueManager: DataQueueManager!
 	
+	override public var logger: OAuth2Logger? {
+		didSet {
+			super.logger = logger
+			queueManager.logger = logger
+		}
+	}
+	
 	
 	public required init(baseURL: NSURL, auth: OAuth2JSON?) {
 		super.init(baseURL: baseURL, auth: auth)

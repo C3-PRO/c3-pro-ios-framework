@@ -33,7 +33,11 @@ class DataQueueManager {
 	/// The file extension, likely "json".
 	static var fileExtension = "json"
 	
+	/// The Server instance we'll be talking to.
 	unowned let server: Server
+	
+	/// The logger to use, if any.
+	var logger: OAuth2Logger?
 	
 	/// The absolute path to the receiver's queue directory; individual per the receiver's host.
 	let queueDirectory: String
@@ -42,11 +46,12 @@ class DataQueueManager {
 		server = fhirServer
 		queueDirectory = directory
 		#if DEBUG
+		let logger = OAuth2DebugLogger(.Trace)
 		let manager = NSFileManager()
 		if let iterator = manager.enumeratorAtPath(queueDirectory) {
-			c3_logIfDebug("-->  Initialized data queue at «\(queueDirectory)»")
+			logger.trace("C3-PRO", msg: "Initialized data queue at «\(queueDirectory)»")
 			for item in iterator {
-				c3_logIfDebug("--->  Waiting: \(item)")
+				logger.trace("C3-PRO", msg: "Waiting: \(item)")
 			}
 		}
 		#endif
@@ -112,7 +117,7 @@ class DataQueueManager {
 			}
 		}
 		catch let error {
-			c3_logIfDebug("Failed to read current queue: \(error)")
+			logger?.debug("C3-PRO", msg: "Failed to read current queue: \(error)")
 		}
 		
 		return (nil != myMin) ? (min: myMin!, max: myMax!) : nil
@@ -138,10 +143,10 @@ class DataQueueManager {
 		do {
 			let data = try NSJSONSerialization.dataWithJSONObject(resource.asJSON(), options: [])
 			try data.writeToFile(path, options: fileProtection)
-			c3_logIfDebug("Enqueued resource at \(path)")
+			logger?.debug("C3-PRO", msg: "Enqueued resource at \(path)")
 		}
 		catch let error {
-			c3_logIfDebug("Failed to serialize or enqueue JSON: \(error)")
+			logger?.debug("C3-PRO", msg: "Failed to serialize or enqueue JSON: \(error)")
 		}
 	}
 	
@@ -186,7 +191,7 @@ class DataQueueManager {
 		}
 		
 		if let first = firstInQueue() {
-			c3_logIfDebug("Dequeueing first in queue: \(first.path)")
+			logger?.debug("C3-PRO", msg: "Dequeueing first in queue: \(first.path)")
 			do {
 				try first.readFromFile()
 				currentlyDequeueing = first
@@ -243,7 +248,7 @@ class DataQueueManager {
 			if manager.isReadableFileAtPath(path) {
 				return QueuedResource(path: path)
 			}
-			c3_logIfDebug("Have file in queue but it is not readable, waiting for next call")
+			logger?.debug("C3-PRO", msg: "Have file in queue but it is not readable, waiting for next call")
 		}
 		return nil
 	}
