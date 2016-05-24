@@ -62,7 +62,8 @@ public class AESUtility {
 	- returns: Encryped data representation
 	*/
 	public func encrypt(data: NSData) throws -> NSData {
-		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
+		let iv = [UInt8](count: AES.blockSize, repeatedValue: 0)  // specify default iv to prevent bug #261 in CryptoSwift 0.4.1
+		let aes = try AES(key: symmetricKey, iv: iv)              // this only fails if keySize is wrong
 		let enc = try aes.encrypt(data.arrayOfBytes())
 		return NSData.withBytes(enc)
 	}
