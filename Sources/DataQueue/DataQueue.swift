@@ -35,7 +35,7 @@ public class DataQueue: Server {
 	override public var logger: OAuth2Logger? {
 		didSet {
 			super.logger = logger
-			queueManager.logger = logger
+			queueManager?.logger = logger
 		}
 	}
 	
@@ -46,6 +46,7 @@ public class DataQueue: Server {
 		if let host = baseURL.host {
 			let full = ((dir as NSString).stringByAppendingPathComponent("DataQueue") as NSString).stringByAppendingPathComponent(host)
 			queueManager = DataQueueManager(fhirServer: self, directory: full)
+			queueManager.logger = logger
 		}
 		else {
 			fatalError("DataQueue: Cannot initialize without host in baseURL")

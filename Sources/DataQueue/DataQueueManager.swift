@@ -45,16 +45,19 @@ class DataQueueManager {
 	init(fhirServer: Server, directory: String) {
 		server = fhirServer
 		queueDirectory = directory
-		#if DEBUG
-		let logger = OAuth2DebugLogger(.Trace)
-		let manager = NSFileManager()
-		if let iterator = manager.enumeratorAtPath(queueDirectory) {
-			logger.trace("C3-PRO", msg: "Initialized data queue at «\(queueDirectory)»")
-			for item in iterator {
-				logger.trace("C3-PRO", msg: "Waiting: \(item)")
+		
+		if let logger = server.logger where logger.level <= .Trace {
+			let manager = NSFileManager()
+			if let iterator = manager.enumeratorAtPath(queueDirectory) {
+				logger.trace("C3-PRO", msg: "Initialized data queue at «\(queueDirectory)»")
+				for item in iterator {
+					logger.trace("C3-PRO", msg: "Waiting: \(item)")
+				}
 			}
 		}
-		#endif
+		else {
+			server.logger?.debug("C3-PRO", msg: "Initialized data queue at «\(queueDirectory)»")
+		}
 	}
 	
 	
