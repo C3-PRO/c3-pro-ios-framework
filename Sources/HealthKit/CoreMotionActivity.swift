@@ -1,0 +1,80 @@
+//
+//  CoreMotionActivity.swift
+//  C3PRO
+//
+//  Created by Pascal Pfiffner on 25/05/16.
+//  Copyright © 2016 University Hospital Zurich. All rights reserved.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
+import CoreMotion
+
+
+/**
+Bitmask for core motion activity types, mapping directly to what's available in CMMotionActivity.
+*/
+public struct CoreMotionActivityType: OptionSetType {
+	public let rawValue: Int
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
+	}
+	
+	static let Unknown    = CoreMotionActivityType(rawValue: 0)
+	static let Stationary = CoreMotionActivityType(rawValue: 1 << 0)
+	static let Automotive = CoreMotionActivityType(rawValue: 1 << 1)
+	static let Walking    = CoreMotionActivityType(rawValue: 1 << 2)
+	static let Running    = CoreMotionActivityType(rawValue: 1 << 3)
+	static let Cycling    = CoreMotionActivityType(rawValue: 1 << 4)
+}
+
+
+/**
+Representing a CMMotionActivity
+*/
+public class CoreMotionActivity {
+	
+	var type: CoreMotionActivityType
+	
+	var startDate: NSDate
+	
+	var confidence: Int
+	
+	public init(activity: CMMotionActivity) {
+		var typ: CoreMotionActivityType = .Unknown
+		if activity.stationary {
+			typ.insert(.Stationary)
+			typ.remove(.Unknown)
+		}
+		if activity.automotive {
+			typ.insert(.Automotive)
+			typ.remove(.Unknown)
+		}
+		if activity.walking {
+			typ.insert(.Walking)
+			typ.remove(.Unknown)
+		}
+		if activity.running {
+			typ.insert(.Running)
+			typ.remove(.Unknown)
+		}
+		if activity.cycling {
+			typ.insert(.Cycling)
+			typ.remove(.Unknown)
+		}
+		type = typ
+		startDate = activity.startDate
+		confidence = activity.confidence.rawValue
+	}
+}
+

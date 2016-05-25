@@ -1,3 +1,9 @@
+HealthKit & CoreMotion
+======================
+
+
+
+
 HealthKit Extensions
 ====================
 
@@ -11,6 +17,7 @@ Extensions for _HealthKit_ classes for convenience.
 #### OUT
 - `Quantity` FHIR resource.
 - `HKQuantity` instance(s) queried from `HKHealthStore`.
+
 
 HKHealthStore
 -------------
