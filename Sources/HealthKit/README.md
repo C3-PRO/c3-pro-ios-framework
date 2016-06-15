@@ -1,7 +1,10 @@
 HealthKit & CoreMotion
 ======================
 
+Activity data interesting for research is available from two places from iOS: **HealthKit** and **CoreMotion**.
 
+This module provides facilities to easily retrieve data from HealthKit, but more importantly helps persisting CoreMotion activity data beyond the 7 day OS default.
+See below for details.
 
 
 HealthKit Extensions
@@ -79,4 +82,71 @@ Extensions to `HKQuantitySample`, `HKQuantity` and `HKQuantityType` to ease work
 - `HKQuantitySample.c3_asFHIRQuantity()` returns a FHIR _Quantity_ (or throws)
 - `HKQuantity.c3_asFHIRQuantityInUnit(HKUnit)` returns a FHIR _Quantity_ (or throws)
 - `HKQuantityType.c3_preferredUnit()` returns the preferred HKUnit for the type
+
+
+CoreMotion
+==========
+
+_CoreMotion_ continuously attempts to determine what the user is currently doing, and creates a _CMMotionActivity_ object whenever the activity type changes.
+Those instances can indicate one or more (!) of the following activity _types_:
+
+- stationary
+- automotive
+- walking
+- running
+- cycling
+
+In addition, they indicate their _confidence_ in the assessment as low, medium or high.
+
+These instances can be queried and the OS stores them for up to 7 days.
+This module stores these activities to a local SQLite database in a compact format so you have access to more than 7 days of activity data since using your app.
+
+### Module Interface
+
+#### IN
+- persists _CMMotionActivity_ to SQLite
+
+#### OUT
+- `xx`
+
+
+CoreMotionReporter
+------------------
+
+- `archiveActivities(callback:)`: archive all activities that occurred since last sampling (if any) and dump to the database
+- `xx`: read activity data from the SQLite database
+
+### Archiving
+
+Even if you expect your users to use your app at least once per week, you probably want to have iOS wake your app periodically so you can persist motion activity to SQLite.
+Do do this we can abuse the _background fetch_ background mode of iOS:
+
+- Enable the _“Background Fetch”_ background mode in your app capabilities
+- Set the minimum fetch interval to `UIApplicationBackgroundFetchIntervalMinimum` in `application:didFinishLaunchingWithOptions:`.
+- Properly implement `application:performFetchWithCompletionHandler:`, so:
+
+```swift
+func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    ...
+    application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+    ...
+}
+
+func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+    let reporter = CoreMotionReporter(path: <# database path #>)
+    reporter.archiveActivities { numNewActivities, error in
+        if let _ = error {
+            completionHandler(.Failed)
+        }
+        else {
+            completionHandler(numNewActivities > 0 ? .NewData : .NoData)
+        }
+    }
+}
+```
+
+You can also call `archiveActivities(callback:)` after the user launches the app.
+The method will only query for new activities since the last archived activity.
+
+### Reporting
 

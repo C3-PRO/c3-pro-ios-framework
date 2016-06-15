@@ -23,9 +23,12 @@ import CoreMotion
 import SMART
 
 
-
+/**
+Dumps latest activity data from CoreMotion to a SQLite database and returns previously archived activity data.
+*/
 public class CoreMotionReporter {
 	
+	/// The filesystem path to the database.
 	public let databaseLocation: String
 	
 	var _connection: Connection?
@@ -33,11 +36,21 @@ public class CoreMotionReporter {
 	lazy var motionManager = CMMotionActivityManager()
 	
 	
+	/**
+	Designated initializer.
+	
+	- parameter path: The filesystem path to the SQLite database
+	*/
 	public init(path: String) {
 		databaseLocation = path
 	}
 	
 	
+	// MARK: - Archiving
+	
+	/**
+	Returns the SQLite connection object to use.
+	*/
 	func connection() throws -> Connection {
 		if let db = _connection {
 			return db
@@ -64,7 +77,7 @@ public class CoreMotionReporter {
 	
 	- parameter callback: The callback to call when done, with an error if something happened, nil otherwise. Called on the main queue
 	*/
-	public func archiveActivities(callback: ((error: ErrorType?) -> Void)) {
+	public func archiveActivities(callback: ((numNewActivities: Int, error: ErrorType?) -> Void)) {
 		do {
 			let db = try connection()
 			let activities = Table("activities")
@@ -90,7 +103,7 @@ public class CoreMotionReporter {
 			if let latest = latest where (now.timeIntervalSinceReferenceDate - latest.timeIntervalSinceReferenceDate) < 30*60 {
 				c3_logIfDebug("Latest activity was sampled \(latest), not archiving again")
 				c3_performOnMainQueue() {
-					callback(error: nil)
+					callback(numNewActivities: 0, error: nil)
 				}
 				return
 			}
@@ -98,11 +111,11 @@ public class CoreMotionReporter {
 			// collect activities and store to database
 			collectActivitiesStartingOn(latest) { samples, collError in
 				if let error = collError {
-					callback(error: error)
+					callback(numNewActivities: 0, error: error)
 					return
 				}
 				if 0 == samples.count {
-					callback(error: nil)
+					callback(numNewActivities: 0, error: nil)
 					return
 				}
 				
@@ -119,13 +132,13 @@ public class CoreMotionReporter {
 							}
 							print("\(NSDate()) ARCHIVER done inserting")
 						}
-						dispatch_async(dispatch_get_main_queue()) {
-							callback(error: nil)
+						c3_performOnMainQueue() {
+							callback(numNewActivities: samples.count, error: nil)
 						}
 					}
 					catch let error {
 						c3_performOnMainQueue() {
-							callback(error: error)
+							callback(numNewActivities: 0, error: error)
 						}
 					}
 				}
@@ -133,7 +146,7 @@ public class CoreMotionReporter {
 		}
 		catch let error {
 			c3_performOnMainQueue() {
-				callback(error: error)
+				callback(numNewActivities: 0, error: error)
 			}
 		}
 	}
@@ -146,7 +159,7 @@ public class CoreMotionReporter {
 	- parameter start:    The NSDate at which to start sampling, up until now
 	- parameter callback: The callback to call when sampling completes. Will execute on the main queue
 	*/
-	public func collectActivitiesStartingOn(start: NSDate?, callback: ((data: [CoreMotionActivity], error: ErrorType?) -> Void)) {
+	func collectActivitiesStartingOn(start: NSDate?, callback: ((data: [CoreMotionActivity], error: ErrorType?) -> Void)) {
 		let collectorQueue = NSOperationQueue()
 		var begin = start ?? NSDate()
 		if nil == start {
