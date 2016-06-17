@@ -321,8 +321,8 @@
 				EE1AB3B91C23286200711108 /* HKQuantity+FHIR.swift */,
 				EEAA40901CF58CDD008FBC4B /* CoreMotionReporter.swift */,
 				EEAA40981CF5CD19008FBC4B /* CoreMotionActivity.swift */,
-				EEAA3FCB1CF4A735008FBC4B /* ActivityData.swift */,
 				EEAA3FC91CF4A35B008FBC4B /* MotionActivity.swift */,
+				EEAA3FCB1CF4A735008FBC4B /* ActivityData.swift */,
 			);
 			name = "HealthKit & CoreMotion";
 			path = Sources/HealthKit;

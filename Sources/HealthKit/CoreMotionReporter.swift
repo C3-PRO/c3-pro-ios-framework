@@ -26,7 +26,7 @@ import SMART
 /**
 Dumps latest activity data from CoreMotion to a SQLite database and returns previously archived activity data.
 */
-public class CoreMotionReporter {
+public class CoreMotionReporter: CoreMotionActivityProcessor {
 	
 	/// The filesystem path to the database.
 	public let databaseLocation: String
@@ -46,7 +46,7 @@ public class CoreMotionReporter {
 	}
 	
 	
-	// MARK: - Archiving
+	// MARK: - SQLite
 	
 	/**
 	Returns the SQLite connection object to use.
@@ -59,13 +59,17 @@ public class CoreMotionReporter {
 		do {
 			let attrs = try fm.attributesOfItemAtPath(databaseLocation) as NSDictionary
 			let size = attrs.fileSize()
-			c3_logIfDebug("ARCHIVER database is already \(size / 1024) KB large")
+			c3_logIfDebug("ARCHIVER database is \(size / 1024) KB")
 //			try? fm.removeItemAtPath(databaseLocation)
 		}
 		catch {  }
 		_connection = try Connection(databaseLocation)
 		return _connection!
 	}
+	
+	
+	
+	// MARK: - Archiving
 	
 	
 	/**
@@ -75,9 +79,11 @@ public class CoreMotionReporter {
 	possible, using NSDate's `timeIntervalSinceReferenceDate` to store the date which also serves as primary key. In my setup, iPhone 6S
 	plus Apple Watch, this amounts to 420 KB of data for a week.
 	
+	- parameter processor: A `CoreMotionActivityProcessor` instance to handle CMMotionActivity processing (not interpretation!) before the
+	                       callback returns; uses self if none is provided
 	- parameter callback: The callback to call when done, with an error if something happened, nil otherwise. Called on the main queue
 	*/
-	public func archiveActivities(callback: ((numNewActivities: Int, error: ErrorType?) -> Void)) {
+	public func archiveActivities(processor: CoreMotionActivityProcessor? = nil, callback: ((numNewActivities: Int, error: ErrorType?) -> Void)) {
 		do {
 			let db = try connection()
 			let activities = Table("activities")
@@ -100,7 +106,7 @@ public class CoreMotionReporter {
 				latest = NSDate(timeIntervalSinceReferenceDate: row[start])
 			}
 			
-			if let latest = latest where (now.timeIntervalSinceReferenceDate - latest.timeIntervalSinceReferenceDate) < 30*60 {
+			if let latest = latest where (now.timeIntervalSinceReferenceDate - latest.timeIntervalSinceReferenceDate) < 2*60 {
 				c3_logIfDebug("Latest activity was sampled \(latest), not archiving again")
 				c3_performOnMainQueue() {
 					callback(numNewActivities: 0, error: nil)
@@ -109,7 +115,7 @@ public class CoreMotionReporter {
 			}
 			
 			// collect activities and store to database
-			collectActivitiesStartingOn(latest) { samples, collError in
+			collectActivitiesStartingOn(latest, processor: processor ?? self) { samples, collError in
 				if let error = collError {
 					callback(numNewActivities: 0, error: error)
 					return
@@ -125,10 +131,10 @@ public class CoreMotionReporter {
 						try db.transaction() {
 							print("\(NSDate()) ARCHIVER inserting \(samples.count) samples")
 							for sample in samples {
-								try db.run(activities.insert(
-									start <- sample.startDate.timeIntervalSinceReferenceDate,
+								try db.run(activities.insert(or: .Ignore,    // UNIQUE constraint on `start` may fail, which we want to ignore
+									start <- round(sample.startDate.timeIntervalSinceReferenceDate * 10) / 10,
 									activity <- Int64(sample.type.rawValue),
-									confidence <- Int64(sample.confidence)))
+									confidence <- Int64(sample.confidence.rawValue)))
 							}
 							print("\(NSDate()) ARCHIVER done inserting")
 						}
@@ -153,13 +159,18 @@ public class CoreMotionReporter {
 	
 	/**
 	Sample CMMotionActivityManager for activities from the given start date up until now. If no start date is given, starts sampling 15 days
-	back, which is useless since there's at max 7 days of activity data available (as of iOS 9). But who knows, maybe it gets bumped one
+	back, which is useless since there's at max 7 days of activity data available (as of iOS 9). But who knows, maybe it gets bumped up one
 	day.
 	
+	There is a bit of processing happening, rather than raw instances being returned, in the receiver's
+	`preprocessMotionActivities(activities:)` implementation.
+	
 	- parameter start:    The NSDate at which to start sampling, up until now
+	- parameter processor: A `CoreMotionActivityProcessor` instance to handle CMMotionActivity processing (not interpretation!) before the
+	                       callback returns
 	- parameter callback: The callback to call when sampling completes. Will execute on the main queue
 	*/
-	func collectActivitiesStartingOn(start: NSDate?, callback: ((data: [CoreMotionActivity], error: ErrorType?) -> Void)) {
+	func collectActivitiesStartingOn(start: NSDate?, processor: CoreMotionActivityProcessor, callback: ((data: [CoreMotionActivity], error: ErrorType?) -> Void)) {
 		let collectorQueue = NSOperationQueue()
 		var begin = start ?? NSDate()
 		if nil == start {
@@ -167,27 +178,78 @@ public class CoreMotionReporter {
 		}
 		motionManager.queryActivityStartingFromDate(begin, toDate: NSDate(), toQueue: collectorQueue) { activities, error in
 			if let activities = activities {
-				var samples = [CoreMotionActivity]()
-				for activity in activities {
-					samples.append(CoreMotionActivity(activity: activity))
-				}
+				let samples = self.preprocessMotionActivities(activities)
 				c3_performOnMainQueue() {
 					callback(data: samples, error: nil)
 				}
 			}
 			else if let error = error where CMErrorDomain != error.domain && 104 != error.code {   // CMErrorDomain error 104 means "no data available"
-				print("No activity data received with error: \(error ?? "no error")")
+				c3_logIfDebug("No activity data received with error: \(error ?? "no error")")
 				c3_performOnMainQueue() {
 					callback(data: [], error: error)
 				}
 			}
 			else {
-				print("No activity data received")
+				c3_logIfDebug("No activity data received")
 				c3_performOnMainQueue() {
 					callback(data: [], error: nil)
 				}
 			}
 		}
 	}
+	
+	
+	// MARK: - CoreMotionActivityProcessor
+	
+	/**
+	Preprocesses raw motion activities before they are dumped to SQLite:
+	
+	1. all unknown activities are discarded
+	2. adjacent activities with same type(s), ignoring their confidence, are joined together and the highest confidence is retained
+	3. adjacent "automotive" activities are joined even if they have additional types (typically "stationary"); highest confidence is
+	   retained and their types are union-ed
+	
+	- parameter activities: The activities to preprocess
+	- returns: Preprocessed and packaged motion activities
+	*/
+	public func preprocessMotionActivities(activities: [CMMotionActivity]) -> [CoreMotionActivity] {
+		var samples = [CoreMotionActivity]()
+		for cmactivity in activities {
+			let activity = CoreMotionActivity(activity: cmactivity)
+			
+			// 1: skip unknown activities
+			if !activity.type.isSubsetOf(.Unknown) {
+				
+				// 2: join same activities
+				if let prev = samples.last where prev.type.isSubsetOf(activity.type) && activity.type.isSubsetOf(prev.type) {
+					prev.confidence = max(prev.confidence, activity.confidence)
+				}
+					
+					// 3: join automotive activities
+				else if let prev = samples.last where prev.type.contains(.Automotive) && activity.type.contains(.Automotive) {
+					prev.type = prev.type.union(activity.type)
+					prev.confidence = max(prev.confidence, activity.confidence)
+				}
+				else {
+					samples.append(activity)
+				}
+			}
+		}
+		return samples
+	}
+}
+
+
+public protocol CoreMotionActivityProcessor {
+	
+	/**
+	This method must be implemented and should do lightweight preprocessing of raw CMMotionActivity, as returned from
+	CMMotionActivityManager, and pack them into CoreMotionActivity instances. The returned array is expected to contain all activities
+	in order, oldest to newest.
+	
+	- parameter activities: The activities to preprocess
+	- returns: Preprocessed and packaged motion activities
+	*/
+	func preprocessMotionActivities(activities: [CMMotionActivity]) -> [CoreMotionActivity]
 }
 

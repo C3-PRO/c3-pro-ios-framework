@@ -258,7 +258,7 @@ public func c3_performOnMainQueue(block: (Void -> Void)) {
 /**
 Prints the given message to stdout if `DEBUG` is defined and true. Prepends filename, line number and method/function name.
 */
-func c3_logIfDebug(@autoclosure message: () -> String, function: String = #function, file: NSString = #file, line: Int = #line) {
+public func c3_logIfDebug(@autoclosure message: () -> String, function: String = #function, file: NSString = #file, line: Int = #line) {
 	#if DEBUG
 		print("[\(file.lastPathComponent):\(line)] \(function)  \(message())")
 	#endif

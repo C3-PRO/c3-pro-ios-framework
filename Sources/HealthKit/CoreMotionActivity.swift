@@ -30,25 +30,40 @@ public struct CoreMotionActivityType: OptionSetType {
 		self.rawValue = rawValue
 	}
 	
-	static let Unknown    = CoreMotionActivityType(rawValue: 0)
-	static let Stationary = CoreMotionActivityType(rawValue: 1 << 0)
-	static let Automotive = CoreMotionActivityType(rawValue: 1 << 1)
-	static let Walking    = CoreMotionActivityType(rawValue: 1 << 2)
-	static let Running    = CoreMotionActivityType(rawValue: 1 << 3)
-	static let Cycling    = CoreMotionActivityType(rawValue: 1 << 4)
+	/// None of the activity types or "unknown" was set to true.
+	static let Unknown    = CoreMotionActivityType(rawValue: 1 << 0)
+	
+	/// The activitiy's "stationary" flag was on.
+	static let Stationary = CoreMotionActivityType(rawValue: 1 << 1)
+	
+	/// The activitiy's "automotive" flag was on.
+	static let Automotive = CoreMotionActivityType(rawValue: 1 << 2)
+	
+	/// The activitiy's "walking" flag was on.
+	static let Walking    = CoreMotionActivityType(rawValue: 1 << 3)
+	
+	/// The activitiy's "running" flag was on.
+	static let Running    = CoreMotionActivityType(rawValue: 1 << 4)
+	
+	/// The activitiy's "cyclinc" flag was on. Remember WWDC14, this is likely only correct when phone is worn on the arm.
+	static let Cycling    = CoreMotionActivityType(rawValue: 1 << 5)
 }
 
 
 /**
-Representing a CMMotionActivity
+Class representing a CMMotionActivity.
 */
 public class CoreMotionActivity {
 	
-	var type: CoreMotionActivityType
+	/// The type(s) the activity represented.
+	public var type: CoreMotionActivityType
 	
-	var startDate: NSDate
+	/// When the receiver started.
+	public var startDate: NSDate
 	
-	var confidence: Int
+	/// The confidence in the activity determination.
+	public var confidence: CMMotionActivityConfidence
+	
 	
 	public init(activity: CMMotionActivity) {
 		var typ: CoreMotionActivityType = .Unknown
@@ -74,7 +89,19 @@ public class CoreMotionActivity {
 		}
 		type = typ
 		startDate = activity.startDate
-		confidence = activity.confidence.rawValue
+		confidence = activity.confidence
 	}
+}
+
+
+extension CMMotionActivityConfidence: Equatable {}
+public func ==(lhs: CMMotionActivityConfidence, rhs: CMMotionActivityConfidence) -> Bool {
+	return lhs.rawValue == rhs.rawValue
+}
+
+
+extension CMMotionActivityConfidence: Comparable {}
+public func <(lhs: CMMotionActivityConfidence, rhs: CMMotionActivityConfidence) -> Bool {
+	return lhs.rawValue < rhs.rawValue
 }
 
