@@ -68,8 +68,10 @@ Otherwise the group will be transparent, only its questions will show up.
 ### Choice and Bool Questions
 
 There's a small sample Questionnaire [examples/Questionnaire-choices.json](../../examples/Questionnaire-choices.json) that has a `choice` and some `boolean` type questions.
-Notice how you can skip questions 1 and 4 but not 2 and 3 in the sample questionnaire.
-It also uses the `enableWhen` extension to conditionally show the 3rd question based on the answer to the 2nd question.
+Notice how you can skip questions 1 and 2 but not 4 and 4 in the sample questionnaire.
+It also uses `item.enableWhen` to conditionally show the 3rd question based on the answer to the 2nd question.
+
+The respective response resource with sample answers is shown in [examples/QuestionnaireResponse-choices.json](../../examples/QuestionnaireResponse-choices.json).
 
 ### Text and Values, Slider for Integers
 

@@ -9,6 +9,7 @@ While in 1.0.2, questions were children of groups, these have been merged into `
 
 - `QuestionnaireGroup` -> `QuestionnaireItem`
 - `QuestionnaireGroupQuestion` -> `QuestionnaireItem`
+- `QuestionnaireGroupQuestion.extension (enable-when)` -> `QuestionnaireItem.enableWhen`
 - `QuestionnaireGroupPromise` -> `QuestionnaireItemPromise`
 - `C3Error.QuestionnaireInvalidNoTopLevel` -> `C3Error.QuestionnaireInvalidNoTopLevelItem`
 

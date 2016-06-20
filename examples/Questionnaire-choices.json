@@ -23,6 +23,21 @@
           ]
         },
         {
+          "linkId": "choice-valueSet-multi",
+          "options": {
+            "reference": "#insuranceNameOptions"
+          },
+          "text": "Multiple Choice",
+          "type": "choice",
+          "repeats": true,
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+              "valueString": "A “choice” question, with “repeats” true to allow multiple choice, possible answers in a referenced ValueSet"
+            }
+          ]
+        },
+        {
           "linkId": "choice-boolean-1",
           "required": true,
           "text": "Skip the Last Question?",
@@ -85,6 +100,49 @@
         ]
       },
       "name": "SF-36 Physical Functioning Subscale answers",
+      "status": "active"
+    },
+    {
+      "id": "insuranceNameOptions",
+      "resourceType": "ValueSet",
+      "compose": {
+        "include": [
+          {
+            "concept": [
+              {
+                "code": "medicare",
+                "display": "Medicare"
+              },
+              {
+                "code": "medicaid",
+                "display": "Medicaid"
+              },
+              {
+                "code": "aetna",
+                "display": "Aetna"
+              },
+              {
+                "code": "blue-cross-blue-shield",
+                "display": "Blue Cross Blue Shield"
+              },
+              {
+                "code": "cigna",
+                "display": "Cigna"
+              },
+              {
+                "code": "humana",
+                "display": "Humana"
+              },
+              {
+                "code": "other",
+                "display": "Other"
+              }
+            ],
+            "system": "http://c3-pro.chip.org/fhir/ValueSet/insurance"
+          }
+        ]
+      },
+      "name": "Known insurance institutions",
       "status": "active"
     }
   ]
