@@ -130,6 +130,9 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 	/// The given question should provide choices but there are none.
 	case QuestionnaireNoChoicesInChoiceQuestion(QuestionnaireItem)
 	
+	/// The 'item.enableWhen' property is incomplete.
+	case QuestionnaireEnableWhenIncomplete(String)
+	
 	/// The questionnaire finished with an error (i.e. was not completed).
 	case QuestionnaireFinishedWithError
 	
@@ -220,6 +223,8 @@ public enum C3Error: ErrorType, CustomStringConvertible {
 			return "Failed to map question type “\(question.type ?? "<nil>")” to ResearchKit answer format [linkId: \(question.linkId ?? "<nil>")]"
 		case .QuestionnaireNoChoicesInChoiceQuestion(let question):
 			return "There are no choices in question “\(question.text ?? "")” [linkId: \(question.linkId ?? "<nil>")]"
+		case .QuestionnaireEnableWhenIncomplete(let reason):
+			return "item.enableWhen is incomplete: \(reason)"
 		case .QuestionnaireFinishedWithError:
 			return "Unknown error finishing questionnaire"
 		case .QuestionnaireUnknownError:

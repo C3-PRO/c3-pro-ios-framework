@@ -287,8 +287,8 @@ extension QuestionnaireItem {
 	/**
 	For `choice` type questions, retrieves the possible answers and returns them as ORKTextChoice in the callback.
 	
-	The `value` property of the text choice is a combination of the coding system URL and the code, separated by a space. If no system URL
-	is provided, "https://fhir.smalthealthit.org" is used.
+	The `value` property of the text choice is a combination of the coding system URL and the code, separated by
+	`kORKTextChoiceSystemSeparator` (a space). If no system URL is provided, "https://fhir.smalthealthit.org" is used.
 	*/
 	func c3_resolveAnswerChoices(callback: ((choices: [ORKTextChoice]?, error: ErrorType?) -> Void)) {
 		options?.resolve(ValueSet.self) { valueSet in
@@ -305,30 +305,22 @@ extension QuestionnaireItem {
 				}
 			}
 			
-			// valueset defines its own concepts (this is gone in FHIR 1.4 in favor of a `CodeSystem` resource, which is not (yet?) on questionnaire)
-//			else if let options = valueSet?.codeSystem?.concept {
-//				let system = valueSet?.codeSystem?.system?.absoluteString ?? kORKTextChoiceDefaultSystem
-//				for option in options {
-//					let code = option.code ?? kORKTextChoiceMissingCodeCode			// code is a required property, so SHOULD always be present
-//					let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-//					let text = ORKTextChoice(text: option.display ?? code, value: value)
-//					choices.append(text)
-//				}
-//			}
-			
-			// valueset includes codes
-			else if let options = valueSet?.compose?.include {		// TODO: also support `import`
-				for option in options {
-					let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem	// system is a required property
-					if let concepts = option.concept {
-						for concept in concepts {
-							let code = concept.code ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
-							let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-							let text = ORKTextChoice(text: concept.display ?? code, value: value)
-							choices.append(text)
+			// valueset includes or defines codes
+			else if let compose = valueSet?.compose {
+				if let options = compose.include {
+					for option in options {
+						let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem	// system is a required property
+						if let concepts = option.concept {
+							for concept in concepts {
+								let code = concept.code ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
+								let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
+								let text = ORKTextChoice(text: concept.display ?? code, value: value)
+								choices.append(text)
+							}
 						}
 					}
 				}
+				// TODO: also support `import`
 			}
 			
 			// all done
