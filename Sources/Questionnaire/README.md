@@ -67,18 +67,18 @@ Otherwise the group will be transparent, only its questions will show up.
 
 ### Choice and Bool Questions
 
-There's a small sample Questionnaire [examples/Questionnaire-choices.json](../../examples/Questionnaire-choices.json) that has a `choice` and some `boolean` type questions.
+There's a small sample Questionnaire [examples/Questionnaire/Questionnaire-choices.json](../../examples/Questionnaire/Questionnaire-choices.json) that has a `choice` and some `boolean` type questions.
 A _choice_ question becomes a _multiple choice_ question when its `repeats` flag is set to true.
 You can use the `max-occurs` extension to limit the number of choices.
 
 Notice how you can skip questions 1 and 2 but not 4 and 4 in the sample questionnaire.
 The sample also uses `item.enableWhen` to conditionally show the 4th question based on the answer to the 3rd question.
 
-The respective response resource with sample answers is shown in [examples/QuestionnaireResponse-choices.json](../../examples/QuestionnaireResponse-choices.json).
+The respective response resource with sample answers is shown in [examples/QuestionnaireResponse/QuestionnaireResponse-choices.json](../../examples/QuestionnaireResponse/QuestionnaireResponse-choices.json).
 
 ### Text and Values, Slider for Integers
 
-The [examples/Questionnaire-textvalue.json](../../examples/Questionnaire-textvalue.json) example contains samples for textual and numerical input.
+The [examples/Questionnaire/Questionnaire-textvalues.json](../../examples/Questionnaire/Questionnaire-textvalues.json) example contains samples for textual and numerical input.
 
 The following will show the title “FHIR Likening”, a smaller instruction text and a slider going from 0-10, with 8 pre-selected.
 Sliders with more than 5 steps will render vertically instead of horizontally.
@@ -120,5 +120,5 @@ If no default value is specified, the minimum value will be pre-selected.
 
 ### Date and Time
 
-The [examples/Questionnaire-dates.json](../../examples/Questionnaire-dates.json) example contains samples for date and time input.
+The [examples/Questionnaire/Questionnaire-dates.json](../../examples/Questionnaire/Questionnaire-dates.json) example contains samples for date and time input.
 
