@@ -67,13 +67,13 @@ Otherwise the group will be transparent, only its questions will show up.
 
 ### Choice and Bool Questions
 
-There's a small sample Questionnaire [examples/Questionnaire-choices.json](../../examples/Questionnaire-choices.json) that has a `choice` and some `boolean` type questions.
+There's a small sample Questionnaire [Questionnaire-choices.json](../../examples/Questionnaire/Questionnaire-choices.json) that has a `choice` and some `boolean` type questions.
 Notice how you can skip questions 1 and 4 but not 2 and 3 in the sample questionnaire.
 It also uses the `enableWhen` extension to conditionally show the 3rd question based on the answer to the 2nd question.
 
 ### Text and Values, Slider for Integers
 
-The [examples/Questionnaire-textvalue.json](../../examples/Questionnaire-textvalue.json) example contains samples for textual and numerical input.
+The [Questionnaire-textvalues.json](../../examples/Questionnaire/Questionnaire-textvalues.json) example contains samples for textual and numerical input.
 
 The following will show the title “FHIR Likening”, a smaller instruction text and a slider going from 0-10, with 8 pre-selected.
 Sliders with more than 5 steps will render vertically instead of horizontally.
@@ -115,5 +115,5 @@ If no default value is specified, the minimum value will be pre-selected.
 
 ### Date and Time
 
-The [examples/Questionnaire-dates.json](../../examples/Questionnaire-dates.json) example contains samples for date and time input.
+The [Questionnaire-dates.json](../../examples/Questionnaire/Questionnaire-dates.json) example contains samples for date and time input.
 
