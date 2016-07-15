@@ -1,5 +1,5 @@
 //
-//  ActivityData.swift
+//  ActivityReportPeriod.swift
 //  C3PRO
 //
 //  Created by Pascal Pfiffner on 24/05/16.
@@ -22,29 +22,22 @@ import SMART
 import HealthKit
 
 
-public class ActivityData: CustomStringConvertible {
+public class ActivityReportPeriod: CustomStringConvertible {
 	
+	/// The reporting period.
 	public let period: Period
 	
+	/// A human-friendly description of the period.
 	public var humanPeriod: String?
 	
+	/// How many days the period contains.
 	public var numberOfDays: Int?
 	
-	public var quantitySamples: [HKQuantitySample]?
+	/// Samples describing activities for the reporting period as reported by HealthKit.
+	public var healthKitSamples: [HKQuantitySample]?
 	
-	public var activityDurations: [MotionActivityDuration]? {
-		didSet {
-			// sort
-			if let durations = activityDurations {
-				self.activityDurations = durations.sort {
-					$0.preferredPosition < $1.preferredPosition
-				}
-			}
-			nonUnknownActivityDurations = activityDurations?.filter() { $0.type != .Unknown }
-		}
-	}
-	
-	public internal(set) var nonUnknownActivityDurations: [MotionActivityDuration]?
+	/// Activities in the reporting period as determined by CoreMotion.
+	public var coreMotionActivities: [CoreMotionActivitySum]?
 	
 	
 	public init(period: Period) {
@@ -55,7 +48,7 @@ public class ActivityData: CustomStringConvertible {
 	// MARK: - FHIR Representations
 	
 	public func samplesAsResponse() -> [QuestionnaireResponseGroupQuestion] {
-		guard let samples = quantitySamples else {
+		guard let samples = healthKitSamples else {
 			return []
 		}
 		var questions = [QuestionnaireResponseGroupQuestion]()
@@ -72,7 +65,7 @@ public class ActivityData: CustomStringConvertible {
 	}
 	
 	public func durationsAsResponse() -> [QuestionnaireResponseGroupQuestion] {
-		guard let durations = activityDurations else {
+		guard let durations = coreMotionActivities else {
 			return []
 		}
 		var questions = [QuestionnaireResponseGroupQuestion]()
@@ -81,7 +74,7 @@ public class ActivityData: CustomStringConvertible {
 			let answer = QuestionnaireResponseGroupQuestionAnswer(json: nil)
 			answer.valueQuantity = duration.duration
 			let question = QuestionnaireResponseGroupQuestion(json: nil)
-			question.linkId = "motion-coprocessor.\(duration.identifier)"
+			question.linkId = "motion-coprocessor.\(duration.type.rawValue)"
 			question.answer = [answer]
 			questions.append(question)
 		}
@@ -109,7 +102,7 @@ public class ActivityData: CustomStringConvertible {
 	// MARK: - Custom String Convertible
 	
 	public var description: String {
-		return "<\(String(self.dynamicType)): \(unsafeAddressOf(self))> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")"
+		return "<\(String(self.dynamicType)) \(unsafeAddressOf(self))> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")"
 	}
 }
 

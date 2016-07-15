@@ -15,6 +15,11 @@
 		EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */; };
 		EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */; };
 		EE5931771AEAD9AF00A7C5E1 /* SMART.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE5931701AEAD93F00A7C5E1 /* SMART.framework */; };
+		EE59D4A81D3911DD00DB37F6 /* HealthKitReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4A71D3911DD00DB37F6 /* HealthKitReporter.swift */; };
+		EE59D4B31D39132E00DB37F6 /* ActivityReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4B21D39132E00DB37F6 /* ActivityReporter.swift */; };
+		EE59D4B51D391E9D00DB37F6 /* CoreMotionActivityInterpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4B41D391E9D00DB37F6 /* CoreMotionActivityInterpreter.swift */; };
+		EE59D4B71D391F6200DB37F6 /* ActivityReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4B61D391F6200DB37F6 /* ActivityReport.swift */; };
+		EE59D4B91D39321F00DB37F6 /* ActivityCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4B81D39321F00DB37F6 /* ActivityCollector.swift */; };
 		EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */; };
 		EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */; };
 		EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7A43921B0D08DE00B30D17 /* ConsentController.swift */; };
@@ -30,8 +35,8 @@
 		EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */; };
 		EEA5CF191BEA5B5A00A6D4C9 /* ConsentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */; };
 		EEA85BEA1C624482009FFBB7 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE32BDFE1B8396A100024E7A /* CryptoSwift.framework */; };
-		EEAA3FCA1CF4A35B008FBC4B /* MotionActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAA3FC91CF4A35B008FBC4B /* MotionActivity.swift */; };
-		EEAA3FCC1CF4A735008FBC4B /* ActivityData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAA3FCB1CF4A735008FBC4B /* ActivityData.swift */; };
+		EEAA3FCA1CF4A35B008FBC4B /* InterpretedCoreMotionActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAA3FC91CF4A35B008FBC4B /* InterpretedCoreMotionActivity.swift */; };
+		EEAA3FCC1CF4A735008FBC4B /* ActivityReportPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAA3FCB1CF4A735008FBC4B /* ActivityReportPeriod.swift */; };
 		EEAA404B1CF58C14008FBC4B /* Blob.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAA400C1CF58C14008FBC4B /* Blob.swift */; };
 		EEAA404C1CF58C14008FBC4B /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAA400D1CF58C14008FBC4B /* Connection.swift */; };
 		EEAA404D1CF58C14008FBC4B /* fts3_tokenizer.h in Headers */ = {isa = PBXBuildFile; fileRef = EEAA400E1CF58C14008FBC4B /* fts3_tokenizer.h */; };
@@ -205,6 +210,11 @@
 		EE519BA41B0CD4A500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE519BA61B0CD6C500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftSMART.xcodeproj; path = "Swift-SMART/SwiftSMART.xcodeproj"; sourceTree = "<group>"; };
+		EE59D4A71D3911DD00DB37F6 /* HealthKitReporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitReporter.swift; sourceTree = "<group>"; };
+		EE59D4B21D39132E00DB37F6 /* ActivityReporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityReporter.swift; sourceTree = "<group>"; };
+		EE59D4B41D391E9D00DB37F6 /* CoreMotionActivityInterpreter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreMotionActivityInterpreter.swift; sourceTree = "<group>"; };
+		EE59D4B61D391F6200DB37F6 /* ActivityReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityReport.swift; sourceTree = "<group>"; };
+		EE59D4B81D39321F00DB37F6 /* ActivityCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityCollector.swift; sourceTree = "<group>"; };
 		EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueue.swift; sourceTree = "<group>"; };
 		EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueuedResource.swift; sourceTree = "<group>"; };
 		EE5F4F7E1B18E2B100DB38B3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -221,8 +231,8 @@
 		EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentTask.swift; sourceTree = "<group>"; };
 		EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContractExtensions.swift; sourceTree = "<group>"; };
 		EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentResult.swift; sourceTree = "<group>"; };
-		EEAA3FC91CF4A35B008FBC4B /* MotionActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionActivity.swift; sourceTree = "<group>"; };
-		EEAA3FCB1CF4A735008FBC4B /* ActivityData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityData.swift; sourceTree = "<group>"; };
+		EEAA3FC91CF4A35B008FBC4B /* InterpretedCoreMotionActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterpretedCoreMotionActivity.swift; sourceTree = "<group>"; };
+		EEAA3FCB1CF4A735008FBC4B /* ActivityReportPeriod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityReportPeriod.swift; sourceTree = "<group>"; };
 		EEAA40001CF58C14008FBC4B /* CONTRIBUTING.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		EEAA40021CF58C14008FBC4B /* Index.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Index.md; sourceTree = "<group>"; };
 		EEAA40031CF58C14008FBC4B /* Planning.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Planning.md; sourceTree = "<group>"; };
@@ -319,10 +329,15 @@
 				EE1AB3B61C23283100711108 /* README.md */,
 				EE1AB3B51C23283100711108 /* HKHealthStore+Sampling.swift */,
 				EE1AB3B91C23286200711108 /* HKQuantity+FHIR.swift */,
+				EE59D4B21D39132E00DB37F6 /* ActivityReporter.swift */,
+				EE59D4B81D39321F00DB37F6 /* ActivityCollector.swift */,
+				EE59D4A71D3911DD00DB37F6 /* HealthKitReporter.swift */,
 				EEAA40901CF58CDD008FBC4B /* CoreMotionReporter.swift */,
+				EE59D4B41D391E9D00DB37F6 /* CoreMotionActivityInterpreter.swift */,
 				EEAA40981CF5CD19008FBC4B /* CoreMotionActivity.swift */,
-				EEAA3FC91CF4A35B008FBC4B /* MotionActivity.swift */,
-				EEAA3FCB1CF4A735008FBC4B /* ActivityData.swift */,
+				EEAA3FC91CF4A35B008FBC4B /* InterpretedCoreMotionActivity.swift */,
+				EEAA3FCB1CF4A735008FBC4B /* ActivityReportPeriod.swift */,
+				EE59D4B61D391F6200DB37F6 /* ActivityReport.swift */,
 			);
 			name = "HealthKit & CoreMotion";
 			path = Sources/HealthKit;
@@ -837,7 +852,8 @@
 				EE1AB3BA1C23286200711108 /* HKQuantity+FHIR.swift in Sources */,
 				EEAA404B1CF58C14008FBC4B /* Blob.swift in Sources */,
 				EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */,
-				EEAA3FCC1CF4A735008FBC4B /* ActivityData.swift in Sources */,
+				EE59D4B31D39132E00DB37F6 /* ActivityReporter.swift in Sources */,
+				EEAA3FCC1CF4A735008FBC4B /* ActivityReportPeriod.swift in Sources */,
 				EEEA7F481BD61EA20089BF85 /* StudyIntroCollectionViewController.swift in Sources */,
 				EEAA405C1CF58C14008FBC4B /* Expression.swift in Sources */,
 				EEC3C95D1B83D3C80096D5BE /* RSAUtility.swift in Sources */,
@@ -865,7 +881,9 @@
 				EEEA7FCB1BD784FA0089BF85 /* WebViewController.swift in Sources */,
 				EEAA405D1CF58C14008FBC4B /* Operators.swift in Sources */,
 				EEAA405E1CF58C14008FBC4B /* Query.swift in Sources */,
+				EE59D4A81D3911DD00DB37F6 /* HealthKitReporter.swift in Sources */,
 				EEAA40911CF58CDD008FBC4B /* CoreMotionReporter.swift in Sources */,
+				EE59D4B91D39321F00DB37F6 /* ActivityCollector.swift in Sources */,
 				EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */,
 				EE86C4801C49327D00B7D486 /* SystemPermissionStepViewController.swift in Sources */,
 				EEEEAB891BDA97EE001F8B5C /* GroupExtensions.swift in Sources */,
@@ -883,11 +901,12 @@
 				EEEA7F691BD68E800089BF85 /* C3Error.swift in Sources */,
 				EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */,
 				EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */,
-				EEAA3FCA1CF4A35B008FBC4B /* MotionActivity.swift in Sources */,
+				EEAA3FCA1CF4A35B008FBC4B /* InterpretedCoreMotionActivity.swift in Sources */,
 				EEAA405A1CF58C14008FBC4B /* CoreFunctions.swift in Sources */,
 				EEA5CF191BEA5B5A00A6D4C9 /* ConsentResult.swift in Sources */,
 				EEAA40531CF58C14008FBC4B /* R*Tree.swift in Sources */,
 				EEE60CD31C68999E00F381B7 /* ConditionalStep.swift in Sources */,
+				EE59D4B71D391F6200DB37F6 /* ActivityReport.swift in Sources */,
 				EEFA84DA1AE5C25500E61006 /* QuestionnaireGroupPromise.swift in Sources */,
 				EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */,
 				EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */,
@@ -896,6 +915,7 @@
 				EEC6DC2B1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift in Sources */,
 				EEAA40591CF58C14008FBC4B /* Collation.swift in Sources */,
 				EEAA40511CF58C14008FBC4B /* Value.swift in Sources */,
+				EE59D4B51D391E9D00DB37F6 /* CoreMotionActivityInterpreter.swift in Sources */,
 				EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */,
 				EEEEAB801BDA9648001F8B5C /* EligibilityRequirement.swift in Sources */,
 			);

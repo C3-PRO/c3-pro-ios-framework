@@ -45,7 +45,7 @@ public struct CoreMotionActivityType: OptionSetType {
 	/// The activitiy's "running" flag was on.
 	static let Running    = CoreMotionActivityType(rawValue: 1 << 4)
 	
-	/// The activitiy's "cyclinc" flag was on. Remember WWDC14, this is likely only correct when phone is worn on the arm.
+	/// The activitiy's "cycling" flag was on. Remember WWDC14, this is likely only correct when phone is worn on the arm.
 	static let Cycling    = CoreMotionActivityType(rawValue: 1 << 5)
 }
 
@@ -65,7 +65,13 @@ public class CoreMotionActivity {
 	public var confidence: CMMotionActivityConfidence
 	
 	
-	public init(activity: CMMotionActivity) {
+	public init(start: NSDate, activity: CoreMotionActivityType, confidence inConfidence: CMMotionActivityConfidence) {
+		type = activity
+		startDate = start
+		confidence = inConfidence
+	}
+	
+	public convenience init(activity: CMMotionActivity) {
 		var typ: CoreMotionActivityType = .Unknown
 		if activity.stationary {
 			typ.insert(.Stationary)
@@ -87,9 +93,7 @@ public class CoreMotionActivity {
 			typ.insert(.Cycling)
 			typ.remove(.Unknown)
 		}
-		type = typ
-		startDate = activity.startDate
-		confidence = activity.confidence
+		self.init(start: activity.startDate, activity: typ, confidence: activity.confidence)
 	}
 }
 
