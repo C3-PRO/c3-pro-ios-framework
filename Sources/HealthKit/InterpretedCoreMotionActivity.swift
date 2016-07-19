@@ -98,7 +98,7 @@ public class InterpretedCoreMotionActivity: CoreMotionActivity {
 /**
 Contains information about activity duration of a given type.
 */
-public struct CoreMotionActivitySum {
+public struct CoreMotionActivitySum: CustomStringConvertible, CustomDebugStringConvertible {
 	
 	public let type: CoreMotionActivityInterpretation
 	
@@ -156,6 +156,17 @@ public struct CoreMotionActivitySum {
 			bright = 0.7
 		}
 		return (hue: hue, saturation: sat, brightness: bright)
+	}
+	
+	
+	// MARK: - String Convertible
+	
+	public var description: String {
+		return "<\(String(self.dynamicType))> “\(type.rawValue)” of \(duration.value ?? NSDecimalNumber.zero()) \(duration.unit ?? "")"
+	}
+	
+	public var debugDescription: String {
+		return description
 	}
 }
 

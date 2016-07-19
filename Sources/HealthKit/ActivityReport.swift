@@ -21,7 +21,7 @@
 import SMART
 
 
-public class ActivityReport {
+public class ActivityReport: CustomStringConvertible {
 	
 	public var count: Int {
 		return periods.count
@@ -35,9 +35,9 @@ public class ActivityReport {
 		return periods.last
 	}
 	
-	public internal(set) var periods: [ActivityReportPeriod] {
+	public internal(set) var periods: [ActivityReportPeriod] {		// TODO: hide and make sequence type
 		didSet {
-			periods.sortInPlace() { return $0.0.period.start > $0.1.period.start }
+			periods.sortInPlace() { return $0.0.period.start < $0.1.period.start }
 			period = Period(json: nil)
 			period.start = periods.first?.period.start
 			period.end = periods.last?.period.end
@@ -48,7 +48,7 @@ public class ActivityReport {
 	
 	
 	public init(periods: [ActivityReportPeriod]) {
-		self.periods = periods
+		self.periods = periods.sort() { return $0.0.period.start < $0.1.period.start }
 		period = Period(json: nil)
 		period.start = periods.first?.period.start
 		period.end = periods.last?.period.end
@@ -59,6 +59,13 @@ public class ActivityReport {
 			return periods[key]
 		}
 		return nil
+	}
+	
+	
+	// MARK: - Custom String Convertible
+	
+	public var description: String {
+		return "<\(String(self.dynamicType)) \(unsafeAddressOf(self))> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")"
 	}
 }
 

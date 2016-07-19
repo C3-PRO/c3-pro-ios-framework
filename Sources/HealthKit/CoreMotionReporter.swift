@@ -277,14 +277,14 @@ public class CoreMotionReporter: ActivityReporter, CoreMotionActivityInterpreter
 	*/
 	func report(forActivities activities: [InterpretedCoreMotionActivity]) -> ActivityReportPeriod {
 		let calendar = NSCalendar.currentCalendar()
-		var earliest = NSDate.distantFuture()
-		var latest = NSDate.distantPast()
+		var earliest: NSDate?
+		var latest: NSDate?
 		
 		// aggregate seconds
 		var periods = [CoreMotionActivityInterpretation: Int]()
 		for activity in activities {
-			earliest = (activity.startDate.compare(earliest) == .OrderedAscending) ? activity.startDate : earliest
-			latest = (activity.endDate.compare(latest) == .OrderedAscending) ? latest : activity.endDate
+			earliest = (nil == earliest || activity.startDate.compare(earliest!) == .OrderedAscending) ? activity.startDate : earliest
+			latest = (nil == latest || activity.endDate.compare(latest!) == .OrderedDescending) ? activity.endDate : latest
 			
 			let baseSecs = periods[activity.interpretation] ?? 0
 			let newSecs = calendar.components(.Second, fromDate: activity.startDate, toDate: activity.endDate, options: []).second
@@ -300,8 +300,8 @@ public class CoreMotionReporter: ActivityReporter, CoreMotionActivityInterpreter
 		}
 		
 		let period = Period(json: nil)
-		period.start = earliest.fhir_asDateTime()
-		period.end = latest.fhir_asDateTime()
+		period.start = earliest?.fhir_asDateTime()
+		period.end = latest?.fhir_asDateTime()
 		let data = ActivityReportPeriod(period: period)
 		data.coreMotionActivities = durations
 		

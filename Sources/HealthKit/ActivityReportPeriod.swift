@@ -22,7 +22,7 @@ import SMART
 import HealthKit
 
 
-public class ActivityReportPeriod: CustomStringConvertible {
+public class ActivityReportPeriod: CustomStringConvertible, CustomDebugStringConvertible {
 	
 	/// The reporting period.
 	public let period: Period
@@ -103,6 +103,10 @@ public class ActivityReportPeriod: CustomStringConvertible {
 	
 	public var description: String {
 		return "<\(String(self.dynamicType)) \(unsafeAddressOf(self))> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")"
+	}
+	
+	public var debugDescription: String {
+		return "<\(String(self.dynamicType)) \(unsafeAddressOf(self))> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")\n- samples: \(healthKitSamples ?? [])\n- motion: \(coreMotionActivities ?? [])"
 	}
 }
 
