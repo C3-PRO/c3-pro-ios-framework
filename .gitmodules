@@ -7,6 +7,9 @@
 [submodule "CryptoSwift"]
 	path = CryptoSwift
 	url = https://github.com/krzyzanowskim/CryptoSwift.git
+[submodule "SQLiteSwift"]
+	path = SQLiteSwift
+	url = https://github.com/p2/SQLite.swift.git
 [submodule "examples"]
 	path = examples
 	url = https://github.com/C3-PRO/c3-pro-sample-data.git
