@@ -25,16 +25,25 @@ import SMART
 /**
 Class that uses both `HealthKitReporter` and `CoreMotionReporter` to retrieve activity data from both stores.
 */
-public class ActivityCollector {
+public class ActivityCollector: ActivityReporter {
 	
 	var hkReporter: HealthKitReporter?
 	
 	var cmReporter: CoreMotionReporter?
 	
-	let cmPath: String
+	/// Path to the CoreMotionReporter local data store; you usually place this in ~/Library.
+	public let cmPath: String
 	
-	let cmInterpreter: CoreMotionActivityInterpreter?
+	/// The CoreMotionActivityInterpreter to use to interpret core motion activity sampled by the receiver.
+	public let cmInterpreter: CoreMotionActivityInterpreter?
 	
+	
+	/**
+	Designated initializer.
+	
+	- parameter coreMotionDBPath: The path to the local CoreMotion database, as used by `CoreMotionReporter`
+	- parameter coreMotionInterpreter: The core motion activity interpreter to use; uses `CoreMotionReporter` itself if nil
+	*/
 	public init(coreMotionDBPath: String, coreMotionInterpreter: CoreMotionActivityInterpreter?) {
 		cmPath = coreMotionDBPath
 		cmInterpreter = coreMotionInterpreter
@@ -43,18 +52,31 @@ public class ActivityCollector {
 	
 	// MARK: - Activity Resource Reporting
 	
+	/**
+	Creates a `QuestionnaireResponse` resource containing all activities of the past x days.
+	
+	- parameter ofLastDays: The number of days before today to start on
+	- parameter callback:   The callback to call when all activities are retrieved
+	*/
 	public func resourceForAllActivity(ofLastDays days: Int = 7, callback: ((resource: QuestionnaireResponse?, error: ErrorType?) -> Void)) {
 		let end = NSDate()
 		let comps = NSDateComponents()
 		comps.day = -1 * days
 		let start = NSCalendar.currentCalendar().dateByAddingComponents(comps, toDate: end, options: [])!
-		resourceForAllActivity(startingAt: start, end: end, callback: callback)
+		resourceForAllActivity(startingAt: start, until: end, callback: callback)
 	}
 	
-	public func resourceForAllActivity(startingAt start: NSDate, end: NSDate, callback: ((resource: QuestionnaireResponse?, error: ErrorType?) -> Void)) {
-		reportForActivityPeriod(startingAt: start, until: end) { report, error in
+	/**
+	Creates a `QuestionnaireResponse` resource for all activity that was reported in the given period.
+	
+	- parameter startingAt: The start date
+	- parameter until:      The end date
+	- parameter callback:   The callback to call when all activities are retrieved
+	*/
+	public func resourceForAllActivity(startingAt start: NSDate, until: NSDate, callback: ((resource: QuestionnaireResponse?, error: ErrorType?) -> Void)) {
+		reportForActivityPeriod(startingAt: start, until: until) { report, error in
 			do {
-				let answer = try report.asQuestionnaireResponse("org.chip.c3-pro.activity")
+				let answer = try report?.asQuestionnaireResponse("org.chip.c3-pro.activity")
 				callback(resource: answer, error: error)
 			}
 			catch let error {
@@ -67,7 +89,14 @@ public class ActivityCollector {
 	
 	// MARK: - Reporting
 	
-	public func reportForActivityPeriod(startingAt start: NSDate, until: NSDate, callback: ((report: ActivityReportPeriod, error: ErrorType?) -> Void)) {
+	/**
+	Collect activities from HealthKit and CoreMotion over the given period.
+	
+	- parameter startingAt: The start date
+	- parameter until:      The end date
+	- parameter callback:   The callback to call when all activities are retrieved
+	*/
+	public func reportForActivityPeriod(startingAt start: NSDate, until: NSDate, callback: ((period: ActivityReportPeriod?, error: ErrorType?) -> Void)) {
 		let queueGroup = dispatch_group_create()
 		var errors = [ErrorType]()
 		
@@ -104,11 +133,11 @@ public class ActivityCollector {
 		
 		// put both reports into one
 		dispatch_group_notify(queueGroup, dispatch_get_main_queue()) {
-			let report = ActivityReportPeriod(period: period)
-			report.coreMotionActivities = cmReport?.coreMotionActivities
-			report.healthKitSamples = hkReport?.healthKitSamples
+			let period = ActivityReportPeriod(period: period)
+			period.coreMotionActivities = cmReport?.coreMotionActivities
+			period.healthKitSamples = hkReport?.healthKitSamples
 			
-			callback(report: report, error: (errors.count > 0) ? C3Error.MultipleErrors(errors) : nil)
+			callback(period: period, error: (errors.count > 0) ? C3Error.MultipleErrors(errors) : nil)
 		}
 	}
 }

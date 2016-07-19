@@ -28,6 +28,7 @@ Convenience class querying HealthKit and CoreMotion for activity data.
 */
 public class HealthKitReporter: ActivityReporter {
 	
+	/// The health store used by the instance.
 	lazy var healthStore = HKHealthStore()
 	
 	
@@ -38,10 +39,10 @@ public class HealthKitReporter: ActivityReporter {
 	// MARK: - Convenience Methods
 	
 	/**
-	
+	Creates one `ActivityReportPeriod` instance containing summarized HKQuantitySample over the given period.
 	*/
 	public func reportForActivityPeriod(startingAt start: NSDate, until: NSDate, callback: ((period: ActivityReportPeriod?, error: ErrorType?) -> Void)) {
-		retrieveHealthKitActivityData(startingAt: start, until: until) { samples, error in
+		retrieveHealthKitActivitySummary(startingAt: start, until: until) { samples, error in
 			
 			// create the period
 			let period = Period(json: nil)
@@ -60,8 +61,9 @@ public class HealthKitReporter: ActivityReporter {
 	
 	/**
 	Samples activity data in HealthKit (steps, flights climbed and active energy) and returns one HKQuantitySample per type in a callback.
+	Uses `c3_summaryOfSamplesOfTypeBetween(type:start:end:)` on the receiver's HKHealthStore instance.
 	*/
-	public func retrieveHealthKitActivityData(startingAt start: NSDate, until: NSDate, callback: ((samples: [HKQuantitySample]?, error: ErrorType?) -> Void)) {
+	public func retrieveHealthKitActivitySummary(startingAt start: NSDate, until: NSDate, callback: ((samples: [HKQuantitySample]?, error: ErrorType?) -> Void)) {
 		if HKHealthStore.isHealthDataAvailable() {
 			let queueGroup = dispatch_group_create()
 			var quantities = [HKQuantitySample]()

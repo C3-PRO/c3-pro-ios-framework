@@ -20,6 +20,7 @@
 		EE59D4B51D391E9D00DB37F6 /* CoreMotionActivityInterpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4B41D391E9D00DB37F6 /* CoreMotionActivityInterpreter.swift */; };
 		EE59D4B71D391F6200DB37F6 /* ActivityReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4B61D391F6200DB37F6 /* ActivityReport.swift */; };
 		EE59D4B91D39321F00DB37F6 /* ActivityCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4B81D39321F00DB37F6 /* ActivityCollector.swift */; };
+		EE59D4BB1D3E0E9900DB37F6 /* CoreMotionActivitySum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4BA1D3E0E9900DB37F6 /* CoreMotionActivitySum.swift */; };
 		EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */; };
 		EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */; };
 		EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7A43921B0D08DE00B30D17 /* ConsentController.swift */; };
@@ -215,6 +216,7 @@
 		EE59D4B41D391E9D00DB37F6 /* CoreMotionActivityInterpreter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreMotionActivityInterpreter.swift; sourceTree = "<group>"; };
 		EE59D4B61D391F6200DB37F6 /* ActivityReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityReport.swift; sourceTree = "<group>"; };
 		EE59D4B81D39321F00DB37F6 /* ActivityCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityCollector.swift; sourceTree = "<group>"; };
+		EE59D4BA1D3E0E9900DB37F6 /* CoreMotionActivitySum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreMotionActivitySum.swift; sourceTree = "<group>"; };
 		EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueue.swift; sourceTree = "<group>"; };
 		EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueuedResource.swift; sourceTree = "<group>"; };
 		EE5F4F7E1B18E2B100DB38B3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -327,8 +329,6 @@
 			isa = PBXGroup;
 			children = (
 				EE1AB3B61C23283100711108 /* README.md */,
-				EE1AB3B51C23283100711108 /* HKHealthStore+Sampling.swift */,
-				EE1AB3B91C23286200711108 /* HKQuantity+FHIR.swift */,
 				EE59D4B21D39132E00DB37F6 /* ActivityReporter.swift */,
 				EE59D4B81D39321F00DB37F6 /* ActivityCollector.swift */,
 				EE59D4A71D3911DD00DB37F6 /* HealthKitReporter.swift */,
@@ -336,8 +336,11 @@
 				EE59D4B41D391E9D00DB37F6 /* CoreMotionActivityInterpreter.swift */,
 				EEAA40981CF5CD19008FBC4B /* CoreMotionActivity.swift */,
 				EEAA3FC91CF4A35B008FBC4B /* InterpretedCoreMotionActivity.swift */,
+				EE59D4BA1D3E0E9900DB37F6 /* CoreMotionActivitySum.swift */,
 				EEAA3FCB1CF4A735008FBC4B /* ActivityReportPeriod.swift */,
 				EE59D4B61D391F6200DB37F6 /* ActivityReport.swift */,
+				EE1AB3B51C23283100711108 /* HKHealthStore+Sampling.swift */,
+				EE1AB3B91C23286200711108 /* HKQuantity+FHIR.swift */,
 			);
 			name = "HealthKit & CoreMotion";
 			path = Sources/HealthKit;
@@ -886,6 +889,7 @@
 				EE59D4B91D39321F00DB37F6 /* ActivityCollector.swift in Sources */,
 				EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */,
 				EE86C4801C49327D00B7D486 /* SystemPermissionStepViewController.swift in Sources */,
+				EE59D4BB1D3E0E9900DB37F6 /* CoreMotionActivitySum.swift in Sources */,
 				EEEEAB891BDA97EE001F8B5C /* GroupExtensions.swift in Sources */,
 				EEFA84DC1AE5C25500E61006 /* QuestionnaireQuestionPromise.swift in Sources */,
 				EE1AB3B71C23283100711108 /* HKHealthStore+Sampling.swift in Sources */,

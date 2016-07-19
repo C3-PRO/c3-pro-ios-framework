@@ -1,5 +1,5 @@
 //
-//  MotionActivity.swift
+//  InterpretedCoreMotionActivity.swift
 //  C3PRO
 //
 //  Created by Pascal Pfiffner on 24/05/16.
@@ -20,10 +20,11 @@
 
 import Foundation
 import CoreMotion
-import SMART
 
 
-
+/**
+Interpretation of core motion activity, as derived from looking at activities over time.
+*/
 public enum CoreMotionActivityInterpretation: String {
 	case Unknown = "unknown"
 	
@@ -93,81 +94,4 @@ public class InterpretedCoreMotionActivity: CoreMotionActivity {
 		self.init(start: startDate, activity: activity, confidence: confidence, end: endDate)
 	}
 }
-
-
-/**
-Contains information about activity duration of a given type.
-*/
-public struct CoreMotionActivitySum: CustomStringConvertible, CustomDebugStringConvertible {
-	
-	public let type: CoreMotionActivityInterpretation
-	
-	public let duration: Duration
-	
-	public init(type: CoreMotionActivityInterpretation, duration: Duration) {
-		self.type = type
-		self.duration = duration
-	}
-	
-	
-	// MARK: - Helper
-	
-	public var preferredPosition: Int {
-		switch type {
-		case .Sleeping:
-			return 0
-		case .Stationary:
-			return 4
-		case .Automotive:
-			return 10
-		case .Walking:
-			return 100
-		case .Running:
-			return 120
-		case .Cycling:
-			return 200
-		case .Unknown:
-			return 999
-		}
-	}
-	
-	public func preferredColorComponentsHSB() -> (hue: Float, saturation: Float, brightness: Float) {
-		var hue: Float = 0.0
-		var sat: Float = 0.7
-		var bright: Float = 0.94
-		switch type {
-		case .Sleeping:
-			hue = 0.0
-			sat = 0.0
-			bright = 0.85
-		case .Stationary:
-			hue = 0.54
-		case .Automotive:
-			hue = 0.61
-		case .Walking:
-			hue = 0.4
-		case .Running:
-			hue = 0.04
-		case .Cycling:
-			hue = 0.1
-		case .Unknown:
-			hue = 0.0
-			sat = 0.0
-			bright = 0.7
-		}
-		return (hue: hue, saturation: sat, brightness: bright)
-	}
-	
-	
-	// MARK: - String Convertible
-	
-	public var description: String {
-		return "<\(String(self.dynamicType))> “\(type.rawValue)” of \(duration.value ?? NSDecimalNumber.zero()) \(duration.unit ?? "")"
-	}
-	
-	public var debugDescription: String {
-		return description
-	}
-}
-
 

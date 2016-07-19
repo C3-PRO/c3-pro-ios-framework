@@ -22,12 +22,28 @@ import Foundation
 import SMART
 
 
+/**
+Protocol to which activity reporters/collectors should adhere.
+*/
 public protocol ActivityReporter {
 	
+	/**
+	Retrieve activities performed between two given dates.
+	
+	- parameter startingAt: The start date
+	- parameter until:      The end date
+	- parameter callback:   The callback to call when all activities have been retrieved
+	*/
 	func reportForActivityPeriod(startingAt start: NSDate, until: NSDate, callback: ((period: ActivityReportPeriod?, error: ErrorType?) -> Void))
 	
+	/**
+	Retrieve activity data with progressively increasing time intervals (1 day -> 1 month) up until today.
+	
+	- parameter callback: The callback to call when all activities have been retrieved
+	*/
 	func progressivelyCollatedActivityData(callback: ((report: ActivityReport, error: ErrorType?) -> Void))
 }
+
 
 extension ActivityReporter {
 	
