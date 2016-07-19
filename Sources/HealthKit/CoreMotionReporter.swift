@@ -26,7 +26,7 @@ import SMART
 /**
 Dumps latest activity data from CoreMotion to a SQLite database and returns previously archived activity data.
 */
-public class CoreMotionReporter: ActivityReporter, CoreMotionActivityInterpreter {
+public class CoreMotionReporter: ActivityReporter {
 	
 	/// The filesystem path to the database.
 	public let databaseLocation: String
@@ -70,7 +70,7 @@ public class CoreMotionReporter: ActivityReporter, CoreMotionActivityInterpreter
 	plus Apple Watch, this amounts to 420 KB of data for a week.
 	
 	- parameter processor: A `CoreMotionActivityInterpreter` instance to handle CMMotionActivity processing (not interpretation!) before the
-	                       callback returns; uses self if none is provided
+	                       callback returns; uses an `CoreMotionStandardActivityInterpreter` instance if none is provided
 	- parameter callback:  The callback to call when done, with an error if something happened, nil otherwise. Called on the main queue
 	*/
 	public func archiveActivities(processor: CoreMotionActivityInterpreter? = nil, callback: ((numNewActivities: Int, error: ErrorType?) -> Void)) {
@@ -105,7 +105,8 @@ public class CoreMotionReporter: ActivityReporter, CoreMotionActivityInterpreter
 			}
 			
 			// collect activities and store to database
-			collectCoreMotionActivities(startingOn: latest, processor: processor ?? self) { samples, collError in
+			let processor = processor ?? CoreMotionStandardActivityInterpreter()
+			collectCoreMotionActivities(startingOn: latest, processor: processor) { samples, collError in
 				if let error = collError {
 					callback(numNewActivities: 0, error: error)
 					return
@@ -152,12 +153,12 @@ public class CoreMotionReporter: ActivityReporter, CoreMotionActivityInterpreter
 	back, which is useless since there's at max 7 days of activity data available (as of iOS 9). But who knows, maybe it gets bumped up one
 	day.
 	
-	There is a bit of processing happening, rather than raw instances being returned, in the receiver's
-	`preprocess(activities:)` implementation.
+	There is a bit of processing happening, rather than raw instances being returned, in the receiver's `preprocess(activities:)`
+	implementation.
 	
 	- parameter startingOn: The NSDate at which to start sampling, up until now
-	- parameter processor:  A `CoreMotionActivityInterpreter` instance to handle CMMotionActivity processing (not interpretation!) before the
-	                        callback returns
+	- parameter processor:  A `CoreMotionActivityInterpreter` instance to handle CMMotionActivity preprocessing (not interpretation!) before
+	                        the callback returns
 	- parameter callback:   The callback to call when sampling completes. Will execute on the main queue
 	*/
 	func collectCoreMotionActivities(startingOn start: NSDate?, processor: CoreMotionActivityInterpreter, callback: ((data: [CoreMotionActivity], error: ErrorType?) -> Void)) {
@@ -168,7 +169,8 @@ public class CoreMotionReporter: ActivityReporter, CoreMotionActivityInterpreter
 		}
 		motionManager.queryActivityStartingFromDate(begin, toDate: NSDate(), toQueue: collectorQueue) { activities, error in
 			if let activities = activities {
-				let samples = self.preprocess(activities: activities)
+				let processor = processor ?? CoreMotionStandardActivityInterpreter()
+				let samples = processor.preprocess(activities: activities)
 				c3_performOnMainQueue() {
 					callback(data: samples, error: nil)
 				}
@@ -201,7 +203,7 @@ public class CoreMotionReporter: ActivityReporter, CoreMotionActivityInterpreter
 	
 	- parameter startingAt:  The start date
 	- parameter until:       The end date; uses "now" if nil
-	- parameter interpreter: The interpreter to use; uses self if nil
+	- parameter interpreter: The interpreter to use; uses a fresh instance of `CoreMotionStandardActivityInterpreter` if nil
 	- parameter callback:    The callback to call when all activities are retrieved and the interpreter has run
 	*/
 	public func reportForActivityPeriod(startingAt start: NSDate, until: NSDate? = nil, interpreter: CoreMotionActivityInterpreter? = nil, callback: ((report: ActivityReportPeriod?, error: ErrorType?) -> Void)) {
@@ -214,7 +216,8 @@ public class CoreMotionReporter: ActivityReporter, CoreMotionActivityInterpreter
 			// dispatch to background queue and call back on the main queue
 			dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
 				do {
-					let activities = try self.retrieveActivities(startingAt: start, until: endDate, interpreter: interpreter ?? self)
+					let interpreter = interpreter ?? CoreMotionStandardActivityInterpreter()
+					let activities = try self.retrieveActivities(startingAt: start, until: endDate, interpreter: interpreter)
 					let report = self.report(forActivities: activities)
 					c3_performOnMainQueue() {
 						callback(report: report, error: nil)
@@ -235,7 +238,7 @@ public class CoreMotionReporter: ActivityReporter, CoreMotionActivityInterpreter
 	
 	- parameter startingAt:  The start date
 	- parameter until:       The end date; uses "now" if nil
-	- parameter interpreter: The interpreter to use; uses self if nil
+	- parameter interpreter: The interpreter to use; uses a fresh instance of `CoreMotionStandardActivityInterpreter` if nil
 	*/
 	func retrieveActivities(startingAt start: NSDate, until: NSDate, interpreter: CoreMotionActivityInterpreter) throws -> [InterpretedCoreMotionActivity] {
 		let db = try self.connection()
@@ -306,164 +309,6 @@ public class CoreMotionReporter: ActivityReporter, CoreMotionActivityInterpreter
 		data.coreMotionActivities = durations
 		
 		return data
-	}
-	
-	
-	// MARK: - CoreMotionActivityInterpreter
-	
-	/**
-	Preprocesses raw motion activities before they are dumped to SQLite. See the Motion Tracking talk from WWDC14 for a detailed look at
-	how this stuff works: https://developer.apple.com/videos/play/wwdc2014/612/
-	
-	1. all unknown activities are discarded
-	2. adjacent activities with same type(s), ignoring their confidence, are joined together and the highest confidence is retained; this
-	   means that activities that had unknown activities interspersed are joined together and also span the time of the unknown period
-	3. adjacent "automotive" activities are joined even if they have additional types (typically "stationary"); highest confidence is
-	   retained and their types are union-ed
-	
-	- parameter activities: The activities to preprocess
-	- returns: Preprocessed and packaged motion activities
-	*/
-	public func preprocess(activities activities: [CMMotionActivity]) -> [CoreMotionActivity] {
-		var samples = [CoreMotionActivity]()
-		for cmactivity in activities {
-			let activity = CoreMotionActivity(activity: cmactivity)
-			if let processed = preprocessedMotionActivity(activity, followingAfter: samples.last) {
-				samples.append(processed)
-			}
-		}
-		return samples
-	}
-	
-	/**
-	Internal method to apply preprocessing both before archiving as well as for interpretation during retrieval.
-	
-	See `preprocess(activities:)` for the rules being applied.
-	
-	- parameter activity:       The activity to evaluate
-	- parameter followingAfter: The activity preceding `activity`, if any - may be modified
-	- returns:                  An interpreted activity to be collected by the caller; if nil is returned the activity has been filtered
-	*/
-	func preprocessedMotionActivity<T: CoreMotionActivity>(activity: T, followingAfter prev: T?) -> T? {
-		
-		// 1: skip unknown activities (skip if "unknown" = true (known unknown) as well as those without any true state (unknown unknown))
-		if !activity.type.isSubsetOf(.Unknown) {
-			
-			// 2: join same activities
-			if let prev = prev where prev.type.isSubsetOf(activity.type) && activity.type.isSubsetOf(prev.type) {
-				prev.confidence = max(prev.confidence, activity.confidence)
-			}
-			
-			// 3: join automotive activities
-			else if let prev = prev where prev.type.contains(.Automotive) && activity.type.contains(.Automotive) {
-				prev.type = prev.type.union(activity.type)
-				prev.confidence = max(prev.confidence, activity.confidence)
-			}
-			else {
-				return activity
-			}
-		}
-		return nil
-	}
-	
-	/**
-	Our implementation of the core motion activity interpreter. It runs these interpretation rules:
-	
-	- automotive < 5 minutes: stationary
-	- cycling < 2 minutes: running if prev/next is running, walking if prev/next is walking, stationary otherwise
-	- walking < 1 minute, stationary prev and next, low confidence: stationary
-	- stationary > 3 hours: sleeping
-	- IDEA: stationary < 1 minute, running or walking before and after: standing
-	
-	- parameter activities: The activities to interpret
-	- returns:              An array of interpreted activities
-	*/
-	public func interpret(activities activities: [InterpretedCoreMotionActivity]) -> [InterpretedCoreMotionActivity] {
-		var prev: InterpretedCoreMotionActivity?
-		for i in 0..<activities.count {
-			let activity = activities[i]
-			let duration = activity.endDate.timeIntervalSinceDate(activity.startDate)
-			
-			// automotive < 5 minutes: stationary
-			if activity.type.contains(.Automotive) && duration < 300.0 {
-				activity.type.remove(.Automotive)
-				activity.type.unionInPlace(.Stationary)
-				activity.interpretation = .Automotive
-			}
-				
-			// cycling < 2 minutes: running if prev/next is running, walking if prev/next is walking, stationary otherwise
-			else if activity.type.contains(.Cycling) && duration < 120.0 {
-				activity.type.remove(.Cycling)
-				if let prev = prev where prev.type.contains(.Running) {
-					activity.type.unionInPlace(.Running)
-					activity.interpretation = .Running
-				}
-				else if activities.count > i+1 && activities[i+1].type.contains(.Running) {
-					activity.type.unionInPlace(.Running)
-					activity.interpretation = .Running
-				}
-				else if let prev = prev where prev.type.contains(.Walking) {
-					activity.type.unionInPlace(.Walking)
-					activity.interpretation = .Walking
-				}
-				else if activities.count > i+1 && activities[i+1].type.contains(.Walking) {
-					activity.type.unionInPlace(.Walking)
-					activity.interpretation = .Walking
-				}
-				else {
-					activity.type.unionInPlace(.Stationary)
-					activity.interpretation = .Stationary
-				}
-			}
-			
-			/*/ stationary < 1 minute, running or walking before and after: standing
-			else if activity.type.contains(.Stationary) && duration < 60.0 {
-				if let prev = prev where prev.isWalkingRunningCycling {
-				}
-				else if self.activities.count > i+1 && self.activities[i+1].isWalkingRunningCycling {
-				}
-			}	//	*/
-			
-			// no rule, interpret by picking `type`
-			else {
-				if activity.type.contains(.Cycling) {
-					activity.interpretation = .Cycling
-				}
-				else if activity.type.contains(.Running) {
-					activity.interpretation = .Running
-				}
-				else if activity.type.contains(.Walking) {
-					activity.interpretation = .Walking
-				}
-				else if activity.type.contains(.Automotive) {
-					activity.interpretation = .Automotive
-				}
-				else if activity.type.contains(.Stationary) {
-					activity.interpretation = .Stationary
-				}
-				else {
-					activity.interpretation = .Unknown
-				}
-			}
-			
-			prev = activity
-		}
-		
-		// concatenate same (using the same preprocessing algo as when archiving since activities may have changed) and find sleep
-		var interpreted = [InterpretedCoreMotionActivity]()
-		for activity in activities {
-			if let inter = preprocessedMotionActivity(activity, followingAfter: interpreted.last) {
-				interpreted.append(inter)
-				
-				// is this sleep? Yes if stationary > 3 hours
-				if .Stationary == inter.interpretation {
-					if NSCalendar.currentCalendar().components(.Hour, fromDate: inter.startDate, toDate: inter.endDate, options: []).hour >= 3 {
-						inter.interpretation = .Sleeping
-					}
-				}
-			}
-		}
-		return interpreted
 	}
 }
 

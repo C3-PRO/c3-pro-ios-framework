@@ -21,6 +21,7 @@
 		EE59D4B71D391F6200DB37F6 /* ActivityReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4B61D391F6200DB37F6 /* ActivityReport.swift */; };
 		EE59D4B91D39321F00DB37F6 /* ActivityCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4B81D39321F00DB37F6 /* ActivityCollector.swift */; };
 		EE59D4BB1D3E0E9900DB37F6 /* CoreMotionActivitySum.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4BA1D3E0E9900DB37F6 /* CoreMotionActivitySum.swift */; };
+		EE59D4C71D3E32EC00DB37F6 /* CoreMotionStandardActivityInterpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE59D4C61D3E32EC00DB37F6 /* CoreMotionStandardActivityInterpreter.swift */; };
 		EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */; };
 		EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */; };
 		EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7A43921B0D08DE00B30D17 /* ConsentController.swift */; };
@@ -217,6 +218,7 @@
 		EE59D4B61D391F6200DB37F6 /* ActivityReport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityReport.swift; sourceTree = "<group>"; };
 		EE59D4B81D39321F00DB37F6 /* ActivityCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityCollector.swift; sourceTree = "<group>"; };
 		EE59D4BA1D3E0E9900DB37F6 /* CoreMotionActivitySum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreMotionActivitySum.swift; sourceTree = "<group>"; };
+		EE59D4C61D3E32EC00DB37F6 /* CoreMotionStandardActivityInterpreter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreMotionStandardActivityInterpreter.swift; sourceTree = "<group>"; };
 		EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueue.swift; sourceTree = "<group>"; };
 		EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueuedResource.swift; sourceTree = "<group>"; };
 		EE5F4F7E1B18E2B100DB38B3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -334,6 +336,7 @@
 				EE59D4A71D3911DD00DB37F6 /* HealthKitReporter.swift */,
 				EEAA40901CF58CDD008FBC4B /* CoreMotionReporter.swift */,
 				EE59D4B41D391E9D00DB37F6 /* CoreMotionActivityInterpreter.swift */,
+				EE59D4C61D3E32EC00DB37F6 /* CoreMotionStandardActivityInterpreter.swift */,
 				EEAA40981CF5CD19008FBC4B /* CoreMotionActivity.swift */,
 				EEAA3FC91CF4A35B008FBC4B /* InterpretedCoreMotionActivity.swift */,
 				EE59D4BA1D3E0E9900DB37F6 /* CoreMotionActivitySum.swift */,
@@ -856,6 +859,7 @@
 				EEAA404B1CF58C14008FBC4B /* Blob.swift in Sources */,
 				EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */,
 				EE59D4B31D39132E00DB37F6 /* ActivityReporter.swift in Sources */,
+				EE59D4C71D3E32EC00DB37F6 /* CoreMotionStandardActivityInterpreter.swift in Sources */,
 				EEAA3FCC1CF4A735008FBC4B /* ActivityReportPeriod.swift in Sources */,
 				EEEA7F481BD61EA20089BF85 /* StudyIntroCollectionViewController.swift in Sources */,
 				EEAA405C1CF58C14008FBC4B /* Expression.swift in Sources */,
