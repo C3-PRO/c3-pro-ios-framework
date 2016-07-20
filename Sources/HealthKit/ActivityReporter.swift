@@ -25,7 +25,7 @@ import SMART
 /**
 Protocol to which activity reporters/collectors should adhere.
 
-See [HealthKit/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/HealthKit#activityreporter) for detailed instructions.
+See [HealthKit/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/HealthKit#activity-reporter) for detailed instructions.
 */
 public protocol ActivityReporter {
 	

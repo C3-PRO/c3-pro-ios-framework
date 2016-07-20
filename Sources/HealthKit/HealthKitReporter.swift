@@ -26,7 +26,7 @@ import SMART
 /**
 Convenience class querying HealthKit and CoreMotion for activity data.
 
-See [HealthKit/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/HealthKit#activityreporter) for detailed instructions.
+See [HealthKit/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/HealthKit#activity-reporter) for detailed instructions.
 */
 public class HealthKitReporter: ActivityReporter {
 	

@@ -24,6 +24,8 @@ import SMART
 
 /**
 Class that uses both `HealthKitReporter` and `CoreMotionReporter` to retrieve activity data from both stores.
+
+See [HealthKit/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/HealthKit#activity-reporter) for detailed instructions.
 */
 public class ActivityCollector: ActivityReporter {
 	
