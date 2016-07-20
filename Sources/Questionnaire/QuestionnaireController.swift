@@ -33,7 +33,7 @@ The `whenCompleted` callback is called when the user completes the questionnaire
 a `QuestionnaireResponse` resource.
 The `whenCancelledOrFailed` callback is called when the questionnaire is cancelled (error = nil) or finishes with an error.
 
-See [Questionnaire/README.md](https://github.com/chb/c3-pro-ios-framework/tree/master/Sources/Questionnaire#questionnairecontroller) for detailed instructions.
+See [Questionnaire/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/Questionnaire#questionnairecontroller) for detailed instructions.
 */
 public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	

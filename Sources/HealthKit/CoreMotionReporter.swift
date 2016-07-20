@@ -25,6 +25,8 @@ import SMART
 
 /**
 Dumps latest activity data from CoreMotion to a SQLite database and returns previously archived activity data.
+
+See [HealthKit/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/HealthKit#coremotiondatapersistence) for detailed instructions.
 */
 public class CoreMotionReporter: ActivityReporter {
 	
