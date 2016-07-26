@@ -52,16 +52,20 @@ public class CoreMotionReporter: ActivityReporter {
 	Returns the SQLite connection object to use.
 	*/
 	func connection() throws -> Connection {
+		#if false
 		let fm = NSFileManager()
 		if let attrs = try? fm.attributesOfItemAtPath(databaseLocation) as NSDictionary {
 			let size = attrs.fileSize()
 			c3_logIfDebug("REPORTER database is \(size / 1024) KB")
 		}
+		#endif
 		return try Connection(databaseLocation)
 	}
 	
 	
 	// MARK: - Archiving
+	
+	private var lastArchival: NSDate?
 	
 	
 	/**
@@ -76,6 +80,11 @@ public class CoreMotionReporter: ActivityReporter {
 	- parameter callback:  The callback to call when done, with an error if something happened, nil otherwise. Called on the main queue
 	*/
 	public func archiveActivities(processor: CoreMotionActivityInterpreter? = nil, callback: ((numNewActivities: Int, error: ErrorType?) -> Void)) {
+		if let lastArchival = lastArchival where lastArchival.timeIntervalSinceNow > -30 {
+			callback(numNewActivities: 0, error: nil)
+			return
+		}
+		
 		do {
 			let db = try connection()
 			let activities = Table("activities")
@@ -131,6 +140,7 @@ public class CoreMotionReporter: ActivityReporter {
 							}
 							print("\(NSDate()) ARCHIVER done inserting")
 						}
+						self.lastArchival = NSDate()
 						c3_performOnMainQueue() {
 							callback(numNewActivities: samples.count, error: nil)
 						}
