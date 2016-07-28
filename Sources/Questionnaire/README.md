@@ -26,7 +26,8 @@ This model implements the `ORKTaskViewControllerDelegate` protocol and holds on 
 
 ```swift
 // Let's assume you have a Questionnaire "Survey.json" in your app bundle
-// You can use other means, such as `Questionnaire.read(id:server:callback:)`
+// You can use other means, such as `Questionnaire.read(id:server:callback:)`,
+// to read a questionnaire from a FHIR server.
 let questionnaire = NSBundle.mainBundle().fhir_bundledResource("<# Survey #>")
 let controller = QuestionnaireController(questionnaire: questionnaire)
 controller.whenCompleted = { viewController, answers in
@@ -53,6 +54,9 @@ controller.prepareQuestionnaireViewController() { viewController, error in
         // error preparing the questionnaire in "error"
     }
 }
+
+// you will need a type/instance variable to hold on to `controller`
+self.controller = controller
 ```
 
 
