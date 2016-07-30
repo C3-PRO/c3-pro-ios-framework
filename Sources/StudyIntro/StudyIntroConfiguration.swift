@@ -69,9 +69,9 @@ public class StudyIntroConfiguration {
 	
 	public internal(set) var ineligibleMessage: String?
 	
-	public init(json filename: String, inBundle: NSBundle? = nil) throws {
-		if let url = (inBundle ?? NSBundle.mainBundle()).URLForResource(filename, withExtension: "json"), let data = NSData(contentsOfURL: url) {
-			let json = try NSJSONSerialization.JSONObjectWithData(data, options: [])
+	public init(json filename: String, inBundle: Bundle? = nil) throws {
+		if let url = (inBundle ?? Bundle.main).urlForResource(filename, withExtension: "json"), let data = try? Data(contentsOf: url) {
+			let json = try JSONSerialization.jsonObject(with: data, options: [])
 			
 			// top level
 			if let ttl = json["title"] as? String {
@@ -116,11 +116,11 @@ public class StudyIntroConfiguration {
 				}
 			}
 			else {
-				throw C3Error.InvalidJSON("No “items” array of dictionaries found")
+				throw C3Error.invalidJSON("No “items” array of dictionaries found")
 			}
 		}
 		else {
-			throw C3Error.BundleFileNotFound(filename)
+			throw C3Error.bundleFileNotFound(filename)
 		}
 	}
 }

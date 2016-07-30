@@ -50,34 +50,34 @@ public class SystemServicePermissioner {
 	- parameter service: The SystemService to inquire for
 	- parameter callback: A block to be executed when status has been determined; executed on the main queue
 	*/
-	public func hasPermissionForService(service: SystemService) -> Bool {
+	public func hasPermissionForService(_ service: SystemService) -> Bool {
 		switch service {
-		case .GeoLocationWhenUsing:
+		case .geoLocationWhenUsing:
 			return hasGeoLocationPermissions(false)
-		case .GeoLocationAlways:
+		case .geoLocationAlways:
 			return hasGeoLocationPermissions(true)
 			
-		case .LocalNotifications(let categories):
+		case .localNotifications(let categories):
 			return hasLocalNotificationsPermissions(categories)
 			
-		case .CoreMotion:
+		case .coreMotion:
 			return hasCoreMotionPermissions()
-		case .HealthKit(let types):
+		case .healthKit(let types):
 			return hasHealthKitPermissions(types)
 			
-		case .Microphone:
+		case .microphone:
 			return hasMicrophonePermissions()
 		}
 	}
 	
-	func hasGeoLocationPermissions(always: Bool) -> Bool {
+	func hasGeoLocationPermissions(_ always: Bool) -> Bool {
 		let status = CLLocationManager.authorizationStatus()
-		return (.AuthorizedAlways == status || (!always && .AuthorizedWhenInUse == status))
+		return (.authorizedAlways == status || (!always && .authorizedWhenInUse == status))
 	}
 	
-	func hasLocalNotificationsPermissions(categories: Set<UIUserNotificationCategory>) -> Bool {
-		let settings = UIApplication.sharedApplication().currentUserNotificationSettings()
-		return ((settings?.types ?? UIUserNotificationType.None) != UIUserNotificationType.None)
+	func hasLocalNotificationsPermissions(_ categories: Set<UIUserNotificationCategory>) -> Bool {
+		let settings = UIApplication.shared().currentUserNotificationSettings()
+		return ((settings?.types ?? UIUserNotificationType()) != UIUserNotificationType())
 	}
 	
 	/**
@@ -91,12 +91,12 @@ public class SystemServicePermissioner {
 	/**
 	Always returns false without inspecting HealthKit types.
 	*/
-	func hasHealthKitPermissions(types: HealthKitTypes) -> Bool {
+	func hasHealthKitPermissions(_ types: HealthKitTypes) -> Bool {
 		return false
 	}
 	
 	func hasMicrophonePermissions() -> Bool {
-		return (AVAudioSession.sharedInstance().recordPermission() == AVAudioSessionRecordPermission.Granted)
+		return (AVAudioSession.sharedInstance().recordPermission() == AVAudioSessionRecordPermission.granted)
 	}
 	
 	
@@ -108,22 +108,22 @@ public class SystemServicePermissioner {
 	- parameter service: The SystemService to request access to
 	- parameter callback: A block to be executed when the request has been granted or denied; executed on the main queue
 	*/
-	public func requestPermissionForService(service: SystemService, callback: ((error: ErrorType?) -> Void)) {
+	public func requestPermissionForService(_ service: SystemService, callback: ((error: ErrorProtocol?) -> Void)) {
 		switch service {
-		case .GeoLocationWhenUsing:
+		case .geoLocationWhenUsing:
 			requestGeoLocationPermissions(false, callback: callback)
-		case .GeoLocationAlways:
+		case .geoLocationAlways:
 			requestGeoLocationPermissions(true, callback: callback)
 		
-		case .LocalNotifications(let categories):
+		case .localNotifications(let categories):
 			requestLocalNotificationsPermissions(categories, callback: callback)
 		
-		case .CoreMotion:
+		case .coreMotion:
 			requestCoreMotionPermissions(callback)
-		case .HealthKit(let types):
+		case .healthKit(let types):
 			requestHealthKitPermissions(types, callback: callback)
 		
-		case .Microphone:
+		case .microphone:
 			requestMicrophonePermissions(callback)
 		}
 	}
@@ -134,9 +134,9 @@ public class SystemServicePermissioner {
 	- parameter always: Whether location access should always be granted, not just while using the app
 	- parameter callback: A block to be executed when the request has been granted or denied; executed on the main queue
 	*/
-	func requestGeoLocationPermissions(always: Bool, callback: ((error: ErrorType?) -> Void)) {
+	func requestGeoLocationPermissions(_ always: Bool, callback: ((error: ErrorProtocol?) -> Void)) {
 		let status = CLLocationManager.authorizationStatus()
-		if .AuthorizedAlways == status || (!always && .AuthorizedWhenInUse == status) {
+		if .authorizedAlways == status || (!always && .authorizedWhenInUse == status) {
 			c3_performOnMainQueue() {
 				callback(error: nil)
 			}
@@ -168,13 +168,13 @@ public class SystemServicePermissioner {
 		}
 	}
 	
-	func requestLocalNotificationsPermissions(categories: Set<UIUserNotificationCategory>, callback: ((error: ErrorType?) -> Void)) {
-		let app = UIApplication.sharedApplication()
+	func requestLocalNotificationsPermissions(_ categories: Set<UIUserNotificationCategory>, callback: ((error: ErrorProtocol?) -> Void)) {
+		let app = UIApplication.shared()
 		var settings = app.currentUserNotificationSettings()
 		
-		if nil == settings?.categories || !(settings!.categories!).isSupersetOf(categories) {
-			let types: UIUserNotificationType = [.Alert, .Badge, .Sound]
-			settings = UIUserNotificationSettings(forTypes: types, categories: categories)
+		if nil == settings?.categories || !(settings!.categories!).isSuperset(of: categories) {
+			let types: UIUserNotificationType = [.alert, .badge, .sound]
+			settings = UIUserNotificationSettings(types: types, categories: categories)
 			app.registerUserNotificationSettings(settings!)
 			// callbacks are only delivered to `application:didRegisterUserNotificationSettings:`. It is best to just assume it went
 			// through and then, before scheduling a local notification, check permissions again.
@@ -188,7 +188,7 @@ public class SystemServicePermissioner {
 	Requests permission to access CoreMotion data. Does that by querying activity from now to now and captures whether the
 	CMErrorMotionActivityNotAuthorized error comes back or not.
 	*/
-	func requestCoreMotionPermissions(callback: ((error: ErrorType?) -> Void)) {
+	func requestCoreMotionPermissions(_ callback: ((error: ErrorProtocol?) -> Void)) {
 		if nil != coreMotionManager {
 			c3_warn("CoreMotion permission request is already ongoing, not requesting again")
 			c3_performOnMainQueue() {
@@ -198,7 +198,7 @@ public class SystemServicePermissioner {
 		}
 		
 		coreMotionManager = CMMotionActivityManager()
-		coreMotionManager!.queryActivityStartingFromDate(NSDate(), toDate: NSDate(), toQueue: NSOperationQueue()) { [weak self] activity, error in
+		coreMotionManager!.queryActivityStarting(from: Date(), to: Date(), to: OperationQueue()) { [weak self] activity, error in
 			self?.coreMotionManager = nil
 			c3_performOnMainQueue() {
 				if let error = error where error.domain == CMErrorDomain && error.code == Int(CMErrorMotionActivityNotAuthorized.rawValue) {
@@ -219,10 +219,10 @@ public class SystemServicePermissioner {
 	- parameter types: The HealthKitTypes that want to be accessed
 	- parameter callback: A callback - containing an error if something went wrong, nil otherwise - when authorization completes
 	*/
-	func requestHealthKitPermissions(types: HealthKitTypes, callback: ((error: ErrorType?) -> Void)) {
+	func requestHealthKitPermissions(_ types: HealthKitTypes, callback: ((error: ErrorProtocol?) -> Void)) {
 		guard HKHealthStore.isHealthDataAvailable() else {
 			c3_performOnMainQueue() {
-				callback(error: C3Error.HealthKitNotAvailable)
+				callback(error: C3Error.healthKitNotAvailable)
 			}
 			return
 		}
@@ -231,7 +231,7 @@ public class SystemServicePermissioner {
 		readTypes = readTypes.union(types.characteristicTypesToRead as Set<HKObjectType>)
 		readTypes = readTypes.union(types.quantityTypesToRead as Set<HKObjectType>)
 		
-		store.requestAuthorizationToShareTypes(types.quantityTypesToWrite, readTypes: readTypes) { success, error in
+		store.requestAuthorization(toShare: types.quantityTypesToWrite, read: readTypes) { success, error in
 			c3_performOnMainQueue() {
 				callback(error: error)
 			}
@@ -241,10 +241,10 @@ public class SystemServicePermissioner {
 	/**
 	Requests permission to access the microphone.
 	*/
-	func requestMicrophonePermissions(callback: ((error: ErrorType?) -> Void)) {
+	func requestMicrophonePermissions(_ callback: ((error: ErrorProtocol?) -> Void)) {
 		AVAudioSession.sharedInstance().requestRecordPermission { success in
 			c3_performOnMainQueue() {
-				callback(error: success ? nil : C3Error.LocationServicesDisabled)
+				callback(error: success ? nil : C3Error.locationServicesDisabled)
 			}
 		}
 	}
@@ -256,32 +256,32 @@ Instances of this class are used as delegate when requesting access to CoreLocat
 */
 class SystemRequesterGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
 	
-	var didComplete: ((error: ErrorType?) -> Void)
+	var didComplete: ((error: ErrorProtocol?) -> Void)
 	
-	init(complete: ((error: ErrorType?) -> Void)) {
+	init(complete: ((error: ErrorProtocol?) -> Void)) {
 		didComplete = complete
 	}
 	
-	func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+	func locationManager(_ manager: CLLocationManager, didFailWithError error: NSError) {
 		manager.stopUpdatingLocation()
 	}
 	
-	func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
 		switch status {
-		case .NotDetermined:
+		case .notDetermined:
 			break
-		case .AuthorizedAlways:
+		case .authorizedAlways:
 			manager.stopUpdatingLocation()
 			didComplete(error: nil)
-		case .AuthorizedWhenInUse:
+		case .authorizedWhenInUse:
 			manager.stopUpdatingLocation()
 			didComplete(error: nil)
-		case .Denied:
+		case .denied:
 			manager.stopUpdatingLocation()
-			didComplete(error: C3Error.LocationServicesDisabled)
-		case .Restricted:
+			didComplete(error: C3Error.locationServicesDisabled)
+		case .restricted:
 			manager.stopUpdatingLocation()
-			didComplete(error: C3Error.LocationServicesDisabled)
+			didComplete(error: C3Error.locationServicesDisabled)
 		}
 	}
 }

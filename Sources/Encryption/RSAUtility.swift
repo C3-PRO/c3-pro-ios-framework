@@ -49,7 +49,7 @@ public class RSAUtility {
 	- parameter data: The data to encrypt
 	- returns: Encrypted data
 	*/
-	public func encrypt(data: NSData) throws -> NSData {
+	public func encrypt(_ data: Data) throws -> Data {
 		if nil == publicKey {
 			try readBundledCertificate()
 		}
@@ -63,7 +63,7 @@ public class RSAUtility {
 	- parameter key: The key to use for encryption
 	- returns: Encrypted data
 	*/
-	public func encryptDataWithKey(data: NSData, key: SecKey) throws -> NSData {
+	public func encryptDataWithKey(_ data: Data, key: SecKey) throws -> Data {
 		let cipherBufferSize = SecKeyGetBlockSize(key)
 		let cipherBuffer = NSMutableData(length: Int(cipherBufferSize))
 		let cipherBufferPointer = UnsafeMutablePointer<UInt8>(cipherBuffer!.mutableBytes)
@@ -71,15 +71,15 @@ public class RSAUtility {
 		
 		let status = SecKeyEncrypt(key,
 			SecPadding.OAEP,				// `SecPadding.OAEP` works with RSA/ECB/OAEPWithSHA1AndMGF1Padding on the Java side
-			UnsafePointer<UInt8>(data.bytes),
-			data.length,
+			UnsafePointer<UInt8>((data as NSData).bytes),
+			data.count,
 			cipherBufferPointer,
 			&cipherBufferSizeResult
 		)
 		if noErr == status {
-			return NSData(bytes:cipherBuffer!.bytes, length:Int(cipherBufferSizeResult))
+			return Data(bytes: UnsafePointer<UInt8>(cipherBuffer!.bytes), count:Int(cipherBufferSizeResult))
 		}
-		throw C3Error.EncryptionFailedWithStatus(status)
+		throw C3Error.encryptionFailedWithStatus(status)
 	}
 	
 	
@@ -91,15 +91,15 @@ public class RSAUtility {
 	- returns: The `SecKey` read from the bundled certificate
 	*/
 	func readBundledCertificate() throws -> SecKey {
-		if let keyURL = NSBundle.mainBundle().URLForResource(publicCertificateFile, withExtension: "crt") {
-			if let certData = NSData(contentsOfURL: keyURL) {
+		if let keyURL = Bundle.main.urlForResource(publicCertificateFile, withExtension: "crt") {
+			if let certData = try? Data(contentsOf: keyURL) {
 				let key = try loadPublicKey(certData)
 				publicKey = key
 				return key
 			}
-			throw C3Error.EncryptionX509CertificateNotRead(publicCertificateFile)
+			throw C3Error.encryptionX509CertificateNotRead(publicCertificateFile)
 		}
-		throw C3Error.EncryptionX509CertificateNotFound(publicCertificateFile)
+		throw C3Error.encryptionX509CertificateNotFound(publicCertificateFile)
 	}
 	
 	/**
@@ -108,7 +108,7 @@ public class RSAUtility {
 	- parameter data: Date representing a X509 certificate
 	- returns: The `SecKey` loaded from the given data
 	*/
-	func loadPublicKey(data: NSData) throws -> SecKey {
+	func loadPublicKey(_ data: Data) throws -> SecKey {
 		if let cert = SecCertificateCreateWithData(kCFAllocatorDefault, data) {
 			var trust: SecTrust?
 			let policy = SecPolicyCreateBasicX509()
@@ -118,11 +118,11 @@ public class RSAUtility {
 				if let key = SecTrustCopyPublicKey(trust) {
 					return key
 				}
-				throw C3Error.EncryptionX509CertificateNotLoaded("Failed to copy public key from SecTrust")
+				throw C3Error.encryptionX509CertificateNotLoaded("Failed to copy public key from SecTrust")
 			}
-			throw C3Error.EncryptionX509CertificateNotLoaded("Failed to create a trust management object from X509 certificate: OSError \(status)")
+			throw C3Error.encryptionX509CertificateNotLoaded("Failed to create a trust management object from X509 certificate: OSError \(status)")
 		}
-		throw C3Error.EncryptionX509CertificateNotLoaded("Failed to create SecCertificate from given data")
+		throw C3Error.encryptionX509CertificateNotLoaded("Failed to create SecCertificate from given data")
 	}
 }
 

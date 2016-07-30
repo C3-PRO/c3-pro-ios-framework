@@ -50,13 +50,13 @@ public class QueuedResource {
 	- returns: True if the resource was successfully instantiated, false otherwise
 	*/
 	func readFromFile() throws {
-		let data = try NSData(contentsOfFile: path, options: [])
-		let json = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? FHIRJSON
-		resource = Resource.instantiateFrom(json, owner: nil) as? Resource
+		let data = try Data(contentsOf: URL(fileURLWithPath: path), options: [])
+		let json = try JSONSerialization.jsonObject(with: data, options: []) as? FHIRJSON
+		resource = Resource.instantiate(fromJSON: json, owner: nil) as? Resource
 		if nil != resource {
 			return
 		}
-		throw FHIRError.ResourceFailedToInstantiate(NSString(data: data, encoding: NSUTF8StringEncoding) as? String ?? "No data")
+		throw FHIRError.resourceFailedToInstantiate(String(data: data, encoding: String.Encoding.utf8) ?? "No data")
 	}
 }
 

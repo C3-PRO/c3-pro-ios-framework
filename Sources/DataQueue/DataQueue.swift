@@ -40,11 +40,11 @@ public class DataQueue: Server {
 	}
 	
 	
-	public required init(baseURL: NSURL, auth: OAuth2JSON?) {
+	public required init(baseURL: URL, auth: OAuth2JSON?) {
 		super.init(baseURL: baseURL, auth: auth)
-		let dir = try! NSFileManager.defaultManager().c3_appLibraryDirectory()
+		let dir = try! FileManager.default.c3_appLibraryDirectory()
 		if let host = baseURL.host {
-			let full = ((dir as NSString).stringByAppendingPathComponent("DataQueue") as NSString).stringByAppendingPathComponent(host)
+			let full = ((dir as NSString).appendingPathComponent("DataQueue") as NSString).appendingPathComponent(host)
 			queueManager = DataQueueManager(fhirServer: self, directory: full)
 		}
 		else {
@@ -60,19 +60,19 @@ public class DataQueue: Server {
 	
 	- parameter resource: The FHIR Resource to enqueue
 	*/
-	public func enqueueResource(resource: Resource) {
+	public func enqueueResource(_ resource: Resource) {
 		queueManager.enqueueResource(resource)
 	}
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
-	public func flush(callback: ((error: ErrorType?) -> Void)) {
+	public func flush(_ callback: ((error: ErrorProtocol?) -> Void)) {
 		queueManager.flush(callback)
 	}
 	
 	
 	// MARK: - URL Session
 	
-	override public func performPreparedRequest<R : FHIRServerRequestHandler>(request: NSMutableURLRequest, handler: R, callback: ((response: FHIRServerResponse) -> Void)) {
+	override public func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, withSession session: URLSession, handler: R, callback: ((response: FHIRServerResponse) -> Void)) {
 		if .POST == handler.type || .PUT == handler.type {
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			

@@ -28,10 +28,10 @@ Protocol for delegates to the encrypted data queue.
 public protocol EncryptedDataQueueDelegate {
 	
 	/** Method called to determine whether the respective resource should be encrypted. */
-	func encryptedDataQueue(queue: EncryptedDataQueue, wantsEncryptionForResource resource: Resource, requestType: FHIRRequestType) -> Bool
+	func encryptedDataQueue(_ queue: EncryptedDataQueue, wantsEncryptionForResource resource: Resource, requestType: FHIRRequestType) -> Bool
 	
 	/** Method that asks for the identifier of the key that should be used for encryption. */
-	func keyIdentifierForEncryptedDataQueue(queue: EncryptedDataQueue) -> String?
+	func keyIdentifierForEncryptedDataQueue(_ queue: EncryptedDataQueue) -> String?
 }
 
 
@@ -46,7 +46,7 @@ public class EncryptedDataQueue: DataQueue {
 	public var delegate: EncryptedDataQueueDelegate?
 	
 	/// The endpoint for encrypted resources; usually different from `baseURL` since these are not FHIR compliant.
-	public internal(set) var encryptedBaseURL: NSURL
+	public internal(set) var encryptedBaseURL: URL
 	
 	let aes = AESUtility()
 	
@@ -60,9 +60,9 @@ public class EncryptedDataQueue: DataQueue {
 	- parameter encBaseURL: The base URL for encrypted resources
 	- parameter publicCertificateFile: Filename, without ".crt" extension, of a bundled X509 public key certificate
 	*/
-	public init(baseURL: NSURL, auth: OAuth2JSON?, encBaseURL: NSURL, publicCertificateFile: String) {
-		if let lastChar = encBaseURL.absoluteString.characters.last where "/" != lastChar {
-			encryptedBaseURL = encBaseURL.URLByAppendingPathComponent("/")
+	public init(baseURL: URL, auth: OAuth2JSON?, encBaseURL: URL, publicCertificateFile: String) {
+		if let lastChar = encBaseURL.absoluteString?.characters.last where "/" != lastChar, let postfixed = try? encBaseURL.appendingPathComponent("/") {
+			encryptedBaseURL = postfixed
 		}
 		else {
 			encryptedBaseURL = encBaseURL
@@ -72,7 +72,7 @@ public class EncryptedDataQueue: DataQueue {
 	}
 	
 	/** You CANNOT use this initializer on the encrypted data queue, use `init(baseURL:auth:encBaseURL:publicCertificateFile:)`. */
-	public required init(baseURL: NSURL, auth: OAuth2JSON?) {
+	public required init(baseURL: URL, auth: OAuth2JSON?) {
 	    fatalError("init(baseURL:auth:) cannot be used on `EncryptedDataQueue`, use init(baseURL:auth:encBaseURL:publicCertificateFile:)")
 	}
 	
@@ -86,31 +86,31 @@ public class EncryptedDataQueue: DataQueue {
 	- parameter data: The data to encrypt, presumed to be NSData of a JSON-serialized FHIR resource
 	- returns: NSData representing JSON
 	*/
-	public func encryptedData(data: NSData) throws -> NSData {
+	public func encryptedData(_ data: Data) throws -> Data {
 		let encData = try aes.encrypt(data)
 		let encKey = try rsa.encrypt(aes.symmetricKeyData)
 		let dict = [
 			"key_id": delegate?.keyIdentifierForEncryptedDataQueue(self) ?? "",
-			"symmetric_key": encKey.base64EncodedStringWithOptions([]),
-			"message": encData.base64EncodedStringWithOptions([]),
+			"symmetric_key": encKey.base64EncodedString(options: []),
+			"message": encData.base64EncodedString(options: []),
 			"version": C3PROFHIRVersion,
 		]
-		return try NSJSONSerialization.dataWithJSONObject(dict, options: [])
+		return try JSONSerialization.data(withJSONObject: dict, options: [])
 	}
 	
 	
 	// MARK: - Requests
 	
-	public override func handlerForRequestOfType(type: FHIRRequestType, resource: Resource?, headers: FHIRRequestHeaders?) -> FHIRServerRequestHandler? {
+	override public func handlerForRequest(ofType type: FHIRRequestType, resource: Resource?, headers: FHIRRequestHeaders?) -> FHIRServerRequestHandler? {
 		if let resource = resource where nil == delegate || delegate!.encryptedDataQueue(self, wantsEncryptionForResource: resource, requestType: type) {
 			return EncryptedJSONRequestHandler(type, resource: resource, dataQueue: self)
 		}
-		return super.handlerForRequestOfType(type, resource: resource, headers: headers)
+		return super.handlerForRequest(ofType: type, resource: resource, headers: headers)
 	}
 	
-	public override func absoluteURLForPath(path: String, handler: FHIRServerRequestHandler) -> NSURL? {
+	override public func absoluteURLForPath(_ path: String, handler: FHIRServerRequestHandler) -> URL? {
 		if handler is EncryptedJSONRequestHandler {
-			return NSURL(string: path, relativeToURL: encryptedBaseURL)
+			return URL(string: path, relativeTo: encryptedBaseURL)
 		}
 		return super.absoluteURLForPath(path, handler: handler)
 	}

@@ -56,7 +56,7 @@ public class SystemPermissionStep: ORKStep {
 		super.init(coder: aDecoder)
 	}
 	
-	public override func copyWithZone(zone: NSZone) -> AnyObject {
+	override public func copy(with zone: NSZone? = nil) -> AnyObject {
 		let copy = self.dynamicType.init(identifier: identifier)
 		copy.services = services
 		return copy

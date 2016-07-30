@@ -48,23 +48,23 @@ public class BorderedButton: UIButton {
 	
 	// MARK: - Actions
 	
-	public override var enabled: Bool {
+	public override var isEnabled: Bool {
 		didSet {
-			super.enabled = enabled
+			super.isEnabled = isEnabled
 			updateBorderColor()
 		}
 	}
 	
-	public override var highlighted: Bool {
+	public override var isHighlighted: Bool {
 		didSet {
-			super.highlighted = highlighted
+			super.isHighlighted = isHighlighted
 			updateBorderColor()
 		}
 	}
 	
-	public override var selected: Bool {
+	public override var isSelected: Bool {
 		didSet {
-			super.selected = selected
+			super.isSelected = isSelected
 			updateBorderColor()
 		}
 	}
@@ -74,27 +74,27 @@ public class BorderedButton: UIButton {
 	
 	public override func tintColorDidChange() {
 		super.tintColorDidChange()
-		setTitleColor(tintColor, forState: .Normal)
-		setTitleColor(UIColor.whiteColor(), forState: .Highlighted)
-		setTitleColor(UIColor.whiteColor(), forState: .Selected)
-		setTitleColor(disabledTintColor, forState: .Disabled)
+		setTitleColor(tintColor, for: UIControlState())
+		setTitleColor(UIColor.white(), for: .highlighted)
+		setTitleColor(UIColor.white(), for: .selected)
+		setTitleColor(disabledTintColor, for: .disabled)
 		updateBorderColor()
 	}
 	
 	func updateBorderColor() {
-		if enabled {
-			if highlighted || selected {
+		if isEnabled {
+			if isHighlighted || isSelected {
 				backgroundColor = tintColor
-				layer.borderColor = tintColor.CGColor
+				layer.borderColor = tintColor.cgColor
 			}
 			else {
-				backgroundColor = UIColor.whiteColor();
-				layer.borderColor = tintColor.CGColor;
+				backgroundColor = UIColor.white();
+				layer.borderColor = tintColor.cgColor;
 			}
 		}
 		else {
-			backgroundColor = UIColor.whiteColor();
-			layer.borderColor = disabledTintColor.CGColor;
+			backgroundColor = UIColor.white();
+			layer.borderColor = disabledTintColor.cgColor;
 		}
 	}
 	

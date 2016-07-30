@@ -43,7 +43,7 @@ public class EligibilityStatusViewController: UIViewController {
 	/// To inform the receiver that the action button cannot yet be enabled.
 	public var waitingForAction = false {
 		didSet {
-			actionButton?.enabled = !waitingForAction
+			actionButton?.isEnabled = !waitingForAction
 		}
 	}
 	
@@ -53,14 +53,14 @@ public class EligibilityStatusViewController: UIViewController {
 	/// Action to perform when the one and only action button is tapped.
 	public var onActionButtonTap: ((controller: UIViewController) -> Void)? {
 		didSet {
-			actionButton?.hidden = nil == onActionButtonTap
+			actionButton?.isHidden = nil == onActionButtonTap
 		}
 	}
 	
 	
 	// MARK: - Actions
 	
-	func didTapActionButton(button: UIButton) {
+	func didTapActionButton(_ button: UIButton) {
 		if let exec = onActionButtonTap {
 			exec(controller: self)
 		}
@@ -71,9 +71,9 @@ public class EligibilityStatusViewController: UIViewController {
 	
 	public override func loadView() {
 		super.loadView()
-		view.backgroundColor = UIColor.whiteColor()
+		view.backgroundColor = UIColor.white()
 		
-		let desc = UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleBody)
+		let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: UIFontTextStyleBody)
 		
 		let content = UIView()
 		content.translatesAutoresizingMaskIntoConstraints = false
@@ -82,8 +82,8 @@ public class EligibilityStatusViewController: UIViewController {
 		let img = UIImageView(image: UIImage(named: imageName))
 		img.translatesAutoresizingMaskIntoConstraints = false
 		content.addSubview(img)
-		content.addConstraint(NSLayoutConstraint(item: img, attribute: .Top, relatedBy: .Equal, toItem: content, attribute: .Top, multiplier: 1.0, constant: 0.0))
-		content.addConstraint(NSLayoutConstraint(item: img, attribute: .CenterX, relatedBy: .Equal, toItem: content, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
+		content.addConstraint(NSLayoutConstraint(item: img, attribute: .top, relatedBy: .equal, toItem: content, attribute: .top, multiplier: 1.0, constant: 0.0))
+		content.addConstraint(NSLayoutConstraint(item: img, attribute: .centerX, relatedBy: .equal, toItem: content, attribute: .centerX, multiplier: 1.0, constant: 0.0))
 		
 		// text labels
 		var lastView: UIView = img
@@ -91,13 +91,13 @@ public class EligibilityStatusViewController: UIViewController {
 			let label = UILabel()
 			label.translatesAutoresizingMaskIntoConstraints = false
 			label.numberOfLines = 0
-			label.textAlignment = .Center
-			label.font = UIFont(descriptor: desc.fontDescriptorWithSymbolicTraits([.TraitBold]), size: desc.pointSize)
+			label.textAlignment = .center
+			label.font = UIFont(descriptor: desc.withSymbolicTraits([.traitBold])!, size: desc.pointSize)
 			label.text = text
 			
 			content.addSubview(label)
-			content.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|-[label]-|", options: [], metrics: nil, views: ["label": label]))
-			content.addConstraint(NSLayoutConstraint(item: label, attribute: .Top, relatedBy: .Equal, toItem: lastView, attribute: .Bottom, multiplier: 1.0, constant: 20.0))
+			content.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-[label]-|", options: [], metrics: nil, views: ["label": label]))
+			content.addConstraint(NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: lastView, attribute: .bottom, multiplier: 1.0, constant: 20.0))
 			lastView = label
 		}
 		
@@ -105,35 +105,35 @@ public class EligibilityStatusViewController: UIViewController {
 			let label = UILabel()
 			label.translatesAutoresizingMaskIntoConstraints = false
 			label.numberOfLines = 0
-			label.textAlignment = .Center
-			label.textColor = UIColor.darkGrayColor()
+			label.textAlignment = .center
+			label.textColor = UIColor.darkGray()
 			label.font = UIFont(descriptor: desc, size: desc.pointSize)
 			label.text = text
 			
 			content.addSubview(label)
-			content.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|-[label]-|", options: [], metrics: nil, views: ["label": label]))
-			content.addConstraint(NSLayoutConstraint(item: label, attribute: .Top, relatedBy: .Equal, toItem: lastView, attribute: .Bottom, multiplier: 1.0, constant: 20.0))
+			content.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-[label]-|", options: [], metrics: nil, views: ["label": label]))
+			content.addConstraint(NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: lastView, attribute: .bottom, multiplier: 1.0, constant: 20.0))
 			lastView = label
 		}
-		content.addConstraint(NSLayoutConstraint(item: lastView, attribute: .Bottom, relatedBy: .Equal, toItem: content, attribute: .Bottom, multiplier: 1.0, constant: 0.0))
+		content.addConstraint(NSLayoutConstraint(item: lastView, attribute: .bottom, relatedBy: .equal, toItem: content, attribute: .bottom, multiplier: 1.0, constant: 0.0))
 		
 		// button
 		let button = BorderedButton()
 		button.translatesAutoresizingMaskIntoConstraints = false
-		button.setTitle(actionButtonTitle, forState: .Normal)
-		button.hidden = nil == onActionButtonTap
-		button.enabled = !waitingForAction
-		button.addTarget(self, action: #selector(EligibilityStatusViewController.didTapActionButton(_:)), forControlEvents: .TouchUpInside)
+		button.setTitle(actionButtonTitle, for: UIControlState())
+		button.isHidden = nil == onActionButtonTap
+		button.isEnabled = !waitingForAction
+		button.addTarget(self, action: #selector(EligibilityStatusViewController.didTapActionButton(_:)), for: .touchUpInside)
 		actionButton = button
 		
 		// main layout
 		view.addSubview(content)
-		view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|-[content]-|", options: [], metrics: nil, views: ["content": content]))
-		view.addConstraint(NSLayoutConstraint(item: content, attribute: .CenterY, relatedBy: .Equal, toItem: view, attribute: .CenterY, multiplier: 1.0, constant: 0.0))
+		view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-[content]-|", options: [], metrics: nil, views: ["content": content]))
+		view.addConstraint(NSLayoutConstraint(item: content, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: 0.0))
 		view.addSubview(button)
-		view.addConstraint(NSLayoutConstraint(item: button, attribute: .CenterX, relatedBy: .Equal, toItem: view, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
-		view.addConstraint(NSLayoutConstraint(item: button, attribute: .Width, relatedBy: .GreaterThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 0.0, constant: 180.0))
-		view.addConstraint(NSLayoutConstraint(item: button, attribute: .Bottom, relatedBy: .Equal, toItem: bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: -20.0))
+		view.addConstraint(NSLayoutConstraint(item: button, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0.0))
+		view.addConstraint(NSLayoutConstraint(item: button, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 0.0, constant: 180.0))
+		view.addConstraint(NSLayoutConstraint(item: button, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: -20.0))
 	}
 }
 

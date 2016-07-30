@@ -33,19 +33,19 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	public var openLinksExternally = true
 	
 	/// The URL to load on view instantiation.
-	public var startURL: NSURL?
+	public var startURL: URL?
 	
 	
 	override public func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = UIColor.lightGrayColor()
-		edgesForExtendedLayout = .All
+		view.backgroundColor = UIColor.lightGray()
+		edgesForExtendedLayout = .all
 		
 		// create webview
 		let web = UIWebView()
 		web.translatesAutoresizingMaskIntoConstraints = false
 		web.delegate = self
-		web.dataDetectorTypes = .All
+		web.dataDetectorTypes = .all
 		if #available(iOS 9.0, *) {
 		    web.allowsLinkPreview = true
 		}
@@ -53,11 +53,11 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 		webView = web
 		
 		view.addSubview(web)
-		view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[web]|", options: [], metrics: nil, views: ["web": web]))
-		view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[web]|", options: [], metrics: nil, views: ["web": web]))
+		view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[web]|", options: [], metrics: nil, views: ["web": web]))
+		view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[web]|", options: [], metrics: nil, views: ["web": web]))
 	}
 	
-	override public func viewWillAppear(animated: Bool) {
+	override public func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		if let webView = webView where nil == webView.request {
 			loadStartURL()
@@ -72,8 +72,8 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	/// The CSS style to apply.
 	var appStyle: String {
 		if nil == self.dynamicType._appStyle {
-			if let styleURL = NSBundle.mainBundle().URLForResource("Intro", withExtension: "css") ?? NSBundle.mainBundle().URLForResource("Intro", withExtension: "css", subdirectory: "HTMLContent") {
-				self.dynamicType._appStyle = (try? NSString(contentsOfFile: styleURL.path!, encoding: NSUTF8StringEncoding)) as? String
+			if let styleURL = Bundle.main.urlForResource("Intro", withExtension: "css") ?? Bundle.main.urlForResource("Intro", withExtension: "css", subdirectory: "HTMLContent") {
+				self.dynamicType._appStyle = (try? NSString(contentsOfFile: styleURL.path!, encoding: String.Encoding.utf8.rawValue)) as? String
 			}
 			else {
 				c3_warn("Please include a CSS stylesheet called «Intro.css» in the app bundle")
@@ -88,7 +88,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	- parameter content: The HTML Body content, wrapped into `<body><div>...</div></body>`.
 	- returns: A full HTML document string
 	*/
-	public func htmlDocWithContent(content: String) -> String {
+	public func htmlDocWithContent(_ content: String) -> String {
 		return "<!DOCTYPE html><html><head><style>\(appStyle)</style></head><body><div style=\"padding:20px 15px;\">\(content)</div></body></html>"
 	}
 	
@@ -98,7 +98,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	/** Make `webView` load `startURL`. */
 	public func loadStartURL() {
 		if let startURL = startURL, let webView = webView {
-			let request = NSURLRequest(URL: startURL)
+			let request = URLRequest(url: startURL)
 			webView.loadRequest(request)
 		}
 	}
@@ -106,9 +106,9 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	
 	// MARK: - Web View Delegate
 	
-	public func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-		if openLinksExternally && .LinkClicked == navigationType, let url = request.URL {
-			UIApplication.sharedApplication().openURL(url)
+	public func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+		if openLinksExternally && .linkClicked == navigationType, let url = request.url {
+			UIApplication.shared().openURL(url)
 			return false
 		}
 		return true
@@ -125,9 +125,9 @@ public class PDFViewController : WebViewController, UIDocumentInteractionControl
 	
 	var documentInteraction: UIDocumentInteractionController?
 	
-	private var PDFURL: NSURL? {
+	private var PDFURL: URL? {
 		didSet {
-			shareButton?.enabled = nil != PDFURL
+			shareButton?.isEnabled = nil != PDFURL
 		}
 	}
 	
@@ -135,8 +135,8 @@ public class PDFViewController : WebViewController, UIDocumentInteractionControl
 		super.viewDidLoad()
 		
 		// create share button
-		let share = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(PDFViewController.share))
-		share.enabled = nil != PDFURL
+		let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(PDFViewController.share))
+		share.isEnabled = nil != PDFURL
 		shareButton = share
 		
 		if nil == navigationItem.rightBarButtonItem {
@@ -156,10 +156,10 @@ public class PDFViewController : WebViewController, UIDocumentInteractionControl
 	
 	- parameter url: The URL to load PDF data from
 	*/
-	public func loadPDFDataFrom(url: NSURL) {
+	public func loadPDFDataFrom(_ url: URL) {
 		PDFURL = url
 		if let web = webView {
-			let request = NSURLRequest(URL: url)
+			let request = URLRequest(url: url)
 			web.loadRequest(request)
 		}
 	}
@@ -172,14 +172,14 @@ public class PDFViewController : WebViewController, UIDocumentInteractionControl
 	*/
 	public func share() {
 		if let url = PDFURL {
-			documentInteraction = UIDocumentInteractionController(URL: url)
+			documentInteraction = UIDocumentInteractionController(url: url)
 			documentInteraction!.delegate = self;
 			documentInteraction!.name = self.title;
-			documentInteraction!.presentOptionsMenuFromBarButtonItem(shareButton!, animated: true)
+			documentInteraction!.presentOptionsMenu(from: shareButton!, animated: true)
 		}
 	}
 	
-	public func documentInteractionControllerDidDismissOpenInMenu(controller: UIDocumentInteractionController) {
+	public func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
 		if documentInteraction === controller {
 			documentInteraction = nil
 		}

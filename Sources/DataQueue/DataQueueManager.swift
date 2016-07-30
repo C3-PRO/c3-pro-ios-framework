@@ -46,9 +46,9 @@ class DataQueueManager {
 		server = fhirServer
 		queueDirectory = directory
 		#if DEBUG
-		let logger = OAuth2DebugLogger(.Trace)
-		let manager = NSFileManager()
-		if let iterator = manager.enumeratorAtPath(queueDirectory) {
+		let logger = OAuth2DebugLogger(.trace)
+		let manager = FileManager()
+		if let iterator = manager.enumerator(atPath: queueDirectory) {
 			logger.trace("C3-PRO", msg: "Initialized data queue at «\(queueDirectory)»")
 			for item in iterator {
 				logger.trace("C3-PRO", msg: "Waiting: \(item)")
@@ -61,13 +61,13 @@ class DataQueueManager {
 	// MARK: - File Handling
 	
 	/** The filename of a resource at the given queue position. */
-	func fileNameForSequence(seq: Int) -> String {
-		return ("\(self.dynamicType.prefix)\(seq)" as NSString).stringByAppendingPathExtension(self.dynamicType.fileExtension)!
+	func fileNameForSequence(_ seq: Int) -> String {
+		return ("\(self.dynamicType.prefix)\(seq)" as NSString).appendingPathExtension(self.dynamicType.fileExtension)!
 	}
 	
 	/// The data writing options when storing a resource to the queue.
-	var fileProtection: NSDataWritingOptions {
-		return NSDataWritingOptions.DataWritingFileProtectionCompleteUnlessOpen
+	var fileProtection: Data.WritingOptions {
+		return Data.WritingOptions.completeFileProtectionUnlessOpen
 	}
 	
 	
@@ -75,7 +75,7 @@ class DataQueueManager {
 	
 	var currentlyDequeueing: QueuedResource?
 	
-	func isDequeueing(resource: Resource) -> Bool {
+	func isDequeueing(_ resource: Resource) -> Bool {
 		if let dequeueing = currentlyDequeueing?.resource where dequeueing === resource {
 			return true
 		}
@@ -84,12 +84,12 @@ class DataQueueManager {
 	
 	/** Checks if the directory for queued files exists on disk, creating them and adjusting the file protection status if necessary. */
 	func ensureHasDirectory() {
-		let manager = NSFileManager.defaultManager()
+		let manager = FileManager.default
 		
 		var isDir: ObjCBool = true
-		if !manager.fileExistsAtPath(queueDirectory, isDirectory: &isDir) || !isDir {
+		if !manager.fileExists(atPath: queueDirectory, isDirectory: &isDir) || !isDir {
 			do {
-				try manager.createDirectoryAtPath(queueDirectory, withIntermediateDirectories: true, attributes: nil)
+				try manager.createDirectory(atPath: queueDirectory, withIntermediateDirectories: true, attributes: nil)
 			}
 			catch let error {
 				fatalError("DataQueue: Failed to create queue directory: \(error)")
@@ -103,15 +103,15 @@ class DataQueueManager {
 	- parameter manager: The NSFileManager to use
 	- returns: A tuple of (min, max) indices
 	*/
-	func currentQueueRange(manager: NSFileManager) -> (min: Int, max: Int)? {
+	func currentQueueRange(_ manager: FileManager) -> (min: Int, max: Int)? {
 		var myMin: Int?
 		var myMax: Int?
 		
 		do {
-			let files = try manager.contentsOfDirectoryAtPath(queueDirectory)
+			let files = try manager.contentsOfDirectory(atPath: queueDirectory)
 			for anyFile in files {
 				let file = anyFile as NSString
-				let pure = file.stringByDeletingPathExtension.stringByReplacingOccurrencesOfString(self.dynamicType.prefix, withString: "") as NSString
+				let pure = file.deletingPathExtension.replacingOccurrences(of: self.dynamicType.prefix, with: "") as NSString
 				myMin = min(myMin ?? pure.integerValue, pure.integerValue)
 				myMax = max(myMax ?? pure.integerValue, pure.integerValue)
 			}
@@ -131,18 +131,19 @@ class DataQueueManager {
 	
 	- parameter resource: The FHIR Resource to enqueue
 	*/
-	func enqueueResource(resource: Resource) {
+	func enqueueResource(_ resource: Resource) {
 		ensureHasDirectory()
 		
 		// get next sequence number
-		var seq = currentQueueRange(NSFileManager())?.max ?? 0
+		var seq = currentQueueRange(FileManager())?.max ?? 0
 		seq += 1
 		
 		// store new resoure to queue
-		let path = (queueDirectory as NSString).stringByAppendingPathComponent(fileNameForSequence(seq))
+		let path = (queueDirectory as NSString).appendingPathComponent(fileNameForSequence(seq))
 		do {
-			let data = try NSJSONSerialization.dataWithJSONObject(resource.asJSON(), options: [])
-			try data.writeToFile(path, options: fileProtection)
+			let data = try JSONSerialization.data(withJSONObject: resource.asJSON(), options: [])
+			let url = URL(fileURLWithPath: path)
+			try data.write(to: url, options: fileProtection)
 			logger?.debug("C3-PRO", msg: "Enqueued resource at \(path)")
 		}
 		catch let error {
@@ -151,14 +152,14 @@ class DataQueueManager {
 	}
 	
 	/** Convenience method for internal use; POST requests should be DataRequests so this should never fail. */
-	func enqueueResourceInHandler(handler: FHIRServerRequestHandler) {
+	func enqueueResourceInHandler(_ handler: FHIRServerRequestHandler) {
 		if let resource = handler.resource {
 			enqueueResource(resource)
 		}
 	}
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
-	func flush(callback: ((error: ErrorType?) -> Void)) {
+	func flush(_ callback: ((error: ErrorProtocol?) -> Void)) {
 		dequeueFirst { [weak self] didDequeue, error in
 			if let error = error {
 				callback(error: error)
@@ -168,7 +169,7 @@ class DataQueueManager {
 					this.flush(callback)
 				}
 				else {
-					callback(error: C3Error.DataQueueFlushHalted)
+					callback(error: C3Error.dataQueueFlushHalted)
 				}
 			}
 			else {
@@ -183,7 +184,7 @@ class DataQueueManager {
 	- parameter callback: The callback to call. "didDequeue" is true if the resource was successfully dequeued. "error" is nil on success or
 	if there was no file to dequeue (in which case _didDequeue_ would be false)
 	*/
-	func dequeueFirst(callback: ((didDequeue: Bool, error: ErrorType?) -> Void)) {
+	func dequeueFirst(_ callback: ((didDequeue: Bool, error: ErrorProtocol?) -> Void)) {
 		if nil != currentlyDequeueing {
 			c3_warn("already dequeueing")
 			callback(didDequeue: false, error: nil)
@@ -204,7 +205,7 @@ class DataQueueManager {
 				
 				if nil != first.resource!.id {
 					first.resource!._server = server
-					first.resource!.update(cb)
+					first.resource!.update(callback: cb)
 				}
 				else {
 					first.resource!.create(server, callback: cb)
@@ -224,9 +225,9 @@ class DataQueueManager {
 	/** Deletes the resource in `currentlyDequeueing` from the queue. */
 	func clearCurrentlyDequeueing() {
 		if let path = currentlyDequeueing?.path {
-			let manager = NSFileManager()
+			let manager = FileManager()
 			do {
-				try manager.removeItemAtPath(path)
+				try manager.removeItem(atPath: path)
 				currentlyDequeueing = nil
 			}
 			catch let error {
@@ -242,10 +243,10 @@ class DataQueueManager {
 	- returns: The first resource in the queue, as `QueuedResource`
 	*/
 	final func firstInQueue() -> QueuedResource? {
-		let manager = NSFileManager()
+		let manager = FileManager()
 		if let first = currentQueueRange(manager)?.min {
-			let path = (queueDirectory as NSString).stringByAppendingPathComponent(fileNameForSequence(first))
-			if manager.isReadableFileAtPath(path) {
+			let path = (queueDirectory as NSString).appendingPathComponent(fileNameForSequence(first))
+			if manager.isReadableFile(atPath: path) {
 				return QueuedResource(path: path)
 			}
 			logger?.debug("C3-PRO", msg: "Have file in queue but it is not readable, waiting for next call")

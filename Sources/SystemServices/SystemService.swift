@@ -31,25 +31,25 @@ The items have a `usageReason` attached to them which can be shown to users for 
 public enum SystemService: CustomStringConvertible {
 	
 	/// Access to the user's location while using the app. Must provide the reason why you want access.
-	case GeoLocationWhenUsing(String)
+	case geoLocationWhenUsing(String)
 	
 	/// Access to the user's location even when in background. Must provide the reason why you want access here and set
 	/// `NSLocationAlwaysUsageDescription` in Info.plist
-	case GeoLocationAlways(String)
+	case geoLocationAlways(String)
 	
 	/// Permission to deliver local notifications.
-	case LocalNotifications(Set<UIUserNotificationCategory>)
+	case localNotifications(Set<UIUserNotificationCategory>)
 	
 //	case RemoteNotifications
 	
 	/// Permission to access CoreMotion data.
-	case CoreMotion
+	case coreMotion
 	
 	/// Permission to use HealthKit data. Provide `NSHealthShareUsageDescription` and/or `NSHealthUpdateUsageDescription` in Info.plist.
-	case HealthKit(HealthKitTypes)
+	case healthKit(HealthKitTypes)
 	
 	/// Permission to access the device microphone.
-	case Microphone
+	case microphone
 	
 	
 	// MARK: - Titles, Names and Strings
@@ -57,17 +57,17 @@ public enum SystemService: CustomStringConvertible {
 	/// The title or name of the service.
 	public var description: String {
 		switch self {
-		case .GeoLocationWhenUsing:
+		case .geoLocationWhenUsing:
 			return "Location Services".c3_localized
-		case .GeoLocationAlways:
+		case .geoLocationAlways:
 			return "Location Services".c3_localized
-		case .LocalNotifications:
+		case .localNotifications:
 			return "Notifications".c3_localized
-		case .CoreMotion:
+		case .coreMotion:
 			return "Motion Activity".c3_localized
-		case .HealthKit:
+		case .healthKit:
 			return "HealthKit".c3_localized
-		case .Microphone:
+		case .microphone:
 			return "Microphone".c3_localized
 		}
 	}
@@ -75,17 +75,17 @@ public enum SystemService: CustomStringConvertible {
 	/// The description of what the service entails/why it's needed.
 	public var usageReason: String {
 		switch self {
-		case .GeoLocationWhenUsing(let reason):
+		case .geoLocationWhenUsing(let reason):
 			return reason
-		case .GeoLocationAlways(let reason):
+		case .geoLocationAlways(let reason):
 			return reason
-		case .LocalNotifications:
+		case .localNotifications:
 			return "Enabling notifications allows the app to show reminders.".c3_localized
-		case .CoreMotion:
+		case .coreMotion:
 			return "Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease.".c3_localized
-		case .HealthKit:
+		case .healthKit:
 			return "Individually specify which general health information the app may read from and write to HealthKit".c3_localized
-		case .Microphone:
+		case .microphone:
 			return "Access to microphone is required for your Voice Recording Activity.".c3_localized
 		}
 	}
@@ -93,19 +93,19 @@ public enum SystemService: CustomStringConvertible {
 	/// Localized instructions telling how to re-enable the system service. Queries `CFBundleDisplayName` from the bundle's Info.plist to
 	/// substitute the app name.
 	public var localizedHowToReEnable: String {
-		let appName = (NSBundle.mainBundle().infoDictionary?["CFBundleDisplayName"] as? String ?? NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String) ?? "App Name".c3_localized
+		let appName = (Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String ?? Bundle.main.infoDictionary?["CFBundleName"] as? String) ?? "App Name".c3_localized
 		switch self {
-		case .GeoLocationWhenUsing:
+		case .geoLocationWhenUsing:
 			return "Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable.".c3_localized
-		case .GeoLocationAlways:
+		case .geoLocationAlways:
 			return "Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable.".c3_localized
-		case .LocalNotifications:
+		case .localNotifications:
 			return "Please go to the Settings app ➔ “\(appName)” ➔ “Notifications” and turn “Allow Notifications” on.".c3_localized
-		case .CoreMotion:
+		case .coreMotion:
 			return "Please go to the Settings app ➔ “\(appName)” and turn “Motion & Fitness” on".c3_localized
-		case .HealthKit:
+		case .healthKit:
 			return "Please go to the Settings app ➔ “Privacy ”➔ “Health” ➔ \(appName) to re-enable.".c3_localized
-		case .Microphone:
+		case .microphone:
 			return "Please go to the Settings app ➔ “\(appName)” and turn “Microphone” on".c3_localized
 		}
 	}
@@ -113,7 +113,7 @@ public enum SystemService: CustomStringConvertible {
 	/// Whether the settings can be managed from within the app's settings pane (not a top-level pane, such as “Privacy”)
 	public var wantsAppSettingsPane: Bool {
 		switch self {
-		case .HealthKit:
+		case .healthKit:
 			return false
 		default:
 			return true

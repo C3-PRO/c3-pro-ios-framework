@@ -50,7 +50,7 @@ class ConditionalQuestionStep: ORKQuestionStep {
 	
 	// MARK: - Requirements
 	
-	func addRequirement(requirement: ResultRequirement) {
+	func addRequirement(_ requirement: ResultRequirement) {
 		if nil == requirements {
 			requirements = [ResultRequirement]()
 		}
@@ -65,7 +65,7 @@ class ConditionalQuestionStep: ORKQuestionStep {
 			requirements = reqs
 		}
 		else {
-			requirements!.appendContentsOf(reqs)
+			requirements!.append(contentsOf: reqs)
 		}
 	}
 	
@@ -75,14 +75,14 @@ class ConditionalQuestionStep: ORKQuestionStep {
 	- parameter result: The result to use for the checks
 	- returns: A bool indicating success or failure, nil if there are no requirements
 	*/
-	func requirementsAreSatisfiedBy(result: ORKTaskResult) -> Bool? {
+	func requirementsAreSatisfiedBy(_ result: ORKTaskResult) -> Bool? {
 		guard let requirements = requirements else {
 			return nil
 		}
 		
 		// check each requirement and drop out early if one fails
 		for requirement in requirements {
-			if let stepResult = result.resultForIdentifier(requirement.questionIdentifier as String) as? ORKStepResult {
+			if let stepResult = result.result(forIdentifier: requirement.questionIdentifier as String) as? ORKStepResult {
 				if let questionResults = stepResult.results as? [ORKQuestionResult] {
 					var ok = false
 					for questionResult in questionResults {
@@ -109,8 +109,8 @@ class ConditionalQuestionStep: ORKQuestionStep {
 	
 	// MARK: - NSCopying
 	
-	override func copyWithZone(zone: NSZone) -> AnyObject {
-		super.copyWithZone(zone)
+	override func copy(with zone: NSZone?) -> AnyObject {
+		super.copy(with: zone)
 		return self
 	}
 	
@@ -123,9 +123,9 @@ class ConditionalQuestionStep: ORKQuestionStep {
 		requirements = aDecoder.decodeObjectOfClasses(set, forKey: "requirements") as? [ResultRequirement]
 	}
 	
-	override func encodeWithCoder(aCoder: NSCoder) {
-		super.encodeWithCoder(aCoder)
-		aCoder.encodeObject(requirements, forKey: "requirements")
+	override func encode(with aCoder: NSCoder) {
+		super.encode(with: aCoder)
+		aCoder.encode(requirements, forKey: "requirements")
 	}
 }
 
@@ -154,7 +154,7 @@ class ConditionalInstructionStep: ORKInstructionStep {
 	
 	// MARK: - Requirements
 	
-	func addRequirement(requirement: ResultRequirement) {
+	func addRequirement(_ requirement: ResultRequirement) {
 		if nil == requirements {
 			requirements = [ResultRequirement]()
 		}
@@ -166,7 +166,7 @@ class ConditionalInstructionStep: ORKInstructionStep {
 			requirements = reqs
 		}
 		else {
-			requirements!.appendContentsOf(reqs)
+			requirements!.append(contentsOf: reqs)
 		}
 	}
 	
@@ -175,14 +175,14 @@ class ConditionalInstructionStep: ORKInstructionStep {
 	
 	- returns: A bool indicating success or failure, nil if there are no requirements
 	*/
-	func requirementsAreSatisfiedBy(result: ORKTaskResult) -> Bool? {
+	func requirementsAreSatisfiedBy(_ result: ORKTaskResult) -> Bool? {
 		guard let requirements = requirements else {
 			return nil
 		}
 		
 		// check each requirement and drop out early if one fails
 		for requirement in requirements {
-			if let stepResult = result.resultForIdentifier(requirement.questionIdentifier as String) as? ORKStepResult {
+			if let stepResult = result.result(forIdentifier: requirement.questionIdentifier as String) as? ORKStepResult {
 				if let questionResults = stepResult.results as? [ORKQuestionResult] {
 					var ok = false
 					for questionResult in questionResults {
@@ -209,8 +209,8 @@ class ConditionalInstructionStep: ORKInstructionStep {
 	
 	// MARK: - NSCopying
 	
-	override func copyWithZone(zone: NSZone) -> AnyObject {
-		super.copyWithZone(zone)
+	override func copy(with zone: NSZone?) -> AnyObject {
+		super.copy(with: zone)
 		return self
 	}
 	
@@ -223,9 +223,9 @@ class ConditionalInstructionStep: ORKInstructionStep {
 		requirements = aDecoder.decodeObjectOfClasses(set, forKey: "requirements") as? [ResultRequirement]
 	}
 	
-	override func encodeWithCoder(aCoder: NSCoder) {
-		super.encodeWithCoder(aCoder)
-		aCoder.encodeObject(requirements, forKey: "requirements")
+	override func encode(with aCoder: NSCoder) {
+		super.encode(with: aCoder)
+		aCoder.encode(requirements, forKey: "requirements")
 	}
 }
 

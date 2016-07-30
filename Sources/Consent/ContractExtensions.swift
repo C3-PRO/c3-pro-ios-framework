@@ -53,7 +53,7 @@ public extension Contract {
 	*/
 	public func c3_termsAsConsentSections() throws -> [ORKConsentSection] {
 		guard let terms = term else {
-			throw C3Error.ConsentContractHasNoTerms
+			throw C3Error.consentContractHasNoTerms
 		}
 		var sections = [ORKConsentSection]()
 		for term in terms {
@@ -66,7 +66,7 @@ public extension Contract {
 			}
 		}
 		if sections.isEmpty {
-			throw C3Error.ConsentContractHasNoTerms
+			throw C3Error.consentContractHasNoTerms
 		}
 		return sections
 	}
@@ -87,7 +87,7 @@ public extension ContractTerm {
 		section.summary = text
 		
 		// We need extensions for some other properties
-		if let subs = extensionsFor(kContractTermConsentSectionExtension)?.first?.extension_fhir {
+		if let subs = extensions(forURI: kContractTermConsentSectionExtension)?.first?.extension_fhir {
 			for sub in subs {
 				if let url = sub.url?.absoluteString {
 					switch url {
@@ -96,10 +96,10 @@ public extension ContractTerm {
 					case "htmlContent":
 						section.htmlContent = sub.valueString
 					case "htmlContentFile":
-						let bundle = NSBundle.mainBundle()
-						if let name = sub.valueString, let url = bundle.URLForResource(name, withExtension: "html") ?? bundle.URLForResource(name, withExtension: "html", subdirectory: "HTMLContent") {
+						let bundle = Bundle.main
+						if let name = sub.valueString, let url = bundle.urlForResource(name, withExtension: "html") ?? bundle.urlForResource(name, withExtension: "html", subdirectory: "HTMLContent") {
 							do {
-								section.htmlContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
+								section.htmlContent = try String(contentsOf: url, encoding: String.Encoding.utf8)
 							}
 							catch let error {
 								c3_warn("Failed to read from bundled file «\(url)»: \(error)")
@@ -116,8 +116,8 @@ public extension ContractTerm {
 							c3_warn("Custom consent image named «\(sub.valueString)» is not in main bundle")
 						}
 					case "animation":
-						let multi = (UIScreen.mainScreen().scale >= 3.0) ? "@3x" : "@2x"
-						if let name = sub.valueString, let url = NSBundle.mainBundle().URLForResource(name + multi, withExtension: "m4v") {
+						let multi = (UIScreen.main().scale >= 3.0) ? "@3x" : "@2x"
+						if let name = sub.valueString, let url = Bundle.main.urlForResource(name + multi, withExtension: "m4v") {
 							section.customAnimationURL = url
 						}
 						else {
@@ -151,31 +151,31 @@ public extension ContractTerm {
 				}
 				switch code.code! {
 				case "Overview":
-					return ORKConsentSectionType.Overview
+					return ORKConsentSectionType.overview
 				case "Privacy":
-					return ORKConsentSectionType.Privacy
+					return ORKConsentSectionType.privacy
 				case "DataGathering":
-					return ORKConsentSectionType.DataGathering
+					return ORKConsentSectionType.dataGathering
 				case "DataUse":
-					return ORKConsentSectionType.DataUse
+					return ORKConsentSectionType.dataUse
 				case "TimeCommitment":
-					return ORKConsentSectionType.TimeCommitment
+					return ORKConsentSectionType.timeCommitment
 				case "StudySurvey":
-					return ORKConsentSectionType.StudySurvey
+					return ORKConsentSectionType.studySurvey
 				case "StudyTasks":
-					return ORKConsentSectionType.StudyTasks
+					return ORKConsentSectionType.studyTasks
 				case "Withdrawing":
-					return ORKConsentSectionType.Withdrawing
+					return ORKConsentSectionType.withdrawing
 				case "Custom":
-					return ORKConsentSectionType.Custom
+					return ORKConsentSectionType.custom
 				case "OnlyInDocument":
-					return ORKConsentSectionType.OnlyInDocument
+					return ORKConsentSectionType.onlyInDocument
 				default:
-					throw C3Error.ConsentSectionTypeUnknownToResearchKit(code.code!)
+					throw C3Error.consentSectionTypeUnknownToResearchKit(code.code!)
 				}
 			}
 		}
-		throw C3Error.ConsentSectionHasNoType
+		throw C3Error.consentSectionHasNoType
 	}
 }
 

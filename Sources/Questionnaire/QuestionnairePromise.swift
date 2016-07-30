@@ -30,7 +30,7 @@ protocol QuestionnairePromiseProto: CustomStringConvertible {
 	
 	var steps: [ORKStep]? { get }
 	
-	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void))
+	func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorProtocol]?) -> Void))
 }
 
 
@@ -64,9 +64,9 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 	- parameter parentRequirements: An array of ResultRequirement instances required by parent elements
 	- parameter callback: Callback to be called upon promise fulfillment with a list of errors, if any. Called on the main thread.
 	*/
-	public func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
+	public func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorProtocol]?) -> Void)) {
 		guard let item = questionnaire.item where item.count > 0 else {
-			callback(errors: [C3Error.QuestionnaireInvalidNoTopLevelItem])
+			callback(errors: [C3Error.questionnaireInvalidNoTopLevelItem])
 			return
 		}
 		
@@ -81,7 +81,7 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 				callback(errors: errors)
 			}
 			else {
-				callback(errors: errors ?? [C3Error.QuestionnaireUnknownError])
+				callback(errors: errors ?? [C3Error.questionnaireUnknownError])
 			}
 		}
 	}
@@ -91,7 +91,7 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 	
 	/// String representation of the receiver.
 	public var description: String {
-		return NSString(format: "QuestionnairePromise <%p>", unsafeAddressOf(self)) as String
+		return NSString(format: "QuestionnairePromise <%p>", unsafeAddress(of: self)) as String
 	}
 }
 

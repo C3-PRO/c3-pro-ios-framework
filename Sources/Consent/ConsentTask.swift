@@ -41,7 +41,7 @@ public class ConsentTask: ORKOrderedTask {
 	
 	/// The sharing step.
 	public var sharingStep: ORKStep? {
-		return stepWithIdentifier(self.dynamicType.sharingStepName)
+		return step(withIdentifier: self.dynamicType.sharingStepName)
 	}
 	
 	/// The identifier of the sharing step.
@@ -91,15 +91,15 @@ public class ConsentTask: ORKOrderedTask {
 	- parameter options: The options to consider when creating the task
 	- returns: A named tuple returning the ORKConsentDocument and an array of ORKSteps
 	*/
-	class func stepsAndConsentFromContract(contract: Contract, options: ConsentTaskOptions) throws -> (consent: ORKConsentDocument, steps: [ORKStep]) {
+	class func stepsAndConsentFromContract(_ contract: Contract, options: ConsentTaskOptions) throws -> (consent: ORKConsentDocument, steps: [ORKStep]) {
 		let consent = try contract.c3_asConsentDocument()
-		let bundle = NSBundle.mainBundle()
+		let bundle = Bundle.main
 		
 		// full consent review document (override, if nil will automatically combine all consent sections)
 		if let reviewDoc = options.reviewConsentDocument {
-			if let url = bundle.URLForResource(reviewDoc, withExtension: "html") ?? bundle.URLForResource(reviewDoc, withExtension: "html", subdirectory: "HTMLContent") {
+			if let url = bundle.urlForResource(reviewDoc, withExtension: "html") ?? bundle.urlForResource(reviewDoc, withExtension: "html", subdirectory: "HTMLContent") {
 				do {
-					consent.htmlReviewContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
+					consent.htmlReviewContent = try String(contentsOf: url, encoding: String.Encoding.utf8)
 				}
 				catch let error {
 					c3_warn("Failed to read contents of file named «\(reviewDoc).html»: \(error)")
@@ -118,10 +118,10 @@ public class ConsentTask: ORKOrderedTask {
 		// sharing step
 		if options.askForSharing {
 			let more = options.shareMoreInfoDocument
-			if let url = bundle.URLForResource(more, withExtension: "html") ?? bundle.URLForResource(more, withExtension: "html", subdirectory: "HTMLContent") {
+			if let url = bundle.urlForResource(more, withExtension: "html") ?? bundle.urlForResource(more, withExtension: "html", subdirectory: "HTMLContent") {
 				do {
-					let learnMore = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
-					let teamName = contract.authority?.first?.resolved(Organization)?.name
+					let learnMore = try String(contentsOf: url, encoding: String.Encoding.utf8)
+					let teamName = contract.authority?.first?.resolved(Organization.self)?.name
 					let team = (nil != teamName) ? "The \(teamName!)" : options.shareTeamName
 					let sharing = ORKConsentSharingStep(identifier: sharingStepName,
 						investigatorShortDescription: team,
@@ -143,7 +143,7 @@ public class ConsentTask: ORKOrderedTask {
 		// consent review step
 		let signature = ORKConsentSignature(forPersonWithTitle: "Participant".c3_localized, dateFormatString: nil, identifier: participantSignatureName)
 		consent.addSignature(signature)
-		let review = ORKConsentReviewStep(identifier: reviewStepName, signature: signature, inDocument: consent)
+		let review = ORKConsentReviewStep(identifier: reviewStepName, signature: signature, in: consent)
 		review.reasonForConsent = options.reasonForConsent
 		steps.append(review)
 		
@@ -174,9 +174,9 @@ public class ConsentTask: ORKOrderedTask {
 	- parameter taskResult: The result of the consent task
 	- returns: The consent signature result, if the step has been completed yet
 	*/
-	public func signatureResult(taskResult: ORKTaskResult) -> ORKConsentSignatureResult? {
-		return taskResult.stepResultForStepIdentifier(self.dynamicType.reviewStepName)?
-			.resultForIdentifier(self.dynamicType.participantSignatureName) as? ORKConsentSignatureResult
+	public func signatureResult(_ taskResult: ORKTaskResult) -> ORKConsentSignatureResult? {
+		return taskResult.stepResult(forStepIdentifier: self.dynamicType.reviewStepName)?
+			.result(forIdentifier: self.dynamicType.participantSignatureName) as? ORKConsentSignatureResult
 	}
 	
 	/**
@@ -186,7 +186,7 @@ public class ConsentTask: ORKOrderedTask {
 	- parameter result: The consent signature result to inspect
 	- returns: The consent signature, if it's there
 	*/
-	public func signatureInResult(result: ORKConsentSignatureResult) -> ORKConsentSignature? {
+	public func signatureInResult(_ result: ORKConsentSignatureResult) -> ORKConsentSignature? {
 		if let signature = result.signature where nil != signature.signatureImage {
 			return signature
 		}
@@ -199,7 +199,7 @@ public class ConsentTask: ORKOrderedTask {
 	- parameter taskResult: The result of the consent task to inspect
 	- returns: The consent signature, if the user consented and signed
 	*/
-	public func signature(taskResult: ORKTaskResult) -> ORKConsentSignature? {
+	public func signature(_ taskResult: ORKTaskResult) -> ORKConsentSignature? {
 		guard let result = signatureResult(taskResult) else {
 			return nil
 		}
@@ -209,7 +209,7 @@ public class ConsentTask: ORKOrderedTask {
 	
 	// MARK: - Task Navigation
 	
-	public override func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+	override public func step(after step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
 		guard let step = step else {
 			return steps.first
 		}
@@ -218,7 +218,7 @@ public class ConsentTask: ORKOrderedTask {
 		if self.dynamicType.reviewStepName == step.identifier && nil == signature(result) {
 			return nil
 		}
-		return super.stepAfterStep(step, withResult: result)
+		return super.step(after: step, with: result)
 	}
 }
 

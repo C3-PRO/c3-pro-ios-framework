@@ -31,8 +31,8 @@ public class AESUtility {
 	public var keySize = 32
 	
 	/// NSData representation of the symmetric key.
-	public var symmetricKeyData: NSData {
-		return NSData.withBytes(symmetricKey)
+	public var symmetricKeyData: Data {
+		return Data(bytes: symmetricKey)
 	}
 	
 	var symmetricKey: [UInt8]
@@ -61,10 +61,10 @@ public class AESUtility {
 	- parameter data: The data to encrypt using the receiver's symmetric key
 	- returns: Encryped data representation
 	*/
-	public func encrypt(data: NSData) throws -> NSData {
+	public func encrypt(_ data: Data) throws -> Data {
 		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
 		let enc = try aes.encrypt(data.arrayOfBytes())
-		return NSData.withBytes(enc)
+		return Data.withBytes(enc)
 	}
 	
 	
@@ -76,10 +76,10 @@ public class AESUtility {
 	- parameter encData: Encrypted data to decrypt using the receiver's symmetric key
 	- returns: Decrypted data
 	*/
-	public func decrypt(encData: NSData) throws -> NSData {
+	public func decrypt(_ encData: Data) throws -> Data {
 		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
 		let dec = try aes.decrypt(encData.arrayOfBytes())
-		return NSData.withBytes(dec)
+		return Data.withBytes(dec)
 	}
 }
 

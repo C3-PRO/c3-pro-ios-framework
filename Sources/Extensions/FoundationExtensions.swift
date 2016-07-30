@@ -30,8 +30,8 @@ extension String {
 	*/
 	func c3_stripMultipleSpaces() -> String {
 		do {
-			let regEx = try NSRegularExpression(pattern: " +", options: [])
-			return regEx.stringByReplacingMatchesInString(self, options: [], range: NSMakeRange(0, self.characters.count), withTemplate: " ")
+			let regEx = try RegularExpression(pattern: " +", options: [])
+			return regEx.stringByReplacingMatches(in: self, options: [], range: NSMakeRange(0, self.characters.count), withTemplate: " ")
 		}
 		catch {
 		}
@@ -40,7 +40,7 @@ extension String {
 }
 
 
-extension NSFileManager {
+extension FileManager {
 	
 	/**
 	Return the path to the app's library directory.
@@ -48,11 +48,11 @@ extension NSFileManager {
 	- returns: The path to the app library
 	*/
 	public func c3_appLibraryDirectory() throws -> String {
-		let paths = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true)
+		let paths = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
 		if let first = paths.first {
 			return first
 		}
-		throw C3Error.AppLibraryDirectoryNotPresent
+		throw C3Error.appLibraryDirectoryNotPresent
 	}
 }
 

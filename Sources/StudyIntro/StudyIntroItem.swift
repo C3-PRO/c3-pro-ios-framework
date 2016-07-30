@@ -97,9 +97,9 @@ public class StudyIntroHTMLItem: StudyIntroItem {
 	/// The name of the file included in the bundle, either at the top level or in a `HTMLContent` subdirectory.
 	public var filename: String?
 	
-	var url: NSURL? {
+	var url: URL? {
 		if let filename = filename {
-			let url = NSBundle.mainBundle().URLForResource(filename, withExtension: "html") ?? NSBundle.mainBundle().URLForResource(filename, withExtension: "html", subdirectory: "HTMLContent")
+			let url = Bundle.main.urlForResource(filename, withExtension: "html") ?? Bundle.main.urlForResource(filename, withExtension: "html", subdirectory: "HTMLContent")
 			if nil == url {
 				fatalError("Expecting file «\(filename).html» to be present in the bundle (or its «HTMLContent» directory), but didn't find it")
 			}

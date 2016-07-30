@@ -41,7 +41,7 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 		super.init(step: step)
 	}
 	
-	public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+	public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 	}
 
@@ -52,7 +52,7 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 	
 	// MARK: - Data
 	
-	func serviceAtIndexPath(indexPath: NSIndexPath) -> SystemService? {
+	func serviceAtIndexPath(_ indexPath: IndexPath) -> SystemService? {
 		if let step = step as? SystemPermissionStep, let services = step.services {
 			if indexPath.row < services.count {
 				return services[indexPath.row]
@@ -70,18 +70,18 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		createUI()
-		tableView.registerClass(PermissionRequestTableViewCell.self, forCellReuseIdentifier: "MainCell")
+		tableView.register(PermissionRequestTableViewCell.self, forCellReuseIdentifier: "MainCell")
 	}
 	
-	public override func viewWillAppear(animated: Bool) {
+	public override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		if hasNextStep() {
-			let title = ORKBundle().localizedStringForKey("BUTTON_NEXT", value: "BUTTON_NEXT", table: "ResearchKit")
-			let next = UIBarButtonItem(title: title, style: .Plain, target: self, action: #selector(UIWebView.goForward))
+			let title = "Next"; // FIXME: no longer available: ORKBundle().localizedStringForKey("BUTTON_NEXT", value: "BUTTON_NEXT", table: "ResearchKit")
+			let next = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(UIWebView.goForward))
 			self.navigationItem.rightBarButtonItem = next
 		}
 		else {
-			let done = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(UIWebView.goForward))
+			let done = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(UIWebView.goForward))
 			self.navigationItem.rightBarButtonItem = done
 		}
 	}
@@ -91,7 +91,7 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 			return
 		}
 		
-		let tv = UITableView(frame: self.view.bounds, style: .Plain)
+		let tv = UITableView(frame: self.view.bounds, style: .plain)
 		tv.translatesAutoresizingMaskIntoConstraints = false
 		tv.delegate = self
 		tv.dataSource = self
@@ -99,26 +99,26 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 		tv.estimatedRowHeight = 200.0
 		
 		view.addSubview(tv)
-		view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[tv]|", options: [], metrics: nil, views: ["tv": tv]))
-		view.addConstraint(NSLayoutConstraint(item: tv, attribute: .Top, relatedBy: .Equal, toItem: topLayoutGuide, attribute: .Bottom, multiplier: 1, constant: 0))
-		view.addConstraint(NSLayoutConstraint(item: tv, attribute: .Bottom, relatedBy: .Equal, toItem: bottomLayoutGuide, attribute: .Top, multiplier: 1, constant: 0))
+		view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[tv]|", options: [], metrics: nil, views: ["tv": tv]))
+		view.addConstraint(NSLayoutConstraint(item: tv, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 0))
+		view.addConstraint(NSLayoutConstraint(item: tv, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1, constant: 0))
 		tableView = tv
 	}
 	
 	
 	// MARK: - Table View Data Source
 	
-	public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	public func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 	
-	public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return (step as? SystemPermissionStep)?.services?.count ?? 0
 	}
 	
-	public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("MainCell", forIndexPath: indexPath) as! PermissionRequestTableViewCell
-		cell.selectionStyle = .None
+	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath) as! PermissionRequestTableViewCell
+		cell.selectionStyle = .none
 		if let service = serviceAtIndexPath(indexPath) {
 			cell.setupForService(service, permissioner: permissionRequester, viewController: self)
 		}

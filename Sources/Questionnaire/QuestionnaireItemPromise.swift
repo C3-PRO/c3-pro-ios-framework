@@ -62,14 +62,14 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	- parameter callback: The callback to be called when done; note that even when you get an error, some steps might have successfully been
 	                      allocated still, so don't throw everything away just because you receive errors
 	*/
-	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
-		let linkId = item.linkId ?? NSUUID().UUIDString
+	func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorProtocol]?) -> Void)) {
+		let linkId = item.linkId ?? UUID().uuidString
 		let (title, text) = item.c3_bestTitleAndText()
 		
 		// resolve answer format, THEN resolve sub-groups, if any
 		item.c3_asAnswerFormat() { format, error in
 			var steps = [ORKStep]()
-			var errors = [ErrorType]()
+			var errors = [ErrorProtocol]()
 			var requirements = parentRequirements ?? [ResultRequirement]()
 			
 			// we know the answer format, create a conditional step
@@ -77,12 +77,12 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				let step = ConditionalQuestionStep(identifier: linkId, title: title, answer: fmt)
 				step.fhirType = self.item.type
 				step.text = text
-				step.optional = !(self.item.required ?? false)
+				step.isOptional = !(self.item.required ?? false)
 				
 				// questions "enableWhen" requirements
 				do {
 					if let myreqs = try self.item.c3_enableQuestionnaireElementWhen() {
-						requirements.appendContentsOf(myreqs)
+						requirements.append(contentsOf: myreqs)
 					}
 				}
 				catch let error {
@@ -109,21 +109,21 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				let subpromises = subitems.map() { QuestionnaireItemPromise(item: $0) }
 				
 				// fulfill all group promises
-				let queueGroup = dispatch_group_create()
+				let queueGroup = DispatchGroup()
 				for subpromise in subpromises {
-					dispatch_group_enter(queueGroup)
+					queueGroup.enter()
 					subpromise.fulfill(requirements) { berrors in
 						if nil != berrors {
-							errors.appendContentsOf(berrors!)
+							errors.append(contentsOf: berrors!)
 						}
-						dispatch_group_leave(queueGroup)
+						queueGroup.leave()
 					}
 				}
 				
 				// all done
-				dispatch_group_notify(queueGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+				queueGroup.notify(queue: DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.priorityHigh)) {
 					let gsteps = subpromises.filter() { return nil != $0.steps }.flatMap() { return $0.steps! }
-					steps.appendContentsOf(gsteps)
+					steps.append(contentsOf: gsteps)
 					
 					self.steps = steps
 					callback(errors: errors.count > 0 ? errors : nil)
@@ -141,7 +141,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	
 	/// String representation of the receiver.
 	var description: String {
-		return NSString(format: "QuestionnaireItemPromise <%p>", unsafeAddressOf(self)) as String
+		return NSString(format: "QuestionnaireItemPromise <%p>", unsafeAddress(of: self)) as String
 	}
 }
 
@@ -175,27 +175,27 @@ extension QuestionnaireItem {
 	}
 	
 	func c3_questionMinOccurs() -> Int? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger
 	}
 	
 	func c3_questionMaxOccurs() -> Int? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger
 	}
 	
 	func c3_questionInstruction() -> String? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString
 	}
 	
 	func c3_questionHelpText() -> String? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString
 	}
 	
 	func c3_numericAnswerUnit() -> String? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
 	}
 	
 	func c3_defaultAnswer() -> Extension? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue")?.first
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue")?.first
 	}
 	
 	
@@ -219,12 +219,12 @@ extension QuestionnaireItem {
 	[x] ORKTimeOfDayAnswerFormat:       "time"
 	[ ] ORKTimeIntervalAnswerFormat:
 	*/
-	func c3_asAnswerFormat(callback: ((format: ORKAnswerFormat?, error: ErrorType?) -> Void)) {
+	func c3_asAnswerFormat(_ callback: ((format: ORKAnswerFormat?, error: ErrorProtocol?) -> Void)) {
 		let link = linkId ?? "<nil>"
 		if let type = type {
 			switch type {
 			case "boolean":	  callback(format: ORKAnswerFormat.booleanAnswerFormat(), error: nil)
-			case "decimal":	  callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(nil), error: nil)
+			case "decimal":	  callback(format: ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), error: nil)
 			case "integer":
 				let minVals = c3_minValue()
 				let maxVals = c3_maxValue()
@@ -234,38 +234,38 @@ extension QuestionnaireItem {
 					let minDesc = minVals?.filter() { return $0.valueString != nil }.first?.valueString
 					let maxDesc = maxVals?.filter() { return $0.valueString != nil }.first?.valueString
 					let defVal = c3_defaultAnswer()?.valueInteger ?? minVal
-					let format = ORKAnswerFormat.scaleAnswerFormatWithMaximumValue(maxVal, minimumValue: minVal, defaultValue: defVal,
+					let format = ORKAnswerFormat.scale(withMaximumValue: maxVal, minimumValue: minVal, defaultValue: defVal,
 						step: 1, vertical: (maxVal - minVal > 5),
 						maximumValueDescription: maxDesc, minimumValueDescription: minDesc)
 					callback(format: format, error: nil)
 					
 				}
 				else {
-					callback(format: ORKAnswerFormat.integerAnswerFormatWithUnit(nil), error: nil)
+					callback(format: ORKAnswerFormat.integerAnswerFormat(withUnit: nil), error: nil)
 				}
-			case "quantity":  callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(c3_numericAnswerUnit()), error: nil)
+			case "quantity":  callback(format: ORKAnswerFormat.decimalAnswerFormat(withUnit: c3_numericAnswerUnit()), error: nil)
 			case "date":      callback(format: ORKAnswerFormat.dateAnswerFormat(), error: nil)
-			case "dateTime":  callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
-			case "instant":   callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
+			case "dateTime":  callback(format: ORKAnswerFormat.dateTime(), error: nil)
+			case "instant":   callback(format: ORKAnswerFormat.dateTime(), error: nil)
 			case "time":      callback(format: ORKAnswerFormat.timeOfDayAnswerFormat(), error: nil)
 			case "string":    callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
 			case "url":       callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
 			case "choice":
 				c3_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? C3Error.QuestionnaireNoChoicesInChoiceQuestion(self))
+						callback(format: nil, error: error ?? C3Error.questionnaireNoChoicesInChoiceQuestion(self))
 					}
 					else {
-						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.c3_answerChoiceStyle(), textChoices: choices!), error: nil)
+						callback(format: ORKAnswerFormat.choiceAnswerFormat(with: self.c3_answerChoiceStyle(), textChoices: choices!), error: nil)
 					}
 				}
 			case "open-choice":
 				c3_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? C3Error.QuestionnaireNoChoicesInChoiceQuestion(self))
+						callback(format: nil, error: error ?? C3Error.questionnaireNoChoicesInChoiceQuestion(self))
 					}
 					else {
-						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.c3_answerChoiceStyle(), textChoices: choices!), error: nil)
+						callback(format: ORKAnswerFormat.choiceAnswerFormat(with: self.c3_answerChoiceStyle(), textChoices: choices!), error: nil)
 					}
 				}
 			//case "attachment":	callback(format: nil, error: nil)
@@ -275,7 +275,7 @@ extension QuestionnaireItem {
 			case "group":
 				callback(format: nil, error: nil)
 			default:
-				callback(format: nil, error: C3Error.QuestionnaireQuestionTypeUnknownToResearchKit(self))
+				callback(format: nil, error: C3Error.questionnaireQuestionTypeUnknownToResearchKit(self))
 			}
 		}
 		else {
@@ -290,7 +290,7 @@ extension QuestionnaireItem {
 	The `value` property of the text choice is a combination of the coding system URL and the code, separated by
 	`kORKTextChoiceSystemSeparator` (a space). If no system URL is provided, "https://fhir.smalthealthit.org" is used.
 	*/
-	func c3_resolveAnswerChoices(callback: ((choices: [ORKTextChoice]?, error: ErrorType?) -> Void)) {
+	func c3_resolveAnswerChoices(_ callback: ((choices: [ORKTextChoice]?, error: ErrorProtocol?) -> Void)) {
 		options?.resolve(ValueSet.self) { valueSet in
 			var choices = [ORKTextChoice]()
 			
@@ -328,7 +328,7 @@ extension QuestionnaireItem {
 				callback(choices: choices, error: nil)
 			}
 			else {
-				callback(choices: nil, error: C3Error.QuestionnaireNoChoicesInChoiceQuestion(self))
+				callback(choices: nil, error: C3Error.questionnaireNoChoicesInChoiceQuestion(self))
 			}
 		}
 	}
@@ -339,7 +339,7 @@ extension QuestionnaireItem {
 	*/
 	func c3_answerChoiceStyle() -> ORKChoiceAnswerStyle {
 		let multiple = repeats ?? ((c3_questionMaxOccurs() ?? 1) > 1)
-		let style: ORKChoiceAnswerStyle = multiple ? .MultipleChoice : .SingleChoice
+		let style: ORKChoiceAnswerStyle = multiple ? .multipleChoice : .singleChoice
 		return style
 	}
 }

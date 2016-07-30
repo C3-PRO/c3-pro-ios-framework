@@ -90,13 +90,13 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	/**
 	Load the instance from the given storyboard. This is the preferred way to instantiate the intro view controller.
 	*/
-	public class func fromStoryboard(storyboardName: String) throws -> StudyIntroCollectionViewController {
+	public class func fromStoryboard(_ storyboardName: String) throws -> StudyIntroCollectionViewController {
 		let storyboard = UIStoryboard(name: storyboardName, bundle: nil)
 		let vc = storyboard.instantiateInitialViewController()
 		if let vc = vc as? StudyIntroCollectionViewController {
 			return vc
 		}
-		throw C3Error.InvalidStoryboard("The initial view controller of «\(storyboardName).storyboard» must be a `StudyIntroCollectionViewController` instance, but is: \(vc)")
+		throw C3Error.invalidStoryboard("The initial view controller of «\(storyboardName).storyboard» must be a `StudyIntroCollectionViewController` instance, but is: \(vc)")
 	}
 	
 	
@@ -129,12 +129,12 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 			else {
 				c3_warn("hint: if you put the intro collection view controller into a navigation controller, the consent document will be pushed instead of shown modally")
 				let navi = UINavigationController(rootViewController: pdfVC)
-				let done = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(StudyIntroCollectionViewController.dismissModal))
+				let done = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(StudyIntroCollectionViewController.dismissModal))
 				pdfVC.navigationItem.rightBarButtonItem = done
-				presentViewController(navi, animated: true, completion: nil)
+				present(navi, animated: true, completion: nil)
 			}
 			
-			dispatch_async(dispatch_get_main_queue()) {
+			DispatchQueue.main.async {
 				pdfVC.loadPDFDataFrom(url)
 			}
 		}
@@ -143,12 +143,12 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 		}
 	}
 	
-	public func showVideo(name: String) {
-		if let url = NSBundle.mainBundle().URLForResource(name, withExtension: "mp4") {
+	public func showVideo(_ name: String) {
+		if let url = Bundle.main.urlForResource(name, withExtension: "mp4") {
 			let player = MPMoviePlayerViewController(contentURL: url)
-			player.moviePlayer.controlStyle = .Fullscreen
+			player?.moviePlayer.controlStyle = .fullscreen
 			
-			presentViewController(player, animated: true, completion: nil)
+			present(player!, animated: true, completion: nil)
 		}
 		else {
 			c3_warn("Video named «\(name).mp4» not found in app bundle")
@@ -175,14 +175,14 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 		}
 	}
 	
-	public override func viewWillAppear(animated: Bool) {
+	public override func viewWillAppear(_ animated: Bool) {
 		if hidesNavigationBar {
 			navigationController?.setNavigationBarHidden(true, animated: animated)
 		}
 		super.viewWillAppear(animated)
 	}
 	
-	public override func viewWillDisappear(animated: Bool) {
+	public override func viewWillDisappear(_ animated: Bool) {
 		if hidesNavigationBar {
 			navigationController?.setNavigationBarHidden(false, animated: animated)
 		}
@@ -190,26 +190,26 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	}
 	
 	func dismissModal() {
-		dismissViewControllerAnimated(true, completion: nil)
+		dismiss(animated: true, completion: nil)
 	}
 	
 	
 	// MARK: - Collection View
 	
-	public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+	public func numberOfSections(in collectionView: UICollectionView) -> Int {
 		return 1
 	}
 	
-	public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return items?.count ?? 0
 	}
 	
-	public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		let item = items![indexPath.row]
+	public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let item = items![(indexPath as NSIndexPath).row]
 		
 		// welcome cell
 		if let item = item as? StudyIntroWelcomeItem {
-			let cell = collectionView.dequeueReusableCellWithReuseIdentifier(item.dynamicType.cellReuseIdentifier, forIndexPath: indexPath) as! StudyIntroWelcomeCell
+			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: item.dynamicType.cellReuseIdentifier, for: indexPath) as! StudyIntroWelcomeCell
 			cell.item = item
 			cell.onConsentTap = {
 				self.showConsent()
@@ -222,7 +222,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 		
 		// video cell
 		if let item = item as? StudyIntroVideoItem {
-			let cell = collectionView.dequeueReusableCellWithReuseIdentifier(item.dynamicType.cellReuseIdentifier, forIndexPath: indexPath) as! StudyIntroVideoCell
+			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: item.dynamicType.cellReuseIdentifier, for: indexPath) as! StudyIntroVideoCell
 			cell.item = item
 			cell.onVideoTap = { video in
 				self.showVideo(video)
@@ -232,7 +232,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 		
 		// default: html cell
 		let html = item as! StudyIntroHTMLItem
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier(html.dynamicType.cellReuseIdentifier, forIndexPath: indexPath) as! StudyIntroHTMLCell
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: html.dynamicType.cellReuseIdentifier, for: indexPath) as! StudyIntroHTMLCell
 		cell.item = html
 		return cell
 	}
@@ -240,7 +240,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	
 	// MARK: - Scroll View
 	
-	public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+	public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 		if let pageWidth = collectionView?.frame.size.width, let offset = collectionView?.contentOffset.x {
 			pageControl?.currentPage = Int((offset + pageWidth / 2) / pageWidth)
 		}
@@ -252,8 +252,8 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	/**
 	Returns the URL to the bundled blank consent PDF, by default named «Consent.pdf»
 	*/
-	public class func bundledConsentPDFURL() -> NSURL? {
-		return NSBundle.mainBundle().URLForResource("Consent", withExtension: "pdf")
+	public class func bundledConsentPDFURL() -> URL? {
+		return Bundle.main.urlForResource("Consent", withExtension: "pdf")
 	}
 }
 

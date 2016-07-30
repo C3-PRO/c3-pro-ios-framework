@@ -35,7 +35,7 @@ public class StudyIntroWelcomeCell: UICollectionViewCell {
 	
 	@IBOutlet public var swipeLabel: UILabel?
 	
-	public var onConsentTap: (Void -> Void)?
+	public var onConsentTap: ((Void) -> Void)?
 	public var onVideoTap: ((name: String) -> Void)?
 	
 	public var item: StudyIntroWelcomeItem? {
@@ -49,7 +49,7 @@ public class StudyIntroWelcomeCell: UICollectionViewCell {
 		titleLabel?.numberOfLines = (bounds.size.height > 280.0) ? 0 : 1;			// to force one line on iPhone 4S
 	}
 	
-	func setupCellWithItem(item: StudyIntroWelcomeItem?) {
+	func setupCellWithItem(_ item: StudyIntroWelcomeItem?) {
 		if let item = item {
 			if let logo = item.logoName {
 				image?.image = UIImage(named: logo)
@@ -57,8 +57,8 @@ public class StudyIntroWelcomeCell: UICollectionViewCell {
 			titleLabel?.text = item.title
 			subtitleLabel?.text = item.subtitle
 		}
-		videoButton?.enabled = (nil != item?.videoName)
-		videoButton?.hidden = (nil == item?.videoName)
+		videoButton?.isEnabled = (nil != item?.videoName)
+		videoButton?.isHidden = (nil == item?.videoName)
 	}
 	
 	
@@ -100,11 +100,11 @@ public class StudyIntroVideoCell: UICollectionViewCell {
 		}
 	}
 	
-	func setupCellWithItem(item: StudyIntroVideoItem?) {
+	func setupCellWithItem(_ item: StudyIntroVideoItem?) {
 		if let item = item {
-			videoButton?.setImage(UIImage(named: item.videoIconName), forState: .Normal)
+			videoButton?.setImage(UIImage(named: item.videoIconName), for: UIControlState())
 		}
-		videoButton?.enabled = (nil != item?.videoName)
+		videoButton?.isEnabled = (nil != item?.videoName)
 	}
 	
 	@IBAction func showVideo() {
@@ -128,22 +128,22 @@ public class StudyIntroHTMLCell: UICollectionViewCell, UIWebViewDelegate {
 		}
 	}
 	
-	func setupCellWithItem(item: StudyIntroHTMLItem?) {
+	func setupCellWithItem(_ item: StudyIntroHTMLItem?) {
 		if let url = item?.url {
-			webView?.loadRequest(NSURLRequest(URL: url))
+			webView?.loadRequest(URLRequest(url: url as URL))
 		}
 	}
 	
 	
-	public func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-		if .LinkClicked == navigationType, let url = request.URL {
-			return !UIApplication.sharedApplication().openURL(url)
+	public func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+		if .linkClicked == navigationType, let url = request.url {
+			return !UIApplication.shared().openURL(url)
 		}
 		return true
 	}
 	
-	public func webViewDidFinishLoad(webView: UIWebView) {
-		webView.stringByEvaluatingJavaScriptFromString("document.documentElement.style.webkitUserSelect=\"none\"")		// disable text selection
+	public func webViewDidFinishLoad(_ webView: UIWebView) {
+		webView.stringByEvaluatingJavaScript(from: "document.documentElement.style.webkitUserSelect=\"none\"")		// disable text selection
 	}
 }
 

@@ -18,7 +18,6 @@
 		EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */; };
 		EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */; };
 		EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */; };
-		EE5931771AEAD9AF00A7C5E1 /* SMART.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE5931701AEAD93F00A7C5E1 /* SMART.framework */; };
 		EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */; };
 		EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */; };
 		EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7A43921B0D08DE00B30D17 /* ConsentController.swift */; };
@@ -33,9 +32,11 @@
 		EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */; };
 		EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */; };
 		EEA5CF191BEA5B5A00A6D4C9 /* ConsentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */; };
-		EEA85BEA1C624482009FFBB7 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE32BDFE1B8396A100024E7A /* CryptoSwift.framework */; };
 		EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */; };
 		EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */; };
+		EEB917AC1D4B9F820077D257 /* CryptoSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEB917A91D4B9F820077D257 /* CryptoSwift.framework */; };
+		EEB917AD1D4B9F820077D257 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEB917AA1D4B9F820077D257 /* ResearchKit.framework */; };
+		EEB917AE1D4B9F820077D257 /* SMART.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEB917AB1D4B9F820077D257 /* SMART.framework */; };
 		EEC3C95D1B83D3C80096D5BE /* RSAUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC3C95C1B83D3C80096D5BE /* RSAUtility.swift */; };
 		EEC3C95F1B83DA650096D5BE /* AESUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC3C95E1B83DA650096D5BE /* AESUtility.swift */; };
 		EEC6DC2B1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC6DC2A1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift */; };
@@ -58,114 +59,15 @@
 		EEFA84CE1AE5C18B00E61006 /* C3PROTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */; };
 		EEFA84DB1AE5C25500E61006 /* QuestionnairePromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */; };
 		EEFA84DC1AE5C25500E61006 /* QuestionnaireItemPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFA84D91AE5C25500E61006 /* QuestionnaireItemPromise.swift */; };
-		EEFA84FA1AE5C2BC00E61006 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84F31AE5C29100E61006 /* ResearchKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		EE1EAD611C5BD631000A0BD4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5596BDBB1BC8F220007E38D5;
-			remoteInfo = "CryptoSwift watchOS";
-		};
-		EE1EAD631C5BD631000A0BD4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 75D614BF1BD844F2001358B2;
-			remoteInfo = "CryptoSwift tvOS";
-		};
-		EE1EAD651C5BD631000A0BD4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 75DF77721BC8EB59006E9520;
-			remoteInfo = "CryptoSwift OSX";
-		};
-		EE32BDFD1B8396A100024E7A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 754BE45519693E190098E6F3;
-			remoteInfo = CryptoSwift;
-		};
-		EE32BDFF1B8396A100024E7A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 754BE46019693E190098E6F3;
-			remoteInfo = CryptoSwiftTests;
-		};
-		EE32BE061B8396B300024E7A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 754BE45419693E190098E6F3;
-			remoteInfo = CryptoSwift;
-		};
-		EE59316F1AEAD93F00A7C5E1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE43B1A919546D880017679A;
-			remoteInfo = "SwiftSMART-iOS";
-		};
-		EE5931711AEAD93F00A7C5E1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE43B1B319546D880017679A;
-			remoteInfo = "SwiftSMART-iOSTests";
-		};
-		EE5931731AEAD93F00A7C5E1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EECAA7831A5D3DE60062C64B;
-			remoteInfo = "SwiftSMART-OSX";
-		};
-		EE5931751AEAD93F00A7C5E1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE13AA921A5D44D100B901FD;
-			remoteInfo = "SwiftSMART-OSXTests";
-		};
-		EE5931781AEAD9B800A7C5E1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = EE43B1A819546D880017679A;
-			remoteInfo = "SwiftSMART-iOS";
-		};
 		EEFA84C81AE5C18B00E61006 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EEFA84B21AE5C18B00E61006 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = EEFA84BA1AE5C18B00E61006;
 			remoteInfo = ResearchCHIP;
-		};
-		EEFA84F21AE5C29100E61006 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B183A5951A8535D100C76870;
-			remoteInfo = ResearchKit;
-		};
-		EEFA84F41AE5C29100E61006 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
-			remoteInfo = ResearchKitTests;
-		};
-		EEFA84F81AE5C2B300E61006 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B183A4731A8535D100C76870;
-			remoteInfo = ResearchKit;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -179,14 +81,12 @@
 		EE2A9D7C1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Questionnaire_ValueSet-relative.json"; sourceTree = "<group>"; };
 		EE2A9D7D1CE61F2500FB2B4F /* ValueSet_SF36.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ValueSet_SF36.json; sourceTree = "<group>"; };
 		EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncryptedDataQueue.swift; sourceTree = "<group>"; };
-		EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CryptoSwift.xcodeproj; path = CryptoSwift/CryptoSwift.xcodeproj; sourceTree = "<group>"; };
 		EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueueManager.swift; sourceTree = "<group>"; };
 		EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2DynRegAppStore.swift; sourceTree = "<group>"; };
 		EE519B9C1B0CD3AC00036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireExtensions.swift; sourceTree = "<group>"; };
 		EE519BA41B0CD4A500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE519BA61B0CD6C500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftSMART.xcodeproj; path = "Swift-SMART/SwiftSMART.xcodeproj"; sourceTree = "<group>"; };
 		EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueue.swift; sourceTree = "<group>"; };
 		EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueuedResource.swift; sourceTree = "<group>"; };
 		EE5F4F7E1B18E2B100DB38B3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -208,6 +108,9 @@
 		EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeIdentifier.swift; sourceTree = "<group>"; };
 		EEB6DD221B5D3FD3006A3B9F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geocoder.swift; sourceTree = "<group>"; };
+		EEB917A91D4B9F820077D257 /* CryptoSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoSwift.framework; path = "CryptoSwift/build/Debug-iphoneos/CryptoSwift.framework"; sourceTree = "<group>"; };
+		EEB917AA1D4B9F820077D257 /* ResearchKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ResearchKit.framework; path = "ResearchKit/build/Debug-iphoneos/ResearchKit.framework"; sourceTree = "<group>"; };
+		EEB917AB1D4B9F820077D257 /* SMART.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMART.framework; path = "Swift-SMART/build/Debug-iphoneos/SMART.framework"; sourceTree = "<group>"; };
 		EEC3C95B1B83D37F0096D5BE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EEC3C95C1B83D3C80096D5BE /* RSAUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAUtility.swift; sourceTree = "<group>"; };
 		EEC3C95E1B83DA650096D5BE /* AESUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AESUtility.swift; sourceTree = "<group>"; };
@@ -236,7 +139,6 @@
 		EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C3PROTests.swift; sourceTree = "<group>"; };
 		EEFA84D81AE5C25500E61006 /* QuestionnairePromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnairePromise.swift; sourceTree = "<group>"; };
 		EEFA84D91AE5C25500E61006 /* QuestionnaireItemPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireItemPromise.swift; sourceTree = "<group>"; };
-		EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = ResearchKit/ResearchKit.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,9 +146,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEA85BEA1C624482009FFBB7 /* CryptoSwift.framework in Frameworks */,
-				EE5931771AEAD9AF00A7C5E1 /* SMART.framework in Frameworks */,
-				EEFA84FA1AE5C2BC00E61006 /* ResearchKit.framework in Frameworks */,
+				EEB917AC1D4B9F820077D257 /* CryptoSwift.framework in Frameworks */,
+				EEB917AE1D4B9F820077D257 /* SMART.framework in Frameworks */,
+				EEB917AD1D4B9F820077D257 /* ResearchKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,18 +174,6 @@
 			path = Sources/HealthKit;
 			sourceTree = SOURCE_ROOT;
 		};
-		EE32BDF81B8396A100024E7A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				EE32BDFE1B8396A100024E7A /* CryptoSwift.framework */,
-				EE1EAD621C5BD631000A0BD4 /* CryptoSwift.framework */,
-				EE1EAD661C5BD631000A0BD4 /* CryptoSwift.framework */,
-				EE1EAD641C5BD631000A0BD4 /* CryptoSwift.framework */,
-				EE32BE001B8396A100024E7A /* CryptoSwiftTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		EE519BA51B0CD69B00036B96 /* Consent & Eligibility */ = {
 			isa = PBXGroup;
 			children = (
@@ -300,17 +190,6 @@
 			);
 			name = "Consent & Eligibility";
 			path = Sources/Consent;
-			sourceTree = "<group>";
-		};
-		EE5931681AEAD93F00A7C5E1 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				EE5931701AEAD93F00A7C5E1 /* SMART.framework */,
-				EE5931721AEAD93F00A7C5E1 /* SwiftSMART-iOSTests.xctest */,
-				EE5931741AEAD93F00A7C5E1 /* SMART.framework */,
-				EE5931761AEAD93F00A7C5E1 /* SwiftSMART-OSXTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		EE5F4F6A1B174B6B00DB38B3 /* DataQueue */ = {
@@ -351,6 +230,16 @@
 			);
 			name = DeIdentifier;
 			path = Sources/DeIdentifier;
+			sourceTree = "<group>";
+		};
+		EEB917A81D4B9F810077D257 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EEB917A91D4B9F820077D257 /* CryptoSwift.framework */,
+				EEB917AA1D4B9F820077D257 /* ResearchKit.framework */,
+				EEB917AB1D4B9F820077D257 /* SMART.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		EEC3C9531B83D3460096D5BE /* Encryption */ = {
@@ -418,9 +307,7 @@
 				EEFA84BE1AE5C18B00E61006 /* Supporting Files */,
 				EEFA84CA1AE5C18B00E61006 /* Tests */,
 				EEFA84BC1AE5C18B00E61006 /* Products */,
-				EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */,
-				EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */,
-				EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */,
+				EEB917A81D4B9F810077D257 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -480,15 +367,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		EEFA84ED1AE5C29100E61006 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				EEFA84F31AE5C29100E61006 /* ResearchKit.framework */,
-				EEFA84F51AE5C29100E61006 /* ResearchKitTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -514,9 +392,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				EE32BE071B8396B300024E7A /* PBXTargetDependency */,
-				EE5931791AEAD9B800A7C5E1 /* PBXTargetDependency */,
-				EEFA84F91AE5C2B300E61006 /* PBXTargetDependency */,
 			);
 			name = C3PRO;
 			productName = ResearchCHIP;
@@ -549,14 +424,16 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Boston Children's Hospital";
 				TargetAttributes = {
 					EEFA84BA1AE5C18B00E61006 = {
 						CreatedOnToolsVersion = 6.3;
+						LastSwiftMigration = 0800;
 					};
 					EEFA84C51AE5C18B00E61006 = {
 						CreatedOnToolsVersion = 6.3;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -570,20 +447,6 @@
 			mainGroup = EEFA84B11AE5C18B00E61006;
 			productRefGroup = EEFA84BC1AE5C18B00E61006 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = EE32BDF81B8396A100024E7A /* Products */;
-					ProjectRef = EE32BDF71B8396A100024E7A /* CryptoSwift.xcodeproj */;
-				},
-				{
-					ProductGroup = EEFA84ED1AE5C29100E61006 /* Products */;
-					ProjectRef = EEFA84EC1AE5C29100E61006 /* ResearchKit.xcodeproj */;
-				},
-				{
-					ProductGroup = EE5931681AEAD93F00A7C5E1 /* Products */;
-					ProjectRef = EE5931671AEAD93F00A7C5E1 /* SwiftSMART.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				EEFA84BA1AE5C18B00E61006 /* C3PRO */,
@@ -591,86 +454,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		EE1EAD621C5BD631000A0BD4 /* CryptoSwift.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = CryptoSwift.framework;
-			remoteRef = EE1EAD611C5BD631000A0BD4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EE1EAD641C5BD631000A0BD4 /* CryptoSwift.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = CryptoSwift.framework;
-			remoteRef = EE1EAD631C5BD631000A0BD4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EE1EAD661C5BD631000A0BD4 /* CryptoSwift.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = CryptoSwift.framework;
-			remoteRef = EE1EAD651C5BD631000A0BD4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EE32BDFE1B8396A100024E7A /* CryptoSwift.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = CryptoSwift.framework;
-			remoteRef = EE32BDFD1B8396A100024E7A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EE32BE001B8396A100024E7A /* CryptoSwiftTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = CryptoSwiftTests.xctest;
-			remoteRef = EE32BDFF1B8396A100024E7A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EE5931701AEAD93F00A7C5E1 /* SMART.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SMART.framework;
-			remoteRef = EE59316F1AEAD93F00A7C5E1 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EE5931721AEAD93F00A7C5E1 /* SwiftSMART-iOSTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "SwiftSMART-iOSTests.xctest";
-			remoteRef = EE5931711AEAD93F00A7C5E1 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EE5931741AEAD93F00A7C5E1 /* SMART.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SMART.framework;
-			remoteRef = EE5931731AEAD93F00A7C5E1 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EE5931761AEAD93F00A7C5E1 /* SwiftSMART-OSXTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "SwiftSMART-OSXTests.xctest";
-			remoteRef = EE5931751AEAD93F00A7C5E1 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EEFA84F31AE5C29100E61006 /* ResearchKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ResearchKit.framework;
-			remoteRef = EEFA84F21AE5C29100E61006 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		EEFA84F51AE5C29100E61006 /* ResearchKitTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ResearchKitTests.xctest;
-			remoteRef = EEFA84F41AE5C29100E61006 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		EEFA84B91AE5C18B00E61006 /* Resources */ = {
@@ -755,25 +538,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		EE32BE071B8396B300024E7A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = CryptoSwift;
-			targetProxy = EE32BE061B8396B300024E7A /* PBXContainerItemProxy */;
-		};
-		EE5931791AEAD9B800A7C5E1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "SwiftSMART-iOS";
-			targetProxy = EE5931781AEAD9B800A7C5E1 /* PBXContainerItemProxy */;
-		};
 		EEFA84C91AE5C18B00E61006 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = EEFA84BA1AE5C18B00E61006 /* C3PRO */;
 			targetProxy = EEFA84C81AE5C18B00E61006 /* PBXContainerItemProxy */;
-		};
-		EEFA84F91AE5C2B300E61006 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ResearchKit;
-			targetProxy = EEFA84F81AE5C2B300E61006 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -887,6 +655,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CryptoSwift/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/ResearchKit/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Swift-SMART/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/SupportingFiles/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -895,6 +669,7 @@
 				PRODUCT_NAME = C3PRO;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -906,12 +681,20 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CryptoSwift/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/ResearchKit/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Swift-SMART/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/SupportingFiles/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.chip.c3-pro-ios-framework.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = C3PRO;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -929,6 +712,7 @@
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = C3PROTests;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -942,6 +726,8 @@
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = C3PROTests;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

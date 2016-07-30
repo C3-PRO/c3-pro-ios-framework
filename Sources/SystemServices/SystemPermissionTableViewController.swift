@@ -39,7 +39,7 @@ public class SystemPermissionTableViewController: UITableViewController {
 		super.init(style: style)
 	}
 	
-	public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+	public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 	}
 	
@@ -50,10 +50,10 @@ public class SystemPermissionTableViewController: UITableViewController {
 	
 	// MARK: - Data
 	
-	func serviceAtIndexPath(indexPath: NSIndexPath) -> SystemService? {
+	func serviceAtIndexPath(_ indexPath: IndexPath) -> SystemService? {
 		if let services = services {
-			if indexPath.row < services.count {
-				return services[indexPath.row]
+			if (indexPath as NSIndexPath).row < services.count {
+				return services[(indexPath as NSIndexPath).row]
 			}
 		}
 		return nil
@@ -69,23 +69,23 @@ public class SystemPermissionTableViewController: UITableViewController {
 		tableView.dataSource = self
 		tableView.rowHeight = UITableViewAutomaticDimension
 		tableView.estimatedRowHeight = 200.0
-		tableView.registerClass(PermissionRequestTableViewCell.self, forCellReuseIdentifier: "MainCell")
+		tableView.register(PermissionRequestTableViewCell.self, forCellReuseIdentifier: "MainCell")
 	}
 	
 	
 	// MARK: - Table View Data Source
 	
-	public override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	public override func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 	
-	public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return services?.count ?? 0
 	}
 	
-	public override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("MainCell", forIndexPath: indexPath) as! PermissionRequestTableViewCell
-		cell.selectionStyle = .None
+	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath) as! PermissionRequestTableViewCell
+		cell.selectionStyle = .none
 		if let service = serviceAtIndexPath(indexPath) {
 			cell.setupForService(service, permissioner: permissionRequester, viewController: self)
 		}

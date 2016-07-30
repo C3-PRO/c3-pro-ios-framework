@@ -53,7 +53,7 @@ public class DeIdentifier {
 			}
 			patient.gender = inPatient.gender
 			if let bday = inPatient.birthDate {
-				patient.birthDate = self.hipaaCompliantBirthDate(bday)
+				patient.birthDate = self.hipaaCompliant(birthdate: bday)
 			}
 			callback(patient: patient)
 		}
@@ -64,10 +64,10 @@ public class DeIdentifier {
 	
 	- returns: A compliant Date instance
 	*/
-	public func hipaaCompliantBirthDate(birthdate: Date) -> Date {
-		let current = NSDate().fhir_asDate()
+	public func hipaaCompliant(birthdate: FHIRDate) -> FHIRDate {
+		let current = Date().fhir_asDate()
 		let year = (current.year - birthdate.year) > 90 ? (current.year - 90) : current.year
-		return Date(year: year, month: nil, day: nil)
+		return FHIRDate(year: year, month: nil, day: nil)
 	}
 }
 
