@@ -27,7 +27,7 @@ Class to hold on to the consent result.
 public class ConsentResult {
 	
 	/// When the participant did consent, if at all.
-	public var consentDate: NSDate?
+	public var consentDate: Date?
 	
 	/// Given name of the participant.
 	public var participantGivenName: String?
@@ -54,7 +54,7 @@ public class ConsentResult {
 	
 	
 	public init(signature: ORKConsentSignature) {
-		consentDate = NSDate()
+		consentDate = Date()
 		participantGivenName = signature.givenName
 		participantFamilyName = signature.familyName
 		signatureImage = signature.signatureImage

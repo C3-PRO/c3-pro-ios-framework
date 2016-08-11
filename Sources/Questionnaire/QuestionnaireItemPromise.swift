@@ -121,7 +121,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				}
 				
 				// all done
-				queueGroup.notify(queue: DispatchQueue.global(qos: DispatchQoS.QoSClass.default)) {
+				queueGroup.notify(queue: DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default)) {
 					let gsteps = subpromises.filter() { return nil != $0.steps }.flatMap() { return $0.steps! }
 					steps.append(contentsOf: gsteps)
 					
