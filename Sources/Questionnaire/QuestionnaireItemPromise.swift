@@ -90,7 +90,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				}
 				
 				if !requirements.isEmpty {
-					step.addRequirements(requirements: requirements)
+					step.add(requirements: requirements)
 				}
 				steps.append(step)
 			}

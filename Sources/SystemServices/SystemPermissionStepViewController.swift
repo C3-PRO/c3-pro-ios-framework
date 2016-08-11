@@ -52,7 +52,7 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 	
 	// MARK: - Data
 	
-	func serviceAtIndexPath(_ indexPath: IndexPath) -> SystemService? {
+	func service(at indexPath: IndexPath) -> SystemService? {
 		if let step = step as? SystemPermissionStep, let services = step.services {
 			if indexPath.row < services.count {
 				return services[indexPath.row]
@@ -119,8 +119,8 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath) as! PermissionRequestTableViewCell
 		cell.selectionStyle = .none
-		if let service = serviceAtIndexPath(indexPath) {
-			cell.setupForService(service, permissioner: permissionRequester, viewController: self)
+		if let service = service(at: indexPath) {
+			cell.setup(for: service, permissioner: permissionRequester, viewController: self)
 		}
 		return cell
 	}

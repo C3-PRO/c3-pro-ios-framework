@@ -81,10 +81,10 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	/**
 	Configure the cell to represent a given service and make its button request access to the given service via the permissioner provided.
 	
-	- parameter service: The service to represent
+	- parameter service:      The service to represent
 	- parameter permissioner: The permissioner to use to request permission
 	*/
-	public func setupForService(_ service: SystemService, permissioner: SystemServicePermissioner, viewController vc: UIViewController) {
+	public func setup(for service: SystemService, permissioner: SystemServicePermissioner, viewController vc: UIViewController) {
 		titleLabel?.text = service.description
 		commentLabel?.text = service.usageReason
 		if permissioner.hasPermissionForService(service) {
@@ -94,9 +94,9 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 		else {
 			viewController = vc
 			actionCallback = { button in
-				permissioner.requestPermissionForService(service) { [weak self] error in
+				permissioner.requestPermission(for: service) { [weak self] error in
 					if let error = error {
-						self?.indicateError(error, forService: service)
+						self?.indicateError(error, for: service)
 					}
 					else {
 						self?.commentLabel?.text = service.usageReason
@@ -120,10 +120,10 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	This method renders the error in place of the system service description, turning the text red, and calling
 	`showRecoveryInstructionsForService(service:fromViewController)` to show next steps.
 	
-	- parameter error: The error that occurred
-	- parameter forService: The system service affected
+	- parameter error:   The error that occurred
+	- parameter service: The system service that was affected
 	*/
-	public func indicateError(_ error: Error, forService service: SystemService) {
+	public func indicateError(_ error: Error, for service: SystemService) {
 		commentLabel?.text = "\(error)."
 		commentLabel?.textColor = UIColor.red
 		actionButton?.setTitle("Try Again".c3_localized("Button title"), for: UIControlState())
@@ -131,17 +131,17 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 		contentView.layoutIfNeeded()
 		
 		if let viewController = viewController {
-			showRecoveryInstructionsForService(service, fromViewController: viewController)
+			showRecoveryInstructions(for: service, from: viewController)
 		}
 	}
 	
 	/**
 	Show how to recover from failure to enable a certain service.
 	
-	- parameter service: The system service that was affected
-	- parameter fromViewController: The view controller to use for instruction presentation
+	- parameter service:        The system service that was affected
+	- parameter viewController: The view controller to use for instruction presentation
 	*/
-	public func showRecoveryInstructionsForService(_ service: SystemService, fromViewController viewController: UIViewController) {
+	public func showRecoveryInstructions(for service: SystemService, from viewController: UIViewController) {
 		let alert = UIAlertController(title: service.description, message: service.localizedHowToReEnable, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "OK".c3_localized("Alert button title"), style: .cancel, handler: nil))
 		if service.wantsAppSettingsPane, let url = URL(string: UIApplicationOpenSettingsURLString) {

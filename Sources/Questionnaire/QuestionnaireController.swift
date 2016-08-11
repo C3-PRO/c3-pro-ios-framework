@@ -94,13 +94,8 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 			}
 		}
 		else {
-			if Thread.isMainThread {
+			callOnMainThread {
 				callback(task: nil, error: C3Error.questionnaireNotPresent)
-			}
-			else {
-				DispatchQueue.main.async {
-					callback(task: nil, error: C3Error.questionnaireNotPresent)
-				}
 			}
 		}
 	}

@@ -45,9 +45,9 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 	
 	var refreshDelegate: AppStoreRequestDelegate?
 	
-	override public func registerClient(_ client: OAuth2, callback: ((json: OAuth2JSON?, error: Error?) -> Void)) {
+	override public func register(client: OAuth2, callback: ((json: OAuth2JSON?, error: Error?) -> Void)) {
 		if ensureHasAppReceipt() {
-			super.registerClient(client, callback: callback)
+			super.register(client: client, callback: callback)
 		}
 		else {
 			refreshAppReceipt() { error in
@@ -60,14 +60,14 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 					}
 				}
 				else {
-					super.registerClient(client, callback: callback)
+					super.register(client: client, callback: callback)
 				}
 			}
 		}
 	}
 	
-	override public func registrationBody(_ client: OAuth2) -> OAuth2JSON {
-		var dict = super.registrationBody(client)
+	override public func registrationBody(for client: OAuth2) -> OAuth2JSON {
+		var dict = super.registrationBody(for: client)
 		dict["sandbox"] = sandbox
 		dict["receipt-data"] = appReceipt
 		return dict

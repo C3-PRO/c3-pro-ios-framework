@@ -126,7 +126,8 @@ public class ConsentController {
 	
 	- parameter config: An optional `StudyIntroConfiguration` instance that carries custom eligible/ineligible texts
 	- parameter onStartConsent: The block to execute when all eligibility criteria are met and the participant wants to start consent. Leave
-	    nil to automatically present (and dismiss) the consent task view controller that will be returned by `consentViewController()`.
+	                            nil to automatically present (and dismiss) the consent task view controller that will be returned by
+	                            `consentViewController()`.
 	*/
 	public func eligibilityStatusViewController(_ config: StudyIntroConfiguration? = nil, onStartConsent: ((viewController: EligibilityCheckViewController) -> Void)? = nil) -> EligibilityStatusViewController {
 		let check = EligibilityStatusViewController()
@@ -199,7 +200,7 @@ public class ConsentController {
 	- parameter callback: The callback that is called when the group is resolved (or resolution fails); may be on any thread but may be
 	                      called immediately in case of embedded resources.
 	*/
-	public func eligibilityRequirements(_ callback: ((requirements: [EligibilityRequirement]?) -> Void)) {
+	public func eligibilityRequirements(callback: ((requirements: [EligibilityRequirement]?) -> Void)) {
 		if let group = contract?.subject?.first {
 			group.resolve(Group.self) { group in
 				if let characteristics = group?.characteristic {
@@ -236,10 +237,10 @@ public class ConsentController {
 	- returns: A `ConsentTask` that can be presented using ResearchKit
 	*/
 	public func createConsentTask() throws -> ConsentTask {
-		if let contract = contract {
-			return try ConsentTask(identifier: UUID().uuidString, contract: contract, options: options)
+		guard let contract = contract else {
+			throw C3Error.consentContractNotPresent
 		}
-		throw C3Error.consentContractNotPresent
+		return try ConsentTask(identifier: UUID().uuidString, contract: contract, options: options)
 	}
 	
 	/**
@@ -276,7 +277,7 @@ public class ConsentController {
 				let taskResult = taskViewController.result
 				
                 // if we have a signature in the signature result, we're consented: create PDF and call the callbacks
-                if let signatureResult = task.signatureResult(taskResult), let signature = task.signatureInResult(signatureResult) {
+				if let signatureResult = task.signatureResult(from: taskResult), let signature = task.signature(in: signatureResult) {
                     let result = ConsentResult(signature: signature)
 					sign(consentDocument: task.consentDocument, with: signatureResult)                    
                     

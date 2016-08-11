@@ -50,14 +50,14 @@ class ConditionalQuestionStep: ORKQuestionStep {
 	
 	// MARK: - Requirements
 	
-	func addRequirement(_ requirement: ResultRequirement) {
+	func add(requirement: ResultRequirement) {
 		if nil == requirements {
 			requirements = [ResultRequirement]()
 		}
 		requirements!.append(requirement)
 	}
 	
-	func addRequirements(requirements reqs: [ResultRequirement]) {
+	func add(requirements reqs: [ResultRequirement]) {
 		guard !reqs.isEmpty else {
 			return
 		}
@@ -86,8 +86,8 @@ class ConditionalQuestionStep: ORKQuestionStep {
 				if let questionResults = stepResult.results as? [ORKQuestionResult] {
 					var ok = false
 					for questionResult in questionResults {
-						//c3_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.c3_hasSameAnswer(requirement.result))")
-						if questionResult.c3_hasSameAnswer(requirement.result) {
+						//c3_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.c3_hasSameResponse(requirement.result))")
+						if questionResult.c3_hasSameResponse(requirement.result) {
 							ok = true
 						}
 					}
@@ -154,14 +154,14 @@ class ConditionalInstructionStep: ORKInstructionStep {
 	
 	// MARK: - Requirements
 	
-	func addRequirement(_ requirement: ResultRequirement) {
+	func add(requirement: ResultRequirement) {
 		if nil == requirements {
 			requirements = [ResultRequirement]()
 		}
 		requirements!.append(requirement)
 	}
 	
-	func addRequirements(requirements reqs: [ResultRequirement]) {
+	func add(requirements reqs: [ResultRequirement]) {
 		if nil == requirements {
 			requirements = reqs
 		}
@@ -186,8 +186,8 @@ class ConditionalInstructionStep: ORKInstructionStep {
 				if let questionResults = stepResult.results as? [ORKQuestionResult] {
 					var ok = false
 					for questionResult in questionResults {
-						//c3_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.c3_hasSameAnswer(requirement.result))")
-						if questionResult.c3_hasSameAnswer(requirement.result) {
+						//c3_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.c3_hasSameResponse(requirement.result))")
+						if questionResult.c3_hasSameResponse(requirement.result) {
 							ok = true
 						}
 					}

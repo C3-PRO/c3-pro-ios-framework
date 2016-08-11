@@ -88,7 +88,7 @@ public class EncryptedDataQueue: DataQueue {
 	*/
 	public func encrypted(data: Data) throws -> Data {
 		let encData = try aes.encrypt(data: data)
-		let encKey = try rsa.encrypt(aes.symmetricKeyData)
+		let encKey = try rsa.encrypt(data: aes.symmetricKeyData)
 		let dict = [
 			"key_id": delegate?.keyIdentifierForEncryptedDataQueue(self) ?? "",
 			"symmetric_key": encKey.base64EncodedString(options: []),
@@ -143,7 +143,7 @@ public class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler {
 		data = nil					// to avoid double-encryption
 		try super.prepareData()
 		if let data = data {
-			self.data = try dataQueue.encrypted(data)
+			self.data = try dataQueue.encrypted(data: data)
 		}
 	}
 }

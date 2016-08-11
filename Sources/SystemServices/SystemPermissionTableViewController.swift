@@ -87,7 +87,7 @@ public class SystemPermissionTableViewController: UITableViewController {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath) as! PermissionRequestTableViewCell
 		cell.selectionStyle = .none
 		if let service = serviceAtIndexPath(indexPath) {
-			cell.setupForService(service, permissioner: permissionRequester, viewController: self)
+			cell.setup(for: service, permissioner: permissionRequester, viewController: self)
 		}
 		return cell
 	}

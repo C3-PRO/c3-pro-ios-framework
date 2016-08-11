@@ -72,3 +72,4 @@ public class SystemPermissionStep: ORKStep {
 		return SystemPermissionStepViewController.self
 	}
 }
+

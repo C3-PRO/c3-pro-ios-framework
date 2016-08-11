@@ -66,7 +66,7 @@ public class ConsentTask: ORKOrderedTask {
 	public init(identifier: String, contract: Contract, options: ConsentTaskOptions) throws {
 		self.contract = contract
 		do {
-			let prepped = try self.dynamicType.stepsAndConsentFromContract(contract, options: options)
+			let prepped = try self.dynamicType.stepsAndConsent(from: contract, options: options)
 			consentDocument = prepped.consent
 			super.init(identifier: identifier, steps: prepped.steps)
 		}
@@ -87,11 +87,11 @@ public class ConsentTask: ORKOrderedTask {
 	/**
 	Prepare the task with the given options, from the given contract.
 	
-	- parameter contract: The contract to use to create a) a consent document and b) all the steps to perform
+	- parameter from:    The contract to use to create a) a consent document and b) all the steps to perform
 	- parameter options: The options to consider when creating the task
-	- returns: A named tuple returning the ORKConsentDocument and an array of ORKSteps
+	- returns:           A named tuple returning the ORKConsentDocument and an array of ORKSteps
 	*/
-	class func stepsAndConsentFromContract(_ contract: Contract, options: ConsentTaskOptions) throws -> (consent: ORKConsentDocument, steps: [ORKStep]) {
+	class func stepsAndConsent(from contract: Contract, options: ConsentTaskOptions) throws -> (consent: ORKConsentDocument, steps: [ORKStep]) {
 		let consent = try contract.c3_asConsentDocument()
 		let bundle = Bundle.main
 		
@@ -171,10 +171,10 @@ public class ConsentTask: ORKOrderedTask {
 	/**
 	Retrieves the signature result (identifier `participantSignatureName`) of the consent signature step (identifier `reviewStepName`).
 	
-	- parameter taskResult: The result of the consent task
-	- returns: The consent signature result, if the step has been completed yet
+	- parameter from: The result of the consent task
+	- returns:        The consent signature result, if the step has been completed yet
 	*/
-	public func signatureResult(_ taskResult: ORKTaskResult) -> ORKConsentSignatureResult? {
+	public func signatureResult(from taskResult: ORKTaskResult) -> ORKConsentSignatureResult? {
 		return taskResult.stepResult(forStepIdentifier: self.dynamicType.reviewStepName)?
 			.result(forIdentifier: self.dynamicType.participantSignatureName) as? ORKConsentSignatureResult
 	}
@@ -183,10 +183,10 @@ public class ConsentTask: ORKOrderedTask {
 	Extracts the consent signature from the signature result, if it's there. If this method returns a signature, the patient has agreed to
 	the consent and signed on screen.
 	
-	- parameter result: The consent signature result to inspect
-	- returns: The consent signature, if it's there
+	- parameter in: The consent signature result to inspect
+	- returns:      The consent signature, if it's there
 	*/
-	public func signatureInResult(_ result: ORKConsentSignatureResult) -> ORKConsentSignature? {
+	public func signature(in result: ORKConsentSignatureResult) -> ORKConsentSignature? {
 		if let signature = result.signature, nil != signature.signatureImage {
 			return signature
 		}
@@ -196,14 +196,14 @@ public class ConsentTask: ORKOrderedTask {
 	/**
 	Retrieve the consent signature found in the task result, if it's there, indicating the user consented.
 	
-	- parameter taskResult: The result of the consent task to inspect
-	- returns: The consent signature, if the user consented and signed
+	- parameter from: The result of the consent task to inspect
+	- returns:        The consent signature, if the user consented and signed
 	*/
-	public func signature(_ taskResult: ORKTaskResult) -> ORKConsentSignature? {
-		guard let result = signatureResult(taskResult) else {
+	public func signature(from taskResult: ORKTaskResult) -> ORKConsentSignature? {
+		guard let result = signatureResult(from: taskResult) else {
 			return nil
 		}
-		return signatureInResult(result)
+		return signature(in: result)
 	}
 	
 	
@@ -215,7 +215,7 @@ public class ConsentTask: ORKOrderedTask {
 		}
 		
 		// declined consent, stop here
-		if self.dynamicType.reviewStepName == step.identifier && nil == signature(result) {
+		if self.dynamicType.reviewStepName == step.identifier && nil == signature(from: result) {
 			return nil
 		}
 		return super.step(after: step, with: result)
