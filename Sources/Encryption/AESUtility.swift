@@ -61,7 +61,7 @@ public class AESUtility {
 	- parameter data: The data to encrypt using the receiver's symmetric key
 	- returns: Encryped data representation
 	*/
-	public func encrypt(_ data: Data) throws -> Data {
+	public func encrypt(data: Data) throws -> Data {
 		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
 		let enc = try aes.encrypt(data.bytes)
 		return Data(bytes: enc)
@@ -76,7 +76,7 @@ public class AESUtility {
 	- parameter encData: Encrypted data to decrypt using the receiver's symmetric key
 	- returns: Decrypted data
 	*/
-	public func decrypt(_ encData: Data) throws -> Data {
+	public func decrypt(encData: Data) throws -> Data {
 		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
 		let dec = try aes.decrypt(encData.bytes)
 		return Data(bytes: dec)

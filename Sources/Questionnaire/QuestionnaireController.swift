@@ -33,7 +33,7 @@ The `whenCompleted` callback is called when the user completes the questionnaire
 a `QuestionnaireResponse` resource.
 The `whenCancelledOrFailed` callback is called when the questionnaire is cancelled (error = nil) or finishes with an error.
 
-See [Questionnaire/README.md](https://github.com/chb/c3-pro-ios-framework/tree/master/Sources/Questionnaire#questionnairecontroller) for detailed instructions.
+See [Questionnaire/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/Questionnaire#questionnairecontroller) for detailed instructions.
 */
 public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
@@ -67,7 +67,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
 	- parameter callback: The callback once preparation has concluded, either with an ORKTask or an error. Called on the main queue.
 	*/
-	func prepareQuestionnaire(_ callback: ((task: ORKTask?, error: Error?) -> Void)) {
+	func prepareQuestionnaire(callback: ((task: ORKTask?, error: Error?) -> Void)) {
 		if let questionnaire = questionnaire {
 			logger?.trace("C3-PRO", msg: "Fulfilling promise for \(questionnaire)")
 			let promise = QuestionnairePromise(questionnaire: questionnaire)
@@ -111,7 +111,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	- parameter callback: Callback to be called on the main queue, either with a task view controller prepared for the questionnaire task or an
 		error
 	*/
-	public func prepareQuestionnaireViewController(_ callback: ((viewController: ORKTaskViewController?, error: Error?) -> Void)) {
+	public func prepareQuestionnaireViewController(callback: ((viewController: ORKTaskViewController?, error: Error?) -> Void)) {
 		prepareQuestionnaire() { task, error in
 			if let task = task {
 				let viewController = ORKTaskViewController(task: task, taskRun: nil)
@@ -144,7 +144,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 		case .failed:
 			didFailWithError(viewController, error: C3Error.questionnaireFinishedWithError)
 		case .completed:
-			whenCompleted?(viewController: viewController, answers: viewController.result.c3_asQuestionnaireResponseForTask(viewController.task))
+			whenCompleted?(viewController: viewController, answers: viewController.result.c3_asQuestionnaireResponse(for: viewController.task))
 		case .discarded:
 			didFailWithError(viewController, error: nil)
 		case .saved:

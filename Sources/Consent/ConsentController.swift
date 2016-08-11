@@ -58,14 +58,14 @@ public struct ConsentTaskOptions {
 	
 	/// Shown when the user taps agree and she needs to confirm that she is in agreement.
 	public var reasonForConsent = "By agreeing you confirm that you read the consent and that you wish to take part in this research study.".c3_localized
-    
-    /// Whether the user should be prompted to create a passcode/PIN after consenting.
-    public var askToCreatePasscode = true
-	
+
+	/// Whether the user should be prompted to create a passcode/PIN after consenting.
+	public var askToCreatePasscode = true
+
 	/// Which system permissions the user should be asked to grant during consenting.
 	public var wantedServicePermissions: [SystemService]? = nil
-	
-	
+
+
 	public init() {  }
 }
 
@@ -448,7 +448,7 @@ public class ConsentController {
 	- parameter mustExist: If `true` will return nil if no file exists at the expected file URL. If `false` will return the desired URL,
 	                       which is pretty sure to return non-nil, so use that exclamation mark!
 	*/
-	public class func signedConsentPDFURL(_ mustExist: Bool = false) -> URL? {
+	public class func signedConsentPDFURL(mustExist: Bool = false) -> URL? {
 		do {
 			let base = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
 			let url = base.appendingPathComponent("consent-signed.pdf")

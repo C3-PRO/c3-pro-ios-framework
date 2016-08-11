@@ -49,7 +49,7 @@ public class RSAUtility {
 	- parameter data: The data to encrypt
 	- returns: Encrypted data
 	*/
-	public func encrypt(_ data: Data) throws -> Data {
+	public func encrypt(data: Data) throws -> Data {
 		if nil == publicKey {
 			publicKey = try readBundledCertificate()
 		}

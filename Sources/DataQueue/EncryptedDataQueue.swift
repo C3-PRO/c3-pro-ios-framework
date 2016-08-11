@@ -83,11 +83,11 @@ public class EncryptedDataQueue: DataQueue {
 	Encrypts the given data (which is presumed to be JSON data of a FHIR resource), then creates a JSON representation that also contains
 	the encrypted symmetric key and a FHIR version flag and returns data produced when serializing that JSON.
 	
-	- parameter data: The data to encrypt, presumed to be NSData of a JSON-serialized FHIR resource
-	- returns: NSData representing JSON
+	- parameter data: The data to encrypt, presumed to be Data of a JSON-serialized FHIR resource
+	- returns:        Data representing JSON
 	*/
-	public func encryptedData(_ data: Data) throws -> Data {
-		let encData = try aes.encrypt(data)
+	public func encrypted(data: Data) throws -> Data {
+		let encData = try aes.encrypt(data: data)
 		let encKey = try rsa.encrypt(aes.symmetricKeyData)
 		let dict = [
 			"key_id": delegate?.keyIdentifierForEncryptedDataQueue(self) ?? "",
@@ -108,11 +108,11 @@ public class EncryptedDataQueue: DataQueue {
 		return super.handlerForRequest(ofType: type, resource: resource, headers: headers)
 	}
 	
-	override public func absoluteURLForPath(_ path: String, handler: FHIRServerRequestHandler) -> URL? {
+	override public func absoluteURL(for path: String, handler: FHIRServerRequestHandler) -> URL? {
 		if handler is EncryptedJSONRequestHandler {
 			return URL(string: path, relativeTo: encryptedBaseURL)
 		}
-		return super.absoluteURLForPath(path, handler: handler)
+		return super.absoluteURL(for: path, handler: handler)
 	}
 }
 
@@ -143,7 +143,7 @@ public class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler {
 		data = nil					// to avoid double-encryption
 		try super.prepareData()
 		if let data = data {
-			self.data = try dataQueue.encryptedData(data)
+			self.data = try dataQueue.encrypted(data)
 		}
 	}
 }

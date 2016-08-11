@@ -46,6 +46,7 @@ public class DataQueue: Server {
 		if let host = baseURL.host {
 			let full = ((dir as NSString).appendingPathComponent("DataQueue") as NSString).appendingPathComponent(host)
 			queueManager = DataQueueManager(fhirServer: self, directory: full)
+			queueManager.logger = logger
 		}
 		else {
 			fatalError("DataQueue: Cannot initialize without host in baseURL")
@@ -60,13 +61,13 @@ public class DataQueue: Server {
 	
 	- parameter resource: The FHIR Resource to enqueue
 	*/
-	public func enqueueResource(_ resource: Resource) {
-		queueManager.enqueueResource(resource)
+	public func enqueue(resource: Resource) {
+		queueManager.enqueue(resource: resource)
 	}
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
-	public func flush(_ callback: ((error: Error?) -> Void)) {
-		queueManager.flush(callback)
+	public func flush(callback: ((error: Error?) -> Void)) {
+		queueManager.flush(callback: callback)
 	}
 	
 	
@@ -77,7 +78,7 @@ public class DataQueue: Server {
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			
 			// are we currently dequeueing the resource we're trying to POST (and hence inside a `flush` call)?
-			if let resource = handler.resource, queueManager.isDequeueing(resource) {
+			if let resource = handler.resource, queueManager.isDequeueing(resource: resource) {
 				super.performPreparedRequest(request, handler: handler, callback: callback)
 			}
 			
@@ -85,7 +86,7 @@ public class DataQueue: Server {
 			else {
 				queueManager.flush() { error in
 					if let error = error {
-						self.queueManager.enqueueResourceInHandler(handler)
+						self.queueManager.enqueue(resourceInHandler: handler)
 						
 						let response = R.ResponseType.init(error: error)
 						callback(response: response)
@@ -93,7 +94,7 @@ public class DataQueue: Server {
 					else {
 						super.performPreparedRequest(request, handler: handler) { response in
 							if nil != response.error {
-								self.queueManager.enqueueResourceInHandler(handler)
+								self.queueManager.enqueue(resourceInHandler: handler)
 							}
 							callback(response: response)
 						}

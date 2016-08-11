@@ -273,7 +273,7 @@ public func c3_logIfDebug(_ message: @autoclosure () -> String, function: String
 /**
 Prints the given message to stdout. Prepends filename, line number, method/function name and "WARNING:".
 */
-func c3_warn(_ message: @autoclosure () -> String, function: String = #function, file: NSString = #file, line: Int = #line) {
+public func c3_warn(_ message: @autoclosure () -> String, function: String = #function, file: NSString = #file, line: Int = #line) {
 	print("[\(file.lastPathComponent):\(line)] \(function)  WARNING: \(message())")
 }
 

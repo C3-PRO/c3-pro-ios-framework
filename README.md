@@ -35,6 +35,7 @@ This framework combines several versioned technologies, here's an overview over 
 
    Version |   Swift | ResearchKit |  FHIR
 -----------|---------|-------------|------
+   **1.1** |     2.2 |         1.3 | 1.0.2
  **1.0.1** |     2.2 |         1.3 | 1.0.2
    **1.0** | 2.0-2.2 |         1.3 | 1.0.2
 
@@ -65,8 +66,10 @@ Also serves as return format of **activity data** collected on the phone.
 `DataQueue` is a FHIR server implementation used to move FHIR resources, created on device, to a FHIR server, without the need for user interaction nor -confirmation.  
 [➔ DataQueue](./Sources/DataQueue/)
 
-### HealthKit Extensions
+### HealthKit & CoreMotion (Activity Data)
 
+`ActivityReporter` implementations for _HealthKit_ and _CoreMotion_.
+The latter includes persistence of activity data past the 7 days iOS default.
 Extensions to _HealthKit_ classes to easily query for samples and to represent quantities in FHIR.  
 [➔ HealthKit](./Sources/HealthKit/)
 
@@ -111,5 +114,5 @@ Be sure to take a look at the [NOTICE.txt](./NOTICE.txt) file, and don't forget 
 [researchkit]: http://researchkit.github.io
 [i2b2]: https://www.i2b2.org
 [mix-match]: https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html
-[sample app]: https://github.com/chb/c3-pro-demo-ios
+[sample app]: https://github.com/C3-PRO/c3-pro-demo-ios
 [docs]: http://chb.github.io/c3-pro-ios-framework/

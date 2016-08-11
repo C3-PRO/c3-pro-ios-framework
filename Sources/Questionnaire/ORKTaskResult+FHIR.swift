@@ -30,10 +30,10 @@ extension ORKTaskResult {
 	/**
 	Extracts all results from the task and converts them to a FHIR QuestionnaireResponse.
 	
-	- parameter task: The task the receiver is a result for
-	- returns: A `QuestionnaireResponse` resource or nil
+	- parameter for: The task the receiver is a result for
+	- returns:       A `QuestionnaireResponse` resource or nil
 	*/
-	func c3_asQuestionnaireResponseForTask(_ task: ORKTask?) -> QuestionnaireResponse? {
+	func c3_asQuestionnaireResponse(for task: ORKTask?) -> QuestionnaireResponse? {
 		guard let results = results as? [ORKStepResult] else {
 			return nil
 		}
