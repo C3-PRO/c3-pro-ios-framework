@@ -97,7 +97,7 @@ public extension ContractTerm {
 						section.htmlContent = sub.valueString
 					case "htmlContentFile":
 						let bundle = Bundle.main
-						if let name = sub.valueString, let url = bundle.urlForResource(name, withExtension: "html") ?? bundle.urlForResource(name, withExtension: "html", subdirectory: "HTMLContent") {
+						if let name = sub.valueString, let url = bundle.url(forResource: name, withExtension: "html") ?? bundle.url(forResource: name, withExtension: "html", subdirectory: "HTMLContent") {
 							do {
 								section.htmlContent = try String(contentsOf: url, encoding: String.Encoding.utf8)
 							}
@@ -116,8 +116,8 @@ public extension ContractTerm {
 							c3_warn("Custom consent image named «\(sub.valueString)» is not in main bundle")
 						}
 					case "animation":
-						let multi = (UIScreen.main().scale >= 3.0) ? "@3x" : "@2x"
-						if let name = sub.valueString, let url = Bundle.main.urlForResource(name + multi, withExtension: "m4v") {
+						let multi = (UIScreen.main.scale >= 3.0) ? "@3x" : "@2x"
+						if let name = sub.valueString, let url = Bundle.main.url(forResource: name + multi, withExtension: "m4v") {
 							section.customAnimationURL = url
 						}
 						else {
@@ -142,7 +142,7 @@ public extension ContractTerm {
 	public func c3_consentSectionType() throws -> ORKConsentSectionType {
 		if let codings = type?.coding {
 			for code in codings {
-				if let url = code.system?.absoluteString where url != kContractTermConsentSectionType {
+				if let url = code.system?.absoluteString, url != kContractTermConsentSectionType {
 					c3_logIfDebug("Ignoring consent section system “\(url)” (expecting “\(kContractTermConsentSectionType)”)")
 					continue
 				}

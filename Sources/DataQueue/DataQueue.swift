@@ -65,7 +65,7 @@ public class DataQueue: Server {
 	}
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
-	public func flush(_ callback: ((error: ErrorProtocol?) -> Void)) {
+	public func flush(_ callback: ((error: Error?) -> Void)) {
 		queueManager.flush(callback)
 	}
 	
@@ -77,7 +77,7 @@ public class DataQueue: Server {
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			
 			// are we currently dequeueing the resource we're trying to POST (and hence inside a `flush` call)?
-			if let resource = handler.resource where queueManager.isDequeueing(resource) {
+			if let resource = handler.resource, queueManager.isDequeueing(resource) {
 				super.performPreparedRequest(request, handler: handler, callback: callback)
 			}
 			

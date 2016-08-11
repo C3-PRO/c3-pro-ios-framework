@@ -37,12 +37,12 @@ class ConditionalOrderedTask: ORKOrderedTask {
 		
 		// does the serial next step have conditional requirements and are they satisfied?
 		if let condNext = serialNext as? ConditionalQuestionStep {
-			if let ok = condNext.requirementsAreSatisfiedBy(result) where !ok {
+			if let ok = condNext.requirementsAreSatisfiedBy(result), !ok {
 				return self.step(after: condNext, with: result)
 			}
 		}
 		if let condNext = serialNext as? ConditionalInstructionStep {
-			if let ok = condNext.requirementsAreSatisfiedBy(result) where !ok {
+			if let ok = condNext.requirementsAreSatisfiedBy(result), !ok {
 				return self.step(after: condNext, with: result)
 			}
 		}
@@ -54,12 +54,12 @@ class ConditionalOrderedTask: ORKOrderedTask {
 		
 		// does the serial previous step have conditional requirements and are they satisfied?
 		if let condPrev = serialPrev as? ConditionalQuestionStep {
-			if let ok = condPrev.requirementsAreSatisfiedBy(result) where !ok {
+			if let ok = condPrev.requirementsAreSatisfiedBy(result), !ok {
 				return self.step(before: condPrev, with: result)
 			}
 		}
 		if let condPrev = serialPrev as? ConditionalInstructionStep {
-			if let ok = condPrev.requirementsAreSatisfiedBy(result) where !ok {
+			if let ok = condPrev.requirementsAreSatisfiedBy(result), !ok {
 				return self.step(before: condPrev, with: result)
 			}
 		}
@@ -107,8 +107,8 @@ public class ResultRequirement: NSObject, NSCopying, NSSecureCoding {
 	}
 	
 	required public init?(coder aDecoder: NSCoder) {
-		questionIdentifier = aDecoder.decodeObjectOfClass(NSString.self, forKey: "stepIdentifier")!
-		result = aDecoder.decodeObjectOfClass(ORKQuestionResult.self, forKey: "result")!
+		questionIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "stepIdentifier")!
+		result = aDecoder.decodeObject(of: ORKQuestionResult.self, forKey: "result")!
 	}
 	
 	public func encode(with aCoder: NSCoder) {

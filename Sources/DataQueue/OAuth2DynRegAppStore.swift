@@ -45,14 +45,14 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 	
 	var refreshDelegate: AppStoreRequestDelegate?
 	
-	override public func registerClient(_ client: OAuth2, callback: ((json: OAuth2JSON?, error: ErrorProtocol?) -> Void)) {
+	override public func registerClient(_ client: OAuth2, callback: ((json: OAuth2JSON?, error: Error?) -> Void)) {
 		if ensureHasAppReceipt() {
 			super.registerClient(client, callback: callback)
 		}
 		else {
 			refreshAppReceipt() { error in
 				if let error = error {
-					if SKErrorDomain == error._domain && SKErrorCode.unknown.rawValue == error._code {
+					if SKErrorDomain == error._domain && SKError.unknown.rawValue == error._code {
 						callback(json: nil, error: C3Error.appReceiptRefreshFailed)
 					}
 					else {
@@ -97,7 +97,7 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 	
 	- parameter callback: The callback to call, containing an optional error when refresh is done
 	*/
-	func refreshAppReceipt(_ callback: ((error: ErrorProtocol?) -> Void)) {
+	func refreshAppReceipt(_ callback: ((error: Error?) -> Void)) {
 		if let delegate = refreshDelegate {
 			refreshRequest?.cancel()
 			delegate.callback(error: OAuth2Error.generic("App Store Receipt refresh timeout"))
@@ -122,7 +122,7 @@ Simple object used by `OAuth2DynRegAppStore` to use block-based callbacks on an 
 class AppStoreRequestDelegate: NSObject, SKRequestDelegate {
 	
 	/// The callback to call when done or on error.
-	let callback: ((error: ErrorProtocol?) -> Void)
+	let callback: ((error: Error?) -> Void)
 	
 	
 	/**
@@ -130,7 +130,7 @@ class AppStoreRequestDelegate: NSObject, SKRequestDelegate {
 	
 	- parameter callback: The callback the instance should hold on to
 	*/
-	init(callback: ((error: ErrorProtocol?) -> Void)) {
+	init(callback: ((error: Error?) -> Void)) {
 		self.callback = callback
 	}
 	
@@ -141,7 +141,7 @@ class AppStoreRequestDelegate: NSObject, SKRequestDelegate {
 		callback(error: nil)
 	}
 	
-	func request(_ request: SKRequest, didFailWithError error: NSError) {
+	func request(_ request: SKRequest, didFailWithError error: Error) {
 		callback(error: error)
 	}
 }

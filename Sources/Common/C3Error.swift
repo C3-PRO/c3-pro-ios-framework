@@ -29,13 +29,13 @@ public let C3PROFHIRVersion = "1.4.0"
 /**
 Errors thrown around when working with C3-PRO.
 */
-public enum C3Error: ErrorProtocol, CustomStringConvertible {
+public enum C3Error: Error, CustomStringConvertible {
 	
 	/// The mentioned feature is not implemented.
 	case notImplemented(String)
 	
 	/// An error holding on to multiple other errors.
-	case multipleErrors(Array<ErrorProtocol>)
+	case multipleErrors(Array<Error>)
 	
 	
 	// MARK: App
@@ -68,7 +68,7 @@ public enum C3Error: ErrorProtocol, CustomStringConvertible {
 	// MARK: Consent
 	
 	/// The consent is lacking a patient reference.
-	case consentNoPatientReference(ErrorProtocol)
+	case consentNoPatientReference(Error)
 	
 	/// The necessary contract is not present.
 	case consentContractNotPresent

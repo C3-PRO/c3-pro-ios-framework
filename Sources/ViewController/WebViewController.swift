@@ -38,7 +38,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	
 	override public func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = UIColor.lightGray()
+		view.backgroundColor = UIColor.lightGray
 		edgesForExtendedLayout = .all
 		
 		// create webview
@@ -59,7 +59,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	
 	override public func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		if let webView = webView where nil == webView.request {
+		if let webView = webView, nil == webView.request {
 			loadStartURL()
 		}
 	}
@@ -72,8 +72,8 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	/// The CSS style to apply.
 	var appStyle: String {
 		if nil == self.dynamicType._appStyle {
-			if let styleURL = Bundle.main.urlForResource("Intro", withExtension: "css") ?? Bundle.main.urlForResource("Intro", withExtension: "css", subdirectory: "HTMLContent") {
-				self.dynamicType._appStyle = (try? NSString(contentsOfFile: styleURL.path!, encoding: String.Encoding.utf8.rawValue)) as? String
+			if let styleURL = Bundle.main.url(forResource: "Intro", withExtension: "css") ?? Bundle.main.url(forResource: "Intro", withExtension: "css", subdirectory: "HTMLContent") {
+				self.dynamicType._appStyle = (try? String(contentsOfFile: styleURL.path, encoding: String.Encoding.utf8))
 			}
 			else {
 				c3_warn("Please include a CSS stylesheet called «Intro.css» in the app bundle")
@@ -108,7 +108,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	
 	public func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
 		if openLinksExternally && .linkClicked == navigationType, let url = request.url {
-			UIApplication.shared().openURL(url)
+			UIApplication.shared.openURL(url)
 			return false
 		}
 		return true

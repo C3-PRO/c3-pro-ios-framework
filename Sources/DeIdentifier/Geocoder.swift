@@ -24,13 +24,13 @@ import SMART
 
 
 /** Callback called when geocoding finishes. Supplies `location` (`CLLocation`), if determined, or `error`. */
-public typealias GeocoderLocationCallback = ((location: CLLocation?, error: ErrorProtocol?) -> Void)
+public typealias GeocoderLocationCallback = ((location: CLLocation?, error: Error?) -> Void)
 
 /** Callback called when geocoding finishes. Supplies `placemark` (`CLPlacemark`), if determined, or `error`. */
-public typealias GeocoderPlacemarkCallback = ((placemark: CLPlacemark?, error: ErrorProtocol?) -> Void)
+public typealias GeocoderPlacemarkCallback = ((placemark: CLPlacemark?, error: Error?) -> Void)
 
 /** Callback called when geocoding finishes. Supplies `address` (`SMART.Address`), if determined, or `error`. */
-public typealias GeocoderAddressCallback = ((address: Address?, error: ErrorProtocol?) -> Void)
+public typealias GeocoderAddressCallback = ((address: Address?, error: Error?) -> Void)
 
 
 /**
@@ -115,7 +115,7 @@ public class Geocoder {
 		locationManager = nil
 	}
 	
-	func locationManagerDidFail(_ error: ErrorProtocol?) {
+	func locationManagerDidFail(_ error: Error?) {
 		c3_logIfDebug("Location determination failed with error: \(error)")
 		locationCallback?(location: nil, error: error)
 		locationCallback = nil
@@ -281,8 +281,8 @@ public class Geocoder {
 		hipaa.country = address.country
 		
 		// US: 3-digit ZIP
-		if let us = address.country where us.lowercased().hasPrefix("us") {
-			if let fullZip = address.postalCode where fullZip.characters.count >= 3 {
+		if let us = address.country, us.lowercased().hasPrefix("us") {
+			if let fullZip = address.postalCode, fullZip.characters.count >= 3 {
 				let zip = fullZip[fullZip.startIndex..<fullZip.index(fullZip.startIndex, offsetBy: 3)]
 				hipaa.postalCode = Geocoder.restrictedThreeDigitZIPs().contains(zip) ? "000" : zip
 			}
@@ -323,7 +323,7 @@ class LocationManagerDelegate: NSObject, CLLocationManagerDelegate {
 		didUpdateLocations?(locations: locations ?? [])
 	}
 	
-	func locationManager(_ manager: CLLocationManager, didFailWithError error: NSError) {
+	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
 		didUpdateLocations?(locations: [])
 	}
 }

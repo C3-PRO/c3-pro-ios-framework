@@ -119,8 +119,8 @@ class ConditionalQuestionStep: ORKQuestionStep {
 	
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-		let set = NSSet(array: [NSArray.self, ResultRequirement.self]) as Set<NSObject>
-		requirements = aDecoder.decodeObjectOfClasses(set, forKey: "requirements") as? [ResultRequirement]
+		// TODO: how to use [ResultRequirement] as first argument to decodeObject()?
+		requirements = aDecoder.decodeObject(of: nil, forKey: "requirements") as? [ResultRequirement]
 	}
 	
 	override func encode(with aCoder: NSCoder) {
@@ -219,8 +219,8 @@ class ConditionalInstructionStep: ORKInstructionStep {
 	
 	required init(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-		let set = NSSet(array: [NSArray.self, ResultRequirement.self]) as Set<NSObject>
-		requirements = aDecoder.decodeObjectOfClasses(set, forKey: "requirements") as? [ResultRequirement]
+		// TODO: how to use [ResultRequirement] as first argument to decodeObject()?
+		requirements = aDecoder.decodeObject(of: nil, forKey: "requirements") as? [ResultRequirement]
 	}
 	
 	override func encode(with aCoder: NSCoder) {

@@ -61,8 +61,8 @@ public class EncryptedDataQueue: DataQueue {
 	- parameter publicCertificateFile: Filename, without ".crt" extension, of a bundled X509 public key certificate
 	*/
 	public init(baseURL: URL, auth: OAuth2JSON?, encBaseURL: URL, publicCertificateFile: String) {
-		if let lastChar = encBaseURL.absoluteString?.characters.last where "/" != lastChar, let postfixed = try? encBaseURL.appendingPathComponent("/") {
-			encryptedBaseURL = postfixed
+		if let lastChar = encBaseURL.absoluteString.characters.last, "/" != lastChar {
+			encryptedBaseURL = encBaseURL.appendingPathComponent("/")
 		}
 		else {
 			encryptedBaseURL = encBaseURL
@@ -102,7 +102,7 @@ public class EncryptedDataQueue: DataQueue {
 	// MARK: - Requests
 	
 	override public func handlerForRequest(ofType type: FHIRRequestType, resource: Resource?, headers: FHIRRequestHeaders?) -> FHIRServerRequestHandler? {
-		if let resource = resource where nil == delegate || delegate!.encryptedDataQueue(self, wantsEncryptionForResource: resource, requestType: type) {
+		if let resource = resource, nil == delegate || delegate!.encryptedDataQueue(self, wantsEncryptionForResource: resource, requestType: type) {
 			return EncryptedJSONRequestHandler(type, resource: resource, dataQueue: self)
 		}
 		return super.handlerForRequest(ofType: type, resource: resource, headers: headers)

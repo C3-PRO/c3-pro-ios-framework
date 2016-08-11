@@ -62,14 +62,14 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	- parameter callback: The callback to be called when done; note that even when you get an error, some steps might have successfully been
 	                      allocated still, so don't throw everything away just because you receive errors
 	*/
-	func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorProtocol]?) -> Void)) {
+	func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [Error]?) -> Void)) {
 		let linkId = item.linkId ?? UUID().uuidString
 		let (title, text) = item.c3_bestTitleAndText()
 		
 		// resolve answer format, THEN resolve sub-groups, if any
 		item.c3_asAnswerFormat() { format, error in
 			var steps = [ORKStep]()
-			var errors = [ErrorProtocol]()
+			var errors = [Error]()
 			var requirements = parentRequirements ?? [ResultRequirement]()
 			
 			// we know the answer format, create a conditional step
@@ -121,7 +121,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				}
 				
 				// all done
-				queueGroup.notify(queue: DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.priorityHigh)) {
+				queueGroup.notify(queue: DispatchQueue.global(qos: DispatchQoS.QoSClass.default)) {
 					let gsteps = subpromises.filter() { return nil != $0.steps }.flatMap() { return $0.steps! }
 					steps.append(contentsOf: gsteps)
 					
@@ -219,7 +219,7 @@ extension QuestionnaireItem {
 	[x] ORKTimeOfDayAnswerFormat:       "time"
 	[ ] ORKTimeIntervalAnswerFormat:
 	*/
-	func c3_asAnswerFormat(_ callback: ((format: ORKAnswerFormat?, error: ErrorProtocol?) -> Void)) {
+	func c3_asAnswerFormat(_ callback: ((format: ORKAnswerFormat?, error: Error?) -> Void)) {
 		let link = linkId ?? "<nil>"
 		if let type = type {
 			switch type {
@@ -230,7 +230,7 @@ extension QuestionnaireItem {
 				let maxVals = c3_maxValue()
 				let minVal = minVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger
 				let maxVal = maxVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger
-				if let minVal = minVal, maxVal = maxVal where maxVal > minVal {
+				if let minVal = minVal, let maxVal = maxVal, maxVal > minVal {
 					let minDesc = minVals?.filter() { return $0.valueString != nil }.first?.valueString
 					let maxDesc = maxVals?.filter() { return $0.valueString != nil }.first?.valueString
 					let defVal = c3_defaultAnswer()?.valueInteger ?? minVal
@@ -290,7 +290,7 @@ extension QuestionnaireItem {
 	The `value` property of the text choice is a combination of the coding system URL and the code, separated by
 	`kORKTextChoiceSystemSeparator` (a space). If no system URL is provided, "https://fhir.smalthealthit.org" is used.
 	*/
-	func c3_resolveAnswerChoices(_ callback: ((choices: [ORKTextChoice]?, error: ErrorProtocol?) -> Void)) {
+	func c3_resolveAnswerChoices(_ callback: ((choices: [ORKTextChoice]?, error: Error?) -> Void)) {
 		options?.resolve(ValueSet.self) { valueSet in
 			var choices = [ORKTextChoice]()
 			

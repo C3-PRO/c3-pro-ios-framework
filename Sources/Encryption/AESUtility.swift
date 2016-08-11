@@ -63,8 +63,8 @@ public class AESUtility {
 	*/
 	public func encrypt(_ data: Data) throws -> Data {
 		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
-		let enc = try aes.encrypt(data.arrayOfBytes())
-		return Data.withBytes(enc)
+		let enc = try aes.encrypt(data.bytes)
+		return Data(bytes: enc)
 	}
 	
 	
@@ -78,8 +78,8 @@ public class AESUtility {
 	*/
 	public func decrypt(_ encData: Data) throws -> Data {
 		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
-		let dec = try aes.decrypt(encData.arrayOfBytes())
-		return Data.withBytes(dec)
+		let dec = try aes.decrypt(encData.bytes)
+		return Data(bytes: dec)
 	}
 }
 

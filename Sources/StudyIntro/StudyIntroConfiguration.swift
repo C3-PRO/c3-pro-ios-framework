@@ -70,7 +70,7 @@ public class StudyIntroConfiguration {
 	public internal(set) var ineligibleMessage: String?
 	
 	public init(json filename: String, inBundle: Bundle? = nil) throws {
-		if let url = (inBundle ?? Bundle.main).urlForResource(filename, withExtension: "json"), let data = try? Data(contentsOf: url) {
+		if let url = (inBundle ?? Bundle.main).url(forResource: filename, withExtension: "json"), let data = try? Data(contentsOf: url) {
 			let json = try JSONSerialization.jsonObject(with: data, options: [])
 			
 			// top level

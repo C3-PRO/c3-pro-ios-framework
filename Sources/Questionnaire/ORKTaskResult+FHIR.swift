@@ -195,7 +195,7 @@ extension ORKTextQuestionResult {
 			return nil
 		}
 		let answer = QuestionnaireResponseItemAnswer(json: nil)
-		if let fhir = fhirType where "url" == fhir {
+		if let fhir = fhirType, "url" == fhir {
 			answer.valueUri = URL(string: text)
 		}
 		else {
@@ -219,11 +219,11 @@ extension ORKNumericQuestionResult {
 			return nil
 		}
 		let answer = QuestionnaireResponseItemAnswer(json: nil)
-		if let fhir = fhirType where "quantity" == fhir {
+		if let fhir = fhirType, "quantity" == fhir {
 			answer.valueQuantity = Quantity(json: ["value": numeric])
 			answer.valueQuantity!.unit = unit
 		}
-		else if let fhir = fhirType where "integer" == fhir {
+		else if let fhir = fhirType, "integer" == fhir {
 			answer.valueInteger = numeric.intValue
 		}
 		else {

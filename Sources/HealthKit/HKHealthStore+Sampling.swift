@@ -38,7 +38,7 @@ public extension HKHealthStore {
 	- parameter typeIdentifier: The type of samples to retrieve
 	- parameter callback: Callback to call when query finishes, comes back either with a quantity, an error or neither
 	*/
-	public func c3_latestSampleOfType(_ typeIdentifier: String, callback: ((quantity: HKQuantity?, error: ErrorProtocol?) -> Void)) {
+	public func c3_latestSampleOfType(_ typeIdentifier: String, callback: ((quantity: HKQuantity?, error: Error?) -> Void)) {
 		c3_samplesOfTypeBetween(typeIdentifier, start: Date.distantPast , end: Date(), limit: 1) { results, error in
 			callback(quantity: results?.first?.quantity, error: error)
 		}
@@ -54,14 +54,14 @@ public extension HKHealthStore {
 	- parameter limit: How many samples to retrieve at max
 	- parameter callback: Callback to call when query finishes, comes back either with an array of samples, an error or neither
 	*/
-	public func c3_samplesOfTypeBetween(_ typeIdentifier: String, start: Date, end: Date, limit: Int, callback: ((results: [HKQuantitySample]?, error: ErrorProtocol?) -> Void)) {
+	public func c3_samplesOfTypeBetween(_ typeIdentifier: String, start: Date, end: Date, limit: Int, callback: ((results: [HKQuantitySample]?, error: Error?) -> Void)) {
 		guard let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier(rawValue: typeIdentifier)) else {
 			callback(results: nil, error: C3Error.noSuchHKSampleType(typeIdentifier))
 			return
 		}
 		
 		let period = HKQuery.predicateForSamples(withStart: start, end: end, options: HKQueryOptions())
-		let sortDescriptor = SortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+		let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
 		let query = HKSampleQuery(sampleType: sampleType, predicate: period, limit: limit, sortDescriptors: [sortDescriptor]) { sampleQuery, results, error in
 			if let err = error {
 				callback(results: nil, error: err)
@@ -82,14 +82,14 @@ public extension HKHealthStore {
 	- parameter callback: Callback to call, on a background queue, when the query finishes, containing one HKQuantitySample spanning the
 	                      whole period or an error (or neither)
 	*/
-	public func c3_summaryOfSamplesOfTypeBetween(_ typeIdentifier: String, start: Date, end: Date, callback: ((result: HKQuantitySample?, error: ErrorProtocol?) -> Void)) {
+	public func c3_summaryOfSamplesOfTypeBetween(_ typeIdentifier: String, start: Date, end: Date, callback: ((result: HKQuantitySample?, error: Error?) -> Void)) {
 		guard let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier(rawValue: typeIdentifier)) else {
 			callback(result: nil, error: C3Error.noSuchHKSampleType(typeIdentifier))
 			return
 		}
 		
 		// we create one interval for the whole period between start and end dates
-		let interval = Calendar.current.components([.day, .hour], from: start, to: end, options: [])
+		let interval = Calendar.current.dateComponents([.day, .hour], from: start, to: end)
 		guard interval.day! + interval.hour! > 0 else {
 			callback(result: nil, error: C3Error.intervalTooSmall)
 			return

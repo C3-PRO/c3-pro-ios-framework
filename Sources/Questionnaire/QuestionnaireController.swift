@@ -44,7 +44,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	public final var whenCompleted: ((viewController: ORKTaskViewController, answers: QuestionnaireResponse?) -> Void)?
 	
 	/// Callback to be called when the questionnaire is cancelled (error = nil) or finishes with an error.
-	public final var whenCancelledOrFailed: ((viewController: ORKTaskViewController, error: ErrorProtocol?) -> Void)?
+	public final var whenCancelledOrFailed: ((viewController: ORKTaskViewController, error: Error?) -> Void)?
 	
 	/// The logger to use, if any.
 	public var logger: OAuth2Logger?
@@ -67,13 +67,13 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
 	- parameter callback: The callback once preparation has concluded, either with an ORKTask or an error. Called on the main queue.
 	*/
-	func prepareQuestionnaire(_ callback: ((task: ORKTask?, error: ErrorProtocol?) -> Void)) {
+	func prepareQuestionnaire(_ callback: ((task: ORKTask?, error: Error?) -> Void)) {
 		if let questionnaire = questionnaire {
 			logger?.trace("C3-PRO", msg: "Fulfilling promise for \(questionnaire)")
 			let promise = QuestionnairePromise(questionnaire: questionnaire)
 			promise.fulfill(nil) { errors in
 				DispatchQueue.main.async {
-					var multiErrors: ErrorProtocol?
+					var multiErrors: Error?
 					if let errs = errors {
 						multiErrors = C3Error.multipleErrors(errs)
 					}
@@ -111,7 +111,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	- parameter callback: Callback to be called on the main queue, either with a task view controller prepared for the questionnaire task or an
 		error
 	*/
-	public func prepareQuestionnaireViewController(_ callback: ((viewController: ORKTaskViewController?, error: ErrorProtocol?) -> Void)) {
+	public func prepareQuestionnaireViewController(_ callback: ((viewController: ORKTaskViewController?, error: Error?) -> Void)) {
 		prepareQuestionnaire() { task, error in
 			if let task = task {
 				let viewController = ORKTaskViewController(task: task, taskRun: nil)
@@ -127,7 +127,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
 	// MARK: - Task View Controller Delegate
 	
-	public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: NSError?) {
+	public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
 		if let error = error {
 			didFailWithError(taskViewController, error: error)
 		}
@@ -153,7 +153,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 		}
 	}
 	
-	func didFailWithError(_ viewController: ORKTaskViewController, error: ErrorProtocol?) {
+	func didFailWithError(_ viewController: ORKTaskViewController, error: Error?) {
 		whenCancelledOrFailed?(viewController: viewController, error: error)
 	}
 }

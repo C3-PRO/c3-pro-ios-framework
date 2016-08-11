@@ -42,7 +42,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	/// The title shown at the top.
 	public var topTitle: String? {
 		didSet {
-			if isViewLoaded() {
+			if isViewLoaded {
 				topTitleLabel?.text = topTitle
 			}
 		}
@@ -51,7 +51,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	/// Name of the image file shown at the very top.
 	public var topImageName = "logo_institute" {
 		didSet {
-			if isViewLoaded() {
+			if isViewLoaded {
 				topImage?.image = UIImage(named: topImageName)
 			}
 		}
@@ -71,7 +71,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	/// The study intro items to show
 	public var items: [StudyIntroItem]? {
 		didSet {
-			if isViewLoaded() {
+			if isViewLoaded {
 				pageControl?.numberOfPages = items?.count ?? 0
 			}
 		}
@@ -144,7 +144,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	}
 	
 	public func showVideo(_ name: String) {
-		if let url = Bundle.main.urlForResource(name, withExtension: "mp4") {
+		if let url = Bundle.main.url(forResource: name, withExtension: "mp4") {
 			let player = MPMoviePlayerViewController(contentURL: url)
 			player?.moviePlayer.controlStyle = .fullscreen
 			
@@ -253,7 +253,7 @@ public class StudyIntroCollectionViewController: UIViewController, UICollectionV
 	Returns the URL to the bundled blank consent PDF, by default named «Consent.pdf»
 	*/
 	public class func bundledConsentPDFURL() -> URL? {
-		return Bundle.main.urlForResource("Consent", withExtension: "pdf")
+		return Bundle.main.url(forResource: "Consent", withExtension: "pdf")
 	}
 }
 

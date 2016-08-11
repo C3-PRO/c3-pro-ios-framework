@@ -75,8 +75,8 @@ public class BorderedButton: UIButton {
 	public override func tintColorDidChange() {
 		super.tintColorDidChange()
 		setTitleColor(tintColor, for: UIControlState())
-		setTitleColor(UIColor.white(), for: .highlighted)
-		setTitleColor(UIColor.white(), for: .selected)
+		setTitleColor(UIColor.white, for: .highlighted)
+		setTitleColor(UIColor.white, for: .selected)
 		setTitleColor(disabledTintColor, for: .disabled)
 		updateBorderColor()
 	}
@@ -88,21 +88,21 @@ public class BorderedButton: UIButton {
 				layer.borderColor = tintColor.cgColor
 			}
 			else {
-				backgroundColor = UIColor.white();
-				layer.borderColor = tintColor.cgColor;
+				backgroundColor = UIColor.white
+				layer.borderColor = tintColor.cgColor
 			}
 		}
 		else {
-			backgroundColor = UIColor.white();
-			layer.borderColor = disabledTintColor.cgColor;
+			backgroundColor = UIColor.white
+			layer.borderColor = disabledTintColor.cgColor
 		}
 	}
 	
 	
 	// MARK: - Sizing
 	
-	public override func intrinsicContentSize() -> CGSize {
-		let size = super.intrinsicContentSize()
+	public override var intrinsicContentSize: CGSize {
+		let size = super.intrinsicContentSize
 		return CGSize(width: max(size.width + 20, 100), height: max(size.height, 44))
 	}
 }

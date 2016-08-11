@@ -76,7 +76,7 @@ class DataQueueManager {
 	var currentlyDequeueing: QueuedResource?
 	
 	func isDequeueing(_ resource: Resource) -> Bool {
-		if let dequeueing = currentlyDequeueing?.resource where dequeueing === resource {
+		if let dequeueing = currentlyDequeueing?.resource, dequeueing === resource {
 			return true
 		}
 		return false
@@ -87,7 +87,7 @@ class DataQueueManager {
 		let manager = FileManager.default
 		
 		var isDir: ObjCBool = true
-		if !manager.fileExists(atPath: queueDirectory, isDirectory: &isDir) || !isDir {
+		if !manager.fileExists(atPath: queueDirectory, isDirectory: &isDir) || !isDir.boolValue {
 			do {
 				try manager.createDirectory(atPath: queueDirectory, withIntermediateDirectories: true, attributes: nil)
 			}
@@ -159,7 +159,7 @@ class DataQueueManager {
 	}
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
-	func flush(_ callback: ((error: ErrorProtocol?) -> Void)) {
+	func flush(_ callback: ((error: Error?) -> Void)) {
 		dequeueFirst { [weak self] didDequeue, error in
 			if let error = error {
 				callback(error: error)
@@ -184,7 +184,7 @@ class DataQueueManager {
 	- parameter callback: The callback to call. "didDequeue" is true if the resource was successfully dequeued. "error" is nil on success or
 	if there was no file to dequeue (in which case _didDequeue_ would be false)
 	*/
-	func dequeueFirst(_ callback: ((didDequeue: Bool, error: ErrorProtocol?) -> Void)) {
+	func dequeueFirst(_ callback: ((didDequeue: Bool, error: Error?) -> Void)) {
 		if nil != currentlyDequeueing {
 			c3_warn("already dequeueing")
 			callback(didDequeue: false, error: nil)

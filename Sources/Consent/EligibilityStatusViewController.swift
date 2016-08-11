@@ -71,7 +71,7 @@ public class EligibilityStatusViewController: UIViewController {
 	
 	public override func loadView() {
 		super.loadView()
-		view.backgroundColor = UIColor.white()
+		view.backgroundColor = UIColor.white
 		
 		let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: UIFontTextStyleBody)
 		
@@ -106,7 +106,7 @@ public class EligibilityStatusViewController: UIViewController {
 			label.translatesAutoresizingMaskIntoConstraints = false
 			label.numberOfLines = 0
 			label.textAlignment = .center
-			label.textColor = UIColor.darkGray()
+			label.textColor = UIColor.darkGray
 			label.font = UIFont(descriptor: desc, size: desc.pointSize)
 			label.text = text
 			

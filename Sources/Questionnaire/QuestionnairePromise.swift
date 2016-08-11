@@ -30,7 +30,7 @@ protocol QuestionnairePromiseProto: CustomStringConvertible {
 	
 	var steps: [ORKStep]? { get }
 	
-	func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorProtocol]?) -> Void))
+	func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [Error]?) -> Void))
 }
 
 
@@ -64,8 +64,8 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 	- parameter parentRequirements: An array of ResultRequirement instances required by parent elements
 	- parameter callback: Callback to be called upon promise fulfillment with a list of errors, if any. Called on the main thread.
 	*/
-	public func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorProtocol]?) -> Void)) {
-		guard let item = questionnaire.item where item.count > 0 else {
+	public func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [Error]?) -> Void)) {
+		guard let item = questionnaire.item, item.count > 0 else {
 			callback(errors: [C3Error.questionnaireInvalidNoTopLevelItem])
 			return
 		}

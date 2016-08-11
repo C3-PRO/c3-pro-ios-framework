@@ -51,7 +51,7 @@ public class RSAUtility {
 	*/
 	public func encrypt(_ data: Data) throws -> Data {
 		if nil == publicKey {
-			try readBundledCertificate()
+			publicKey = try readBundledCertificate()
 		}
 		return try encryptDataWithKey(data, key: publicKey!)
 	}
@@ -91,11 +91,9 @@ public class RSAUtility {
 	- returns: The `SecKey` read from the bundled certificate
 	*/
 	func readBundledCertificate() throws -> SecKey {
-		if let keyURL = Bundle.main.urlForResource(publicCertificateFile, withExtension: "crt") {
+		if let keyURL = Bundle.main.url(forResource: publicCertificateFile, withExtension: "crt") {
 			if let certData = try? Data(contentsOf: keyURL) {
-				let key = try loadPublicKey(certData)
-				publicKey = key
-				return key
+				return try loadPublicKey(certData)
 			}
 			throw C3Error.encryptionX509CertificateNotRead(publicCertificateFile)
 		}

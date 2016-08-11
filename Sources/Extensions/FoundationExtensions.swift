@@ -30,7 +30,7 @@ extension String {
 	*/
 	func c3_stripMultipleSpaces() -> String {
 		do {
-			let regEx = try RegularExpression(pattern: " +", options: [])
+			let regEx = try NSRegularExpression(pattern: " +", options: [])
 			return regEx.stringByReplacingMatches(in: self, options: [], range: NSMakeRange(0, self.characters.count), withTemplate: " ")
 		}
 		catch {

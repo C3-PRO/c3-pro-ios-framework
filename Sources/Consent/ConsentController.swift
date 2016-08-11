@@ -26,7 +26,7 @@ import ResearchKit
 /**
 Callback used when signing the consent. Provides `contract`, `patient` and an optional `error`.
 */
-public typealias ConsentSigningCallback = ((contract: Contract, patient: Patient, error: ErrorProtocol?) -> Void)
+public typealias ConsentSigningCallback = ((contract: Contract, patient: Patient, error: Error?) -> Void)
 
 /// Name of notification sent when the user completes and agrees to consent.
 public let C3UserDidConsentNotification = "C3UserDidConsentNotification"
@@ -450,10 +450,9 @@ public class ConsentController {
 	*/
 	public class func signedConsentPDFURL(_ mustExist: Bool = false) -> URL? {
 		do {
-			let base = try FileManager.default
-				.urlForDirectory(.documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-			let url = try! base.appendingPathComponent("consent-signed.pdf")
-			if !mustExist || FileManager().fileExists(atPath: url.path!) {
+			let base = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+			let url = base.appendingPathComponent("consent-signed.pdf")
+			if !mustExist || FileManager().fileExists(atPath: url.path) {
 				return url
 			}
 		}
@@ -467,7 +466,7 @@ public class ConsentController {
 	The local URL to the bundled consent; looks for «consent.pdf» in the main bundle.
 	*/
 	public class func bundledConsentPDFURL() -> URL? {
-		return Bundle.main.urlForResource("consent", withExtension: "pdf")
+		return Bundle.main.url(forResource: "consent", withExtension: "pdf")
 	}
 }
 
@@ -480,7 +479,7 @@ class ConsentTaskViewControllerDelegate: NSObject, ORKTaskViewControllerDelegate
 		self.controller = controller
 	}
 	
-	func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: NSError?) {
+	func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
 		controller.userDidFinishConsent(taskViewController, reason: reason)
 	}
 }

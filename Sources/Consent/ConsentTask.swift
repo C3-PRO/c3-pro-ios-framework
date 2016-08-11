@@ -51,7 +51,7 @@ public class ConsentTask: ORKOrderedTask {
 	public static let pinStepName = "passcode"
 	
 	public var teamName: String? {
-		return contract.authority?.first?.resolved(Organization)?.name
+		return contract.authority?.first?.resolved(Organization.self)?.name
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public class ConsentTask: ORKOrderedTask {
 		
 		// full consent review document (override, if nil will automatically combine all consent sections)
 		if let reviewDoc = options.reviewConsentDocument {
-			if let url = bundle.urlForResource(reviewDoc, withExtension: "html") ?? bundle.urlForResource(reviewDoc, withExtension: "html", subdirectory: "HTMLContent") {
+			if let url = bundle.url(forResource: reviewDoc, withExtension: "html") ?? bundle.url(forResource: reviewDoc, withExtension: "html", subdirectory: "HTMLContent") {
 				do {
 					consent.htmlReviewContent = try String(contentsOf: url, encoding: String.Encoding.utf8)
 				}
@@ -118,7 +118,7 @@ public class ConsentTask: ORKOrderedTask {
 		// sharing step
 		if options.askForSharing {
 			let more = options.shareMoreInfoDocument
-			if let url = bundle.urlForResource(more, withExtension: "html") ?? bundle.urlForResource(more, withExtension: "html", subdirectory: "HTMLContent") {
+			if let url = bundle.url(forResource: more, withExtension: "html") ?? bundle.url(forResource: more, withExtension: "html", subdirectory: "HTMLContent") {
 				do {
 					let learnMore = try String(contentsOf: url, encoding: String.Encoding.utf8)
 					let teamName = contract.authority?.first?.resolved(Organization.self)?.name
@@ -157,7 +157,7 @@ public class ConsentTask: ORKOrderedTask {
         }
 		
 		// request permissions step
-		if let services = options.wantedServicePermissions where !services.isEmpty {
+		if let services = options.wantedServicePermissions, !services.isEmpty {
 			let instruction = ORKInstructionStep(identifier: "permissionsInstruction")
 			instruction.title = "Permissions".c3_localized
 			instruction.text = "You will now be asked to grant the app access to certain system features. This allows us to show reminders and read health data from HealthKit, amongst others.".c3_localized
@@ -187,7 +187,7 @@ public class ConsentTask: ORKOrderedTask {
 	- returns: The consent signature, if it's there
 	*/
 	public func signatureInResult(_ result: ORKConsentSignatureResult) -> ORKConsentSignature? {
-		if let signature = result.signature where nil != signature.signatureImage {
+		if let signature = result.signature, nil != signature.signatureImage {
 			return signature
 		}
 		return nil

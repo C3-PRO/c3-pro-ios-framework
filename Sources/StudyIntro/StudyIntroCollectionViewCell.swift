@@ -137,7 +137,7 @@ public class StudyIntroHTMLCell: UICollectionViewCell, UIWebViewDelegate {
 	
 	public func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
 		if .linkClicked == navigationType, let url = request.url {
-			return !UIApplication.shared().openURL(url)
+			return !UIApplication.shared.openURL(url)
 		}
 		return true
 	}

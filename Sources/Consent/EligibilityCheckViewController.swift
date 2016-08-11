@@ -62,7 +62,7 @@ public class EligibilityCheckViewController: UITableViewController {
 	
 	public override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		if isMovingToParentViewController(), let eligible = isEligible() where eligible {
+		if isMovingToParentViewController, isEligible() ?? false {
 			showEligibleAnimated(true)
 		}
 	}
@@ -217,7 +217,7 @@ class EligibilityCell: UITableViewCell {
 		title.font = UIFont.preferredFont(forTextStyle: UIFontTextStyleBody)
 		title.numberOfLines = 0
 		title.textAlignment = .center
-		title.textColor = UIColor.black()
+		title.textColor = UIColor.black
 		titleLabel = title
 		
 		// choice view
@@ -231,8 +231,8 @@ class EligibilityCell: UITableViewCell {
 		no.translatesAutoresizingMaskIntoConstraints = false
 		yes.isSelected = false
 		no.isSelected = false
-		yes.setTitleColor(UIColor.lightGray(), for: UIControlState())
-		no.setTitleColor(UIColor.lightGray(), for: UIControlState())
+		yes.setTitleColor(UIColor.lightGray, for: UIControlState())
+		no.setTitleColor(UIColor.lightGray, for: UIControlState())
 		yes.setTitleColor(self.tintColor, for: .selected)
 		no.setTitleColor(self.tintColor, for: .selected)
 		yes.addTarget(self, action: #selector(EligibilityCell.buttonDidPress(_:)), for: .touchUpInside)

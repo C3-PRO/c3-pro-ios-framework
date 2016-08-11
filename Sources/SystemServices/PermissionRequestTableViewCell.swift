@@ -72,7 +72,7 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	
 	func resetUI() {
 		actionButton?.isEnabled = (nil != actionCallback)
-		commentLabel?.textColor = UIColor.black()
+		commentLabel?.textColor = UIColor.black
 	}
 	
 	
@@ -123,9 +123,9 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	- parameter error: The error that occurred
 	- parameter forService: The system service affected
 	*/
-	public func indicateError(_ error: ErrorProtocol, forService service: SystemService) {
+	public func indicateError(_ error: Error, forService service: SystemService) {
 		commentLabel?.text = "\(error)."
-		commentLabel?.textColor = UIColor.red()
+		commentLabel?.textColor = UIColor.red
 		actionButton?.setTitle("Try Again".c3_localized("Button title"), for: UIControlState())
 		contentView.setNeedsLayout()
 		contentView.layoutIfNeeded()
@@ -146,7 +146,7 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 		alert.addAction(UIAlertAction(title: "OK".c3_localized("Alert button title"), style: .cancel, handler: nil))
 		if service.wantsAppSettingsPane, let url = URL(string: UIApplicationOpenSettingsURLString) {
 			alert.addAction(UIAlertAction(title: "Open Settings App".c3_localized, style: .default) { action in
-				UIApplication.shared().openURL(url)
+				UIApplication.shared.openURL(url)
 			})
 		}
 		viewController.present(alert, animated: true, completion: nil)

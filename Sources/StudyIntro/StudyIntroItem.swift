@@ -99,7 +99,7 @@ public class StudyIntroHTMLItem: StudyIntroItem {
 	
 	var url: URL? {
 		if let filename = filename {
-			let url = Bundle.main.urlForResource(filename, withExtension: "html") ?? Bundle.main.urlForResource(filename, withExtension: "html", subdirectory: "HTMLContent")
+			let url = Bundle.main.url(forResource: filename, withExtension: "html") ?? Bundle.main.url(forResource: filename, withExtension: "html", subdirectory: "HTMLContent")
 			if nil == url {
 				fatalError("Expecting file «\(filename).html» to be present in the bundle (or its «HTMLContent» directory), but didn't find it")
 			}
