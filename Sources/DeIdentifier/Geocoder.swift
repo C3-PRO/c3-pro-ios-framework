@@ -108,7 +108,7 @@ public class Geocoder {
 	}
 	
 	func locationManagerDidReceiveLocations(locations: [CLLocation]) {
-		c3_logIfDebug("Location determination completed")
+		c3_logIfDebug("Location determination completed, got \(locations.count) location(s)")
 		locationCallback?(location: locations.last, error: nil)
 		locationCallback = nil
 		locationDelegate = nil
