@@ -27,7 +27,10 @@
           "enableWhen": [
             {
               "question": "choice-valueSet",
-              "answerString": "http://sf-36.org/fhir/StructureDefinition/answers-3-levels#3"
+              "answerCoding": {
+                "system": "http://sf-36.org/fhir/StructureDefinition/answers-3-levels",
+                "code": "3"
+              }
             }
           ],
           "required": true,

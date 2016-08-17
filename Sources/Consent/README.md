@@ -61,7 +61,7 @@ Consent Workflow
 ----------------
 
 To read eligibility and consent data from a bundled consent called `Consent.json` you can do the following.
-It will also use the bundled file `Consent_full.html` to show a custom HTML page in the _“Agree”_ step instead of auto-generating that page from all consent sections.
+This example will also use the bundled file `Consent_full.html` to show a custom HTML page in the _“Agree”_ step instead of auto-generating that page from all consent sections.
 This is optional and, if omitted, the consent will be composed of all the individual consenting sections.
 
 You could use this method in combination with `setupUI()` shown in `StudyIntro/README.md`.
@@ -69,7 +69,7 @@ You could use this method in combination with `setupUI()` shown in `StudyIntro/R
 ```swift
 func startEligibilityAndConsent(intro: StudyIntroCollectionViewController) {
     self.controller = try! ConsentController(bundledContract: "Consent")  // retain
-    controller.options.reviewConsentDocument = "Consent_full"        // optional
+    controller.options.reviewConsentDocument = "Consent_full"             // optional
     
     let center = NSNotificationCenter.defaultCenter()
     center.addObserver(self, selector: "userDidConsent",
@@ -94,7 +94,7 @@ func userDidConsent() {
 
 First, the user will be asked your eligibility questions, and – if they are met – presents the consent task as a modal view controller.
 If the user cancels or declines consent, the view controller is dismissed and the eligibility view controller popped from its navigation controller.
-If the user consents the consent view controller is likewise dismissed and you'll receive the `C3UserDidConsentNotification` notification.
+If the user consents, the consent view controller is likewise dismissed and you'll receive the `C3UserDidConsentNotification` notification.
 
 ### Consent Sections
 
@@ -158,6 +158,53 @@ Example:
 ```
 
 
+### Sharing Options
+
+Usually, participants are also asked whether they consent to sharing their data with other qualified researchers or only the team running the study.
+You can turn it off by setting `ConsentTaskOptions.askForSharing` to false.
+
+To populate the team name used when the participant is asked if she's willing to share her data, the `authority.name` property of the Contract is consulted.
+
+> At this time this must be an _Organization_ element that is contained in the contract.
+
+The `ConsentResult` that is sent as a notification when the participant finishes consent contains the property `shareWidely`.
+This property is set to:
+
+- _true_ if the participant consents to sharing data
+- _false_ if only the study team should access the data
+- _nil_ if the question was not asked
+
+Additionally, the `Contract.signer` element is extended with `http://fhir-registry.smarthealthit.org/StructureDefinition/consents-to-data-sharing`, set to `true` if the participant consents to sharing data widely, false otherwise.
+The extension is not present when the question is not asked.
+
+Here is a short example, see [examples/Contract/sample-consent-signed.json](../../examples/Contract/sample-consent-signed.json) for a fully signed Contract:
+
+```json
+{
+  "resourceType": "Contract",
+  "id": "org.chip.c-tracker.consent",
+  ...
+  "authority": [{
+    "reference": "#team"
+  }],
+  "signer": [{
+    "extension": [{
+      "url": "http://fhir-registry.smarthealthit.org/StructureDefinition/consents-to-data-sharing",
+      "valueBoolean": true
+    }],
+    "party": {...},
+    "signature": [...],
+    "type": {...}
+  }],
+  "contained": [{
+    "resourceType": "Organization",
+    "id": "team",
+    "name": "C Tracker Team"
+  }]
+}
+```
+
+
 ### Passcode
 
 By default the user is asked to create a passcode right after signing on screen.
@@ -181,31 +228,6 @@ func passcodeViewControllerDidFinishWithSuccess(viewController: UIViewController
 }
   
 func passcodeViewControllerDidFailAuthentication(viewController: UIViewController) {
-}
-```
-
-
-### Sharing Options
-
-To populate the team name used when the user is asked if he's willing to share his data with qualified researchers worldwide or just the study researchers, the `authority.name` property of the Contract is consulted.
-
-> At this time this must be an _Organization_ element that is contained in the contract.
-
-Example:
-
-```json
-{
-  "id": "org.chip.c-tracker.consent",
-  "resourceType": "Contract",
-  ...
-  "authority": [{
-    "reference": "#team"
-  }],
-  "contained": [{
-    "id": "team",
-    "resourceType": "Organization",
-    "name": "C Tracker Team"
-  }]
 }
 ```
 

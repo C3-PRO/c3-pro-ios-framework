@@ -31,6 +31,8 @@
 		EE86C48F1C4AC1E500B7D486 /* String+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE86C48E1C4AC1E500B7D486 /* String+C3-PRO.swift */; };
 		EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */; };
 		EE8901171B7DF08300F1EDBF /* Contract+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8901161B7DF08300F1EDBF /* Contract+C3-PRO.swift */; };
+		EE9560981D6454850069D49B /* ConsentControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9560971D6454850069D49B /* ConsentControllerTests.swift */; };
+		EE9560AD1D645EBC0069D49B /* Contract in Resources */ = {isa = PBXBuildFile; fileRef = EE9560AC1D645EB30069D49B /* Contract */; };
 		EEA5CF191BEA5B5A00A6D4C9 /* ConsentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */; };
 		EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */; };
 		EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */; };
@@ -121,6 +123,12 @@
 		EE86C4901C4ADA6400B7D486 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentTask.swift; sourceTree = "<group>"; };
 		EE8901161B7DF08300F1EDBF /* Contract+C3-PRO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Contract+C3-PRO.swift"; sourceTree = "<group>"; };
+		EE9560971D6454850069D49B /* ConsentControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentControllerTests.swift; sourceTree = "<group>"; };
+		EE9560A51D6456050069D49B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EE9560A91D645B3D0069D49B /* Questionnaire */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Questionnaire; sourceTree = "<group>"; };
+		EE9560AA1D645B4B0069D49B /* QuestionnaireResponse */ = {isa = PBXFileReference; lastKnownFileType = folder; path = QuestionnaireResponse; sourceTree = "<group>"; };
+		EE9560AB1D645B6A0069D49B /* ValueSet */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ValueSet; sourceTree = "<group>"; };
+		EE9560AC1D645EB30069D49B /* Contract */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Contract; sourceTree = "<group>"; };
 		EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentResult.swift; sourceTree = "<group>"; };
 		EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeIdentifier.swift; sourceTree = "<group>"; };
 		EEB6DD221B5D3FD3006A3B9F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -284,6 +292,18 @@
 			name = SystemServices;
 			path = Sources/SystemServices;
 			sourceTree = "<group>";
+		};
+		EE95609B1D6456050069D49B /* examples */ = {
+			isa = PBXGroup;
+			children = (
+				EE9560A51D6456050069D49B /* README.md */,
+				EE9560AC1D645EB30069D49B /* Contract */,
+				EE9560A91D645B3D0069D49B /* Questionnaire */,
+				EE9560AA1D645B4B0069D49B /* QuestionnaireResponse */,
+				EE9560AB1D645B6A0069D49B /* ValueSet */,
+			);
+			path = examples;
+			sourceTree = SOURCE_ROOT;
 		};
 		EEB6DD211B5D3FA3006A3B9F /* DeIdentifier */ = {
 			isa = PBXGroup;
@@ -472,6 +492,8 @@
 			children = (
 				EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */,
 				EE2A9D6C1CE5FB3E00FB2B4F /* QuestionnaireTests.swift */,
+				EE9560971D6454850069D49B /* ConsentControllerTests.swift */,
+				EE95609B1D6456050069D49B /* examples */,
 				EEFA84CB1AE5C18B00E61006 /* Supporting Files */,
 			);
 			path = Tests;
@@ -595,6 +617,7 @@
 			files = (
 				EE2A9D801CE61F2500FB2B4F /* ValueSet_SF36.json in Resources */,
 				EE2A9D7E1CE61F2500FB2B4F /* Questionnaire_ValueSet-contained.json in Resources */,
+				EE9560AD1D645EBC0069D49B /* Contract in Resources */,
 				EE2A9D7F1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -667,6 +690,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE9560981D6454850069D49B /* ConsentControllerTests.swift in Sources */,
 				EEFA84CE1AE5C18B00E61006 /* C3PROTests.swift in Sources */,
 				EE2A9D6D1CE5FB3E00FB2B4F /* QuestionnaireTests.swift in Sources */,
 			);

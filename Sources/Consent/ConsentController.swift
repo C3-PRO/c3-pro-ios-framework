@@ -104,11 +104,17 @@ public class ConsentController {
 	/**
 	Designated initializer.
 	
-	You can optionally supply the name of a bundled JSON file (without extension) that represents a serialized FHIR Contract resource.
+	You can optionally supply the name of a bundled JSON file (without extension) that represents a serialized FHIR Contract resource. This
+	uses the Bundle containing the C3PRO modules, so if you're calling the method from a different bundle (e.g. when unit testing), don't
+	provide a filename and assign `contract` manually by using `fhir_bundledResource(name:subdirectory:type:)`.
+	
+	- parameter bundledContract: The filename (without ".json" of the Contract resource to read)
+	- parameter subdirectory:    The subdirectory, if any, the Contract resource is located in
 	*/
-	public init(bundledContract: String? = nil) throws {
+	public init(bundledContract: String? = nil, subdirectory: String? = nil) throws {
 		if let name = bundledContract {
-			contract = try Bundle.main.fhir_bundledResource(name, type: Contract.self)
+			let bundle = Bundle(for: self.dynamicType)
+			contract = try bundle.fhir_bundledResource(name, subdirectory: subdirectory, type: Contract.self)
 		}
 	}
 	
@@ -340,18 +346,19 @@ public class ConsentController {
 	Instantiates a new "Contract" resource and fills the properties to represent a consent signed by a participant referencing the given
 	patient.
 	
-	- parameter with: The Patient resource to use to sign
-	- parameter date: The date at which the contract was signed
-	- throws:         `C3Error` when referencing the patient resource fails
-	- returns:        A signed Contract resource, usually the receiver's `contract` ivar
+	- parameter with:   The Patient resource to use to sign
+	- parameter result: The date at which the contract was signed
+	- throws:           `C3Error` when referencing the patient resource fails
+	- returns:          A signed Contract resource, usually the receiver's `contract` ivar
 	*/
-	public func signContract(with patient: Patient, date: Date) throws -> Contract {
+	public func signContract(with patient: Patient, result: ConsentResult) throws -> Contract {
 		if nil == patient.id {
 			patient.id = UUID().uuidString
 		}
 		do {
 			let reference = try patient.asRelativeReference()
 			let myContract = contract ?? Contract(json: nil)
+			let date = result.consentDate ?? Date()
 			
 			// applicable period
 			let period = Period(json: nil)
@@ -366,6 +373,13 @@ public class ConsentController {
 			signer.type!.system = URL(string: "http://hl7.org/fhir/ValueSet/contract-signer-type")
 			signer.party = reference
 			
+			// extension to capture sharing intent
+			if let shareWidely = result.shareWidely {
+				let share = Extension(url: URL(string: "http://fhir-registry.smarthealthit.org/StructureDefinition/consents-to-data-sharing")!)
+				share.valueBoolean = shareWidely
+				signer.extension_fhir = [share]
+			}
+			
 			let signatureCode = Coding(json: nil)
 			signatureCode.system = URL(string: "http://hl7.org/fhir/ValueSet/signature-type")
 			signatureCode.code = "1.2.840.10065.1.12.1.7"
@@ -374,6 +388,7 @@ public class ConsentController {
 			let signature = Signature(json: nil)
 			signature.type = [signatureCode]
 			signature.when = date.fhir_asInstant()
+			signature.whoReference = reference
 			
 			signer.signature = [signature]
 			myContract.signer = [signer]
@@ -389,18 +404,18 @@ public class ConsentController {
 	Reverse geocodes and de-identifies the patient, then uses the new Patient resource to sign the contract.
 	
 	- parameter with:     The Patient resource to use to sign
-	- parameter date:     The date at which the contract was signed
+	- parameter result:   The result of the consenting task
 	- parameter callback: The callback to call when done or when signing failed
 	- throws:             `C3Error` when referencing the patient resource fails
 	- returns:            A signed Contract resource, usually the receiver's `contract` ivar
 	*/
-	public func deIdentifyAndSignContract(with patient: Patient, date: Date, callback: ConsentSigningCallback) {
+	public func deIdentifyAndSignContract(with patient: Patient, result: ConsentResult, callback: ConsentSigningCallback) {
 		deidentifier = DeIdentifier()
 		deidentifier!.hipaaCompliantPatient(patient: patient) { patient in
 			self.deidentifier = nil
 			
 			do {
-				let contract = try self.signContract(with: patient, date: date)
+				let contract = try self.signContract(with: patient, result: result)
 				callback(contract: contract, patient: patient, error: nil)
 			}
 			catch let error {

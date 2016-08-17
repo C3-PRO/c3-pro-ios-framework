@@ -53,11 +53,11 @@ public class ConsentResult {
 	public var shareWidely: Bool?
 	
 	
-	public init(signature: ORKConsentSignature) {
+	public init(signature: ORKConsentSignature?) {
 		consentDate = Date()
-		participantGivenName = signature.givenName
-		participantFamilyName = signature.familyName
-		signatureImage = signature.signatureImage
+		participantGivenName = signature?.givenName
+		participantFamilyName = signature?.familyName
+		signatureImage = signature?.signatureImage
 	}
 }
 

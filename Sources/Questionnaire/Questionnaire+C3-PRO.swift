@@ -80,6 +80,11 @@ extension QuestionnaireItemEnableWhen {
 			result.answer = answer
 			return result
 		}
+		if let answer = answerString {
+			let result = ORKTextQuestionResult(identifier: questionIdentifier)
+			result.answer = answer
+			return result
+		}
 		if let answer = answerCoding {
 			if let code = answer.code {
 				let result = ORKChoiceQuestionResult(identifier: questionIdentifier)
@@ -90,7 +95,7 @@ extension QuestionnaireItemEnableWhen {
 			}
 			throw C3Error.questionnaireEnableWhenIncomplete("\(self) has `answerCoding` but is missing a code, cannot create a question result")
 		}
-		throw C3Error.questionnaireEnableWhenIncomplete("\(self) has no `answerXy` type that is supported right now")
+		throw C3Error.questionnaireEnableWhenIncomplete("\(self) has no `answerType` type that is supported right now")
 	}
 }
 
