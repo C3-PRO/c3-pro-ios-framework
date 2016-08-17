@@ -17,7 +17,7 @@
 		EE2D8DE51B87764200D044B4 /* EncryptedDataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */; };
 		EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */; };
 		EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */; };
-		EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */; };
+		EE519BA31B0CD44300036B96 /* Questionnaire+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE519BA21B0CD44200036B96 /* Questionnaire+C3-PRO.swift */; };
 		EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */; };
 		EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5F4F6D1B17A84A00DB38B3 /* QueuedResource.swift */; };
 		EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7A43921B0D08DE00B30D17 /* ConsentController.swift */; };
@@ -30,7 +30,7 @@
 		EE86C48D1C4AB47500B7D486 /* PermissionRequestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE86C48C1C4AB47500B7D486 /* PermissionRequestTableViewCell.swift */; };
 		EE86C48F1C4AC1E500B7D486 /* String+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE86C48E1C4AC1E500B7D486 /* String+C3-PRO.swift */; };
 		EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */; };
-		EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */; };
+		EE8901171B7DF08300F1EDBF /* Contract+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8901161B7DF08300F1EDBF /* Contract+C3-PRO.swift */; };
 		EEA5CF191BEA5B5A00A6D4C9 /* ConsentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */; };
 		EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */; };
 		EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB6DD231B5D3FEC006A3B9F /* Geocoder.swift */; };
@@ -65,11 +65,11 @@
 		EEEA7F671BD68DFE0089BF85 /* StudyIntroConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F661BD68DFE0089BF85 /* StudyIntroConfiguration.swift */; };
 		EEEA7F691BD68E800089BF85 /* C3Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F681BD68E800089BF85 /* C3Error.swift */; };
 		EEEA7FCB1BD784FA0089BF85 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCA1BD784FA0089BF85 /* WebViewController.swift */; };
-		EEEA7FCF1BD785360089BF85 /* FHIRExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCC1BD785360089BF85 /* FHIRExtensions.swift */; };
-		EEEA7FD01BD785360089BF85 /* FoundationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCD1BD785360089BF85 /* FoundationExtensions.swift */; };
+		EEEA7FCF1BD785360089BF85 /* FHIR+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCC1BD785360089BF85 /* FHIR+C3-PRO.swift */; };
+		EEEA7FD01BD785360089BF85 /* Foundation+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCD1BD785360089BF85 /* Foundation+C3-PRO.swift */; };
 		EEEA7FD31BD8D9890089BF85 /* EligibilityCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FD21BD8D9890089BF85 /* EligibilityCheckViewController.swift */; };
 		EEEEAB801BDA9648001F8B5C /* EligibilityRequirement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEEAB7F1BDA9648001F8B5C /* EligibilityRequirement.swift */; };
-		EEEEAB891BDA97EE001F8B5C /* GroupExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEEAB881BDA97EE001F8B5C /* GroupExtensions.swift */; };
+		EEEEAB891BDA97EE001F8B5C /* Group+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEEAB881BDA97EE001F8B5C /* Group+C3-PRO.swift */; };
 		EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */; };
 		EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */; };
 		EEFA84C71AE5C18B00E61006 /* C3PRO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */; };
@@ -101,7 +101,7 @@
 		EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueueManager.swift; sourceTree = "<group>"; };
 		EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2DynRegAppStore.swift; sourceTree = "<group>"; };
 		EE519B9C1B0CD3AC00036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireExtensions.swift; sourceTree = "<group>"; };
+		EE519BA21B0CD44200036B96 /* Questionnaire+C3-PRO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Questionnaire+C3-PRO.swift"; sourceTree = "<group>"; };
 		EE519BA41B0CD4A500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE519BA61B0CD6C500036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE5F4F6B1B174BB000DB38B3 /* DataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueue.swift; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 		EE86C48E1C4AC1E500B7D486 /* String+C3-PRO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+C3-PRO.swift"; path = "Sources/Common/String+C3-PRO.swift"; sourceTree = "<group>"; };
 		EE86C4901C4ADA6400B7D486 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE89010F1B7DEE8200F1EDBF /* ConsentTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentTask.swift; sourceTree = "<group>"; };
-		EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContractExtensions.swift; sourceTree = "<group>"; };
+		EE8901161B7DF08300F1EDBF /* Contract+C3-PRO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Contract+C3-PRO.swift"; sourceTree = "<group>"; };
 		EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentResult.swift; sourceTree = "<group>"; };
 		EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeIdentifier.swift; sourceTree = "<group>"; };
 		EEB6DD221B5D3FD3006A3B9F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -177,11 +177,11 @@
 		EEEA7F661BD68DFE0089BF85 /* StudyIntroConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroConfiguration.swift; sourceTree = "<group>"; };
 		EEEA7F681BD68E800089BF85 /* C3Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = C3Error.swift; path = Sources/Common/C3Error.swift; sourceTree = "<group>"; };
 		EEEA7FCA1BD784FA0089BF85 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
-		EEEA7FCC1BD785360089BF85 /* FHIRExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHIRExtensions.swift; sourceTree = "<group>"; };
-		EEEA7FCD1BD785360089BF85 /* FoundationExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationExtensions.swift; sourceTree = "<group>"; };
+		EEEA7FCC1BD785360089BF85 /* FHIR+C3-PRO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FHIR+C3-PRO.swift"; sourceTree = "<group>"; };
+		EEEA7FCD1BD785360089BF85 /* Foundation+C3-PRO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Foundation+C3-PRO.swift"; sourceTree = "<group>"; };
 		EEEA7FD21BD8D9890089BF85 /* EligibilityCheckViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EligibilityCheckViewController.swift; sourceTree = "<group>"; };
 		EEEEAB7F1BDA9648001F8B5C /* EligibilityRequirement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EligibilityRequirement.swift; sourceTree = "<group>"; };
-		EEEEAB881BDA97EE001F8B5C /* GroupExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupExtensions.swift; sourceTree = "<group>"; };
+		EEEEAB881BDA97EE001F8B5C /* Group+C3-PRO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Group+C3-PRO.swift"; sourceTree = "<group>"; };
 		EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireController.swift; sourceTree = "<group>"; };
 		EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ORKTaskResult+FHIR.swift"; sourceTree = "<group>"; };
 		EEFA84BB1AE5C18B00E61006 /* C3PRO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C3PRO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -249,8 +249,8 @@
 				EEEEAB7F1BDA9648001F8B5C /* EligibilityRequirement.swift */,
 				EEEA7FD21BD8D9890089BF85 /* EligibilityCheckViewController.swift */,
 				EE851A541BD90984007EC6A9 /* EligibilityStatusViewController.swift */,
-				EE8901161B7DF08300F1EDBF /* ContractExtensions.swift */,
-				EEEEAB881BDA97EE001F8B5C /* GroupExtensions.swift */,
+				EE8901161B7DF08300F1EDBF /* Contract+C3-PRO.swift */,
+				EEEEAB881BDA97EE001F8B5C /* Group+C3-PRO.swift */,
 			);
 			name = "Consent & Eligibility";
 			path = Sources/Consent;
@@ -400,8 +400,8 @@
 		EEEA7FC91BD784BA0089BF85 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				EEEA7FCC1BD785360089BF85 /* FHIRExtensions.swift */,
-				EEEA7FCD1BD785360089BF85 /* FoundationExtensions.swift */,
+				EEEA7FCC1BD785360089BF85 /* FHIR+C3-PRO.swift */,
+				EEEA7FCD1BD785360089BF85 /* Foundation+C3-PRO.swift */,
 			);
 			name = Extensions;
 			path = Sources/Extensions;
@@ -451,7 +451,7 @@
 				EEFA84D91AE5C25500E61006 /* QuestionnaireItemPromise.swift */,
 				EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */,
 				EEE60CD21C68999E00F381B7 /* ConditionalStep.swift */,
-				EE519BA21B0CD44200036B96 /* QuestionnaireExtensions.swift */,
+				EE519BA21B0CD44200036B96 /* Questionnaire+C3-PRO.swift */,
 				EEF458551B3DC1230076CE76 /* ORKTaskResult+FHIR.swift */,
 			);
 			name = Questionnaire;
@@ -617,7 +617,7 @@
 				EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */,
 				EEEA7F4A1BD624490089BF85 /* StudyIntroCollectionViewCell.swift in Sources */,
 				EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */,
-				EEEA7FD01BD785360089BF85 /* FoundationExtensions.swift in Sources */,
+				EEEA7FD01BD785360089BF85 /* Foundation+C3-PRO.swift in Sources */,
 				EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */,
 				EEC5A81F1D5CAF7200753852 /* ActivityCollector.swift in Sources */,
 				EE86C4721C490B7400B7D486 /* SystemServicePermissioner.swift in Sources */,
@@ -625,14 +625,14 @@
 				EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */,
 				EEC5A8261D5CAF7200753852 /* CoreMotionReporter.swift in Sources */,
 				EEC5A8221D5CAF7200753852 /* ActivityReportPeriod.swift in Sources */,
-				EEEA7FCF1BD785360089BF85 /* FHIRExtensions.swift in Sources */,
+				EEEA7FCF1BD785360089BF85 /* FHIR+C3-PRO.swift in Sources */,
 				EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */,
 				EE851A551BD90984007EC6A9 /* EligibilityStatusViewController.swift in Sources */,
 				EEEA7FCB1BD784FA0089BF85 /* WebViewController.swift in Sources */,
 				EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */,
 				EEC5A8251D5CAF7200753852 /* CoreMotionActivitySum.swift in Sources */,
 				EE86C4801C49327D00B7D486 /* SystemPermissionStepViewController.swift in Sources */,
-				EEEEAB891BDA97EE001F8B5C /* GroupExtensions.swift in Sources */,
+				EEEEAB891BDA97EE001F8B5C /* Group+C3-PRO.swift in Sources */,
 				EEFA84DC1AE5C25500E61006 /* QuestionnaireItemPromise.swift in Sources */,
 				EE1AB3B71C23283100711108 /* HKHealthStore+Sampling.swift in Sources */,
 				EE86C48F1C4AC1E500B7D486 /* String+C3-PRO.swift in Sources */,
@@ -644,13 +644,13 @@
 				EEEA7F671BD68DFE0089BF85 /* StudyIntroConfiguration.swift in Sources */,
 				EEEA7FD31BD8D9890089BF85 /* EligibilityCheckViewController.swift in Sources */,
 				EEEA7F691BD68E800089BF85 /* C3Error.swift in Sources */,
-				EE519BA31B0CD44300036B96 /* QuestionnaireExtensions.swift in Sources */,
+				EE519BA31B0CD44300036B96 /* Questionnaire+C3-PRO.swift in Sources */,
 				EEB6DD1B1B5D3F91006A3B9F /* DeIdentifier.swift in Sources */,
 				EEA5CF191BEA5B5A00A6D4C9 /* ConsentResult.swift in Sources */,
 				EEE60CD31C68999E00F381B7 /* ConditionalStep.swift in Sources */,
 				EEC5A8231D5CAF7200753852 /* CoreMotionActivity.swift in Sources */,
 				EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */,
-				EE8901171B7DF08300F1EDBF /* ContractExtensions.swift in Sources */,
+				EE8901171B7DF08300F1EDBF /* Contract+C3-PRO.swift in Sources */,
 				EE86C48D1C4AB47500B7D486 /* PermissionRequestTableViewCell.swift in Sources */,
 				EEC5A8271D5CAF7200753852 /* CoreMotionStandardActivityInterpreter.swift in Sources */,
 				EEC5A84A1D5CAFF200753852 /* SQLite-Bridging.m in Sources */,

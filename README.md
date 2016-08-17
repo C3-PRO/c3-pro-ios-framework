@@ -35,6 +35,10 @@ This framework combines several versioned technologies, here's an overview over 
 
    Version |   Swift | ResearchKit |  FHIR
 -----------|---------|-------------|------
+   **2.0** |     3.0 |         1.3 | 1.7.0
+   **1.9** |     3.0 |         1.3 | 1.6.0
+   **1.8** |     3.0 |         1.3 | 1.0.2
+   **1.2** |     2.2 |         1.3 | 1.6.0
    **1.1** |     2.2 |         1.3 | 1.0.2
  **1.0.1** |     2.2 |         1.3 | 1.0.2
    **1.0** | 2.0-2.2 |         1.3 | 1.0.2

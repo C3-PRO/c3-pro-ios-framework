@@ -231,7 +231,7 @@ public class CoreMotionReporter: ActivityReporter {
 			let endDate = until ?? Date()
 			
 			// dispatch to background queue and call back on the main queue
-			DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background).async {
+			DispatchQueue.global(qos: DispatchQoS.QoSClass.utility).async() {
 				do {
 					let interpreter = interpreter ?? CoreMotionStandardActivityInterpreter()
 					let activities = try self.retrieveActivities(startingAt: start, until: endDate, interpreter: interpreter)

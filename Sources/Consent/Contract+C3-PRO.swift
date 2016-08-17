@@ -1,5 +1,5 @@
 //
-//  ContractExtensions.swift
+//  Contract+C3-PRO.swift
 //  C3PRO
 //
 //  Created by Pascal Pfiffner on 8/14/15.

@@ -106,14 +106,9 @@ public class ConsentController {
 	
 	You can optionally supply the name of a bundled JSON file (without extension) that represents a serialized FHIR Contract resource.
 	*/
-	public init(bundledContract: String? = nil) {
+	public init(bundledContract: String? = nil) throws {
 		if let name = bundledContract {
-			do {
-				contract = try Bundle.main.fhir_bundledResource(name, type: Contract.self)
-			}
-			catch let error {
-				c3_warn("failed to read bundled Contract resource: \(error)")
-			}
+			contract = try Bundle.main.fhir_bundledResource(name, type: Contract.self)
 		}
 	}
 	

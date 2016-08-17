@@ -1,7 +1,7 @@
 Migrating Consent
 =================
 
-1.0.2 -> 1.4.0
+1.0.2 -> 1.6.0
 --------------
 
 We're still using the `Contract` resource to represent consent, with some changes:
