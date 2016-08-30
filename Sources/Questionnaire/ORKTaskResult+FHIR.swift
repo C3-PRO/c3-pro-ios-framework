@@ -145,8 +145,8 @@ extension ORKQuestionResult {
 	- returns: A boold indicating whether the results are the same
 	*/
 	func c3_hasSameResponse(_ other: ORKQuestionResult) -> Bool {
-		if let myAnswer: AnyObject = answer {
-			if let otherAnswer: AnyObject = other.answer {
+		if let myAnswer = answer as? AnyObject {
+			if let otherAnswer = other.answer as? AnyObject {
 				return myAnswer.isEqual(otherAnswer)
 			}
 		}

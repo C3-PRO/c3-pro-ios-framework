@@ -21,40 +21,46 @@
 import SMART
 
 
-public class ActivityReport: CustomStringConvertible {
+open class ActivityReport: CustomStringConvertible {
 	
-	public var count: Int {
+	open var count: Int {
 		return periods.count
 	}
 	
-	public var first: ActivityReportPeriod? {
+	open var first: ActivityReportPeriod? {
 		return periods.first
 	}
 	
-	public var last: ActivityReportPeriod? {
+	open var last: ActivityReportPeriod? {
 		return periods.last
 	}
 	
-	public internal(set) var periods: [ActivityReportPeriod] {		// TODO: hide and make sequence type
+	open internal(set) var periods: [ActivityReportPeriod] {		// TODO: hide and make sequence type
 		didSet {
-			periods.sort() { return $0.0.period.start < $0.1.period.start }
+			periods.sort() {
+				guard let st0 = $0.0.period.start else { return true }
+				guard let st1 = $0.1.period.start else { return false }
+				return st0 < st1 }
 			period = Period(json: nil)
 			period.start = periods.first?.period.start
 			period.end = periods.last?.period.end
 		}
 	}
 	
-	public internal(set) var period: Period
+	open internal(set) var period: Period
 	
 	
 	public init(periods: [ActivityReportPeriod]) {
-		self.periods = periods.sorted() { return $0.0.period.start < $0.1.period.start }
+		self.periods = periods.sorted() {
+			guard let st0 = $0.0.period.start else { return true }
+			guard let st1 = $0.1.period.start else { return false }
+			return st0 < st1 }
 		period = Period(json: nil)
 		period.start = periods.first?.period.start
 		period.end = periods.last?.period.end
 	}
 	
-	public subscript(key: Int) -> ActivityReportPeriod? {
+	open subscript(key: Int) -> ActivityReportPeriod? {
 		if key < periods.count {
 			return periods[key]
 		}
@@ -64,8 +70,8 @@ public class ActivityReport: CustomStringConvertible {
 	
 	// MARK: - Custom String Convertible
 	
-	public var description: String {
-		return "<\(String(self.dynamicType)) \(unsafeAddress(of: self))> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")"
+	open var description: String {
+		return String(format: "<\(self) %p> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")", self as! CVarArg)
 	}
 }
 

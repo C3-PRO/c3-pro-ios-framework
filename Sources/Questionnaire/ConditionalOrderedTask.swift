@@ -94,7 +94,7 @@ public class ResultRequirement: NSObject, NSCopying, NSSecureCoding {
 	
 	// MARK: - NSCopying
 	
-	public func copy(with zone: NSZone?) -> AnyObject {
+	public func copy(with zone: NSZone? = nil) -> Any {
 		let step = questionIdentifier.copy(with: zone) as! String
 		return ResultRequirement(step: step, result: result.copy(with: zone) as! ORKQuestionResult)
 	}

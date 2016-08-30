@@ -27,31 +27,31 @@ View controller to inform about eligible or ineligible status.
 
 Simple implementation, you must assign all properties before the view is loaded, dynamic changes are not currently supported!
 */
-public class EligibilityStatusViewController: UIViewController {
+open class EligibilityStatusViewController: UIViewController {
 	
 	/// The image to show at the top, defaults to "logo_disease".
-	public var imageName = "logo_disease"
+	open var imageName = "logo_disease"
 	
 	/// Text to show at the top, bold.
-	public var titleText: String?
+	open var titleText: String?
 	
 	/// Text to show below the title, in normal body font but dark grey.
-	public var subText: String?
+	open var subText: String?
 	
 	var actionButton: UIButton?
 	
 	/// To inform the receiver that the action button cannot yet be enabled.
-	public var waitingForAction = false {
+	open var waitingForAction = false {
 		didSet {
 			actionButton?.isEnabled = !waitingForAction
 		}
 	}
 	
 	/// The title of the one and only action button, which appears at the bottom **if** `onActionButtonTap` is defined.
-	public var actionButtonTitle = "Start Consent".c3_localized("Start Consent button title")
+	open var actionButtonTitle = "Start Consent".c3_localized("Start Consent button title")
 	
 	/// Action to perform when the one and only action button is tapped.
-	public var onActionButtonTap: ((controller: UIViewController) -> Void)? {
+	open var onActionButtonTap: ((_ controller: UIViewController) -> Void)? {
 		didSet {
 			actionButton?.isHidden = nil == onActionButtonTap
 		}
@@ -62,18 +62,18 @@ public class EligibilityStatusViewController: UIViewController {
 	
 	func didTapActionButton(_ button: UIButton) {
 		if let exec = onActionButtonTap {
-			exec(controller: self)
+			exec(self)
 		}
 	}
 	
 	
 	// MARK: - View Tasks
 	
-	public override func loadView() {
+	override open func loadView() {
 		super.loadView()
 		view.backgroundColor = UIColor.white
 		
-		let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: UIFontTextStyleBody)
+		let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: UIFontTextStyle.body)
 		
 		let content = UIView()
 		content.translatesAutoresizingMaskIntoConstraints = false

@@ -15,6 +15,8 @@
 		EE2A9D7F1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json in Resources */ = {isa = PBXBuildFile; fileRef = EE2A9D7C1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json */; };
 		EE2A9D801CE61F2500FB2B4F /* ValueSet_SF36.json in Resources */ = {isa = PBXBuildFile; fileRef = EE2A9D7D1CE61F2500FB2B4F /* ValueSet_SF36.json */; };
 		EE2D8DE51B87764200D044B4 /* EncryptedDataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */; };
+		EE3813FE1D75A643001EFC49 /* QuestionnaireResponse in Resources */ = {isa = PBXBuildFile; fileRef = EE9560AA1D645B4B0069D49B /* QuestionnaireResponse */; };
+		EE3813FF1D75A673001EFC49 /* public.crt in Resources */ = {isa = PBXBuildFile; fileRef = EE3813FC1D75A3D8001EFC49 /* public.crt */; };
 		EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */; };
 		EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */; };
 		EE519BA31B0CD44300036B96 /* Questionnaire+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE519BA21B0CD44200036B96 /* Questionnaire+C3-PRO.swift */; };
@@ -60,6 +62,7 @@
 		EEC5A8621D5CB2CC00753852 /* SQLite.h in Headers */ = {isa = PBXBuildFile; fileRef = EEC5A8611D5CB2CC00753852 /* SQLite.h */; };
 		EEC6DC2B1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC6DC2A1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift */; };
 		EEC6DC3D1C4D4F0200A42E87 /* C3PRO.strings in Resources */ = {isa = PBXBuildFile; fileRef = EEC6DC3F1C4D4F0200A42E87 /* C3PRO.strings */; };
+		EEE091FE1D66105C00F1C829 /* EncryptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE091FD1D66105C00F1C829 /* EncryptionTests.swift */; };
 		EEE60CD31C68999E00F381B7 /* ConditionalStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE60CD21C68999E00F381B7 /* ConditionalStep.swift */; };
 		EEEA7F481BD61EA20089BF85 /* StudyIntroCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */; };
 		EEEA7F4A1BD624490089BF85 /* StudyIntroCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F491BD624490089BF85 /* StudyIntroCollectionViewCell.swift */; };
@@ -100,6 +103,8 @@
 		EE2A9D7C1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Questionnaire_ValueSet-relative.json"; sourceTree = "<group>"; };
 		EE2A9D7D1CE61F2500FB2B4F /* ValueSet_SF36.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ValueSet_SF36.json; sourceTree = "<group>"; };
 		EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncryptedDataQueue.swift; sourceTree = "<group>"; };
+		EE3813FB1D75A35A001EFC49 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		EE3813FC1D75A3D8001EFC49 /* public.crt */ = {isa = PBXFileReference; lastKnownFileType = file; name = public.crt; path = enc/public.crt; sourceTree = "<group>"; };
 		EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueueManager.swift; sourceTree = "<group>"; };
 		EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2DynRegAppStore.swift; sourceTree = "<group>"; };
 		EE519B9C1B0CD3AC00036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -176,6 +181,7 @@
 		EEC5A8611D5CB2CC00753852 /* SQLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SQLite.h; path = SQLiteSwift/SQLite/SQLite.h; sourceTree = SOURCE_ROOT; };
 		EEC6DC2A1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemPermissionTableViewController.swift; sourceTree = "<group>"; };
 		EEC6DC3E1C4D4F0200A42E87 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/C3PRO.strings; sourceTree = "<group>"; };
+		EEE091FD1D66105C00F1C829 /* EncryptionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncryptionTests.swift; sourceTree = "<group>"; };
 		EEE60CD21C68999E00F381B7 /* ConditionalStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionalStep.swift; sourceTree = "<group>"; };
 		EEEA7F451BD61E800089BF85 /* StudyIntro.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = StudyIntro.storyboard; sourceTree = "<group>"; };
 		EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyIntroCollectionViewController.swift; sourceTree = "<group>"; };
@@ -297,6 +303,7 @@
 			isa = PBXGroup;
 			children = (
 				EE9560A51D6456050069D49B /* README.md */,
+				EE3813FC1D75A3D8001EFC49 /* public.crt */,
 				EE9560AC1D645EB30069D49B /* Contract */,
 				EE9560A91D645B3D0069D49B /* Questionnaire */,
 				EE9560AA1D645B4B0069D49B /* QuestionnaireResponse */,
@@ -431,6 +438,7 @@
 			isa = PBXGroup;
 			children = (
 				EE519B9C1B0CD3AC00036B96 /* README.md */,
+				EE3813FB1D75A35A001EFC49 /* CHANGELOG.md */,
 				EEEA7F681BD68E800089BF85 /* C3Error.swift */,
 				EE86C48E1C4AC1E500B7D486 /* String+C3-PRO.swift */,
 				EEC6DC3F1C4D4F0200A42E87 /* C3PRO.strings */,
@@ -491,6 +499,7 @@
 			isa = PBXGroup;
 			children = (
 				EEFA84CD1AE5C18B00E61006 /* C3PROTests.swift */,
+				EEE091FD1D66105C00F1C829 /* EncryptionTests.swift */,
 				EE2A9D6C1CE5FB3E00FB2B4F /* QuestionnaireTests.swift */,
 				EE9560971D6454850069D49B /* ConsentControllerTests.swift */,
 				EE95609B1D6456050069D49B /* examples */,
@@ -616,8 +625,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE2A9D801CE61F2500FB2B4F /* ValueSet_SF36.json in Resources */,
+				EE3813FE1D75A643001EFC49 /* QuestionnaireResponse in Resources */,
 				EE2A9D7E1CE61F2500FB2B4F /* Questionnaire_ValueSet-contained.json in Resources */,
 				EE9560AD1D645EBC0069D49B /* Contract in Resources */,
+				EE3813FF1D75A673001EFC49 /* public.crt in Resources */,
 				EE2A9D7F1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -692,6 +703,7 @@
 			files = (
 				EE9560981D6454850069D49B /* ConsentControllerTests.swift in Sources */,
 				EEFA84CE1AE5C18B00E61006 /* C3PROTests.swift in Sources */,
+				EEE091FE1D66105C00F1C829 /* EncryptionTests.swift in Sources */,
 				EE2A9D6D1CE5FB3E00FB2B4F /* QuestionnaireTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

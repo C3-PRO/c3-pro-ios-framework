@@ -28,7 +28,7 @@ Standard implementation of a core motion activity preprocessor and interpreter.
 
 See `preprocess(activities:)` and `interpret(activities:)` for details on the logic performed.
 */
-public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterpreter {
+open class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterpreter {
 	
 	public init() {
 	}
@@ -49,7 +49,7 @@ public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterprete
 	- parameter activities: The activities to preprocess
 	- returns: Preprocessed and packaged motion activities
 	*/
-	public func preprocess(activities: [CMMotionActivity]) -> [CoreMotionActivity] {
+	open func preprocess(activities: [CMMotionActivity]) -> [CoreMotionActivity] {
 		var samples = [CoreMotionActivity]()
 		for cmactivity in activities {
 			let activity = CoreMotionActivity(activity: cmactivity)
@@ -103,7 +103,7 @@ public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterprete
 	- parameter activities: The activities to interpret
 	- returns:              An array of interpreted activities
 	*/
-	public func interpret(activities: [InterpretedCoreMotionActivity]) -> [InterpretedCoreMotionActivity] {
+	open func interpret(activities: [InterpretedCoreMotionActivity]) -> [InterpretedCoreMotionActivity] {
 		var prev: InterpretedCoreMotionActivity?
 		for i in 0..<activities.count {
 			let activity = activities[i]
@@ -113,7 +113,7 @@ public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterprete
 			if activity.type.contains(.Automotive) && duration < 300.0 {
 				activity.type.remove(.Automotive)
 				activity.type.formUnion(.Stationary)
-				activity.interpretation = .Automotive
+				activity.interpretation = .automotive
 			}
 				
 			// cycling < 2 minutes: running if prev/next is running, walking if prev/next is walking, stationary otherwise
@@ -121,23 +121,23 @@ public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterprete
 				activity.type.remove(.Cycling)
 				if let prev = prev, prev.type.contains(.Running) {
 					activity.type.formUnion(.Running)
-					activity.interpretation = .Running
+					activity.interpretation = .running
 				}
 				else if activities.count > i+1 && activities[i+1].type.contains(.Running) {
 					activity.type.formUnion(.Running)
-					activity.interpretation = .Running
+					activity.interpretation = .running
 				}
 				else if let prev = prev, prev.type.contains(.Walking) {
 					activity.type.formUnion(.Walking)
-					activity.interpretation = .Walking
+					activity.interpretation = .walking
 				}
 				else if activities.count > i+1 && activities[i+1].type.contains(.Walking) {
 					activity.type.formUnion(.Walking)
-					activity.interpretation = .Walking
+					activity.interpretation = .walking
 				}
 				else {
 					activity.type.formUnion(.Stationary)
-					activity.interpretation = .Stationary
+					activity.interpretation = .stationary
 				}
 			}
 			
@@ -152,22 +152,22 @@ public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterprete
 			// no rule, interpret by picking `type`
 			else {
 				if activity.type.contains(.Cycling) {
-					activity.interpretation = .Cycling
+					activity.interpretation = .cycling
 				}
 				else if activity.type.contains(.Running) {
-					activity.interpretation = .Running
+					activity.interpretation = .running
 				}
 				else if activity.type.contains(.Walking) {
-					activity.interpretation = .Walking
+					activity.interpretation = .walking
 				}
 				else if activity.type.contains(.Automotive) {
-					activity.interpretation = .Automotive
+					activity.interpretation = .automotive
 				}
 				else if activity.type.contains(.Stationary) {
-					activity.interpretation = .Stationary
+					activity.interpretation = .stationary
 				}
 				else {
-					activity.interpretation = .Unknown
+					activity.interpretation = .unknown
 				}
 			}
 			
@@ -181,9 +181,9 @@ public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterprete
 				interpreted.append(inter)
 				
 				// is this sleep? Yes if stationary > 3 hours
-				if .Stationary == inter.interpretation {
-					if Calendar.current.dateComponents([.hour], from: inter.startDate, to: inter.endDate).hour >= 3 {
-						inter.interpretation = .Sleeping
+				if .stationary == inter.interpretation {
+					if Calendar.current.dateComponents([.hour], from: inter.startDate, to: inter.endDate).hour! >= 3 {
+						inter.interpretation = .sleeping
 					}
 				}
 			}

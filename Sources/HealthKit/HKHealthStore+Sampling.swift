@@ -25,7 +25,7 @@ import SMART
 /**
 Extend `HKHealthStore` with methods that query the store for samples:
 
-- `c3_latestSampleOfType()`:            retrieve the latest sample of the given type.
+- `c3_latestSample(ofType:)`:           retrieve the latest sample of the given type.
 - `c3_samplesOfTypeBetween()`:          retrieve all samples of a given type between two dates.
 - `c3_summaryOfSamplesOfTypeBetween()`: return a summary of all samples of a given type. Use this to get an **aggregate count** of something
                                         over a given period
@@ -35,12 +35,12 @@ public extension HKHealthStore {
 	/**
 	Convenience method to retrieve the latest sample of a given type.
 	
-	- parameter typeIdentifier: The type of samples to retrieve
+	- parameter type:     The type of samples to retrieve
 	- parameter callback: Callback to call when query finishes, comes back either with a quantity, an error or neither
 	*/
-	public func c3_latestSampleOfType(_ typeIdentifier: String, callback: ((quantity: HKQuantity?, error: Error?) -> Void)) {
-		c3_samplesOfTypeBetween(typeIdentifier, start: Date.distantPast , end: Date(), limit: 1) { results, error in
-			callback(quantity: results?.first?.quantity, error: error)
+	public func c3_latestSample(ofType type: String, callback: ((HKQuantity?, Error?) -> Void)) {
+		c3_samplesOfTypeBetween(type, start: Date.distantPast , end: Date(), limit: 1) { results, error in
+			callback(results?.first?.quantity, error)
 		}
 	}
 	
@@ -54,9 +54,9 @@ public extension HKHealthStore {
 	- parameter limit: How many samples to retrieve at max
 	- parameter callback: Callback to call when query finishes, comes back either with an array of samples, an error or neither
 	*/
-	public func c3_samplesOfTypeBetween(_ typeIdentifier: String, start: Date, end: Date, limit: Int, callback: ((results: [HKQuantitySample]?, error: Error?) -> Void)) {
+	public func c3_samplesOfTypeBetween(_ typeIdentifier: String, start: Date, end: Date, limit: Int, callback: ((_ results: [HKQuantitySample]?, _ error: Error?) -> Void)) {
 		guard let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier(rawValue: typeIdentifier)) else {
-			callback(results: nil, error: C3Error.noSuchHKSampleType(typeIdentifier))
+			callback(nil, C3Error.noSuchHKSampleType(typeIdentifier))
 			return
 		}
 		
@@ -64,10 +64,10 @@ public extension HKHealthStore {
 		let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
 		let query = HKSampleQuery(sampleType: sampleType, predicate: period, limit: limit, sortDescriptors: [sortDescriptor]) { sampleQuery, results, error in
 			if let err = error {
-				callback(results: nil, error: err)
+				callback(nil, err)
 			}
 			else {
-				callback(results: results as? [HKQuantitySample], error: nil)
+				callback(results as? [HKQuantitySample], nil)
 			}
 		}
 		execute(query)
@@ -82,16 +82,16 @@ public extension HKHealthStore {
 	- parameter callback: Callback to call, on a background queue, when the query finishes, containing one HKQuantitySample spanning the
 	                      whole period or an error (or neither)
 	*/
-	public func c3_summaryOfSamplesOfTypeBetween(_ typeIdentifier: String, start: Date, end: Date, callback: ((result: HKQuantitySample?, error: Error?) -> Void)) {
+	public func c3_summaryOfSamplesOfTypeBetween(_ typeIdentifier: String, start: Date, end: Date, callback: ((_ result: HKQuantitySample?, _ error: Error?) -> Void)) {
 		guard let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier(rawValue: typeIdentifier)) else {
-			callback(result: nil, error: C3Error.noSuchHKSampleType(typeIdentifier))
+			callback(nil, C3Error.noSuchHKSampleType(typeIdentifier))
 			return
 		}
 		
 		// we create one interval for the whole period between start and end dates
 		let interval = Calendar.current.dateComponents([.day, .hour], from: start, to: end)
 		guard interval.day! + interval.hour! > 0 else {
-			callback(result: nil, error: C3Error.intervalTooSmall)
+			callback(nil, C3Error.intervalTooSmall)
 			return
 		}
 		let period = HKQuery.predicateForSamples(withStart: start, end: end, options: HKQueryOptions())
@@ -99,7 +99,7 @@ public extension HKHealthStore {
 		let query = HKStatisticsCollectionQuery(quantityType: sampleType, quantitySamplePredicate: period, options: [.cumulativeSum], anchorDate: start, intervalComponents: interval)
 		query.initialResultsHandler = { sampleQuery, results, error in
 			if let error = error {
-				callback(result: nil, error: error)
+				callback(nil, error)
 			}
 			else {
 				var sample: HKQuantitySample?
@@ -111,7 +111,7 @@ public extension HKHealthStore {
 						}
 					}
 				}
-				callback(result: sample, error: nil)
+				callback(sample, nil)
 			}
 		}
 		execute(query)

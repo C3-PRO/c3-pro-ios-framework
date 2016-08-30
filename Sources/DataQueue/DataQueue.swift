@@ -27,12 +27,12 @@ The (FIFO) DataQueue is a special FHIRServer implementation that will enqueue FH
 `create` command fails. The queue can subsequently be flushed to re-attempt creating the resources on the FHIR server, in their original
 order.
 */
-public class DataQueue: Server {
+open class DataQueue: Server {
 	
 	/// The manager for the data queue
 	var queueManager: DataQueueManager!
 	
-	override public var logger: OAuth2Logger? {
+	override open var logger: OAuth2Logger? {
 		didSet {
 			super.logger = logger
 			queueManager.logger = logger
@@ -61,19 +61,19 @@ public class DataQueue: Server {
 	
 	- parameter resource: The FHIR Resource to enqueue
 	*/
-	public func enqueue(resource: Resource) {
+	open func enqueue(resource: Resource) {
 		queueManager.enqueue(resource: resource)
 	}
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
-	public func flush(callback: ((error: Error?) -> Void)) {
+	open func flush(callback: ((Error?) -> Void)) {
 		queueManager.flush(callback: callback)
 	}
 	
 	
 	// MARK: - URL Session
 	
-	override public func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, withSession session: URLSession, handler: R, callback: ((response: FHIRServerResponse) -> Void)) {
+	override open func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, withSession session: URLSession, handler: R, callback: ((FHIRServerResponse) -> Void)) {
 		if .POST == handler.type || .PUT == handler.type {
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			
@@ -89,14 +89,14 @@ public class DataQueue: Server {
 						self.queueManager.enqueue(resourceInHandler: handler)
 						
 						let response = R.ResponseType.init(error: error)
-						callback(response: response)
+						callback(response)
 					}
 					else {
 						super.performPreparedRequest(request, handler: handler) { response in
 							if nil != response.error {
 								self.queueManager.enqueue(resourceInHandler: handler)
 							}
-							callback(response: response)
+							callback(response)
 						}
 					}
 				}

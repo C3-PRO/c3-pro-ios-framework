@@ -24,7 +24,7 @@ import UIKit
 /**
 A bordered button which we need to create manually because ORKBorderedButton is not public.
 */
-public class BorderedButton: UIButton {
+open class BorderedButton: UIButton {
 	
 	var disabledTintColor = UIColor(white: 0.0, alpha: 0.3)
 	
@@ -48,21 +48,21 @@ public class BorderedButton: UIButton {
 	
 	// MARK: - Actions
 	
-	public override var isEnabled: Bool {
+	override open var isEnabled: Bool {
 		didSet {
 			super.isEnabled = isEnabled
 			updateBorderColor()
 		}
 	}
 	
-	public override var isHighlighted: Bool {
+	override open var isHighlighted: Bool {
 		didSet {
 			super.isHighlighted = isHighlighted
 			updateBorderColor()
 		}
 	}
 	
-	public override var isSelected: Bool {
+	override open var isSelected: Bool {
 		didSet {
 			super.isSelected = isSelected
 			updateBorderColor()
@@ -72,7 +72,7 @@ public class BorderedButton: UIButton {
 	
 	// MARK: - Colors
 	
-	public override func tintColorDidChange() {
+	override open func tintColorDidChange() {
 		super.tintColorDidChange()
 		setTitleColor(tintColor, for: UIControlState())
 		setTitleColor(UIColor.white, for: .highlighted)
@@ -101,7 +101,7 @@ public class BorderedButton: UIButton {
 	
 	// MARK: - Sizing
 	
-	public override var intrinsicContentSize: CGSize {
+	override open var intrinsicContentSize: CGSize {
 		let size = super.intrinsicContentSize
 		return CGSize(width: max(size.width + 20, 100), height: max(size.height, 44))
 	}

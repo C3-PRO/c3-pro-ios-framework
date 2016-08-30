@@ -53,16 +53,16 @@ public struct CoreMotionActivityType: OptionSet {
 /**
 Class representing a CMMotionActivity.
 */
-public class CoreMotionActivity {
+open class CoreMotionActivity {
 	
 	/// The type(s) the activity represented.
-	public var type: CoreMotionActivityType
+	open var type: CoreMotionActivityType
 	
 	/// When the receiver started.
-	public var startDate: Date
+	open var startDate: Date
 	
 	/// The confidence in the activity determination.
-	public var confidence: CMMotionActivityConfidence
+	open var confidence: CMMotionActivityConfidence
 	
 	
 	public init(start: Date, activity: CoreMotionActivityType, confidence inConfidence: CMMotionActivityConfidence) {

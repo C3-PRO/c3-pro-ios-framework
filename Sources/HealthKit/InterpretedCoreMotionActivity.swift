@@ -26,43 +26,43 @@ import CoreMotion
 Interpretation of core motion activity, as derived from looking at activities over time.
 */
 public enum CoreMotionActivityInterpretation: String {
-	case Unknown = "unknown"
+	case unknown = "unknown"
 	
 	/// Sleeping "activity" is derived from a "stationary" activity longer than 3 hours.
-	case Sleeping = "sleeping"
+	case sleeping = "sleeping"
 	
 	/// Stationary.
-	case Stationary = "stationary"
+	case stationary = "stationary"
 	
 	/// Likely driving a car or similar.
-	case Automotive = "driving"
+	case automotive = "driving"
 	
 	/// Core Motion reports walking activity.
-	case Walking = "walking"
+	case walking = "walking"
 	
 	/// Core Motion reports running activity.
-	case Running = "running"
+	case running = "running"
 	
 	/// We're cycling.
-	case Cycling = "cycling"
+	case cycling = "cycling"
 	
 	
 	/// The name of the interpretation to be shown to humans.
 	public var humanName: String {
 		switch self {
-		case .Sleeping:
+		case .sleeping:
 			return "Sleeping"
-		case .Stationary:
+		case .stationary:
 			return "Stationary"
-		case .Automotive:
+		case .automotive:
 			return "Driving"
-		case .Walking:
+		case .walking:
 			return "Walking"
-		case .Running:
+		case .running:
 			return "Running"
-		case .Cycling:
+		case .cycling:
 			return "Cycling"
-		case .Unknown:
+		case .unknown:
 			return "unknown"
 		}
 	}
@@ -72,13 +72,13 @@ public enum CoreMotionActivityInterpretation: String {
 /**
 A CoreMotionActivity subclass that also has an end date, for easier use for user presentation.
 */
-public class InterpretedCoreMotionActivity: CoreMotionActivity {
+open class InterpretedCoreMotionActivity: CoreMotionActivity {
 	
 	/// When the receiver ended.
-	public var endDate: Date
+	open var endDate: Date
 	
 	/// The interpretation for this particular activity.
-	public var interpretation = CoreMotionActivityInterpretation.Unknown
+	open var interpretation = CoreMotionActivityInterpretation.unknown
 	
 	
 	public init(start: Date, activity: CoreMotionActivityType, confidence: CMMotionActivityConfidence, end: Date) {

@@ -27,19 +27,19 @@ or a disabled "Granted" button for the services you define, allowing users to gr
 
 Assign an array of `SystemService` instances to your controller's `services` property, then present the view controller to the user.
 */
-public class SystemPermissionTableViewController: UITableViewController {
+open class SystemPermissionTableViewController: UITableViewController {
 	
 	lazy var permissionRequester = SystemServicePermissioner()
 	
 	/// The services to request access to.
-	public var services: [SystemService]?
+	open var services: [SystemService]?
 	
 	
-	public override init(style: UITableViewStyle) {
+	override public init(style: UITableViewStyle) {
 		super.init(style: style)
 	}
 	
-	public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+	override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 	}
 	
@@ -62,7 +62,7 @@ public class SystemPermissionTableViewController: UITableViewController {
 	
 	// MARK: - View Tasks
 	
-	public override func viewDidLoad() {
+	override open func viewDidLoad() {
 		super.viewDidLoad()
 		tableView.translatesAutoresizingMaskIntoConstraints = false
 		tableView.delegate = self
@@ -75,15 +75,15 @@ public class SystemPermissionTableViewController: UITableViewController {
 	
 	// MARK: - Table View Data Source
 	
-	public override func numberOfSections(in tableView: UITableView) -> Int {
+	override open func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 	
-	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return services?.count ?? 0
 	}
 	
-	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath) as! PermissionRequestTableViewCell
 		cell.selectionStyle = .none
 		if let service = serviceAtIndexPath(indexPath) {

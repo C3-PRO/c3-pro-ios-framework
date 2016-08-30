@@ -21,35 +21,35 @@
 import UIKit
 
 
-public class StudyIntroWelcomeCell: UICollectionViewCell {
+open class StudyIntroWelcomeCell: UICollectionViewCell {
 	
-	@IBOutlet public var image: UIImageView?
+	@IBOutlet open var image: UIImageView?
 	
-	@IBOutlet public var titleLabel: UILabel?
+	@IBOutlet open var titleLabel: UILabel?
 	
-	@IBOutlet public var subtitleLabel: UILabel?
+	@IBOutlet open var subtitleLabel: UILabel?
 	
-	@IBOutlet public var consentButton: UIButton?
+	@IBOutlet open var consentButton: UIButton?
 	
-	@IBOutlet public var videoButton: UIButton?
+	@IBOutlet open var videoButton: UIButton?
 	
-	@IBOutlet public var swipeLabel: UILabel?
+	@IBOutlet open var swipeLabel: UILabel?
 	
-	public var onConsentTap: ((Void) -> Void)?
-	public var onVideoTap: ((name: String) -> Void)?
+	open var onConsentTap: ((Void) -> Void)?
+	open var onVideoTap: ((_ name: String) -> Void)?
 	
-	public var item: StudyIntroWelcomeItem? {
+	open var item: StudyIntroWelcomeItem? {
 		didSet {
-			setupCellWithItem(item)
+			setupCell(with: item)
 		}
 	}
 	
-	public override func prepareForReuse() {
+	override open func prepareForReuse() {
 		super.prepareForReuse()
 		titleLabel?.numberOfLines = (bounds.size.height > 280.0) ? 0 : 1;			// to force one line on iPhone 4S
 	}
 	
-	func setupCellWithItem(_ item: StudyIntroWelcomeItem?) {
+	func setupCell(with item: StudyIntroWelcomeItem?) {
 		if let item = item {
 			if let logo = item.logoName {
 				image?.image = UIImage(named: logo)
@@ -75,7 +75,7 @@ public class StudyIntroWelcomeCell: UICollectionViewCell {
 	
 	@IBAction func showVideo() {
 		if let exec = onVideoTap, let video = item?.videoName {
-			exec(name: video)
+			exec(video)
 		}
 		else {
 			c3_warn("Have not assigned `onVideoTap` or the welcome item does not define `videoName`")
@@ -84,23 +84,23 @@ public class StudyIntroWelcomeCell: UICollectionViewCell {
 }
 
 
-public class StudyIntroVideoCell: UICollectionViewCell {
+open class StudyIntroVideoCell: UICollectionViewCell {
 
-	@IBOutlet public var titleLabel: UILabel?
+	@IBOutlet open var titleLabel: UILabel?
 	
-	@IBOutlet public var videoButton: UIButton?
+	@IBOutlet open var videoButton: UIButton?
 	
-	@IBOutlet public var videoMessage: UILabel?
+	@IBOutlet open var videoMessage: UILabel?
 	
-	public var onVideoTap: ((name: String) -> Void)?
+	open var onVideoTap: ((String) -> Void)?
 	
-	public var item: StudyIntroVideoItem? {
+	open var item: StudyIntroVideoItem? {
 		didSet {
-			setupCellWithItem(item)
+			setupCell(with: item)
 		}
 	}
 	
-	func setupCellWithItem(_ item: StudyIntroVideoItem?) {
+	func setupCell(with item: StudyIntroVideoItem?) {
 		if let item = item {
 			videoButton?.setImage(UIImage(named: item.videoIconName), for: UIControlState())
 		}
@@ -109,7 +109,7 @@ public class StudyIntroVideoCell: UICollectionViewCell {
 	
 	@IBAction func showVideo() {
 		if let exec = onVideoTap, let video = item?.videoName {
-			exec(name: video)
+			exec(video)
 		}
 		else {
 			c3_warn("Have not assigned `onVideoTap` or the video item does not define `videoName`")
@@ -118,31 +118,31 @@ public class StudyIntroVideoCell: UICollectionViewCell {
 }
 
 
-public class StudyIntroHTMLCell: UICollectionViewCell, UIWebViewDelegate {
+open class StudyIntroHTMLCell: UICollectionViewCell, UIWebViewDelegate {
 	
-	@IBOutlet public var webView: UIWebView?
+	@IBOutlet open var webView: UIWebView?
 	
-	public var item: StudyIntroHTMLItem? {
+	open var item: StudyIntroHTMLItem? {
 		didSet {
-			setupCellWithItem(item)
+			setupCell(with: item)
 		}
 	}
 	
-	func setupCellWithItem(_ item: StudyIntroHTMLItem?) {
+	func setupCell(with item: StudyIntroHTMLItem?) {
 		if let url = item?.url {
 			webView?.loadRequest(URLRequest(url: url as URL))
 		}
 	}
 	
 	
-	public func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+	open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
 		if .linkClicked == navigationType, let url = request.url {
 			return !UIApplication.shared.openURL(url)
 		}
 		return true
 	}
 	
-	public func webViewDidFinishLoad(_ webView: UIWebView) {
+	open func webViewDidFinishLoad(_ webView: UIWebView) {
 		webView.stringByEvaluatingJavaScript(from: "document.documentElement.style.webkitUserSelect=\"none\"")		// disable text selection
 	}
 }

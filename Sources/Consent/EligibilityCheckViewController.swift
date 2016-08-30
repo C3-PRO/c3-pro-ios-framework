@@ -25,29 +25,29 @@ import UIKit
 View controller presenting all eligibility criteria provided in the receiver`s `requirements` property, allowing the user to proceed to a
 summary page that informs of eligibility and allows to proceed to to consenting or not.
 */
-public class EligibilityCheckViewController: UITableViewController {
+open class EligibilityCheckViewController: UITableViewController {
 	
 	var nextButton: UIBarButtonItem?
 	
 	/// The eligibility criteria.
-	public var requirements: [EligibilityRequirement]?
+	open var requirements: [EligibilityRequirement]?
 	
 	/// Set this string to override the title message. Defaults to "You are eligible to join the study".
-	public var eligibleTitle: String?
+	open var eligibleTitle: String?
 	
 	/// Override point for the default eligible message "Tap the button below to begin the consent process".
-	public var eligibleMessage: String?
+	open var eligibleMessage: String?
 	
 	/// Override point for the default ineligible message "Thank you for your interest!\nUnfortunately, you are not eligible to join [...]".
-	public var ineligibleMessage: String?
+	open var ineligibleMessage: String?
 	
 	/// Block executed if all eligibility requirements are met and the user taps the "Start Consent" button.
-	public var onStartConsent: ((viewController: EligibilityCheckViewController) -> Void)?
+	open var onStartConsent: ((_ viewController: EligibilityCheckViewController) -> Void)?
 	
 	
 	// MARK: - View Tasks
 	
-	public override func viewDidLoad() {
+	override open func viewDidLoad() {
 		super.viewDidLoad()
 		tableView.register(EligibilityCell.self, forCellReuseIdentifier: "EligibilityCell")
 		tableView.estimatedRowHeight = 120.0
@@ -60,10 +60,10 @@ public class EligibilityCheckViewController: UITableViewController {
 		enableDisableNext()
 	}
 	
-	public override func viewWillAppear(_ animated: Bool) {
+	override open func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		if isMovingToParentViewController, isEligible() ?? false {
-			showEligibleAnimated(true)
+			showEligible(animated: true)
 		}
 	}
 	
@@ -85,10 +85,10 @@ public class EligibilityCheckViewController: UITableViewController {
 	func verifyEligibility() {
 		if let eligible = isEligible() {
 			if eligible {
-				showEligibleAnimated(true)
+				showEligible(animated: true)
 			}
 			else {
-				showIneligibleAnimated(true)
+				showIneligible(animated: true)
 			}
 		}
 		else {
@@ -125,13 +125,13 @@ public class EligibilityCheckViewController: UITableViewController {
 	
 	- parameter animated: Whether to animate the push
 	*/
-	public func showEligibleAnimated(_ animated: Bool) {
+	open func showEligible(animated: Bool) {
 		let vc = EligibilityStatusViewController()
 		vc.titleText = eligibleTitle ?? "You are eligible to join the study".c3_localized
 		vc.subText = eligibleMessage ?? "Tap the button below to begin the consent process".c3_localized
 		vc.onActionButtonTap = { controller in
 			if let exec = self.onStartConsent {
-				exec(viewController: self)
+				exec(self)
 			}
 			else {
 				c3_warn("Tapped “Start Consent” but `onStartConsent` is not defined")
@@ -148,7 +148,7 @@ public class EligibilityCheckViewController: UITableViewController {
 	
 	- parameter animated: Whether to animate the push
 	*/
-	public func showIneligibleAnimated(_ animated: Bool) {
+	open func showIneligible(animated: Bool) {
 		let vc = EligibilityStatusViewController()
 		vc.subText = ineligibleMessage ?? "Thank you for your interest!\nUnfortunately, you are not eligible to join this study at this time.".c3_localized
 		
@@ -165,15 +165,15 @@ public class EligibilityCheckViewController: UITableViewController {
 	
 	// MARK: - Table View Data Source
 	
-	public override func numberOfSections(in tableView: UITableView) -> Int {
+	override open func numberOfSections(in tableView: UITableView) -> Int {
 		return requirements?.count ?? 0
 	}
 	
-	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 1
 	}
 	
-	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "EligibilityCell", for: indexPath) as! EligibilityCell
 		cell.item = requirements![(indexPath as NSIndexPath).section]
 		cell.onButtonPress = { button in
@@ -204,7 +204,7 @@ class EligibilityCell: UITableViewCell {
 		}
 	}
 	
-	var onButtonPress: ((button: UIButton) -> Void)?
+	var onButtonPress: ((UIButton) -> Void)?
 	
 	
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -214,7 +214,7 @@ class EligibilityCell: UITableViewCell {
 		// title label
 		let title = UILabel()
 		title.translatesAutoresizingMaskIntoConstraints = false
-		title.font = UIFont.preferredFont(forTextStyle: UIFontTextStyleBody)
+		title.font = UIFont.preferredFont(forTextStyle: .body)
 		title.numberOfLines = 0
 		title.textAlignment = .center
 		title.textColor = UIColor.black
@@ -238,7 +238,7 @@ class EligibilityCell: UITableViewCell {
 		yes.addTarget(self, action: #selector(EligibilityCell.buttonDidPress(_:)), for: .touchUpInside)
 		no.addTarget(self, action: #selector(EligibilityCell.buttonDidPress(_:)), for: .touchUpInside)
 		
-		let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: UIFontTextStyleBody)
+		let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
 		yes.titleLabel?.font = UIFont(descriptor: desc, size: desc.pointSize * 2)
 		no.titleLabel?.font = UIFont(descriptor: desc, size: desc.pointSize * 2)
 		yes.setTitle("Yes".c3_localized("Yes as in yes-i-meet-this-requirement"), for: UIControlState())
@@ -287,7 +287,7 @@ class EligibilityCell: UITableViewCell {
 		}
 		
 		if let exec = onButtonPress {
-			exec(button: sender)
+			exec(sender)
 		}
 	}
 	

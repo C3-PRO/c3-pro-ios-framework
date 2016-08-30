@@ -30,23 +30,23 @@ protocol QuestionnairePromiseProto: CustomStringConvertible {
 	
 	var steps: [ORKStep]? { get }
 	
-	func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [Error]?) -> Void))
+	func fulfill(requiring parentRequirements: [ResultRequirement]?, callback: (([Error]?) -> Void))
 }
 
 
 /**
 A promise that can turn a FHIR Questionnaire into an ORKOrderedTask.
 */
-public class QuestionnairePromise: QuestionnairePromiseProto {
+open class QuestionnairePromise: QuestionnairePromiseProto {
 	
 	/// The promises' questionnaire.
 	let questionnaire: Questionnaire
 	
 	/// The questionnaire's steps, internally assigned after the promise has been successfully fulfilled.
-	internal(set) public var steps: [ORKStep]?
+	internal(set) open var steps: [ORKStep]?
 	
 	/// The task representing the questionnaire; available once the promise has been fulfilled.
-	internal(set) public var task: ORKTask?
+	internal(set) open var task: ORKTask?
 	
 	public init(questionnaire: Questionnaire) {
 		self.questionnaire = questionnaire
@@ -64,24 +64,24 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 	- parameter parentRequirements: An array of ResultRequirement instances required by parent elements
 	- parameter callback: Callback to be called upon promise fulfillment with a list of errors, if any. Called on the main thread.
 	*/
-	public func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [Error]?) -> Void)) {
+	open func fulfill(requiring parentRequirements: [ResultRequirement]?, callback: (([Error]?) -> Void)) {
 		guard let item = questionnaire.item, item.count > 0 else {
-			callback(errors: [C3Error.questionnaireInvalidNoTopLevelItem])
+			callback([C3Error.questionnaireInvalidNoTopLevelItem])
 			return
 		}
 		
 		let topItem = QuestionnaireItem(type: "group")
 		topItem.item = questionnaire.item
 		let promise = QuestionnaireItemPromise(item: topItem)
-		promise.fulfill(parentRequirements) { errors in
+		promise.fulfill(requiring: parentRequirements) { errors in
 			let identifier = self.questionnaire.id ?? (self.questionnaire.identifier?.first?.value ?? "questionnaire-task")
 			if let steps = promise.steps {
 				self.steps = steps
 				self.task = ConditionalOrderedTask(identifier: identifier, steps: steps)
-				callback(errors: errors)
+				callback(errors)
 			}
 			else {
-				callback(errors: errors ?? [C3Error.questionnaireUnknownError])
+				callback(errors ?? [C3Error.questionnaireUnknownError])
 			}
 		}
 	}
@@ -90,8 +90,8 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 	// MARK: - Printable
 	
 	/// String representation of the receiver.
-	public var description: String {
-		return NSString(format: "QuestionnairePromise <%p>", unsafeAddress(of: self)) as String
+	open var description: String {
+		return String(format: "<QuestionnairePromise %p>", self as! CVarArg)
 	}
 }
 

@@ -40,13 +40,13 @@ Data Queue that can encrypt resources before sending.
 
 This class is a subclass of `DataQueue`, an implementation of a `FHIRServer`.
 */
-public class EncryptedDataQueue: DataQueue {
+open class EncryptedDataQueue: DataQueue {
 	
 	/// An optional delegate to ask when to encrypt a resource and when not; if not provided, all resources will be encrypted.
-	public var delegate: EncryptedDataQueueDelegate?
+	open var delegate: EncryptedDataQueueDelegate?
 	
 	/// The endpoint for encrypted resources; usually different from `baseURL` since these are not FHIR compliant.
-	public internal(set) var encryptedBaseURL: URL
+	open internal(set) var encryptedBaseURL: URL
 	
 	let aes = AESUtility()
 	
@@ -91,8 +91,8 @@ public class EncryptedDataQueue: DataQueue {
 		let encKey = try rsa.encrypt(data: aes.symmetricKeyData)
 		let dict = [
 			"key_id": delegate?.keyIdentifierForEncryptedDataQueue(self) ?? "",
-			"symmetric_key": encKey.base64EncodedString(options: []),
-			"message": encData.base64EncodedString(options: []),
+			"symmetric_key": encKey.base64EncodedString(),
+			"message": encData.base64EncodedString(),
 			"version": C3PROFHIRVersion,
 		]
 		return try JSONSerialization.data(withJSONObject: dict, options: [])
@@ -101,14 +101,14 @@ public class EncryptedDataQueue: DataQueue {
 	
 	// MARK: - Requests
 	
-	override public func handlerForRequest(ofType type: FHIRRequestType, resource: Resource?, headers: FHIRRequestHeaders?) -> FHIRServerRequestHandler? {
+	override open func handlerForRequest(ofType type: FHIRRequestType, resource: Resource?, headers: FHIRRequestHeaders?) -> FHIRServerRequestHandler? {
 		if let resource = resource, nil == delegate || delegate!.encryptedDataQueue(self, wantsEncryptionForResource: resource, requestType: type) {
 			return EncryptedJSONRequestHandler(type, resource: resource, dataQueue: self)
 		}
 		return super.handlerForRequest(ofType: type, resource: resource, headers: headers)
 	}
 	
-	override public func absoluteURL(for path: String, handler: FHIRServerRequestHandler) -> URL? {
+	override open func absoluteURL(for path: String, handler: FHIRServerRequestHandler) -> URL? {
 		if handler is EncryptedJSONRequestHandler {
 			return URL(string: path, relativeTo: encryptedBaseURL)
 		}
@@ -122,7 +122,7 @@ A request handler for encrypted JSON data, to be used with `EncryptedDataQueue`.
 
 Its `prepareData()` method asks its dataQueue to encrypt the resource.
 */
-public class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler {
+open class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler {
 	
 	let dataQueue: EncryptedDataQueue
 	
@@ -139,7 +139,7 @@ public class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler {
 	}
 	
 	/** This implementation asks `dataQueue` to handle resource encryption by calling its `encryptedData()` method. */
-	public override func prepareData() throws {
+	override open func prepareData() throws {
 		data = nil					// to avoid double-encryption
 		try super.prepareData()
 		if let data = data {

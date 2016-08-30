@@ -36,14 +36,14 @@ public protocol ActivityReporter {
 	- parameter until:      The end date
 	- parameter callback:   The callback to call when all activities have been retrieved
 	*/
-	func reportForActivityPeriod(startingAt start: Date, until: Date, callback: ((period: ActivityReportPeriod?, error: Error?) -> Void))
+	func reportForActivityPeriod(startingAt start: Date, until: Date, callback: ((ActivityReportPeriod?, Error?) -> Void))
 	
 	/**
 	Retrieve activity data with progressively increasing time intervals (1 day -> 1 month) up until today.
 	
 	- parameter callback: The callback to call when all activities have been retrieved
 	*/
-	func progressivelyCollatedActivityData(_ callback: ((report: ActivityReport, error: Error?) -> Void))
+	func progressivelyCollatedActivityData(callback: ((ActivityReport, Error?) -> Void))
 }
 
 
@@ -52,7 +52,7 @@ extension ActivityReporter {
 	/**
 	Will retrieve activity data with progressively increasing time intervals (1 day -> 1 month).
 	*/
-	public func progressivelyCollatedActivityData(_ callback: ((report: ActivityReport, error: Error?) -> Void)) {
+	public func progressivelyCollatedActivityData(callback: ((ActivityReport, Error?) -> Void)) {
 		let queue = DispatchQueue(label: "org.chip.c3-pro.activity-reporter-queue")
 		queue.async {
 			var calendar = Calendar.current
@@ -83,7 +83,7 @@ extension ActivityReporter {
 			// all intervals collected, order and return
 			let report = ActivityReport(periods: periods)
 			c3_performOnMainQueue() {
-				callback(report: report, error: (errors.count > 0) ? C3Error.multipleErrors(errors) : nil)
+				callback(report, (errors.count > 0) ? C3Error.multipleErrors(errors) : nil)
 			}
 		}
 	}

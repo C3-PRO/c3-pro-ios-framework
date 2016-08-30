@@ -30,18 +30,18 @@ You do not need to manually create this view controller, it is automatically cre
 Displays a list of system services that the app would like to have access to. Each service comes with an “Allow” button that the user can
 press to be prompted for access. Services to which access has already been granted will show up with a disabled button.
 */
-public class SystemPermissionStepViewController: ORKStepViewController, UITableViewDelegate, UITableViewDataSource {
+open class SystemPermissionStepViewController: ORKStepViewController, UITableViewDelegate, UITableViewDataSource {
 	
 	var tableView: UITableView!
 	
 	lazy var permissionRequester = SystemServicePermissioner()
 	
 	
-	public override init(step: ORKStep?) {
+	override public init(step: ORKStep?) {
 		super.init(step: step)
 	}
 	
-	public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+	override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 	}
 
@@ -67,13 +67,13 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 	
 	// MARK: - View Tasks
 	
-	public override func viewDidLoad() {
+	override open func viewDidLoad() {
 		super.viewDidLoad()
 		createUI()
 		tableView.register(PermissionRequestTableViewCell.self, forCellReuseIdentifier: "MainCell")
 	}
 	
-	public override func viewWillAppear(_ animated: Bool) {
+	override open func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		if hasNextStep() {
 			let title = "Next"; // FIXME: no longer available: ORKBundle().localizedStringForKey("BUTTON_NEXT", value: "BUTTON_NEXT", table: "ResearchKit")
@@ -108,15 +108,15 @@ public class SystemPermissionStepViewController: ORKStepViewController, UITableV
 	
 	// MARK: - Table View Data Source
 	
-	public func numberOfSections(in tableView: UITableView) -> Int {
+	open func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 	
-	public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return (step as? SystemPermissionStep)?.services?.count ?? 0
 	}
 	
-	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath) as! PermissionRequestTableViewCell
 		cell.selectionStyle = .none
 		if let service = service(at: indexPath) {

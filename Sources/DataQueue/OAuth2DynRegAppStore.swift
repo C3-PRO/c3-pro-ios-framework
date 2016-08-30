@@ -25,18 +25,18 @@ import StoreKit
 /**
 Dynamic client registration based on the app's App Store receipt.
 */
-public class OAuth2DynRegAppStore: OAuth2DynReg {
+open class OAuth2DynRegAppStore: OAuth2DynReg {
 	
 	deinit {
 		if let delegate = refreshDelegate {
 			refreshRequest?.cancel()
-			delegate.callback(error: OAuth2Error.generic("App Store Receipt refresh cancelled [deinit]"))
+			delegate.callback(OAuth2Error.generic("App Store Receipt refresh cancelled [deinit]"))
 		}
 	}
 	
 	/// Whether the sandbox environment should be used. You can't set this during build-time since TestFlight is now sending out the same
 	/// binary as will end up in the App Store.
-	public var sandbox = false
+	open var sandbox = false
 	
 	/// The App Receipt, read from file.
 	var appReceipt: String?
@@ -45,7 +45,7 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 	
 	var refreshDelegate: AppStoreRequestDelegate?
 	
-	override public func register(client: OAuth2, callback: ((json: OAuth2JSON?, error: Error?) -> Void)) {
+	override open func register(client: OAuth2, callback: ((_ json: OAuth2JSON?, _ error: Error?) -> Void)) {
 		if ensureHasAppReceipt() {
 			super.register(client: client, callback: callback)
 		}
@@ -53,10 +53,10 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 			refreshAppReceipt() { error in
 				if let error = error {
 					if SKErrorDomain == error._domain && SKError.unknown.rawValue == error._code {
-						callback(json: nil, error: C3Error.appReceiptRefreshFailed)
+						callback(nil, C3Error.appReceiptRefreshFailed)
 					}
 					else {
-						callback(json: nil, error: error)
+						callback(nil, error)
 					}
 				}
 				else {
@@ -66,7 +66,7 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 		}
 	}
 	
-	override public func registrationBody(for client: OAuth2) -> OAuth2JSON {
+	override open func registrationBody(for client: OAuth2) -> OAuth2JSON {
 		var dict = super.registrationBody(for: client)
 		dict["sandbox"] = sandbox
 		dict["receipt-data"] = appReceipt
@@ -97,13 +97,13 @@ public class OAuth2DynRegAppStore: OAuth2DynReg {
 	
 	- parameter callback: The callback to call, containing an optional error when refresh is done
 	*/
-	func refreshAppReceipt(_ callback: ((error: Error?) -> Void)) {
+	func refreshAppReceipt(callback: ((Error?) -> Void)) {
 		if let delegate = refreshDelegate {
 			refreshRequest?.cancel()
-			delegate.callback(error: OAuth2Error.generic("App Store Receipt refresh timeout"))
+			delegate.callback(OAuth2Error.generic("App Store Receipt refresh timeout"))
 		}
 		refreshDelegate = AppStoreRequestDelegate(callback: { error in
-			callback(error: error)
+			callback(error)
 			self.refreshRequest = nil
 			self.refreshDelegate = nil
 		})
@@ -122,7 +122,7 @@ Simple object used by `OAuth2DynRegAppStore` to use block-based callbacks on an 
 class AppStoreRequestDelegate: NSObject, SKRequestDelegate {
 	
 	/// The callback to call when done or on error.
-	let callback: ((error: Error?) -> Void)
+	let callback: ((Error?) -> Void)
 	
 	
 	/**
@@ -130,7 +130,7 @@ class AppStoreRequestDelegate: NSObject, SKRequestDelegate {
 	
 	- parameter callback: The callback the instance should hold on to
 	*/
-	init(callback: ((error: Error?) -> Void)) {
+	init(callback: ((Error?) -> Void)) {
 		self.callback = callback
 	}
 	
@@ -138,11 +138,11 @@ class AppStoreRequestDelegate: NSObject, SKRequestDelegate {
 	// MARK: - Delegate Methods
 	
 	func requestDidFinish(_ request: SKRequest) {
-		callback(error: nil)
+		callback(nil)
 	}
 	
 	func request(_ request: SKRequest, didFailWithError error: Error) {
-		callback(error: error)
+		callback(error)
 	}
 }
 

@@ -2,6 +2,12 @@ Changelog
 =========
 
 
+## 1.5 (2016-xx-xx)
+
+- Full conversion to Swift 3.0
+- Now using FHIR v1.6 (STU-3 ballot version)
+
+
 ## 1.1 (2016-07-20)
 
 - Adds the `ActivityReporter` protocol and implementations to retrieve activity data from HealthKit and CoreMotion

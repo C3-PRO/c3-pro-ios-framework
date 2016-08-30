@@ -41,19 +41,19 @@ public struct CoreMotionActivitySum: CustomStringConvertible, CustomDebugStringC
 	
 	public var preferredPosition: Int {
 		switch type {
-		case .Sleeping:
+		case .sleeping:
 			return 0
-		case .Stationary:
+		case .stationary:
 			return 4
-		case .Automotive:
+		case .automotive:
 			return 10
-		case .Walking:
+		case .walking:
 			return 100
-		case .Running:
+		case .running:
 			return 120
-		case .Cycling:
+		case .cycling:
 			return 200
-		case .Unknown:
+		case .unknown:
 			return 999
 		}
 	}
@@ -63,21 +63,21 @@ public struct CoreMotionActivitySum: CustomStringConvertible, CustomDebugStringC
 		var sat: Float = 0.7
 		var bright: Float = 0.94
 		switch type {
-		case .Sleeping:
+		case .sleeping:
 			hue = 0.0
 			sat = 0.0
 			bright = 0.85
-		case .Stationary:
+		case .stationary:
 			hue = 0.54
-		case .Automotive:
+		case .automotive:
 			hue = 0.61
-		case .Walking:
+		case .walking:
 			hue = 0.4
-		case .Running:
+		case .running:
 			hue = 0.04
-		case .Cycling:
+		case .cycling:
 			hue = 0.1
-		case .Unknown:
+		case .unknown:
 			hue = 0.0
 			sat = 0.0
 			bright = 0.7
@@ -89,7 +89,7 @@ public struct CoreMotionActivitySum: CustomStringConvertible, CustomDebugStringC
 	// MARK: - String Convertible
 	
 	public var description: String {
-		return "<\(String(self.dynamicType))> “\(type.rawValue)” of \(duration.value ?? NSDecimalNumber.zero) \(duration.unit ?? "")"
+		return String(format: "<\(self) %p> “\(type.rawValue)” of \(duration.value ?? NSDecimalNumber.zero) \(duration.unit ?? "")", self as! CVarArg)
 	}
 	
 	public var debugDescription: String {

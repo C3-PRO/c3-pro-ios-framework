@@ -23,7 +23,7 @@ import SMART
 
 
 /// The FHIR version used by this instance of the framework.
-public let C3PROFHIRVersion = "1.4.0"
+public let C3PROFHIRVersion = "1.6.0"
 
 
 /**

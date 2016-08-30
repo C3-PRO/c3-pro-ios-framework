@@ -62,7 +62,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	- parameter callback: The callback to be called when done; note that even when you get an error, some steps might have successfully been
 	                      allocated still, so don't throw everything away just because you receive errors
 	*/
-	func fulfill(_ parentRequirements: [ResultRequirement]?, callback: ((errors: [Error]?) -> Void)) {
+	func fulfill(requiring parentRequirements: [ResultRequirement]?, callback: (([Error]?) -> Void)) {
 		let linkId = item.linkId ?? UUID().uuidString
 		let (title, text) = item.c3_bestTitleAndText()
 		
@@ -112,7 +112,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				let queueGroup = DispatchGroup()
 				for subpromise in subpromises {
 					queueGroup.enter()
-					subpromise.fulfill(requirements) { berrors in
+					subpromise.fulfill(requiring: requirements) { berrors in
 						if nil != berrors {
 							errors.append(contentsOf: berrors!)
 						}
@@ -126,12 +126,12 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 					steps.append(contentsOf: gsteps)
 					
 					self.steps = steps
-					callback(errors: errors.count > 0 ? errors : nil)
+					callback(errors.count > 0 ? errors : nil)
 				}
 			}
 			else {
 				self.steps = steps
-				callback(errors: errors)
+				callback(errors)
 			}
 		}
 	}
@@ -141,7 +141,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	
 	/// String representation of the receiver.
 	var description: String {
-		return NSString(format: "QuestionnaireItemPromise <%p>", unsafeAddress(of: self)) as String
+		return String(format: "<QuestionnaireItemPromise %p>", self as! CVarArg)
 	}
 }
 
@@ -219,12 +219,12 @@ extension QuestionnaireItem {
 	[x] ORKTimeOfDayAnswerFormat:       "time"
 	[ ] ORKTimeIntervalAnswerFormat:
 	*/
-	func c3_asAnswerFormat(_ callback: ((format: ORKAnswerFormat?, error: Error?) -> Void)) {
+	func c3_asAnswerFormat(callback: ((ORKAnswerFormat?, Error?) -> Void)) {
 		let link = linkId ?? "<nil>"
 		if let type = type {
 			switch type {
-			case "boolean":	  callback(format: ORKAnswerFormat.booleanAnswerFormat(), error: nil)
-			case "decimal":	  callback(format: ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), error: nil)
+			case "boolean":	  callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
+			case "decimal":	  callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), nil)
 			case "integer":
 				let minVals = c3_minValue()
 				let maxVals = c3_maxValue()
@@ -237,50 +237,50 @@ extension QuestionnaireItem {
 					let format = ORKAnswerFormat.scale(withMaximumValue: maxVal, minimumValue: minVal, defaultValue: defVal,
 						step: 1, vertical: (maxVal - minVal > 5),
 						maximumValueDescription: maxDesc, minimumValueDescription: minDesc)
-					callback(format: format, error: nil)
+					callback(format, nil)
 					
 				}
 				else {
-					callback(format: ORKAnswerFormat.integerAnswerFormat(withUnit: nil), error: nil)
+					callback(ORKAnswerFormat.integerAnswerFormat(withUnit: nil), nil)
 				}
-			case "quantity":  callback(format: ORKAnswerFormat.decimalAnswerFormat(withUnit: c3_numericAnswerUnit()), error: nil)
-			case "date":      callback(format: ORKAnswerFormat.dateAnswerFormat(), error: nil)
-			case "dateTime":  callback(format: ORKAnswerFormat.dateTime(), error: nil)
-			case "instant":   callback(format: ORKAnswerFormat.dateTime(), error: nil)
-			case "time":      callback(format: ORKAnswerFormat.timeOfDayAnswerFormat(), error: nil)
-			case "string":    callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
-			case "url":       callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
+			case "quantity":  callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: c3_numericAnswerUnit()), nil)
+			case "date":      callback(ORKAnswerFormat.dateAnswerFormat(), nil)
+			case "dateTime":  callback(ORKAnswerFormat.dateTime(), nil)
+			case "instant":   callback(ORKAnswerFormat.dateTime(), nil)
+			case "time":      callback(ORKAnswerFormat.timeOfDayAnswerFormat(), nil)
+			case "string":    callback(ORKAnswerFormat.textAnswerFormat(), nil)
+			case "url":       callback(ORKAnswerFormat.textAnswerFormat(), nil)
 			case "choice":
 				c3_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? C3Error.questionnaireNoChoicesInChoiceQuestion(self))
+						callback(nil, error ?? C3Error.questionnaireNoChoicesInChoiceQuestion(self))
 					}
 					else {
-						callback(format: ORKAnswerFormat.choiceAnswerFormat(with: self.c3_answerChoiceStyle(), textChoices: choices!), error: nil)
+						callback(ORKAnswerFormat.choiceAnswerFormat(with: self.c3_answerChoiceStyle(), textChoices: choices!), nil)
 					}
 				}
 			case "open-choice":
 				c3_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? C3Error.questionnaireNoChoicesInChoiceQuestion(self))
+						callback(nil, error ?? C3Error.questionnaireNoChoicesInChoiceQuestion(self))
 					}
 					else {
-						callback(format: ORKAnswerFormat.choiceAnswerFormat(with: self.c3_answerChoiceStyle(), textChoices: choices!), error: nil)
+						callback(ORKAnswerFormat.choiceAnswerFormat(with: self.c3_answerChoiceStyle(), textChoices: choices!), nil)
 					}
 				}
 			//case "attachment":	callback(format: nil, error: nil)
 			//case "reference":		callback(format: nil, error: nil)
 			case "display":
-				callback(format: nil, error: nil)
+				callback(nil, nil)
 			case "group":
-				callback(format: nil, error: nil)
+				callback(nil, nil)
 			default:
-				callback(format: nil, error: C3Error.questionnaireQuestionTypeUnknownToResearchKit(self))
+				callback(nil, C3Error.questionnaireQuestionTypeUnknownToResearchKit(self))
 			}
 		}
 		else {
 			NSLog("Question «\(text)» does not have an answer type, assuming text answer [linkId: \(link)]")
-			callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
+			callback(ORKAnswerFormat.textAnswerFormat(), nil)
 		}
 	}
 	
@@ -290,7 +290,7 @@ extension QuestionnaireItem {
 	The `value` property of the text choice is a combination of the coding system URL and the code, separated by
 	`kORKTextChoiceSystemSeparator` (a space). If no system URL is provided, "https://fhir.smalthealthit.org" is used.
 	*/
-	func c3_resolveAnswerChoices(_ callback: ((choices: [ORKTextChoice]?, error: Error?) -> Void)) {
+	func c3_resolveAnswerChoices(callback: (([ORKTextChoice]?, Error?) -> Void)) {
 		options?.resolve(ValueSet.self) { valueSet in
 			var choices = [ORKTextChoice]()
 			
@@ -300,7 +300,7 @@ extension QuestionnaireItem {
 					let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem
 					let code = option.code ?? kORKTextChoiceMissingCodeCode
 					let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-					let text = ORKTextChoice(text: option.display ?? code, value: value)
+					let text = ORKTextChoice(text: option.display ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
 					choices.append(text)
 				}
 			}
@@ -314,7 +314,7 @@ extension QuestionnaireItem {
 							for concept in concepts {
 								let code = concept.code ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
 								let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-								let text = ORKTextChoice(text: concept.display ?? code, value: value)
+								let text = ORKTextChoice(text: concept.display ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
 								choices.append(text)
 							}
 						}
@@ -325,10 +325,10 @@ extension QuestionnaireItem {
 			
 			// all done
 			if choices.count > 0 {
-				callback(choices: choices, error: nil)
+				callback(choices, nil)
 			}
 			else {
-				callback(choices: nil, error: C3Error.questionnaireNoChoicesInChoiceQuestion(self))
+				callback(nil, C3Error.questionnaireNoChoicesInChoiceQuestion(self))
 			}
 		}
 	}

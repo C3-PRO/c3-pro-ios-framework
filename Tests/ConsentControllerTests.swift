@@ -15,7 +15,7 @@ class ConsentControllerTests: XCTestCase {
 	
 	func testSigning() {
 		do {
-			let bundle = Bundle(for: self.dynamicType)
+			let bundle = Bundle(for: type(of: self))
 			let controller = try ConsentController()
 			controller.contract = try bundle.fhir_bundledResource("sample-consent", subdirectory: "Contract", type: Contract.self)
 			XCTAssertNotNil(controller.contract, "Must parse contract")

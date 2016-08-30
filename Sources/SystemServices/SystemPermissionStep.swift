@@ -30,14 +30,14 @@ step during any `ORKTask`.
 You presumably want to use the step in combination with a `ConsentTask`, in which case you do not need to manually interact with this class
 but define `wantedServicePermissions` on the `ConsentTaskOptions` provided to your `ConsentController`.
 */
-public class SystemPermissionStep: ORKStep {
+open class SystemPermissionStep: ORKStep {
 	
 	/// The services to be requested during this step.
-	public var services: [SystemService]?
+	open var services: [SystemService]?
 	
 	
 	/** Designated initializer. */
-	public override required init(identifier: String) {
+	override public required init(identifier: String) {
 		super.init(identifier: identifier)
 	}
 	
@@ -56,8 +56,8 @@ public class SystemPermissionStep: ORKStep {
 		super.init(coder: aDecoder)
 	}
 	
-	override public func copy(with zone: NSZone? = nil) -> AnyObject {
-		let copy = self.dynamicType.init(identifier: identifier)
+	override open func copy(with zone: NSZone? = nil) -> Any {
+		let copy = type(of: self).init(identifier: identifier)
 		copy.services = services
 		return copy
 	}
@@ -68,7 +68,7 @@ public class SystemPermissionStep: ORKStep {
 	
 	- returns: The `SystemPermissionStepViewController` class
 	*/
-	public class func stepViewControllerClass() -> AnyClass {
+	open class func stepViewControllerClass() -> AnyClass {
 		return SystemPermissionStepViewController.self
 	}
 }

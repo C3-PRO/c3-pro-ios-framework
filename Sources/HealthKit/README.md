@@ -141,7 +141,7 @@ HKHealthStore
 
 Methods that query the store for samples:
 
-- `c3_latestSampleOfType()`: retrieve the latest sample of the given type.
+- `c3_latestSample(ofType:)`:  retrieve the latest sample of the given type.
 - `c3_samplesOfTypeBetween()`: retrieve all samples of a given type between two dates.
 - `c3_summaryOfSamplesOfTypeBetween()`: return a summary of all samples of a given type. 
     Use this to get an **aggregate count** of something over a given period
@@ -153,7 +153,7 @@ import C3PRO
 
 let store = HKHealthStore()
 
-store.c3_latestSampleOfType(HKQuantityTypeIdentifierHeight) { quantity, error in
+store.c3_latestSample(ofType: HKQuantityTypeIdentifierHeight) { quantity, error in
     if let error = error {
         c3_warn("Error reading latest body height: \(error)")
     }

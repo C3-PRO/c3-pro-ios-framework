@@ -24,19 +24,19 @@ import UIKit
 /**
 A web view controller, built on `UIWebView`, to display bundled HTML content.
 */
-public class WebViewController : UIViewController, UIWebViewDelegate {
+open class WebViewController : UIViewController, UIWebViewDelegate {
 	
 	/// The web view.
-	public internal(set) var webView: UIWebView?
+	open internal(set) var webView: UIWebView?
 	
 	/// Whether links should open in the receiver or open in Safari (default).
-	public var openLinksExternally = true
+	open var openLinksExternally = true
 	
 	/// The URL to load on view instantiation.
-	public var startURL: URL?
+	open var startURL: URL?
 	
 	
-	override public func viewDidLoad() {
+	override open func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = UIColor.lightGray
 		edgesForExtendedLayout = .all
@@ -57,7 +57,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 		view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[web]|", options: [], metrics: nil, views: ["web": web]))
 	}
 	
-	override public func viewWillAppear(_ animated: Bool) {
+	override open func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		if let webView = webView, nil == webView.request {
 			loadStartURL()
@@ -71,15 +71,15 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	
 	/// The CSS style to apply.
 	var appStyle: String {
-		if nil == self.dynamicType._appStyle {
+		if nil == type(of: self)._appStyle {
 			if let styleURL = Bundle.main.url(forResource: "Intro", withExtension: "css") ?? Bundle.main.url(forResource: "Intro", withExtension: "css", subdirectory: "HTMLContent") {
-				self.dynamicType._appStyle = (try? String(contentsOfFile: styleURL.path, encoding: String.Encoding.utf8))
+				type(of: self)._appStyle = (try? String(contentsOfFile: styleURL.path, encoding: String.Encoding.utf8))
 			}
 			else {
 				c3_warn("Please include a CSS stylesheet called «Intro.css» in the app bundle")
 			}
 		}
-		return self.dynamicType._appStyle ?? ""
+		return type(of: self)._appStyle ?? ""
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	- parameter content: The HTML Body content, wrapped into `<body><div>...</div></body>`.
 	- returns: A full HTML document string
 	*/
-	public func htmlDocWithContent(_ content: String) -> String {
+	open func htmlDocWithContent(_ content: String) -> String {
 		return "<!DOCTYPE html><html><head><style>\(appStyle)</style></head><body><div style=\"padding:20px 15px;\">\(content)</div></body></html>"
 	}
 	
@@ -96,7 +96,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	// MARK: - Content
 	
 	/** Make `webView` load `startURL`. */
-	public func loadStartURL() {
+	open func loadStartURL() {
 		if let startURL = startURL, let webView = webView {
 			let request = URLRequest(url: startURL)
 			webView.loadRequest(request)
@@ -106,7 +106,7 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 	
 	// MARK: - Web View Delegate
 	
-	public func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+	open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
 		if openLinksExternally && .linkClicked == navigationType, let url = request.url {
 			UIApplication.shared.openURL(url)
 			return false
@@ -119,19 +119,19 @@ public class WebViewController : UIViewController, UIWebViewDelegate {
 /**
 A PDF view controller, built on `UIWebView`, to display bundled PDF files.
 */
-public class PDFViewController : WebViewController, UIDocumentInteractionControllerDelegate {
+open class PDFViewController : WebViewController, UIDocumentInteractionControllerDelegate {
 	
 	var shareButton: UIBarButtonItem?
 	
 	var documentInteraction: UIDocumentInteractionController?
 	
-	private var PDFURL: URL? {
+	fileprivate var PDFURL: URL? {
 		didSet {
 			shareButton?.isEnabled = nil != PDFURL
 		}
 	}
 	
-	override public func viewDidLoad() {
+	override open func viewDidLoad() {
 		super.viewDidLoad()
 		
 		// create share button
@@ -156,7 +156,7 @@ public class PDFViewController : WebViewController, UIDocumentInteractionControl
 	
 	- parameter url: The URL to load PDF data from
 	*/
-	public func loadPDFDataFrom(_ url: URL) {
+	open func loadPDFDataFrom(_ url: URL) {
 		PDFURL = url
 		if let web = webView {
 			let request = URLRequest(url: url)
@@ -170,7 +170,7 @@ public class PDFViewController : WebViewController, UIDocumentInteractionControl
 	/**
 	Display a `UIDocumentInteractionController` so the user can share the PDF.
 	*/
-	public func share() {
+	open func share() {
 		if let url = PDFURL {
 			documentInteraction = UIDocumentInteractionController(url: url)
 			documentInteraction!.delegate = self;
@@ -179,7 +179,7 @@ public class PDFViewController : WebViewController, UIDocumentInteractionControl
 		}
 	}
 	
-	public func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
+	open func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
 		if documentInteraction === controller {
 			documentInteraction = nil
 		}

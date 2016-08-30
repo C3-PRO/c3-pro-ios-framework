@@ -30,7 +30,7 @@ A class to ask a user to grant access to different system-level services, such a
 
 Works together with `SystemService`.
 */
-public class SystemServicePermissioner {
+open class SystemServicePermissioner {
 	
 	var locationManager: CLLocationManager?
 	
@@ -50,7 +50,7 @@ public class SystemServicePermissioner {
 	- parameter service:  The SystemService to inquire for
 	- parameter callback: A block to be executed when status has been determined; executed on the main queue
 	*/
-	public func hasPermissionForService(_ service: SystemService) -> Bool {
+	open func hasPermission(for service: SystemService) -> Bool {
 		switch service {
 		case .geoLocationWhenUsing:
 			return hasGeoLocationPermissions(always: false)
@@ -110,7 +110,7 @@ public class SystemServicePermissioner {
 	- parameter service:  The SystemService to request access to
 	- parameter callback: A block to be executed when the request has been granted or denied; executed on the main queue
 	*/
-	public func requestPermission(for service: SystemService, callback: ((error: Error?) -> Void)) {
+	open func requestPermission(for service: SystemService, callback: ((Error?) -> Void)) {
 		switch service {
 		case .geoLocationWhenUsing:
 			requestGeoLocationPermissions(always: false, callback: callback)
@@ -136,18 +136,18 @@ public class SystemServicePermissioner {
 	- parameter always: Whether location access should always be granted, not just while using the app
 	- parameter callback: A block to be executed when the request has been granted or denied; executed on the main queue
 	*/
-	func requestGeoLocationPermissions(always: Bool, callback: ((error: Error?) -> Void)) {
+	func requestGeoLocationPermissions(always: Bool, callback: ((Error?) -> Void)) {
 		let status = CLLocationManager.authorizationStatus()
 		if .authorizedAlways == status || (!always && .authorizedWhenInUse == status) {
 			c3_performOnMainQueue() {
-				callback(error: nil)
+				callback(nil)
 			}
 			return
 		}
 		if nil != locationManager {
 			c3_warn("Location permission request is already ongoing, not requesting again")
 			c3_performOnMainQueue() {
-				callback(error: nil)
+				callback(nil)
 			}
 			return
 		}
@@ -158,7 +158,7 @@ public class SystemServicePermissioner {
 			self?.locationManager = nil
 			self?.locationDelegate = nil
 			c3_performOnMainQueue() {
-				callback(error: error)
+				callback(error)
 			}
 		})
 		locationManager!.delegate = locationDelegate!
@@ -170,7 +170,7 @@ public class SystemServicePermissioner {
 		}
 	}
 	
-	func requestLocalNotificationsPermissions(for categories: Set<UIUserNotificationCategory>, callback: ((error: Error?) -> Void)) {
+	func requestLocalNotificationsPermissions(for categories: Set<UIUserNotificationCategory>, callback: ((Error?) -> Void)) {
 		let app = UIApplication.shared
 		var settings = app.currentUserNotificationSettings
 		
@@ -182,7 +182,7 @@ public class SystemServicePermissioner {
 			// through and then, before scheduling a local notification, check permissions again.
 		}
 		c3_performOnMainQueue() {
-			callback(error: nil)
+			callback(nil)
 		}
 	}
 	
@@ -190,11 +190,11 @@ public class SystemServicePermissioner {
 	Requests permission to access CoreMotion data. Does that by querying activity from now to now and captures whether the
 	CMErrorMotionActivityNotAuthorized error comes back or not.
 	*/
-	func requestCoreMotionPermissions(callback: ((error: Error?) -> Void)) {
+	func requestCoreMotionPermissions(callback: ((Error?) -> Void)) {
 		if nil != coreMotionManager {
 			c3_warn("CoreMotion permission request is already ongoing, not requesting again")
 			c3_performOnMainQueue() {
-				callback(error: nil)
+				callback(nil)
 			}
 			return
 		}
@@ -205,11 +205,11 @@ public class SystemServicePermissioner {
 			c3_performOnMainQueue() {
 				if let error = error, error._domain == CMErrorDomain && error._code == Int(CMErrorMotionActivityNotAuthorized.rawValue) {
 					self?.coreMotionPermitted = false
-					callback(error: error)
+					callback(error)
 				}
 				else {
 					self?.coreMotionPermitted = true
-					callback(error: nil)
+					callback(nil)
 				}
 			}
 		}
@@ -221,10 +221,10 @@ public class SystemServicePermissioner {
 	- parameter for:      The HealthKitTypes that want to be accessed
 	- parameter callback: A callback - containing an error if something went wrong, nil otherwise - when authorization completes
 	*/
-	func requestHealthKitPermissions(for types: HealthKitTypes, callback: ((error: Error?) -> Void)) {
+	func requestHealthKitPermissions(for types: HealthKitTypes, callback: ((Error?) -> Void)) {
 		guard HKHealthStore.isHealthDataAvailable() else {
 			c3_performOnMainQueue() {
-				callback(error: C3Error.healthKitNotAvailable)
+				callback(C3Error.healthKitNotAvailable)
 			}
 			return
 		}
@@ -235,7 +235,7 @@ public class SystemServicePermissioner {
 		
 		store.requestAuthorization(toShare: types.quantityTypesToWrite, read: readTypes) { success, error in
 			c3_performOnMainQueue() {
-				callback(error: error)
+				callback(error)
 			}
 		}
 	}
@@ -243,10 +243,10 @@ public class SystemServicePermissioner {
 	/**
 	Requests permission to access the microphone.
 	*/
-	func requestMicrophonePermissions(callback: ((error: Error?) -> Void)) {
+	func requestMicrophonePermissions(callback: ((Error?) -> Void)) {
 		AVAudioSession.sharedInstance().requestRecordPermission { success in
 			c3_performOnMainQueue() {
-				callback(error: success ? nil : C3Error.locationServicesDisabled)
+				callback(success ? nil : C3Error.locationServicesDisabled)
 			}
 		}
 	}
@@ -258,9 +258,9 @@ Instances of this class are used as delegate when requesting access to CoreLocat
 */
 class SystemRequesterGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
 	
-	var didComplete: ((error: Error?) -> Void)
+	var didComplete: ((Error?) -> Void)
 	
-	init(complete: ((error: Error?) -> Void)) {
+	init(complete: ((Error?) -> Void)) {
 		didComplete = complete
 	}
 	
@@ -274,16 +274,16 @@ class SystemRequesterGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
 			break
 		case .authorizedAlways:
 			manager.stopUpdatingLocation()
-			didComplete(error: nil)
+			didComplete(nil)
 		case .authorizedWhenInUse:
 			manager.stopUpdatingLocation()
-			didComplete(error: nil)
+			didComplete(nil)
 		case .denied:
 			manager.stopUpdatingLocation()
-			didComplete(error: C3Error.locationServicesDisabled)
+			didComplete(C3Error.locationServicesDisabled)
 		case .restricted:
 			manager.stopUpdatingLocation()
-			didComplete(error: C3Error.locationServicesDisabled)
+			didComplete(C3Error.locationServicesDisabled)
 		}
 	}
 }

@@ -25,13 +25,13 @@ import SMART
 /**
 Class to represent a FHIR resource enqueued in a `DataQueue`.
 */
-public class QueuedResource {
+open class QueuedResource {
 	
 	/// The fath to the resource.
-	public let path: String
+	open let path: String
 	
 	/// The actual resource instance.
-	public var resource: Resource?
+	open var resource: Resource?
 	
 	
 	/**

@@ -41,7 +41,7 @@ public class ConsentTask: ORKOrderedTask {
 	
 	/// The sharing step.
 	public var sharingStep: ORKStep? {
-		return step(withIdentifier: self.dynamicType.sharingStepName)
+		return step(withIdentifier: type(of: self).sharingStepName)
 	}
 	
 	/// The identifier of the sharing step.
@@ -66,7 +66,7 @@ public class ConsentTask: ORKOrderedTask {
 	public init(identifier: String, contract: Contract, options: ConsentTaskOptions) throws {
 		self.contract = contract
 		do {
-			let prepped = try self.dynamicType.stepsAndConsent(from: contract, options: options)
+			let prepped = try type(of: self).stepsAndConsent(from: contract, options: options)
 			consentDocument = prepped.consent
 			super.init(identifier: identifier, steps: prepped.steps)
 		}
@@ -175,8 +175,8 @@ public class ConsentTask: ORKOrderedTask {
 	- returns:        The consent signature result, if the step has been completed yet
 	*/
 	public func signatureResult(from taskResult: ORKTaskResult) -> ORKConsentSignatureResult? {
-		return taskResult.stepResult(forStepIdentifier: self.dynamicType.reviewStepName)?
-			.result(forIdentifier: self.dynamicType.participantSignatureName) as? ORKConsentSignatureResult
+		return taskResult.stepResult(forStepIdentifier: type(of: self).reviewStepName)?
+			.result(forIdentifier: type(of: self).participantSignatureName) as? ORKConsentSignatureResult
 	}
 	
 	/**
@@ -215,7 +215,7 @@ public class ConsentTask: ORKOrderedTask {
 		}
 		
 		// declined consent, stop here
-		if self.dynamicType.reviewStepName == step.identifier && nil == signature(from: result) {
+		if type(of: self).reviewStepName == step.identifier && nil == signature(from: result) {
 			return nil
 		}
 		return super.step(after: step, with: result)

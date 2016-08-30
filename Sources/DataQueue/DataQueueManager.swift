@@ -65,7 +65,7 @@ class DataQueueManager {
 	
 	/** The filename of a resource at the given queue position. */
 	func fileName(for seq: Int) -> String {
-		return ("\(self.dynamicType.prefix)\(seq)" as NSString).appendingPathExtension(self.dynamicType.fileExtension)!
+		return ("\(type(of: self).prefix)\(seq)" as NSString).appendingPathExtension(type(of: self).fileExtension)!
 	}
 	
 	/// The data writing options when storing a resource to the queue.
@@ -114,7 +114,7 @@ class DataQueueManager {
 			let files = try manager.contentsOfDirectory(atPath: queueDirectory)
 			for anyFile in files {
 				let file = anyFile as NSString
-				let pure = file.deletingPathExtension.replacingOccurrences(of: self.dynamicType.prefix, with: "") as NSString
+				let pure = file.deletingPathExtension.replacingOccurrences(of: type(of: self).prefix, with: "") as NSString
 				myMin = min(myMin ?? pure.integerValue, pure.integerValue)
 				myMax = max(myMax ?? pure.integerValue, pure.integerValue)
 			}
@@ -161,21 +161,21 @@ class DataQueueManager {
 	}
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
-	func flush(callback: ((error: Error?) -> Void)) {
+	func flush(callback: ((Error?) -> Void)) {
 		dequeueFirst { [weak self] didDequeue, error in
 			if let error = error {
-				callback(error: error)
+				callback(error)
 			}
 			else if didDequeue {
 				if let this = self {
 					this.flush(callback: callback)
 				}
 				else {
-					callback(error: C3Error.dataQueueFlushHalted)
+					callback(C3Error.dataQueueFlushHalted)
 				}
 			}
 			else {
-				callback(error: nil)
+				callback(nil)
 			}
 		}
 	}
@@ -186,10 +186,10 @@ class DataQueueManager {
 	- parameter callback: The callback to call. "didDequeue" is true if the resource was successfully dequeued. "error" is nil on success or
 	                      if there was no file to dequeue (in which case _didDequeue_ would be false)
 	*/
-	func dequeueFirst(callback: ((didDequeue: Bool, error: Error?) -> Void)) {
+	func dequeueFirst(callback: ((_ didDequeue: Bool, _ error: Error?) -> Void)) {
 		if nil != currentlyDequeueing {
 			c3_warn("already dequeueing")
-			callback(didDequeue: false, error: nil)
+			callback(false, nil)
 			return
 		}
 		
@@ -202,7 +202,7 @@ class DataQueueManager {
 					if nil == cError {
 						self.clearCurrentlyDequeueing()
 					}
-					callback(didDequeue: (nil == cError), error: cError)
+					callback((nil == cError), cError)
 				}
 				
 				if nil != first.resource!.id {
@@ -216,11 +216,11 @@ class DataQueueManager {
 			catch let error {
 				c3_warn("failed to read resource data: \(error)")
 				// TODO: figure out what to do (file should be readable at this point)
-				callback(didDequeue: false, error: nil)
+				callback(false, nil)
 			}
 		}
 		else {
-			callback(didDequeue: false, error: nil)
+			callback(false, nil)
 		}
 	}
 	

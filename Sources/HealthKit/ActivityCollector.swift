@@ -27,17 +27,17 @@ Class that uses both `HealthKitReporter` and `CoreMotionReporter` to retrieve ac
 
 See [HealthKit/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/HealthKit#activity-reporter) for detailed instructions.
 */
-public class ActivityCollector: ActivityReporter {
+open class ActivityCollector: ActivityReporter {
 	
 	var hkReporter: HealthKitReporter?
 	
 	var cmReporter: CoreMotionReporter?
 	
 	/// Path to the CoreMotionReporter local data store; you usually place this in ~/Library.
-	public let cmPath: String
+	open let cmPath: String
 	
 	/// The CoreMotionActivityInterpreter to use to interpret core motion activity sampled by the receiver.
-	public let cmInterpreter: CoreMotionActivityInterpreter?
+	open let cmInterpreter: CoreMotionActivityInterpreter?
 	
 	
 	/**
@@ -60,7 +60,7 @@ public class ActivityCollector: ActivityReporter {
 	- parameter ofLastDays: The number of days before today to start on
 	- parameter callback:   The callback to call when all activities are retrieved
 	*/
-	public func resourceForAllActivity(ofLastDays days: Int = 7, callback: ((resource: QuestionnaireResponse?, error: Error?) -> Void)) {
+	open func resourceForAllActivity(ofLastDays days: Int = 7, callback: ((QuestionnaireResponse?, Error?) -> Void)) {
 		let end = Date()
 		var comps = DateComponents()
 		comps.day = -1 * days
@@ -75,15 +75,15 @@ public class ActivityCollector: ActivityReporter {
 	- parameter until:      The end date
 	- parameter callback:   The callback to call when all activities are retrieved
 	*/
-	public func resourceForAllActivity(startingAt start: Date, until: Date, callback: ((resource: QuestionnaireResponse?, error: Error?) -> Void)) {
+	open func resourceForAllActivity(startingAt start: Date, until: Date, callback: ((QuestionnaireResponse?, Error?) -> Void)) {
 		reportForActivityPeriod(startingAt: start, until: until) { report, error in
 			do {
 				let answer = try report?.asQuestionnaireResponse(linkId: "org.chip.c3-pro.activity")
-				callback(resource: answer, error: error)
+				callback(answer, error)
 			}
 			catch let error {
 				c3_logIfDebug("Failed to create response resource: \(error)")
-				callback(resource: nil, error: error)
+				callback(nil, error)
 			}
 		}
 	}
@@ -98,7 +98,7 @@ public class ActivityCollector: ActivityReporter {
 	- parameter until:      The end date
 	- parameter callback:   The callback to call when all activities are retrieved
 	*/
-	public func reportForActivityPeriod(startingAt start: Date, until: Date, callback: ((period: ActivityReportPeriod?, error: Error?) -> Void)) {
+	open func reportForActivityPeriod(startingAt start: Date, until: Date, callback: ((ActivityReportPeriod?, Error?) -> Void)) {
 		let queueGroup = DispatchGroup()
 		var errors = [Error]()
 		
@@ -139,7 +139,7 @@ public class ActivityCollector: ActivityReporter {
 			period.coreMotionActivities = cmReport?.coreMotionActivities
 			period.healthKitSamples = hkReport?.healthKitSamples
 			
-			callback(period: period, error: (errors.count > 0) ? C3Error.multipleErrors(errors) : nil)
+			callback(period, (errors.count > 0) ? C3Error.multipleErrors(errors) : nil)
 		}
 	}
 }

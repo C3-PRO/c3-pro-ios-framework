@@ -53,25 +53,25 @@ A sample configuration, showing a `StudyIntroWelcomeItem`, a `StudyIntroVideoIte
     }
 
 */
-public class StudyIntroConfiguration {
+open class StudyIntroConfiguration {
 	
-	public internal(set) var title: String?
+	open internal(set) var title: String?
 	
-	public internal(set) var logoName: String?
+	open internal(set) var logoName: String?
 	
-	public internal(set) var items: [StudyIntroItem]?
+	open internal(set) var items: [StudyIntroItem]?
 	
-	public internal(set) var eligibleLetsCheckMessage: String?
+	open internal(set) var eligibleLetsCheckMessage: String?
 	
-	public internal(set) var eligibleTitle: String?
+	open internal(set) var eligibleTitle: String?
 	
-	public internal(set) var eligibleMessage: String?
+	open internal(set) var eligibleMessage: String?
 	
-	public internal(set) var ineligibleMessage: String?
+	open internal(set) var ineligibleMessage: String?
 	
 	public init(json filename: String, inBundle: Bundle? = nil) throws {
 		if let url = (inBundle ?? Bundle.main).url(forResource: filename, withExtension: "json"), let data = try? Data(contentsOf: url) {
-			let json = try JSONSerialization.jsonObject(with: data, options: [])
+			let json = try JSONSerialization.jsonObject(with: data, options: []) as! [AnyHashable: Any]
 			
 			// top level
 			if let ttl = json["title"] as? String {

@@ -25,7 +25,7 @@ import SMART
 /**
 Class to help in de-identifying patient data according to HIPAA's Safe Harbor guidelines.
 */
-public class DeIdentifier {
+open class DeIdentifier {
 	
 	var geocoder: Geocoder?
 	
@@ -41,7 +41,7 @@ public class DeIdentifier {
 	- parameter patient: The Patient resource to de-identify
 	- parameter callback: The callback to call when de-identification has completed
 	*/
-	public func hipaaCompliantPatient(patient inPatient: Patient, callback: ((patient: Patient) -> Void)) {
+	open func hipaaCompliantPatient(patient inPatient: Patient, callback: ((Patient) -> Void)) {
 		geocoder = Geocoder()
 		geocoder!.hipaaCompliantCurrentAddress() { address, error in
 			self.geocoder = nil
@@ -55,7 +55,7 @@ public class DeIdentifier {
 			if let bday = inPatient.birthDate {
 				patient.birthDate = self.hipaaCompliant(birthdate: bday)
 			}
-			callback(patient: patient)
+			callback(patient)
 		}
 	}
 	
@@ -64,7 +64,7 @@ public class DeIdentifier {
 	
 	- returns: A compliant Date instance
 	*/
-	public func hipaaCompliant(birthdate: FHIRDate) -> FHIRDate {
+	open func hipaaCompliant(birthdate: FHIRDate) -> FHIRDate {
 		let current = Date().fhir_asDate()
 		let year = (current.year - birthdate.year) > 90 ? (current.year - 90) : current.year
 		return FHIRDate(year: year, month: nil, day: nil)

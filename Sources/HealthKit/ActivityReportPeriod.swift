@@ -22,22 +22,22 @@ import SMART
 import HealthKit
 
 
-public class ActivityReportPeriod: CustomStringConvertible, CustomDebugStringConvertible {
+open class ActivityReportPeriod: CustomStringConvertible, CustomDebugStringConvertible {
 	
 	/// The reporting period.
-	public let period: Period
+	open let period: Period
 	
 	/// A human-friendly description of the period.
-	public var humanPeriod: String?
+	open var humanPeriod: String?
 	
 	/// How many days the period contains.
-	public var numberOfDays: Int?
+	open var numberOfDays: Int?
 	
 	/// Samples describing activities for the reporting period as reported by HealthKit.
-	public var healthKitSamples: [HKQuantitySample]?
+	open var healthKitSamples: [HKQuantitySample]?
 	
 	/// Activities in the reporting period as determined by CoreMotion.
-	public var coreMotionActivities: [CoreMotionActivitySum]?
+	open var coreMotionActivities: [CoreMotionActivitySum]?
 	
 	
 	public init(period: Period) {
@@ -47,7 +47,7 @@ public class ActivityReportPeriod: CustomStringConvertible, CustomDebugStringCon
 	
 	// MARK: - FHIR Representations
 	
-	public func samplesAsResponse() -> [QuestionnaireResponseItem] {
+	open func samplesAsResponse() -> [QuestionnaireResponseItem] {
 		guard let samples = healthKitSamples else {
 			return []
 		}
@@ -64,7 +64,7 @@ public class ActivityReportPeriod: CustomStringConvertible, CustomDebugStringCon
 		return questions
 	}
 	
-	public func durationsAsResponse() -> [QuestionnaireResponseItem] {
+	open func durationsAsResponse() -> [QuestionnaireResponseItem] {
 		guard let durations = coreMotionActivities else {
 			return []
 		}
@@ -81,28 +81,28 @@ public class ActivityReportPeriod: CustomStringConvertible, CustomDebugStringCon
 		return questions
 	}
 	
-	public func asQuestionnaireResponse(linkId: String) throws -> QuestionnaireResponse {
-		let answer = QuestionnaireResponse(status: "completed")
-		answer.questionnaire = Reference(json: ["reference": linkId])
-		answer.item = samplesAsResponse() + durationsAsResponse()
+	open func asQuestionnaireResponse(linkId: String) throws -> QuestionnaireResponse {
+		let response = QuestionnaireResponse(status: "completed")
+		response.questionnaire = Reference(json: ["reference": linkId])
+		response.item = samplesAsResponse() + durationsAsResponse()
 		
 		let encounter = Encounter(status: "finished")
 		encounter.id = "period"
 		encounter.period = period
-		answer.encounter = try answer.contain(resource: encounter)
+		response.context = try response.contain(resource: encounter)
 		
-		return answer
+		return response
 	}
 	
 	
 	// MARK: - Custom String Convertible
 	
-	public var description: String {
-		return "<\(String(self.dynamicType)) \(unsafeAddress(of: self))> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")"
+	open var description: String {
+		return String(format: "<\(self) %p> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")", self as! CVarArg)
 	}
 	
-	public var debugDescription: String {
-		return "<\(String(self.dynamicType)) \(unsafeAddress(of: self))> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")\n- samples: \(healthKitSamples ?? [])\n- motion: \(coreMotionActivities ?? [])"
+	open var debugDescription: String {
+		return String(format: "<\(self) %p> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")\n- samples: \(healthKitSamples ?? [])\n- motion: \(coreMotionActivities ?? [])", self as! CVarArg)
 	}
 }
 

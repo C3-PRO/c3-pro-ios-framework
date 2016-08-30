@@ -109,7 +109,7 @@ class ConditionalQuestionStep: ORKQuestionStep {
 	
 	// MARK: - NSCopying
 	
-	override func copy(with zone: NSZone?) -> AnyObject {
+	override func copy(with zone: NSZone? = nil) -> Any {
 		super.copy(with: zone)
 		return self
 	}
@@ -209,7 +209,7 @@ class ConditionalInstructionStep: ORKInstructionStep {
 	
 	// MARK: - NSCopying
 	
-	override func copy(with zone: NSZone?) -> AnyObject {
+	override func copy(with zone: NSZone? = nil) -> Any {
 		super.copy(with: zone)
 		return self
 	}

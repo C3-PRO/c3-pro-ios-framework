@@ -16,7 +16,7 @@ class QuestionnaireChoiceTests: XCTestCase {
 	
 	func testContainedValueSet() {
 		do {
-			let bundle = Bundle(for: self.dynamicType)
+			let bundle = Bundle(for: type(of: self))
 			let questionnaire = try bundle.fhir_bundledResource("Questionnaire_ValueSet-contained", type: Questionnaire.self)
 			let controller = QuestionnaireController(questionnaire: questionnaire)
 			
@@ -127,19 +127,19 @@ class BundledFileServer: Server {
 		super.init(baseURL: base, auth: auth)
 	}
 	
-	override func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, handler: R, callback: ((response: FHIRServerResponse) -> Void)) {
+	override func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, handler: R, callback: ((FHIRServerResponse) -> Void)) {
 		let parts = request.url?.path.components(separatedBy: "/").filter() { $0.characters.count > 0 }
 		guard let localName = parts?.joined(separator: "_") else {
-			callback(response: handler.notSent("Unable to infer local filename from request URL path \(request.url?.description ?? "nil")"))
+			callback(handler.notSent("Unable to infer local filename from request URL path \(request.url?.description ?? "nil")"))
 			return
 		}
 		do {
-			let resource = try Bundle(for: self.dynamicType).fhir_bundledResource(localName, type: Resource.self)
+			let resource = try Bundle(for: type(of: self)).fhir_bundledResource(localName, type: Resource.self)
 			let response = FHIRServerResourceResponse(resource: resource)
-			callback(response: response)
+			callback(response)
 		}
 		catch let error {
-			callback(response: handler.notSent("Error: \(error)"))
+			callback(handler.notSent("Error: \(error)"))
 		}
 	}
 }
@@ -151,19 +151,15 @@ class FHIRServerResourceResponse: FHIRServerDataResponse {
 	
 	init(resource: Resource) {
 		self.resource = resource
-		super.init(response: URLResponse(), data: nil, urlError: nil)
+		super.init(response: URLResponse(), data: nil, error: nil)
 	}
 	
-	required init(response: URLResponse, data: NSData?, urlError: NSError?) {
-		fatalError("Cannot use init(response:data:urlError:)")
+	required init(response: URLResponse, data: Data?, error: Error?) {
+		fatalError("Cannot use init(response:data:error:)")
 	}
 	
 	required init(error: Error) {
 		fatalError("Cannot use init(error:)")
-	}
-	
-	required init(response: URLResponse, data: Data?, urlError: NSError?) {
-		fatalError("init(response:data:urlError:) has not been implemented")
 	}
 	
 	override func responseResource<T : Resource>(ofType: T.Type) -> T? {

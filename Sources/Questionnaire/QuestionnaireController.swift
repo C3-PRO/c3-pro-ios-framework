@@ -35,19 +35,19 @@ The `whenCancelledOrFailed` callback is called when the questionnaire is cancell
 
 See [Questionnaire/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/Questionnaire#questionnairecontroller) for detailed instructions.
 */
-public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
+open class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
 	/// The questionnaire the controller represents.
 	public final var questionnaire: Questionnaire?
 	
 	/// Callback called when the user finishes the questionnaire without error.
-	public final var whenCompleted: ((viewController: ORKTaskViewController, answers: QuestionnaireResponse?) -> Void)?
+	public final var whenCompleted: ((_ viewController: ORKTaskViewController, _ answers: QuestionnaireResponse?) -> Void)?
 	
-	/// Callback to be called when the questionnaire is cancelled (error = nil) or finishes with an error.
-	public final var whenCancelledOrFailed: ((viewController: ORKTaskViewController, error: Error?) -> Void)?
+	/// Callback to be called when the questionnaire is cancelled (Error = nil) or finishes with an error.
+	public final var whenCancelledOrFailed: ((ORKTaskViewController, Error?) -> Void)?
 	
 	/// The logger to use, if any.
-	public var logger: OAuth2Logger?
+	open var logger: OAuth2Logger?
 	
 	
 	/**
@@ -67,11 +67,11 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
 	- parameter callback: The callback once preparation has concluded, either with an ORKTask or an error. Called on the main queue.
 	*/
-	func prepareQuestionnaire(callback: ((task: ORKTask?, error: Error?) -> Void)) {
+	func prepareQuestionnaire(callback: ((ORKTask?, Error?) -> Void)) {
 		if let questionnaire = questionnaire {
 			logger?.trace("C3-PRO", msg: "Fulfilling promise for \(questionnaire)")
 			let promise = QuestionnairePromise(questionnaire: questionnaire)
-			promise.fulfill(nil) { errors in
+			promise.fulfill(requiring: nil) { errors in
 				DispatchQueue.main.async {
 					var multiErrors: Error?
 					if let errs = errors {
@@ -83,19 +83,19 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 							self.logger?.debug("C3-PRO", msg: "Successfully prepared questionnaire but encountered errors:\n\(errors)")
 						}
 						self.logger?.trace("C3-PRO", msg: "Promise for \(questionnaire) fulfilled")
-						callback(task: tsk, error: multiErrors)
+						callback(tsk, multiErrors)
 					}
 					else {
 						let err = multiErrors ?? C3Error.questionnaireUnknownError
 						self.logger?.trace("C3-PRO", msg: "Promise for \(questionnaire) fulfilled with error \(err)")
-						callback(task: nil, error: err)
+						callback(nil, err)
 					}
 				}
 			}
 		}
 		else {
 			callOnMainThread {
-				callback(task: nil, error: C3Error.questionnaireNotPresent)
+				callback(nil, C3Error.questionnaireNotPresent)
 			}
 		}
 	}
@@ -106,15 +106,15 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	- parameter callback: Callback to be called on the main queue, either with a task view controller prepared for the questionnaire task or an
 		error
 	*/
-	public func prepareQuestionnaireViewController(callback: ((viewController: ORKTaskViewController?, error: Error?) -> Void)) {
+	open func prepareQuestionnaireViewController(callback: ((ORKTaskViewController?, Error?) -> Void)) {
 		prepareQuestionnaire() { task, error in
 			if let task = task {
 				let viewController = ORKTaskViewController(task: task, taskRun: nil)
 				viewController.delegate = self
-				callback(viewController: viewController, error: error)
+				callback(viewController, error)
 			}
 			else {
-				callback(viewController: nil, error: error)
+				callback(nil, error)
 			}
 		}
 	}
@@ -122,7 +122,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
 	// MARK: - Task View Controller Delegate
 	
-	public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+	open func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
 		if let error = error {
 			didFailWithError(taskViewController, error: error)
 		}
@@ -139,7 +139,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 		case .failed:
 			didFailWithError(viewController, error: C3Error.questionnaireFinishedWithError)
 		case .completed:
-			whenCompleted?(viewController: viewController, answers: viewController.result.c3_asQuestionnaireResponse(for: viewController.task))
+			whenCompleted?(viewController, viewController.result.c3_asQuestionnaireResponse(for: viewController.task))
 		case .discarded:
 			didFailWithError(viewController, error: nil)
 		case .saved:
@@ -149,7 +149,7 @@ public class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	}
 	
 	func didFailWithError(_ viewController: ORKTaskViewController, error: Error?) {
-		whenCancelledOrFailed?(viewController: viewController, error: error)
+		whenCancelledOrFailed?(viewController, error)
 	}
 }
 

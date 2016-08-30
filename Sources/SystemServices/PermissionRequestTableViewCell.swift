@@ -29,7 +29,7 @@ Use `setupForService(service:permissioner:viewController:)` to setup the cell. I
 permission when the user taps the “Allow” button, show when enabling is not possible and also show an alert informing about how to recover
 from the error.
 */
-public class PermissionRequestTableViewCell: UITableViewCell {
+open class PermissionRequestTableViewCell: UITableViewCell {
 	
 	weak var viewController: UIViewController?
 	
@@ -43,7 +43,7 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 		}
 	}
 	
-	public var actionCallback: ((button: UIButton) -> Void)? {
+	open var actionCallback: ((UIButton) -> Void)? {
 		didSet {
 			actionButton?.isEnabled = (nil != actionCallback)
 			if let button = actionButton {
@@ -53,7 +53,7 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 		}
 	}
 	
-	public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+	override public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		setupUI()
 	}
@@ -65,7 +65,7 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	
 	// MARK: - View
 	
-	public override func prepareForReuse() {
+	override open func prepareForReuse() {
 		resetUI()
 		super.prepareForReuse()
 	}
@@ -84,10 +84,10 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	- parameter service:      The service to represent
 	- parameter permissioner: The permissioner to use to request permission
 	*/
-	public func setup(for service: SystemService, permissioner: SystemServicePermissioner, viewController vc: UIViewController) {
+	open func setup(for service: SystemService, permissioner: SystemServicePermissioner, viewController vc: UIViewController) {
 		titleLabel?.text = service.description
 		commentLabel?.text = service.usageReason
-		if permissioner.hasPermissionForService(service) {
+		if permissioner.hasPermission(for: service) {
 			viewController = nil
 			actionCallback = nil
 		}
@@ -110,8 +110,8 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	}
 	
 	/** Perform the action assigned to the button; you normally don't need to use this method yourself. */
-	public func performAction(_ sender: UIButton) {
-		actionCallback?(button: sender)
+	open func performAction(_ sender: UIButton) {
+		actionCallback?(sender)
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	- parameter error:   The error that occurred
 	- parameter service: The system service that was affected
 	*/
-	public func indicateError(_ error: Error, for service: SystemService) {
+	open func indicateError(_ error: Error, for service: SystemService) {
 		commentLabel?.text = "\(error)."
 		commentLabel?.textColor = UIColor.red
 		actionButton?.setTitle("Try Again".c3_localized("Button title"), for: UIControlState())
@@ -141,7 +141,7 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	- parameter service:        The system service that was affected
 	- parameter viewController: The view controller to use for instruction presentation
 	*/
-	public func showRecoveryInstructions(for service: SystemService, from viewController: UIViewController) {
+	open func showRecoveryInstructions(for service: SystemService, from viewController: UIViewController) {
 		let alert = UIAlertController(title: service.description, message: service.localizedHowToReEnable, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "OK".c3_localized("Alert button title"), style: .cancel, handler: nil))
 		if service.wantsAppSettingsPane, let url = URL(string: UIApplicationOpenSettingsURLString) {
@@ -160,10 +160,10 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 			let ttl = UILabel()
 			ttl.translatesAutoresizingMaskIntoConstraints = false
 			if #available(iOS 9.0, *) {
-				ttl.font = UIFont.preferredFont(forTextStyle: UIFontTextStyleTitle1)
+				ttl.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.title1)
 			}
 			else {
-				ttl.font = UIFont.preferredFont(forTextStyle: UIFontTextStyleHeadline)
+				ttl.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
 			}
 			ttl.textAlignment = .center
 			ttl.minimumScaleFactor = 0.7
@@ -176,7 +176,7 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 		if nil == commentLabel {
 			let cmnt = UILabel()
 			cmnt.translatesAutoresizingMaskIntoConstraints = false
-			cmnt.font = UIFont.preferredFont(forTextStyle: UIFontTextStyleBody)
+			cmnt.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)
 			cmnt.textAlignment = .center
 			cmnt.numberOfLines = 0
 			contentView.addSubview(cmnt)

@@ -28,10 +28,10 @@ Dumps latest activity data from CoreMotion to a SQLite database and returns prev
 
 See [HealthKit/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/HealthKit#core-motion-data-persistence) for detailed instructions.
 */
-public class CoreMotionReporter: ActivityReporter {
+open class CoreMotionReporter: ActivityReporter {
 	
 	/// The filesystem path to the database.
-	public let databaseLocation: String
+	open let databaseLocation: String
 	
 	lazy var motionManager = CMMotionActivityManager()
 	
@@ -67,7 +67,7 @@ public class CoreMotionReporter: ActivityReporter {
 	
 	// MARK: - Archiving
 	
-	private var lastArchival: Date?
+	fileprivate var lastArchival: Date?
 	
 	
 	/**
@@ -81,14 +81,14 @@ public class CoreMotionReporter: ActivityReporter {
 	                       callback returns; uses an `CoreMotionStandardActivityInterpreter` instance if none is provided
 	- parameter callback:  The callback to call when done, with an error if something happened, nil otherwise. Called on the main queue
 	*/
-	public func archiveActivities(processor: CoreMotionActivityInterpreter? = nil, callback: ((numNewActivities: Int, error: Error?) -> Void)) {
+	open func archiveActivities(processor: CoreMotionActivityInterpreter? = nil, callback: ((_ numNewActivities: Int, _ error: Error?) -> Void)) {
 		if let lastArchival = lastArchival, lastArchival.timeIntervalSinceNow > -30 {
-			callback(numNewActivities: 0, error: nil)
+			callback(0, nil)
 			return
 		}
 		
 		do {
-			callback(numNewActivities: 0, error: C3Error.notImplemented("Activity archiving is not yet available with Swift 3"))
+			callback(0, C3Error.notImplemented("Activity archiving is not yet available with Swift 3"))
 			/*
 			TODO: reactivate once SQLiteSwift works with Swift 3
 			let db = try connection()
@@ -160,7 +160,7 @@ public class CoreMotionReporter: ActivityReporter {
 		}
 		catch let error {
 			c3_performOnMainQueue() {
-				callback(numNewActivities: 0, error: error)
+				callback(0, error)
 			}
 		}
 	}
@@ -178,7 +178,7 @@ public class CoreMotionReporter: ActivityReporter {
 	                        the callback returns
 	- parameter callback:   The callback to call when sampling completes. Will execute on the main queue
 	*/
-	func collectCoreMotionActivities(startingOn start: Date?, processor: CoreMotionActivityInterpreter, callback: ((data: [CoreMotionActivity], error: Error?) -> Void)) {
+	func collectCoreMotionActivities(startingOn start: Date?, processor: CoreMotionActivityInterpreter, callback: (([CoreMotionActivity], Error?) -> Void)) {
 		let collectorQueue = OperationQueue()
 		var begin = start ?? Date()
 		if nil == start {
@@ -186,22 +186,21 @@ public class CoreMotionReporter: ActivityReporter {
 		}
 		motionManager.queryActivityStarting(from: begin, to: Date(), to: collectorQueue) { activities, error in
 			if let activities = activities {
-				let processor = processor ?? CoreMotionStandardActivityInterpreter()
 				let samples = processor.preprocess(activities: activities)
 				c3_performOnMainQueue() {
-					callback(data: samples, error: nil)
+					callback(samples, nil)
 				}
 			}
 			else if let error = error, CMErrorDomain != error._domain && 104 != error._code {   // CMErrorDomain error 104 means "no data available"
-				c3_logIfDebug("No activity data received with error: \(error ?? "no error" as! Error)")
+				c3_logIfDebug("No activity data received with error: \(error)")
 				c3_performOnMainQueue() {
-					callback(data: [], error: error)
+					callback([], error)
 				}
 			}
 			else {
 				c3_logIfDebug("No activity data received")
 				c3_performOnMainQueue() {
-					callback(data: [], error: nil)
+					callback([], nil)
 				}
 			}
 		}
@@ -210,7 +209,7 @@ public class CoreMotionReporter: ActivityReporter {
 	
 	// MARK: - Retrieval
 	
-	public func reportForActivityPeriod(startingAt start: Date, until: Date, callback: ((period: ActivityReportPeriod?, error: Error?) -> Void)) {
+	open func reportForActivityPeriod(startingAt start: Date, until: Date, callback: ((_ period: ActivityReportPeriod?, _ error: Error?) -> Void)) {
 		reportForActivityPeriod(startingAt: start, until: until, interpreter: nil, callback: callback)
 	}
 	
@@ -223,7 +222,7 @@ public class CoreMotionReporter: ActivityReporter {
 	- parameter interpreter: The interpreter to use; uses a fresh instance of `CoreMotionStandardActivityInterpreter` if nil
 	- parameter callback:    The callback to call when all activities are retrieved and the interpreter has run
 	*/
-	public func reportForActivityPeriod(startingAt start: Date, until: Date? = nil, interpreter: CoreMotionActivityInterpreter? = nil, callback: ((report: ActivityReportPeriod?, error: Error?) -> Void)) {
+	open func reportForActivityPeriod(startingAt start: Date, until: Date? = nil, interpreter: CoreMotionActivityInterpreter? = nil, callback: ((_ report: ActivityReportPeriod?, _ error: Error?) -> Void)) {
 		archiveActivities() { newActivities, error in
 			if let error = error {
 				c3_logIfDebug("Ignoring error when archiving most recent activities before retrieving: \(error)")
@@ -237,12 +236,12 @@ public class CoreMotionReporter: ActivityReporter {
 					let activities = try self.retrieveActivities(startingAt: start, until: endDate, interpreter: interpreter)
 					let report = self.report(forActivities: activities)
 					c3_performOnMainQueue() {
-						callback(report: report, error: nil)
+						callback(report, nil)
 					}
 				}
 				catch let error {
 					c3_performOnMainQueue() {
-						callback(report: nil, error: error)
+						callback(nil, error)
 					}
 				}
 			}
