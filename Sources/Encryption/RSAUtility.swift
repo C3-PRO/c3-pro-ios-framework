@@ -80,7 +80,7 @@ open class RSAUtility {
 			&cipherBufferPointer,
 			&cipherBufferSizeResult
 		)
-		if noErr == status {
+		if errSecSuccess == status {
 			return Data(bytes: cipherBufferPointer, count: cipherBufferSizeResult)
 		}
 		throw C3Error.encryptionFailedWithStatus(status)
