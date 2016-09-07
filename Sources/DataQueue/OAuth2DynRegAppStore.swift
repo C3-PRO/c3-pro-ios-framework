@@ -45,7 +45,7 @@ open class OAuth2DynRegAppStore: OAuth2DynReg {
 	
 	var refreshDelegate: AppStoreRequestDelegate?
 	
-	override open func register(client: OAuth2, callback: ((_ json: OAuth2JSON?, _ error: Error?) -> Void)) {
+	override open func register(client: OAuth2, callback: ((OAuth2JSON?, OAuth2Error?) -> Void)) {
 		if ensureHasAppReceipt() {
 			super.register(client: client, callback: callback)
 		}
@@ -53,10 +53,10 @@ open class OAuth2DynRegAppStore: OAuth2DynReg {
 			refreshAppReceipt() { error in
 				if let error = error {
 					if SKErrorDomain == error._domain && SKError.unknown.rawValue == error._code {
-						callback(nil, C3Error.appReceiptRefreshFailed)
+						callback(nil, OAuth2Error.generic("\(C3Error.appReceiptRefreshFailed)"))
 					}
 					else {
-						callback(nil, error)
+						callback(nil, OAuth2Error.generic("\(error)"))
 					}
 				}
 				else {
