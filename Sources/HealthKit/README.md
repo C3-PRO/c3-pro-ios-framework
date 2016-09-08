@@ -153,7 +153,7 @@ import C3PRO
 
 let store = HKHealthStore()
 
-store.c3_latestSample(ofType: HKQuantityTypeIdentifierHeight) { quantity, error in
+store.c3_latestSample(ofType: HKQuantityTypeIdentifier.height) { quantity, error in
     if let error = error {
         c3_warn("Error reading latest body height: \(error)")
     }
@@ -173,7 +173,7 @@ let comps = NSDateComponents()
 comps.day = -14
 let start = NSCalendar.currentCalendar().dateByAddingComponents(comps, toDate: end, options: [])!
 
-store.c3_summaryOfSamplesOfTypeBetween(HKQuantityTypeIdentifierFlightsClimbed, start: start, end: end) { result, error in
+store.c3_summaryOfSamplesOfTypeBetween(HKQuantityTypeIdentifier.flightsClimbed, start: start, end: end) { result, error in
     if let result = result {
         let fhir = try! result.c3_asFHIRQuantity()
         print("-->  \(fhir.asJSON())")

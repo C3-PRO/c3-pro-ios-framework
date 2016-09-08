@@ -74,7 +74,7 @@ open class HealthKitReporter: ActivityReporter {
 			let types = [HKQuantityTypeIdentifier.stepCount, HKQuantityTypeIdentifier.flightsClimbed, HKQuantityTypeIdentifier.activeEnergyBurned]
 			for type in types {
 				queueGroup.enter()
-				healthStore.c3_summaryOfSamplesOfTypeBetween(type.rawValue, start: start, end: until) { result, error in
+				healthStore.c3_summaryOfSamplesOfTypeBetween(type, start: start, end: until) { result, error in
 					if let result = result {
 						quantities.append(result)
 					}

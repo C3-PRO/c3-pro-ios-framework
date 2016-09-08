@@ -38,7 +38,7 @@ public extension HKHealthStore {
 	- parameter type:     The type of samples to retrieve
 	- parameter callback: Callback to call when query finishes, comes back either with a quantity, an error or neither
 	*/
-	public func c3_latestSample(ofType type: String, callback: @escaping ((HKQuantity?, Error?) -> Void)) {
+	public func c3_latestSample(ofType type: HKQuantityTypeIdentifier, callback: @escaping ((HKQuantity?, Error?) -> Void)) {
 		c3_samplesOfTypeBetween(type, start: Date.distantPast , end: Date(), limit: 1) { results, error in
 			callback(results?.first?.quantity, error)
 		}
@@ -54,9 +54,9 @@ public extension HKHealthStore {
 	- parameter limit: How many samples to retrieve at max
 	- parameter callback: Callback to call when query finishes, comes back either with an array of samples, an error or neither
 	*/
-	public func c3_samplesOfTypeBetween(_ typeIdentifier: String, start: Date, end: Date, limit: Int, callback: @escaping ((_ results: [HKQuantitySample]?, _ error: Error?) -> Void)) {
-		guard let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier(rawValue: typeIdentifier)) else {
-			callback(nil, C3Error.noSuchHKSampleType(typeIdentifier))
+	public func c3_samplesOfTypeBetween(_ typeIdentifier: HKQuantityTypeIdentifier, start: Date, end: Date, limit: Int, callback: @escaping ((_ results: [HKQuantitySample]?, _ error: Error?) -> Void)) {
+		guard let sampleType = HKSampleType.quantityType(forIdentifier: typeIdentifier) else {
+			callback(nil, C3Error.noSuchHKSampleType("\(typeIdentifier)"))
 			return
 		}
 		
@@ -82,9 +82,9 @@ public extension HKHealthStore {
 	- parameter callback: Callback to call, on a background queue, when the query finishes, containing one HKQuantitySample spanning the
 	                      whole period or an error (or neither)
 	*/
-	public func c3_summaryOfSamplesOfTypeBetween(_ typeIdentifier: String, start: Date, end: Date, callback: @escaping ((_ result: HKQuantitySample?, _ error: Error?) -> Void)) {
-		guard let sampleType = HKSampleType.quantityType(forIdentifier: HKQuantityTypeIdentifier(rawValue: typeIdentifier)) else {
-			callback(nil, C3Error.noSuchHKSampleType(typeIdentifier))
+	public func c3_summaryOfSamplesOfTypeBetween(_ typeIdentifier: HKQuantityTypeIdentifier, start: Date, end: Date, callback: @escaping ((_ result: HKQuantitySample?, _ error: Error?) -> Void)) {
+		guard let sampleType = HKSampleType.quantityType(forIdentifier: typeIdentifier) else {
+			callback(nil, C3Error.noSuchHKSampleType("\(typeIdentifier)"))
 			return
 		}
 		
