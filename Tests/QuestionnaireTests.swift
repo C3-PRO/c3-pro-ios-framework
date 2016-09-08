@@ -127,7 +127,7 @@ class BundledFileServer: Server {
 		super.init(baseURL: base, auth: auth)
 	}
 	
-	override func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, handler: R, callback: ((FHIRServerResponse) -> Void)) {
+	override func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, handler: R, callback: @escaping ((FHIRServerResponse) -> Void)) {
 		let parts = request.url?.path.components(separatedBy: "/").filter() { $0.characters.count > 0 }
 		guard let localName = parts?.joined(separator: "_") else {
 			callback(handler.notSent("Unable to infer local filename from request URL path \(request.url?.description ?? "nil")"))

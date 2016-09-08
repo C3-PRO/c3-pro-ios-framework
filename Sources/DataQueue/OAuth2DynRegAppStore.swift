@@ -45,7 +45,7 @@ open class OAuth2DynRegAppStore: OAuth2DynReg {
 	
 	var refreshDelegate: AppStoreRequestDelegate?
 	
-	override open func register(client: OAuth2, callback: ((OAuth2JSON?, OAuth2Error?) -> Void)) {
+	override open func register(client: OAuth2, callback: @escaping ((OAuth2JSON?, OAuth2Error?) -> Void)) {
 		if ensureHasAppReceipt() {
 			super.register(client: client, callback: callback)
 		}
@@ -97,7 +97,7 @@ open class OAuth2DynRegAppStore: OAuth2DynReg {
 	
 	- parameter callback: The callback to call, containing an optional error when refresh is done
 	*/
-	func refreshAppReceipt(callback: ((Error?) -> Void)) {
+	func refreshAppReceipt(callback: @escaping ((Error?) -> Void)) {
 		if let delegate = refreshDelegate {
 			refreshRequest?.cancel()
 			delegate.callback(OAuth2Error.generic("App Store Receipt refresh timeout"))
@@ -130,7 +130,7 @@ class AppStoreRequestDelegate: NSObject, SKRequestDelegate {
 	
 	- parameter callback: The callback the instance should hold on to
 	*/
-	init(callback: ((Error?) -> Void)) {
+	init(callback: @escaping ((Error?) -> Void)) {
 		self.callback = callback
 	}
 	

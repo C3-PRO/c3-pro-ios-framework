@@ -60,7 +60,7 @@ open class ActivityCollector: ActivityReporter {
 	- parameter ofLastDays: The number of days before today to start on
 	- parameter callback:   The callback to call when all activities are retrieved
 	*/
-	open func resourceForAllActivity(ofLastDays days: Int = 7, callback: ((QuestionnaireResponse?, Error?) -> Void)) {
+	open func resourceForAllActivity(ofLastDays days: Int = 7, callback: @escaping ((QuestionnaireResponse?, Error?) -> Void)) {
 		let end = Date()
 		var comps = DateComponents()
 		comps.day = -1 * days
@@ -75,7 +75,7 @@ open class ActivityCollector: ActivityReporter {
 	- parameter until:      The end date
 	- parameter callback:   The callback to call when all activities are retrieved
 	*/
-	open func resourceForAllActivity(startingAt start: Date, until: Date, callback: ((QuestionnaireResponse?, Error?) -> Void)) {
+	open func resourceForAllActivity(startingAt start: Date, until: Date, callback: @escaping ((QuestionnaireResponse?, Error?) -> Void)) {
 		reportForActivityPeriod(startingAt: start, until: until) { report, error in
 			do {
 				let answer = try report?.asQuestionnaireResponse(linkId: "org.chip.c3-pro.activity")
@@ -98,7 +98,7 @@ open class ActivityCollector: ActivityReporter {
 	- parameter until:      The end date
 	- parameter callback:   The callback to call when all activities are retrieved
 	*/
-	open func reportForActivityPeriod(startingAt start: Date, until: Date, callback: ((ActivityReportPeriod?, Error?) -> Void)) {
+	open func reportForActivityPeriod(startingAt start: Date, until: Date, callback: @escaping ((ActivityReportPeriod?, Error?) -> Void)) {
 		let queueGroup = DispatchGroup()
 		var errors = [Error]()
 		

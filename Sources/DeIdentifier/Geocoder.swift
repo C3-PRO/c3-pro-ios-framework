@@ -136,7 +136,7 @@ open class Geocoder {
 	
 	- parameter callback: The callback to call after geocoding, supplies either a CLLocation instance, an error or neither (on abort)
 	*/
-	open func currentLocation(callback inCallback: GeocoderLocationCallback) {
+	open func currentLocation(callback inCallback: @escaping GeocoderLocationCallback) {
 		if let cb = locationCallback {
 			cb(nil, nil)
 			locationCallback = nil
@@ -163,7 +163,7 @@ open class Geocoder {
 	
 	- parameter callback: The callback to call when done, supplies either a CLPlacemark or an error or neither (on abort)
 	*/
-	open func geocodeCurrentLocation(callback: GeocoderPlacemarkCallback) {
+	open func geocodeCurrentLocation(callback: @escaping GeocoderPlacemarkCallback) {
 		currentLocation() { location, error in
 			if nil != error || nil == location {
 				callback(nil, error)
@@ -180,7 +180,7 @@ open class Geocoder {
 	- parameter location: The location to look up
 	- parameter callback: The callback to call when done, supplies either a CLPlacemark or an error or neither (on abort)
 	*/
-	open func reverseGeocode(location: CLLocation, callback: GeocoderPlacemarkCallback) {
+	open func reverseGeocode(location: CLLocation, callback: @escaping GeocoderPlacemarkCallback) {
 		c3_logIfDebug("Starting reverse geocoding")
 		isReverseGeocoding = true
 		geocoder = CLGeocoder()
@@ -202,7 +202,7 @@ open class Geocoder {
 	
 	- parameter callback: The callback to call after geocoding, supplies either an Address element, an error or neither (on abort)
 	*/
-	open func currentAddress(callback: GeocoderAddressCallback) {
+	open func currentAddress(callback: @escaping GeocoderAddressCallback) {
 		geocodeCurrentLocation { placemark, error in
 			if nil != error || nil == placemark {
 				callback(nil, error)
@@ -242,7 +242,7 @@ open class Geocoder {
 	
 	- parameter callback: The callback to call after geocoding, supplies either an Address element, an error or neither (on abort)
 	*/
-	open func hipaaCompliantCurrentAddress(callback: GeocoderAddressCallback) {
+	open func hipaaCompliantCurrentAddress(callback: @escaping GeocoderAddressCallback) {
 		currentAddress { address, error in
 			if nil != error || nil == address {
 				callback(nil, error)
@@ -258,7 +258,7 @@ open class Geocoder {
 	
 	- parameter callback: The callback to call after geocoding, supplies either an Address element, an error or neither (on abort)
 	*/
-	open func hipaaCompliantAddress(from location: CLLocation, callback: GeocoderAddressCallback) {
+	open func hipaaCompliantAddress(from location: CLLocation, callback: @escaping GeocoderAddressCallback) {
 		reverseGeocode(location: location) { placemark, error in
 			if nil != error || nil == placemark {
 				callback(nil, error)

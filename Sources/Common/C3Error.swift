@@ -248,7 +248,7 @@ Ensures that the given block is executed on the main queue.
 
 - parameter block: The block to execute on the main queue.
 */
-public func c3_performOnMainQueue(_ block: ((Void) -> Void)) {
+public func c3_performOnMainQueue(_ block: @escaping ((Void) -> Void)) {
 	if Thread.current.isMainThread {
 		block()
 	}

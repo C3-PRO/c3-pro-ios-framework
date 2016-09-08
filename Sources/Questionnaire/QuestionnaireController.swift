@@ -67,7 +67,7 @@ open class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	
 	- parameter callback: The callback once preparation has concluded, either with an ORKTask or an error. Called on the main queue.
 	*/
-	func prepareQuestionnaire(callback: ((ORKTask?, Error?) -> Void)) {
+	func prepareQuestionnaire(callback: @escaping ((ORKTask?, Error?) -> Void)) {
 		if let questionnaire = questionnaire {
 			logger?.trace("C3-PRO", msg: "Fulfilling promise for \(questionnaire)")
 			let promise = QuestionnairePromise(questionnaire: questionnaire)
@@ -106,7 +106,7 @@ open class QuestionnaireController: NSObject, ORKTaskViewControllerDelegate {
 	- parameter callback: Callback to be called on the main queue, either with a task view controller prepared for the questionnaire task or an
 		error
 	*/
-	open func prepareQuestionnaireViewController(callback: ((ORKTaskViewController?, Error?) -> Void)) {
+	open func prepareQuestionnaireViewController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
 		prepareQuestionnaire() { task, error in
 			if let task = task {
 				let viewController = ORKTaskViewController(task: task, taskRun: nil)

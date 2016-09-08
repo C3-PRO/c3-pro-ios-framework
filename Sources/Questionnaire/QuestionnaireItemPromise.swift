@@ -62,7 +62,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	- parameter callback: The callback to be called when done; note that even when you get an error, some steps might have successfully been
 	                      allocated still, so don't throw everything away just because you receive errors
 	*/
-	func fulfill(requiring parentRequirements: [ResultRequirement]?, callback: (([Error]?) -> Void)) {
+	func fulfill(requiring parentRequirements: [ResultRequirement]?, callback: @escaping (([Error]?) -> Void)) {
 		let linkId = item.linkId ?? UUID().uuidString
 		let (title, text) = item.c3_bestTitleAndText()
 		
@@ -219,7 +219,7 @@ extension QuestionnaireItem {
 	[x] ORKTimeOfDayAnswerFormat:       "time"
 	[ ] ORKTimeIntervalAnswerFormat:
 	*/
-	func c3_asAnswerFormat(callback: ((ORKAnswerFormat?, Error?) -> Void)) {
+	func c3_asAnswerFormat(callback: @escaping ((ORKAnswerFormat?, Error?) -> Void)) {
 		let link = linkId ?? "<nil>"
 		if let type = type {
 			switch type {
@@ -290,7 +290,7 @@ extension QuestionnaireItem {
 	The `value` property of the text choice is a combination of the coding system URL and the code, separated by
 	`kORKTextChoiceSystemSeparator` (a space). If no system URL is provided, "https://fhir.smalthealthit.org" is used.
 	*/
-	func c3_resolveAnswerChoices(callback: (([ORKTextChoice]?, Error?) -> Void)) {
+	func c3_resolveAnswerChoices(callback: @escaping (([ORKTextChoice]?, Error?) -> Void)) {
 		options?.resolve(ValueSet.self) { valueSet in
 			var choices = [ORKTextChoice]()
 			

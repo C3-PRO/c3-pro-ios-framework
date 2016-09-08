@@ -110,7 +110,7 @@ open class SystemServicePermissioner {
 	- parameter service:  The SystemService to request access to
 	- parameter callback: A block to be executed when the request has been granted or denied; executed on the main queue
 	*/
-	open func requestPermission(for service: SystemService, callback: ((Error?) -> Void)) {
+	open func requestPermission(for service: SystemService, callback: @escaping ((Error?) -> Void)) {
 		switch service {
 		case .geoLocationWhenUsing:
 			requestGeoLocationPermissions(always: false, callback: callback)
@@ -136,7 +136,7 @@ open class SystemServicePermissioner {
 	- parameter always: Whether location access should always be granted, not just while using the app
 	- parameter callback: A block to be executed when the request has been granted or denied; executed on the main queue
 	*/
-	func requestGeoLocationPermissions(always: Bool, callback: ((Error?) -> Void)) {
+	func requestGeoLocationPermissions(always: Bool, callback: @escaping ((Error?) -> Void)) {
 		let status = CLLocationManager.authorizationStatus()
 		if .authorizedAlways == status || (!always && .authorizedWhenInUse == status) {
 			c3_performOnMainQueue() {
@@ -170,7 +170,7 @@ open class SystemServicePermissioner {
 		}
 	}
 	
-	func requestLocalNotificationsPermissions(for categories: Set<UIUserNotificationCategory>, callback: ((Error?) -> Void)) {
+	func requestLocalNotificationsPermissions(for categories: Set<UIUserNotificationCategory>, callback: @escaping ((Error?) -> Void)) {
 		let app = UIApplication.shared
 		var settings = app.currentUserNotificationSettings
 		
@@ -190,7 +190,7 @@ open class SystemServicePermissioner {
 	Requests permission to access CoreMotion data. Does that by querying activity from now to now and captures whether the
 	CMErrorMotionActivityNotAuthorized error comes back or not.
 	*/
-	func requestCoreMotionPermissions(callback: ((Error?) -> Void)) {
+	func requestCoreMotionPermissions(callback: @escaping ((Error?) -> Void)) {
 		if nil != coreMotionManager {
 			c3_warn("CoreMotion permission request is already ongoing, not requesting again")
 			c3_performOnMainQueue() {
@@ -221,7 +221,7 @@ open class SystemServicePermissioner {
 	- parameter for:      The HealthKitTypes that want to be accessed
 	- parameter callback: A callback - containing an error if something went wrong, nil otherwise - when authorization completes
 	*/
-	func requestHealthKitPermissions(for types: HealthKitTypes, callback: ((Error?) -> Void)) {
+	func requestHealthKitPermissions(for types: HealthKitTypes, callback: @escaping ((Error?) -> Void)) {
 		guard HKHealthStore.isHealthDataAvailable() else {
 			c3_performOnMainQueue() {
 				callback(C3Error.healthKitNotAvailable)
@@ -243,7 +243,7 @@ open class SystemServicePermissioner {
 	/**
 	Requests permission to access the microphone.
 	*/
-	func requestMicrophonePermissions(callback: ((Error?) -> Void)) {
+	func requestMicrophonePermissions(callback: @escaping ((Error?) -> Void)) {
 		AVAudioSession.sharedInstance().requestRecordPermission { success in
 			c3_performOnMainQueue() {
 				callback(success ? nil : C3Error.locationServicesDisabled)
@@ -260,7 +260,7 @@ class SystemRequesterGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
 	
 	var didComplete: ((Error?) -> Void)
 	
-	init(complete: ((Error?) -> Void)) {
+	init(complete: @escaping ((Error?) -> Void)) {
 		didComplete = complete
 	}
 	

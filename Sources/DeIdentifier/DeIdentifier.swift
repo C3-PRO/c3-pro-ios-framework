@@ -41,7 +41,7 @@ open class DeIdentifier {
 	- parameter patient: The Patient resource to de-identify
 	- parameter callback: The callback to call when de-identification has completed
 	*/
-	open func hipaaCompliantPatient(patient inPatient: Patient, callback: ((Patient) -> Void)) {
+	open func hipaaCompliantPatient(patient inPatient: Patient, callback: @escaping ((Patient) -> Void)) {
 		geocoder = Geocoder()
 		geocoder!.hipaaCompliantCurrentAddress() { address, error in
 			self.geocoder = nil

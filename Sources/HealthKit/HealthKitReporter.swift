@@ -43,7 +43,7 @@ open class HealthKitReporter: ActivityReporter {
 	/**
 	Creates one `ActivityReportPeriod` instance containing summarized HKQuantitySample over the given period.
 	*/
-	open func reportForActivityPeriod(startingAt start: Date, until: Date, callback: ((_ period: ActivityReportPeriod?, _ error: Error?) -> Void)) {
+	open func reportForActivityPeriod(startingAt start: Date, until: Date, callback: @escaping ((_ period: ActivityReportPeriod?, _ error: Error?) -> Void)) {
 		retrieveHealthKitActivitySummary(startingAt: start, until: until) { samples, error in
 			
 			// create the period
@@ -65,7 +65,7 @@ open class HealthKitReporter: ActivityReporter {
 	Samples activity data in HealthKit (steps, flights climbed and active energy) and returns one HKQuantitySample per type in a callback.
 	Uses `c3_summaryOfSamplesOfTypeBetween(type:start:end:)` on the receiver's HKHealthStore instance.
 	*/
-	open func retrieveHealthKitActivitySummary(startingAt start: Date, until: Date, callback: ((_ samples: [HKQuantitySample]?, _ error: Error?) -> Void)) {
+	open func retrieveHealthKitActivitySummary(startingAt start: Date, until: Date, callback: @escaping ((_ samples: [HKQuantitySample]?, _ error: Error?) -> Void)) {
 		if HKHealthStore.isHealthDataAvailable() {
 			let queueGroup = DispatchGroup()
 			var quantities = [HKQuantitySample]()

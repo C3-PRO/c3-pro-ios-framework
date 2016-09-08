@@ -66,14 +66,14 @@ open class DataQueue: Server {
 	}
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
-	open func flush(callback: ((Error?) -> Void)) {
+	open func flush(callback: @escaping ((Error?) -> Void)) {
 		queueManager.flush(callback: callback)
 	}
 	
 	
 	// MARK: - URL Session
 	
-	override open func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, withSession session: URLSession, handler: R, callback: ((FHIRServerResponse) -> Void)) {
+	override open func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, withSession session: URLSession, handler: R, callback: @escaping ((FHIRServerResponse) -> Void)) {
 		if .POST == handler.type || .PUT == handler.type {
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			

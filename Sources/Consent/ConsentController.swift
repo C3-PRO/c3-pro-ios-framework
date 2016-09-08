@@ -201,7 +201,7 @@ public class ConsentController {
 	- parameter callback: The callback that is called when the group is resolved (or resolution fails); may be on any thread but may be
 	                      called immediately in case of embedded resources.
 	*/
-	public func eligibilityRequirements(callback: (([EligibilityRequirement]?) -> Void)) {
+	public func eligibilityRequirements(callback: @escaping (([EligibilityRequirement]?) -> Void)) {
 		if let group = contract?.subject?.first {
 			group.resolve(Group.self) { group in
 				if let characteristics = group?.characteristic {
@@ -254,8 +254,8 @@ public class ConsentController {
 	- parameter onUserDidDecline: Block executed when the user cancels or actively declines consent
 	- throws: Re-throws from `createConsentTask()`
 	*/
-	public func consentViewController(onUserDidConsent onConsent: ((ORKTaskViewController, ConsentResult) -> Void),
-		onUserDidDecline: ((ORKTaskViewController) -> Void)) throws -> ORKTaskViewController {
+	public func consentViewController(onUserDidConsent onConsent: @escaping ((ORKTaskViewController, ConsentResult) -> Void),
+		onUserDidDecline: @escaping ((ORKTaskViewController) -> Void)) throws -> ORKTaskViewController {
 		
 		if nil != onUserDidConsent {
 			c3_warn("a `onUserDidConsent` block is already set on \(self), are you already presenting a consent view controller? This might have unintended consequences.")
@@ -409,7 +409,7 @@ public class ConsentController {
 	- throws:             `C3Error` when referencing the patient resource fails
 	- returns:            A signed Contract resource, usually the receiver's `contract` ivar
 	*/
-	public func deIdentifyAndSignContract(with patient: Patient, result: ConsentResult, callback: ConsentSigningCallback) {
+	public func deIdentifyAndSignContract(with patient: Patient, result: ConsentResult, callback: @escaping ConsentSigningCallback) {
 		deidentifier = DeIdentifier()
 		deidentifier!.hipaaCompliantPatient(patient: patient) { patient in
 			self.deidentifier = nil

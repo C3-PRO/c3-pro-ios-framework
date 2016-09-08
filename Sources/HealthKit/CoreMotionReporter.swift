@@ -81,7 +81,7 @@ open class CoreMotionReporter: ActivityReporter {
 	                       callback returns; uses an `CoreMotionStandardActivityInterpreter` instance if none is provided
 	- parameter callback:  The callback to call when done, with an error if something happened, nil otherwise. Called on the main queue
 	*/
-	open func archiveActivities(processor: CoreMotionActivityInterpreter? = nil, callback: ((_ numNewActivities: Int, _ error: Error?) -> Void)) {
+	open func archiveActivities(processor: CoreMotionActivityInterpreter? = nil, callback: @escaping ((_ numNewActivities: Int, _ error: Error?) -> Void)) {
 		if let lastArchival = lastArchival, lastArchival.timeIntervalSinceNow > -30 {
 			callback(0, nil)
 			return
@@ -178,7 +178,7 @@ open class CoreMotionReporter: ActivityReporter {
 	                        the callback returns
 	- parameter callback:   The callback to call when sampling completes. Will execute on the main queue
 	*/
-	func collectCoreMotionActivities(startingOn start: Date?, processor: CoreMotionActivityInterpreter, callback: (([CoreMotionActivity], Error?) -> Void)) {
+	func collectCoreMotionActivities(startingOn start: Date?, processor: CoreMotionActivityInterpreter, callback: @escaping (([CoreMotionActivity], Error?) -> Void)) {
 		let collectorQueue = OperationQueue()
 		var begin = start ?? Date()
 		if nil == start {
@@ -209,7 +209,7 @@ open class CoreMotionReporter: ActivityReporter {
 	
 	// MARK: - Retrieval
 	
-	open func reportForActivityPeriod(startingAt start: Date, until: Date, callback: ((_ period: ActivityReportPeriod?, _ error: Error?) -> Void)) {
+	open func reportForActivityPeriod(startingAt start: Date, until: Date, callback: @escaping ((_ period: ActivityReportPeriod?, _ error: Error?) -> Void)) {
 		reportForActivityPeriod(startingAt: start, until: until, interpreter: nil, callback: callback)
 	}
 	
@@ -222,7 +222,7 @@ open class CoreMotionReporter: ActivityReporter {
 	- parameter interpreter: The interpreter to use; uses a fresh instance of `CoreMotionStandardActivityInterpreter` if nil
 	- parameter callback:    The callback to call when all activities are retrieved and the interpreter has run
 	*/
-	open func reportForActivityPeriod(startingAt start: Date, until: Date? = nil, interpreter: CoreMotionActivityInterpreter? = nil, callback: ((_ report: ActivityReportPeriod?, _ error: Error?) -> Void)) {
+	open func reportForActivityPeriod(startingAt start: Date, until: Date? = nil, interpreter: CoreMotionActivityInterpreter? = nil, callback: @escaping ((_ report: ActivityReportPeriod?, _ error: Error?) -> Void)) {
 		archiveActivities() { newActivities, error in
 			if let error = error {
 				c3_logIfDebug("Ignoring error when archiving most recent activities before retrieving: \(error)")
