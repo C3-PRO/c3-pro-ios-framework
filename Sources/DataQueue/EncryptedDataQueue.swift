@@ -28,7 +28,7 @@ Protocol for delegates to the encrypted data queue.
 public protocol EncryptedDataQueueDelegate {
 	
 	/** Method called to determine whether the respective resource should be encrypted. */
-	func encryptedDataQueue(_ queue: EncryptedDataQueue, wantsEncryptionForResource resource: Resource, requestType: FHIRRequestType) -> Bool
+	func encryptedDataQueue(_ queue: EncryptedDataQueue, wantsEncryptionForResource resource: Resource, requestMethod: FHIRRequestMethod) -> Bool
 	
 	/** Method that asks for the identifier of the key that should be used for encryption. */
 	func keyIdentifierForEncryptedDataQueue(_ queue: EncryptedDataQueue) -> String?
@@ -101,11 +101,11 @@ open class EncryptedDataQueue: DataQueue {
 	
 	// MARK: - Requests
 	
-	override open func handlerForRequest(ofType type: FHIRRequestType, resource: Resource?, headers: FHIRRequestHeaders?) -> FHIRServerRequestHandler? {
-		if let resource = resource, nil == delegate || delegate!.encryptedDataQueue(self, wantsEncryptionForResource: resource, requestType: type) {
-			return EncryptedJSONRequestHandler(type, resource: resource, dataQueue: self)
+	override open func handlerForRequest(withMethod method: FHIRRequestMethod, resource: Resource?, headers: FHIRRequestHeaders?) -> FHIRServerRequestHandler? {
+		if let resource = resource, nil == delegate || delegate!.encryptedDataQueue(self, wantsEncryptionForResource: resource, requestMethod: method) {
+			return EncryptedJSONRequestHandler(method, resource: resource, dataQueue: self)
 		}
-		return super.handlerForRequest(ofType: type, resource: resource, headers: headers)
+		return super.handlerForRequest(withMethod: method, resource: resource, headers: headers)
 	}
 	
 	override open func absoluteURL(for path: String, handler: FHIRServerRequestHandler) -> URL? {
@@ -133,7 +133,7 @@ open class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler {
 	- parameter resource: The resource to send with this request
 	- parameter dataQueue: The `EncryptedDataQueue` instance that's sending this request
 	*/
-	init(_ type: FHIRRequestType, resource: Resource?, dataQueue: EncryptedDataQueue) {
+	init(_ type: FHIRRequestMethod, resource: Resource?, dataQueue: EncryptedDataQueue) {
 		self.dataQueue = dataQueue
 		super.init(type, resource: resource)
 	}

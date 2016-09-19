@@ -74,7 +74,7 @@ open class DataQueue: Server {
 	// MARK: - URL Session
 	
 	override open func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, withSession session: URLSession, handler: R, callback: @escaping ((FHIRServerResponse) -> Void)) {
-		if .POST == handler.type || .PUT == handler.type {
+		if .POST == handler.method || .PUT == handler.method {
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			
 			// are we currently dequeueing the resource we're trying to POST (and hence inside a `flush` call)?
