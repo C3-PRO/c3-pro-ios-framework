@@ -170,6 +170,7 @@ extension QuestionnaireItem {
 		if nil == txt {
 			txt = c3_questionInstruction() ?? c3_questionHelpText()		// even if the title is still nil, we won't want to populate the title with help text
 		}
+		// TODO: Even if we have title and instructions, show help somewhere if present
 		
 		return (ttl?.c3_stripMultipleSpaces(), txt?.c3_stripMultipleSpaces())
 	}
@@ -291,45 +292,58 @@ extension QuestionnaireItem {
 	`kORKTextChoiceSystemSeparator` (a space). If no system URL is provided, "https://fhir.smalthealthit.org" is used.
 	*/
 	func c3_resolveAnswerChoices(callback: @escaping (([ORKTextChoice]?, Error?) -> Void)) {
-		options?.resolve(ValueSet.self) { valueSet in
-			var choices = [ORKTextChoice]()
-			
-			// we have an expanded ValueSet
-			if let expansion = valueSet?.expansion?.contains {
-				for option in expansion {
-					let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem
-					let code = option.code ?? kORKTextChoiceMissingCodeCode
-					let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-					let text = ORKTextChoice(text: option.display ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
-					choices.append(text)
+		
+		// options are defined inline
+		if let options = option {
+			// TODO: implement!
+			callback(nil, C3Error.notImplemented("Using `option` in Questionnaire.item is not yet supported, use `options`"))
+		}
+		
+		// options are a referenced ValueSet
+		else if let options = options {
+			options.resolve(ValueSet.self) { valueSet in
+				var choices = [ORKTextChoice]()
+				
+				// we have an expanded ValueSet
+				if let expansion = valueSet?.expansion?.contains {
+					for option in expansion {
+						let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem
+						let code = option.code ?? kORKTextChoiceMissingCodeCode
+						let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
+						let text = ORKTextChoice(text: option.display ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
+						choices.append(text)
+					}
 				}
-			}
-			
-			// valueset includes or defines codes
-			else if let compose = valueSet?.compose {
-				if let options = compose.include {
-					for option in options {
-						let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem	// system is a required property
-						if let concepts = option.concept {
-							for concept in concepts {
-								let code = concept.code ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
-								let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-								let text = ORKTextChoice(text: concept.display ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
-								choices.append(text)
+				
+				// valueset includes or defines codes
+				else if let compose = valueSet?.compose {
+					if let options = compose.include {
+						for option in options {
+							let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem	// system is a required property
+							if let concepts = option.concept {
+								for concept in concepts {
+									let code = concept.code ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
+									let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
+									let text = ORKTextChoice(text: concept.display ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
+									choices.append(text)
+								}
 							}
 						}
 					}
+					// TODO: also support `import`
 				}
-				// TODO: also support `import`
+				
+				// all done
+				if choices.count > 0 {
+					callback(choices, nil)
+				}
+				else {
+					callback(nil, C3Error.questionnaireNoChoicesInChoiceQuestion(self))
+				}
 			}
-			
-			// all done
-			if choices.count > 0 {
-				callback(choices, nil)
-			}
-			else {
-				callback(nil, C3Error.questionnaireNoChoicesInChoiceQuestion(self))
-			}
+		}
+		else {
+			callback(nil, C3Error.questionnaireNoChoicesInChoiceQuestion(self))
 		}
 	}
 	
