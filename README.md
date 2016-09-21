@@ -115,4 +115,4 @@ Be sure to take a look at the [NOTICE.txt](./NOTICE.txt) file, and don't forget 
 [i2b2]: https://www.i2b2.org
 [mix-match]: https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html
 [sample app]: https://github.com/C3-PRO/c3-pro-demo-ios
-[docs]: http://chb.github.io/c3-pro-ios-framework/
+[docs]: https://c3-pro.github.io/c3-pro-ios-framework/
