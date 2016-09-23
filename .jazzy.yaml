@@ -1,17 +1,30 @@
 # C3-PRO Jazzy config
-module_name: C3PRO
+module: C3PRO
 
-author_name: C3-PRO
+author: C3-PRO
 author_url:  http://c3-pro.chip.org
 
-root_url:    http://chb.github.io/c3-pro-ios-framework
-github_url:  https://github.com/chb/c3-pro-ios-framework.git
+root_url:    http://c3-pro.github.io/c3-pro-ios-framework
+github_url:  https://github.com/c3-pro/c3-pro-ios-framework.git
 
-theme_directory: fullwidth
+theme: fullwidth
+readme: README.md
+#documentation: Sources/*/README.md
 custom_categories:
   - name: Common
     children:
     - C3Error
+    - C3PROFHIRVersion
+
+  - name: Questionnaire
+    children:
+    - QuestionnaireController
+    - QuestionnairePromise
+    - QuestionnaireGroupPromise
+    - QuestionnaireQuestionPromise
+    - ConditionalOrderedTask
+    - ResultRequirement
+    - GroupCharacteristic
 
   - name: Study Intro
     children:
@@ -29,19 +42,38 @@ custom_categories:
     - ConsentTaskOptions
     - ConsentResult
     - ConsentSigningCallback
+    - C3UserDidConsentNotification
+    - C3UserDidDeclineConsentNotification
+    - C3ConsentResultKey
     - EligibilityRequirement
     - EligibilityStatusViewController
     - EligibilityCheckViewController
     - GroupCharacteristic
+    - Contract
+    - ContractTerm
+    - kContractTermConsentSectionExtension
+    - kContractTermConsentSectionType
 
-  - name: Questionnaire
+  - name: HealthKit & CoreData
     children:
-    - QuestionnaireController
-    - QuestionnairePromise
-    - QuestionnaireGroupPromise
-    - QuestionnaireQuestionPromise
-    - ConditionalOrderedTask
-    - ResultRequirement
+    - ActivityReporter
+    - ActivityCollector
+    - HealthKitReporter
+    - CoreMotionReporter
+    - CoreMotionActivityInterpreter
+    - CoreMotionStandardActivityInterpreter
+    - CoreMotionActivityType
+    - CoreMotionActivitySum
+    - CoreMotionActivityInterpretation
+    - ActivityReport
+    - ActivityReportPeriod
+    - CoreMotionActivity
+    - InterpretedCoreMotionActivity
+    - HealthKitTypes
+    - HKHealthStore
+    - HKQuantity
+    - HKQuantitySample
+    - HKQuantityType
 
   - name: Data Queue
     children:
@@ -51,14 +83,6 @@ custom_categories:
     - EncryptedDataQueueDelegate
     - EncryptedJSONRequestHandler
     - OAuth2DynRegAppStore
-
-  - name: HealthKit
-    children:
-    - HealthKitTypes
-    - HKHealthStore
-    - HKQuantity
-    - HKQuantitySample
-    - HKQuantityType
 
   - name: System Services
     children:

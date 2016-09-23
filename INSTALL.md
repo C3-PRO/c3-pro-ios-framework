@@ -65,11 +65,12 @@ Xcode will automatically add the C3-PRO framework as a target dependency, meanin
 #### Sub-Frameworks
 
 You will need to **manually add sub-frameworks** that are used by C3-PRO but are not automatically linked and embedded.
-This is unfortunately a rather painful exercise.
-You will first need to add these frameworks to your main project, similarly to how you added _C3-PRO_ above, by choosing _“Add files to XY”_, then selecting the `*.xcodeproj` files found **nested in _C3-PRO_**.
+This works similar to how you added _C3-PRO_ above, by choosing _“Add files to XY”_, then selecting the `*.xcodeproj` files for the following libraries, found **nested in _c3-pro-ios-framework_**:
 
-Then, in the _“Embedded Libraries”_ section, you need to add those that are **at the top level** (they will appear multiple times, nested under _C3-PRO_; **don't** select those):
+- ResearchKit
+- Swift-SMART
+- CryptoSwift
+- SQLiteSwift
 
-- ResearchKit.framework
-- SMART.framework
-- CryptoSwift.framework
+Make sure these also appear in the _“Embedded Libraries”_ section.
+

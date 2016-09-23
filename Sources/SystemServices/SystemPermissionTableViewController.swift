@@ -27,19 +27,19 @@ or a disabled "Granted" button for the services you define, allowing users to gr
 
 Assign an array of `SystemService` instances to your controller's `services` property, then present the view controller to the user.
 */
-public class SystemPermissionTableViewController: UITableViewController {
+open class SystemPermissionTableViewController: UITableViewController {
 	
 	lazy var permissionRequester = SystemServicePermissioner()
 	
 	/// The services to request access to.
-	public var services: [SystemService]?
+	open var services: [SystemService]?
 	
 	
-	public override init(style: UITableViewStyle) {
+	override public init(style: UITableViewStyle) {
 		super.init(style: style)
 	}
 	
-	public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+	override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 	}
 	
@@ -50,10 +50,10 @@ public class SystemPermissionTableViewController: UITableViewController {
 	
 	// MARK: - Data
 	
-	func serviceAtIndexPath(indexPath: NSIndexPath) -> SystemService? {
+	func serviceAtIndexPath(_ indexPath: IndexPath) -> SystemService? {
 		if let services = services {
-			if indexPath.row < services.count {
-				return services[indexPath.row]
+			if (indexPath as NSIndexPath).row < services.count {
+				return services[(indexPath as NSIndexPath).row]
 			}
 		}
 		return nil
@@ -62,32 +62,32 @@ public class SystemPermissionTableViewController: UITableViewController {
 	
 	// MARK: - View Tasks
 	
-	public override func viewDidLoad() {
+	override open func viewDidLoad() {
 		super.viewDidLoad()
 		tableView.translatesAutoresizingMaskIntoConstraints = false
 		tableView.delegate = self
 		tableView.dataSource = self
 		tableView.rowHeight = UITableViewAutomaticDimension
 		tableView.estimatedRowHeight = 200.0
-		tableView.registerClass(PermissionRequestTableViewCell.self, forCellReuseIdentifier: "MainCell")
+		tableView.register(PermissionRequestTableViewCell.self, forCellReuseIdentifier: "MainCell")
 	}
 	
 	
 	// MARK: - Table View Data Source
 	
-	public override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	override open func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 	
-	public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return services?.count ?? 0
 	}
 	
-	public override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("MainCell", forIndexPath: indexPath) as! PermissionRequestTableViewCell
-		cell.selectionStyle = .None
+	override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "MainCell", for: indexPath) as! PermissionRequestTableViewCell
+		cell.selectionStyle = .none
 		if let service = serviceAtIndexPath(indexPath) {
-			cell.setupForService(service, permissioner: permissionRequester, viewController: self)
+			cell.setup(for: service, permissioner: permissionRequester, viewController: self)
 		}
 		return cell
 	}

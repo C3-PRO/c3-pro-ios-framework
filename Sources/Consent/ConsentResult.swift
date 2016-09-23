@@ -24,19 +24,19 @@ import ResearchKit
 /**
 Class to hold on to the consent result.
 */
-public class ConsentResult {
+open class ConsentResult {
 	
 	/// When the participant did consent, if at all.
-	public var consentDate: NSDate?
+	open var consentDate: Date?
 	
 	/// Given name of the participant.
-	public var participantGivenName: String?
+	open var participantGivenName: String?
 	
 	/// Family name of the participant.
-	public var participantFamilyName: String?
+	open var participantFamilyName: String?
 	
 	/// Name composed of given and family name.
-	public var participantFriendlyName: String? {
+	open var participantFriendlyName: String? {
 		if let given = participantGivenName {
 			if let family = participantFamilyName {
 				return "\(given) \(family)"
@@ -47,17 +47,17 @@ public class ConsentResult {
 	}
 	
 	/// Image of the participant's signature.
-	public var signatureImage: UIImage?
+	open var signatureImage: UIImage?
 	
 	/// Answer to data sharing: nil if not asked/answered, true if data may be shared widely, false if data is for study researchers only.
-	public var shareWidely: Bool?
+	open var shareWidely: Bool?
 	
 	
-	public init(signature: ORKConsentSignature) {
-		consentDate = NSDate()
-		participantGivenName = signature.givenName
-		participantFamilyName = signature.familyName
-		signatureImage = signature.signatureImage
+	public init(signature: ORKConsentSignature?) {
+		consentDate = Date()
+		participantGivenName = signature?.givenName
+		participantFamilyName = signature?.familyName
+		signatureImage = signature?.signatureImage
 	}
 }
 

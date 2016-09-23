@@ -27,12 +27,12 @@ The (FIFO) DataQueue is a special FHIRServer implementation that will enqueue FH
 `create` command fails. The queue can subsequently be flushed to re-attempt creating the resources on the FHIR server, in their original
 order.
 */
-public class DataQueue: Server {
+open class DataQueue: Server {
 	
 	/// The manager for the data queue
 	var queueManager: DataQueueManager!
 	
-	override public var logger: OAuth2Logger? {
+	override open var logger: OAuth2Logger? {
 		didSet {
 			super.logger = logger
 			queueManager.logger = logger
@@ -40,12 +40,13 @@ public class DataQueue: Server {
 	}
 	
 	
-	public required init(baseURL: NSURL, auth: OAuth2JSON?) {
+	public required init(baseURL: URL, auth: OAuth2JSON?) {
 		super.init(baseURL: baseURL, auth: auth)
-		let dir = try! NSFileManager.defaultManager().c3_appLibraryDirectory()
+		let dir = try! FileManager.default.c3_appLibraryDirectory()
 		if let host = baseURL.host {
-			let full = ((dir as NSString).stringByAppendingPathComponent("DataQueue") as NSString).stringByAppendingPathComponent(host)
+			let full = ((dir as NSString).appendingPathComponent("DataQueue") as NSString).appendingPathComponent(host)
 			queueManager = DataQueueManager(fhirServer: self, directory: full)
+			queueManager.logger = logger
 		}
 		else {
 			fatalError("DataQueue: Cannot initialize without host in baseURL")
@@ -60,24 +61,24 @@ public class DataQueue: Server {
 	
 	- parameter resource: The FHIR Resource to enqueue
 	*/
-	public func enqueueResource(resource: Resource) {
-		queueManager.enqueueResource(resource)
+	open func enqueue(resource: Resource) {
+		queueManager.enqueue(resource: resource)
 	}
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
-	public func flush(callback: ((error: ErrorType?) -> Void)) {
-		queueManager.flush(callback)
+	open func flush(callback: @escaping ((Error?) -> Void)) {
+		queueManager.flush(callback: callback)
 	}
 	
 	
 	// MARK: - URL Session
 	
-	override public func performPreparedRequest<R : FHIRServerRequestHandler>(request: NSMutableURLRequest, handler: R, callback: ((response: FHIRServerResponse) -> Void)) {
-		if .POST == handler.type || .PUT == handler.type {
+	override open func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, withSession session: URLSession, handler: R, callback: @escaping ((FHIRServerResponse) -> Void)) {
+		if .POST == handler.method || .PUT == handler.method {
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			
 			// are we currently dequeueing the resource we're trying to POST (and hence inside a `flush` call)?
-			if let resource = handler.resource where queueManager.isDequeueing(resource) {
+			if let resource = handler.resource, queueManager.isDequeueing(resource: resource) {
 				super.performPreparedRequest(request, handler: handler, callback: callback)
 			}
 			
@@ -85,17 +86,17 @@ public class DataQueue: Server {
 			else {
 				queueManager.flush() { error in
 					if let error = error {
-						self.queueManager.enqueueResourceInHandler(handler)
+						self.queueManager.enqueue(resourceInHandler: handler)
 						
 						let response = R.ResponseType.init(error: error)
-						callback(response: response)
+						callback(response)
 					}
 					else {
 						super.performPreparedRequest(request, handler: handler) { response in
 							if nil != response.error {
-								self.queueManager.enqueueResourceInHandler(handler)
+								self.queueManager.enqueue(resourceInHandler: handler)
 							}
-							callback(response: response)
+							callback(response)
 						}
 					}
 				}

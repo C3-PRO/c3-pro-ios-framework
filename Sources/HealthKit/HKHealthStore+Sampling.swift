@@ -25,7 +25,7 @@ import SMART
 /**
 Extend `HKHealthStore` with methods that query the store for samples:
 
-- `c3_latestSampleOfType()`:            retrieve the latest sample of the given type.
+- `c3_latestSample(ofType:)`:           retrieve the latest sample of the given type.
 - `c3_samplesOfTypeBetween()`:          retrieve all samples of a given type between two dates.
 - `c3_summaryOfSamplesOfTypeBetween()`: return a summary of all samples of a given type. Use this to get an **aggregate count** of something
                                         over a given period
@@ -35,12 +35,12 @@ public extension HKHealthStore {
 	/**
 	Convenience method to retrieve the latest sample of a given type.
 	
-	- parameter typeIdentifier: The type of samples to retrieve
+	- parameter type:     The type of samples to retrieve
 	- parameter callback: Callback to call when query finishes, comes back either with a quantity, an error or neither
 	*/
-	public func c3_latestSampleOfType(typeIdentifier: String, callback: ((quantity: HKQuantity?, error: ErrorType?) -> Void)) {
-		c3_samplesOfTypeBetween(typeIdentifier, start: NSDate.distantPast() , end: NSDate(), limit: 1) { results, error in
-			callback(quantity: results?.first?.quantity, error: error)
+	public func c3_latestSample(ofType type: HKQuantityTypeIdentifier, callback: @escaping ((HKQuantity?, Error?) -> Void)) {
+		c3_samplesOfTypeBetween(type, start: Date.distantPast , end: Date(), limit: 1) { results, error in
+			callback(results?.first?.quantity, error)
 		}
 	}
 	
@@ -54,23 +54,23 @@ public extension HKHealthStore {
 	- parameter limit: How many samples to retrieve at max
 	- parameter callback: Callback to call when query finishes, comes back either with an array of samples, an error or neither
 	*/
-	public func c3_samplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, limit: Int, callback: ((results: [HKQuantitySample]?, error: ErrorType?) -> Void)) {
-		guard let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) else {
-			callback(results: nil, error: C3Error.NoSuchHKSampleType(typeIdentifier))
+	public func c3_samplesOfTypeBetween(_ typeIdentifier: HKQuantityTypeIdentifier, start: Date, end: Date, limit: Int, callback: @escaping ((_ results: [HKQuantitySample]?, _ error: Error?) -> Void)) {
+		guard let sampleType = HKSampleType.quantityType(forIdentifier: typeIdentifier) else {
+			callback(nil, C3Error.noSuchHKSampleType("\(typeIdentifier)"))
 			return
 		}
 		
-		let period = HKQuery.predicateForSamplesWithStartDate(start, endDate: end, options: .None)
+		let period = HKQuery.predicateForSamples(withStart: start, end: end, options: HKQueryOptions())
 		let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
 		let query = HKSampleQuery(sampleType: sampleType, predicate: period, limit: limit, sortDescriptors: [sortDescriptor]) { sampleQuery, results, error in
 			if let err = error {
-				callback(results: nil, error: err)
+				callback(nil, err)
 			}
 			else {
-				callback(results: results as? [HKQuantitySample], error: nil)
+				callback(results as? [HKQuantitySample], nil)
 			}
 		}
-		executeQuery(query)
+		execute(query)
 	}
 	
 	/**
@@ -82,39 +82,39 @@ public extension HKHealthStore {
 	- parameter callback: Callback to call, on a background queue, when the query finishes, containing one HKQuantitySample spanning the
 	                      whole period or an error (or neither)
 	*/
-	public func c3_summaryOfSamplesOfTypeBetween(typeIdentifier: String, start: NSDate, end: NSDate, callback: ((result: HKQuantitySample?, error: ErrorType?) -> Void)) {
-		guard let sampleType = HKSampleType.quantityTypeForIdentifier(typeIdentifier) else {
-			callback(result: nil, error: C3Error.NoSuchHKSampleType(typeIdentifier))
+	public func c3_summaryOfSamplesOfTypeBetween(_ typeIdentifier: HKQuantityTypeIdentifier, start: Date, end: Date, callback: @escaping ((_ result: HKQuantitySample?, _ error: Error?) -> Void)) {
+		guard let sampleType = HKSampleType.quantityType(forIdentifier: typeIdentifier) else {
+			callback(nil, C3Error.noSuchHKSampleType("\(typeIdentifier)"))
 			return
 		}
 		
 		// we create one interval for the whole period between start and end dates
-		let interval = NSCalendar.currentCalendar().components([.Day, .Hour], fromDate: start, toDate: end, options: [])
-		guard interval.day + interval.hour > 0 else {
-			callback(result: nil, error: C3Error.IntervalTooSmall)
+		let interval = Calendar.current.dateComponents([.day, .hour], from: start, to: end)
+		guard interval.day! + interval.hour! > 0 else {
+			callback(nil, C3Error.intervalTooSmall)
 			return
 		}
-		let period = HKQuery.predicateForSamplesWithStartDate(start, endDate: end, options: .None)
+		let period = HKQuery.predicateForSamples(withStart: start, end: end, options: HKQueryOptions())
 		
-		let query = HKStatisticsCollectionQuery(quantityType: sampleType, quantitySamplePredicate: period, options: [.CumulativeSum], anchorDate: start, intervalComponents: interval)
+		let query = HKStatisticsCollectionQuery(quantityType: sampleType, quantitySamplePredicate: period, options: [.cumulativeSum], anchorDate: start, intervalComponents: interval)
 		query.initialResultsHandler = { sampleQuery, results, error in
 			if let error = error {
-				callback(result: nil, error: error)
+				callback(nil, error)
 			}
 			else {
 				var sample: HKQuantitySample?
 				if let results = results {
-					results.enumerateStatisticsFromDate(start, toDate: end) { statistics, stop in
+					results.enumerateStatistics(from: start, to: end) { statistics, stop in
 						if let sum = statistics.sumQuantity() {
-							sample = HKQuantitySample(type: sampleType, quantity: sum, startDate: start, endDate: end)
-							stop.memory = true		// we only expect one summary
+							sample = HKQuantitySample(type: sampleType, quantity: sum, start: start, end: end)
+							stop.pointee = true		// we only expect one summary
 						}
 					}
 				}
-				callback(result: sample, error: nil)
+				callback(sample, nil)
 			}
 		}
-		executeQuery(query)
+		execute(query)
 	}
 }
 

@@ -57,7 +57,7 @@ extension QuestionnaireItemEnableWhen {
 	*/
 	func c3_questionIdentifier() throws -> String {
 		guard let questionIdentifier = question else {
-			throw C3Error.QuestionnaireEnableWhenIncomplete("\(self) has no `question` to refer to")
+			throw C3Error.questionnaireEnableWhenIncomplete("\(self) has no `question` to refer to")
 		}
 		return questionIdentifier
 	}
@@ -73,10 +73,15 @@ extension QuestionnaireItemEnableWhen {
 	- parameter questionIdentifier: The identifier of the question step this extension applies to
 	- returns: An `ORKQuestionResult` representing the result that is required for the item to be shown
 	*/
-	func c3_answerResult(questionIdentifier: String) throws -> ORKQuestionResult {
+	func c3_answerResult(_ questionIdentifier: String) throws -> ORKQuestionResult {
 		let questionIdentifier = try c3_questionIdentifier()
 		if let answer = answerBoolean {
 			let result = ORKBooleanQuestionResult(identifier: questionIdentifier)
+			result.answer = answer
+			return result
+		}
+		if let answer = answerString {
+			let result = ORKTextQuestionResult(identifier: questionIdentifier)
 			result.answer = answer
 			return result
 		}
@@ -88,9 +93,9 @@ extension QuestionnaireItemEnableWhen {
 				result.answer = [value]
 				return result
 			}
-			throw C3Error.QuestionnaireEnableWhenIncomplete("\(self) has `answerCoding` but is missing a code, cannot create a question result")
+			throw C3Error.questionnaireEnableWhenIncomplete("\(self) has `answerCoding` but is missing a code, cannot create a question result")
 		}
-		throw C3Error.QuestionnaireEnableWhenIncomplete("\(self) has no `answerXy` type that is supported right now")
+		throw C3Error.questionnaireEnableWhenIncomplete("\(self) has no `answerType` type that is supported right now")
 	}
 }
 

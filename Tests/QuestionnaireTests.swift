@@ -16,18 +16,18 @@ class QuestionnaireChoiceTests: XCTestCase {
 	
 	func testContainedValueSet() {
 		do {
-			let bundle = NSBundle(forClass: self.dynamicType)
+			let bundle = Bundle(for: type(of: self))
 			let questionnaire = try bundle.fhir_bundledResource("Questionnaire_ValueSet-contained", type: Questionnaire.self)
 			let controller = QuestionnaireController(questionnaire: questionnaire)
 			
-			let exp = self.expectationWithDescription("Questionnaire preparation")
+			let exp = self.expectation(description: "Questionnaire preparation")
 			controller.prepareQuestionnaire() { task, error in
 				XCTAssertNil(error)
 				XCTAssertNotNil(task, "Must succeed in building a task")
 				XCTAssertEqual("ValueSet-contained", task?.identifier)
 				
 				// step 1 is the ValueSet-referencing step
-				let step1 = task?.stepWithIdentifier!("choice-valueSet") as? ConditionalQuestionStep
+				let step1 = task?.step!(withIdentifier: "choice-valueSet") as? ConditionalQuestionStep
 				XCTAssertNotNil(step1, "Should have found step 1 and made it a conditional question step")
 				XCTAssertEqual(step1?.title, "Limited simple choice?")
 				XCTAssertTrue(step1?.answerFormat is ORKTextChoiceAnswerFormat)
@@ -44,18 +44,18 @@ class QuestionnaireChoiceTests: XCTestCase {
 				XCTAssertEqual(choice3?.text, "No, not limited at all!")
 				XCTAssertEqual(choice3?.value.description, "http://sf-36.org/fhir/StructureDefinition/answers-3-levels 3")
 				
-				let step2 = task?.stepWithIdentifier!("choice-boolean") as? ConditionalQuestionStep
+				let step2 = task?.step!(withIdentifier: "choice-boolean") as? ConditionalQuestionStep
 				XCTAssertNotNil(step2, "Should have found step 2 and made it a conditional question step")
 				XCTAssertEqual(step2?.text, "And this is additional, very useful, instructional text.")
 				XCTAssertTrue(step2?.answerFormat is ORKBooleanAnswerFormat)
 				
-				let step3 = task?.stepWithIdentifier!("display-step") as? ConditionalInstructionStep
+				let step3 = task?.step!(withIdentifier: "display-step") as? ConditionalInstructionStep
 				XCTAssertNotNil(step3, "Should have found step 3 and made it an instruction step")
 				XCTAssertEqual(step3?.text, "Pressing “Done” will complete this survey!")
 				
 				exp.fulfill()
 			}
-			self.waitForExpectationsWithTimeout(4, handler: nil)
+			self.waitForExpectations(timeout: 4, handler: nil)
 		}
 		catch let error {
 			XCTAssertTrue(false, "Failed: \(error)")
@@ -64,7 +64,7 @@ class QuestionnaireChoiceTests: XCTestCase {
 	
 	func testRelativeValueSet() {
 		let local = BundledFileServer()
-		let exp = self.expectationWithDescription("Questionnaire preparation")
+		let exp = self.expectation(description: "Questionnaire preparation")
 		Questionnaire.read("ValueSet-relative", server: local) { resource, error in
 			XCTAssertNil(error, "Not expecting an error but got \(error)")
 			guard let questionnaire = resource as? Questionnaire else {
@@ -79,7 +79,7 @@ class QuestionnaireChoiceTests: XCTestCase {
 				XCTAssertEqual("ValueSet-relative", task?.identifier)
 				
 				// step 1 is the ValueSet-referencing step
-				let step1 = task?.stepWithIdentifier!("choice-valueSet") as? ConditionalQuestionStep
+				let step1 = task?.step!(withIdentifier: "choice-valueSet") as? ConditionalQuestionStep
 				XCTAssertNotNil(step1, "Should have found step 1 and made it a conditional question step")
 				XCTAssertEqual(step1?.title, "A Limited Choice?")
 				XCTAssertTrue(step1?.answerFormat is ORKTextChoiceAnswerFormat)
@@ -96,19 +96,19 @@ class QuestionnaireChoiceTests: XCTestCase {
 				XCTAssertEqual(choice3?.text, "No, not limited at all")
 				XCTAssertEqual(choice3?.value.description, "http://sf-36.org/fhir/StructureDefinition/answers-3-levels 3")
 				
-				let step2 = task?.stepWithIdentifier!("choice-boolean") as? ConditionalQuestionStep
+				let step2 = task?.step!(withIdentifier: "choice-boolean") as? ConditionalQuestionStep
 				XCTAssertNotNil(step2, "Should have found step 2 and made it a conditional question step")
 				XCTAssertEqual(step2?.text, "And it has this additional instructional text.")
 				XCTAssertTrue(step2?.answerFormat is ORKBooleanAnswerFormat)
 				
-				let step3 = task?.stepWithIdentifier!("display-step") as? ConditionalInstructionStep
+				let step3 = task?.step!(withIdentifier: "display-step") as? ConditionalInstructionStep
 				XCTAssertNotNil(step3, "Should have found step 3 and made it an instruction step")
 				XCTAssertEqual(step3?.text, "Pressing “Done” will complete this survey.")
 				
 				exp.fulfill()
 			}
 		}
-		self.waitForExpectationsWithTimeout(4, handler: nil)
+		self.waitForExpectations(timeout: 4, handler: nil)
 	}
 }
 
@@ -120,26 +120,26 @@ and requesting this resource from the bundle. This class should probably only be
 class BundledFileServer: Server {
 	
 	init() {
-		super.init(baseURL: NSURL(string: "http://localhost")!)
+		super.init(baseURL: URL(string: "http://localhost")!)
 	}
 	
-	required init(baseURL base: NSURL, auth: OAuth2JSON?) {
+	required init(baseURL base: URL, auth: OAuth2JSON?) {
 		super.init(baseURL: base, auth: auth)
 	}
 	
-	override func performPreparedRequest<R : FHIRServerRequestHandler>(request: NSMutableURLRequest, handler: R, callback: ((response: FHIRServerResponse) -> Void)) {
-		let parts = request.URL?.path?.componentsSeparatedByString("/").filter() { $0.characters.count > 0 }
-		guard let localName = parts?.joinWithSeparator("_") else {
-			callback(response: handler.notSent("Unable to infer local filename from request URL path \(request.URL?.description ?? "nil")"))
+	override func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, handler: R, callback: @escaping ((FHIRServerResponse) -> Void)) {
+		let parts = request.url?.path.components(separatedBy: "/").filter() { $0.characters.count > 0 }
+		guard let localName = parts?.joined(separator: "_") else {
+			callback(handler.notSent("Unable to infer local filename from request URL path \(request.url?.description ?? "nil")"))
 			return
 		}
 		do {
-			let resource = try NSBundle(forClass: self.dynamicType).fhir_bundledResource(localName, type: Resource.self)
+			let resource = try Bundle(for: type(of: self)).fhir_bundledResource(localName, type: Resource.self)
 			let response = FHIRServerResourceResponse(resource: resource)
-			callback(response: response)
+			callback(response)
 		}
 		catch let error {
-			callback(response: handler.notSent("Error: \(error)"))
+			callback(handler.notSent("Error: \(error)"))
 		}
 	}
 }
@@ -151,18 +151,18 @@ class FHIRServerResourceResponse: FHIRServerDataResponse {
 	
 	init(resource: Resource) {
 		self.resource = resource
-		super.init(response: NSURLResponse(), data: nil, urlError: nil)
+		super.init(response: URLResponse(), data: nil, error: nil)
 	}
 	
-	required init(response: NSURLResponse, data: NSData?, urlError: NSError?) {
-		fatalError("Cannot use init(response:data:urlError:)")
+	required init(response: URLResponse, data: Data?, error: Error?) {
+		fatalError("Cannot use init(response:data:error:)")
 	}
 	
-	required init(error: ErrorType) {
+	required init(error: Error) {
 		fatalError("Cannot use init(error:)")
 	}
 	
-	override func responseResource<T : Resource>(expectType: T.Type) -> T? {
+	override func responseResource<T : Resource>(ofType: T.Type) -> T? {
 		guard let resource = resource as? T else {
 			return nil
 		}

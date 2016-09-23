@@ -1,5 +1,5 @@
 //
-//  GroupExtensions.swift
+//  Group+C3-PRO.swift
 //  C3PRO
 //
 //  Created by Pascal Pfiffner on 23/10/15.

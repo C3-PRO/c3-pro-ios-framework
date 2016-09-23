@@ -1,5 +1,5 @@
 //
-//  FHIRExtensions.swift
+//  FHIR+C3-PRO.swift
 //  C3PRO
 //
 //  Created by Pascal Pfiffner on 7/29/15.
@@ -30,7 +30,7 @@ extension Element {
 	- returns: A list of `Extension` resources for the _minValue_ extension
 	*/
 	final func c3_minValue() -> [Extension]? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/minValue")
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/minValue")
 	}
 	
 	/**
@@ -40,7 +40,7 @@ extension Element {
 	- returns: A list of `Extension` resources for the _maxValue_ extension
 	*/
 	final func c3_maxValue() -> [Extension]? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/maxValue")
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/maxValue")
 	}
 }
 
