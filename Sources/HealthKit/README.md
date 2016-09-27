@@ -158,7 +158,7 @@ store.c3_latestSample(ofType: HKQuantityTypeIdentifier.height) { quantity, error
         c3_warn("Error reading latest body height: \(error)")
     }
     else if let quantity = quantity {
-        let unit = HKUnit.meterUnit()
+        let unit = HKUnit.meter()
         let fhir = try! quantity.c3_asFHIRQuantityInUnit(unit)
         print("-->  \(fhir.asJSON())")
     }
@@ -168,10 +168,10 @@ store.c3_latestSample(ofType: HKQuantityTypeIdentifier.height) { quantity, error
 }
 
 
-let end = NSDate()
-let comps = NSDateComponents()
+let end = Date()
+var comps = DateComponents()
 comps.day = -14
-let start = NSCalendar.currentCalendar().dateByAddingComponents(comps, toDate: end, options: [])!
+let start = Calendar.current.date(byAdding: comps, to: end)!
 
 store.c3_summaryOfSamplesOfTypeBetween(HKQuantityTypeIdentifier.flightsClimbed, start: start, end: end) { result, error in
     if let result = result {

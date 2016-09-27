@@ -21,6 +21,7 @@
 import Foundation
 import CoreMotion
 import SMART
+import SQLite
 
 
 /**
@@ -50,9 +51,7 @@ open class CoreMotionReporter: ActivityReporter {
 	
 	/**
 	Returns the SQLite connection object to use.
-	
-	TODO: reactivate once SQLiteSwift works with Swift 3
-	* /
+	*/
 	func connection() throws -> Connection {
 		#if false
 		let fm = NSFileManager()
@@ -62,7 +61,7 @@ open class CoreMotionReporter: ActivityReporter {
 		}
 		#endif
 		return try Connection(databaseLocation)
-	}	//	*/
+	}
 	
 	
 	// MARK: - Archiving
@@ -88,9 +87,6 @@ open class CoreMotionReporter: ActivityReporter {
 		}
 		
 		do {
-			callback(0, C3Error.notImplemented("Activity archiving is not yet available with Swift 3"))
-			/*
-			TODO: reactivate once SQLiteSwift works with Swift 3
 			let db = try connection()
 			let activities = Table("activities")
 			let start = Expression<Double>("start")          // Start in seconds since NSDate reference date (1/1/2001)
@@ -98,7 +94,7 @@ open class CoreMotionReporter: ActivityReporter {
 			let confidence = Expression<Int>("confidence")   // 0 = low, 1 = medium, 2 = high
 			
 			// create table if needed
-			try db.run(activities.create(ifNotExists: true) { t in
+			_ = try db.run(activities.create(ifNotExists: true) { t in
 				t.column(start, unique: true)
 				t.column(activity)
 				t.column(confidence)
@@ -109,13 +105,13 @@ open class CoreMotionReporter: ActivityReporter {
 			var latest: Date?
 			let query = activities.select(start).order(start.desc).limit(1)
 			for row in try db.prepare(query) {
-				latest = NSDate(timeIntervalSinceReferenceDate: row[start])
+				latest = Date(timeIntervalSinceReferenceDate: row[start])
 			}
 			
 			if let latest = latest, (now.timeIntervalSinceReferenceDate - latest.timeIntervalSinceReferenceDate) < 2*60 {
 				c3_logIfDebug("Latest activity was sampled \(latest), not archiving again")
 				c3_performOnMainQueue() {
-					callback(numNewActivities: 0, error: nil)
+					callback(0, nil)
 				}
 				return
 			}
@@ -124,35 +120,35 @@ open class CoreMotionReporter: ActivityReporter {
 			let processor = processor ?? CoreMotionStandardActivityInterpreter()
 			collectCoreMotionActivities(startingOn: latest, processor: processor) { samples, collError in
 				if let error = collError {
-					callback(numNewActivities: 0, error: error)
+					callback(0, error)
 					return
 				}
 				if 0 == samples.count {
-					callback(numNewActivities: 0, error: nil)
+					callback(0, nil)
 					return
 				}
 				
 				// insert into database
-				DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.background).async {
+				DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
 					do {
 						try db.transaction() {
-							print("\(NSDate()) ARCHIVER inserting \(samples.count) samples")
+							print("\(Date()) ARCHIVER inserting \(samples.count) samples")
 							for sample in samples {
-								try db.run(activities.insert(or: .Ignore,    // UNIQUE constraint on `start` may fail, which we want to ignore
+								_ = try db.run(activities.insert(or: .ignore,    // UNIQUE constraint on `start` may fail, which we want to ignore
 									start <- round(sample.startDate.timeIntervalSinceReferenceDate * 10) / 10,
 									activity <- sample.type.rawValue,
 									confidence <- sample.confidence.rawValue))
 							}
-							print("\(NSDate()) ARCHIVER done inserting")
+							print("\(Date()) ARCHIVER done inserting")
 						}
 						self.lastArchival = Date()
 						c3_performOnMainQueue() {
-							callback(numNewActivities: samples.count, error: nil)
+							callback(samples.count, nil)
 						}
 					}
 					catch let error {
 						c3_performOnMainQueue() {
-							callback(numNewActivities: 0, error: error)
+							callback(0, error)
 						}
 					}
 				}
@@ -173,7 +169,7 @@ open class CoreMotionReporter: ActivityReporter {
 	There is a bit of processing happening, rather than raw instances being returned, in the receiver's `preprocess(activities:)`
 	implementation.
 	
-	- parameter startingOn: The NSDate at which to start sampling, up until now
+	- parameter startingOn: The Date at which to start sampling, up until now
 	- parameter processor:  A `CoreMotionActivityInterpreter` instance to handle CMMotionActivity preprocessing (not interpretation!) before
 	                        the callback returns
 	- parameter callback:   The callback to call when sampling completes. Will execute on the main queue
@@ -257,8 +253,6 @@ open class CoreMotionReporter: ActivityReporter {
 	- parameter interpreter: The interpreter to use; uses a fresh instance of `CoreMotionStandardActivityInterpreter` if nil
 	*/
 	func retrieveActivities(startingAt start: Date, until: Date, interpreter: CoreMotionActivityInterpreter) throws -> [InterpretedCoreMotionActivity] {
-		/*
-		TODO: reactivate
 		let db = try self.connection()
 		let activitiesTable = Table("activities")
 		let startCol = Expression<Double>("start")
@@ -271,13 +265,13 @@ open class CoreMotionReporter: ActivityReporter {
 		// query database
 		let filtered = activitiesTable.filter(startCol >= startTime).filter(startCol <= endTime)	//	*/
 		var collected = [InterpretedCoreMotionActivity]()
-		/*for row in try db.prepare(filtered) {
+		for row in try db.prepare(filtered) {
 			let activity = InterpretedCoreMotionActivity(start: row[startCol], activity: row[activityCol], confidence: row[confidenceCol], end: 0.0)
 			if let prev = collected.last {
 				prev.endDate = activity.startDate
 			}
 			collected.append(activity)
-		}	//	*/
+		}
 		if let last = collected.last {
 			last.endDate = until
 		}

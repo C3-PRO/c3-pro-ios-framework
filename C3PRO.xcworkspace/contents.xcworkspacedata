@@ -13,4 +13,7 @@
    <FileRef
       location = "group:ResearchKit/ResearchKit.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:SQLiteSwift/SQLite.xcodeproj">
+   </FileRef>
 </Workspace>
