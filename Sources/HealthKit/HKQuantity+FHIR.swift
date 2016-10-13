@@ -49,11 +49,11 @@ public extension HKQuantity {
 	- parameter unit: The unit to use
 	- returns: A Quantity instance on success
 	*/
-	public func c3_asFHIRQuantityInUnit(unit: HKUnit) throws -> Quantity {
-		if isCompatibleWithUnit(unit) {
-			return Quantity(json: ["value": doubleValueForUnit(unit), "unit": unit.unitString])
+	public func c3_asFHIRQuantityInUnit(_ unit: HKUnit) throws -> Quantity {
+		if `is`(compatibleWith: unit) {
+			return Quantity(json: ["value": self.doubleValue(for: unit), "unit": unit.unitString])
 		}
-		throw C3Error.QuantityNotCompatibleWithUnit
+		throw C3Error.quantityNotCompatibleWithUnit
 	}
 }
 
@@ -68,21 +68,21 @@ public extension HKQuantityType {
 	*/
 	public func c3_preferredUnit() -> HKUnit {
 		switch identifier {
-		case HKQuantityTypeIdentifierActiveEnergyBurned:
-			return HKUnit.jouleUnitWithMetricPrefix(.Kilo)
-		case HKQuantityTypeIdentifierBodyMass:
-			return HKUnit.gramUnitWithMetricPrefix(.Kilo)
-		case HKQuantityTypeIdentifierBodyTemperature:
-			return HKUnit.degreeCelsiusUnit()
-		case HKQuantityTypeIdentifierHeight:
-			return HKUnit.meterUnit()
-		case HKQuantityTypeIdentifierFlightsClimbed:
-			return HKUnit.countUnit()
-		case HKQuantityTypeIdentifierStepCount:
-			return HKUnit.countUnit()
+		case HKQuantityTypeIdentifier.activeEnergyBurned.rawValue:
+			return HKUnit.jouleUnit(with: .kilo)
+		case HKQuantityTypeIdentifier.bodyMass.rawValue:
+			return HKUnit.gramUnit(with: .kilo)
+		case HKQuantityTypeIdentifier.bodyTemperature.rawValue:
+			return HKUnit.degreeCelsius()
+		case HKQuantityTypeIdentifier.height.rawValue:
+			return HKUnit.meter()
+		case HKQuantityTypeIdentifier.flightsClimbed.rawValue:
+			return HKUnit.count()
+		case HKQuantityTypeIdentifier.stepCount.rawValue:
+			return HKUnit.count()
 		// TODO: add more
 		default:
-			return HKUnit.gramUnit()
+			return HKUnit.gram()
 		}
 	}
 }

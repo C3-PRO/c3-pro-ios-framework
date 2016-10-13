@@ -25,21 +25,27 @@ import CryptoSwift
 /**
 Utility to work with symmetric AES encryption. Relies on `CryptoSwift`.
 */
-public class AESUtility {
+open class AESUtility {
 	
 	/// Bytes of the key to use, 32 by default.
-	public var keySize = 32
+	open var keySize = 32
 	
 	/// NSData representation of the symmetric key.
-	public var symmetricKeyData: NSData {
-		return NSData.withBytes(symmetricKey)
+	open var symmetricKeyData: Data {
+		return Data(bytes: symmetricKey)
 	}
 	
 	var symmetricKey: [UInt8]
 	
-	/** Designated initializer. Creates a random symmetric key. */
-	public init() {
-		symmetricKey = AES.randomIV(keySize)
+	/** Designated initializer. Creates a random symmetric key if none is provided. */
+	public init(key: [UInt8]? = nil) {
+		if let key = key {
+			symmetricKey = key
+			keySize = key.count
+		}
+		else {
+			symmetricKey = AES.randomIV(keySize)
+		}
 	}
 	
 	
@@ -48,7 +54,7 @@ public class AESUtility {
 	/**
 	Generate a new random key of `keySize` length.
 	*/
-	public func randomizeKey() {
+	open func randomizeKey() {
 		symmetricKey = AES.randomIV(keySize)
 	}
 	
@@ -61,11 +67,10 @@ public class AESUtility {
 	- parameter data: The data to encrypt using the receiver's symmetric key
 	- returns: Encryped data representation
 	*/
-	public func encrypt(data: NSData) throws -> NSData {
-		let iv = [UInt8](count: AES.blockSize, repeatedValue: 0)  // specify default iv to prevent bug #261 in CryptoSwift 0.4.1
-		let aes = try AES(key: symmetricKey, iv: iv)              // this only fails if keySize is wrong
-		let enc = try aes.encrypt(data.arrayOfBytes())
-		return NSData.withBytes(enc)
+	open func encrypt(data: Data) throws -> Data {
+		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
+		let enc = try aes.encrypt(data.bytes)
+		return Data(bytes: enc)
 	}
 	
 	
@@ -77,10 +82,10 @@ public class AESUtility {
 	- parameter encData: Encrypted data to decrypt using the receiver's symmetric key
 	- returns: Decrypted data
 	*/
-	public func decrypt(encData: NSData) throws -> NSData {
+	open func decrypt(encData: Data) throws -> Data {
 		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
-		let dec = try aes.decrypt(encData.arrayOfBytes())
-		return NSData.withBytes(dec)
+		let dec = try aes.decrypt(encData.bytes)
+		return Data(bytes: dec)
 	}
 }
 

@@ -1,0 +1,11 @@
+# require ResearchKit
+github "ResearchKit/ResearchKit" ~> 1.3.1
+
+# require SMART
+github "smart-on-fhir/Swift-SMART" "master"
+
+# require CryptoSwift
+github "krzyzanowskim/CryptoSwift" ~> 0.6.0
+
+# require SQLite.swift
+github "p2/SQLite.swift" "hotfix/insert-or-ignore"

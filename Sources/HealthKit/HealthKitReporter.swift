@@ -28,7 +28,7 @@ Convenience class querying HealthKit and CoreMotion for activity data.
 
 See [HealthKit/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/HealthKit#activity-reporter) for detailed instructions.
 */
-public class HealthKitReporter: ActivityReporter {
+open class HealthKitReporter: ActivityReporter {
 	
 	/// The health store used by the instance.
 	lazy var healthStore = HKHealthStore()
@@ -43,7 +43,7 @@ public class HealthKitReporter: ActivityReporter {
 	/**
 	Creates one `ActivityReportPeriod` instance containing summarized HKQuantitySample over the given period.
 	*/
-	public func reportForActivityPeriod(startingAt start: NSDate, until: NSDate, callback: ((period: ActivityReportPeriod?, error: ErrorType?) -> Void)) {
+	open func reportForActivityPeriod(startingAt start: Date, until: Date, callback: @escaping ((_ period: ActivityReportPeriod?, _ error: Error?) -> Void)) {
 		retrieveHealthKitActivitySummary(startingAt: start, until: until) { samples, error in
 			
 			// create the period
@@ -54,7 +54,7 @@ public class HealthKitReporter: ActivityReporter {
 			// Put all data into one ActivityData instance
 			let report = ActivityReportPeriod(period: period)
 			report.healthKitSamples = samples
-			callback(period: report, error: error)
+			callback(report, error)
 		}
 	}
 	
@@ -65,15 +65,15 @@ public class HealthKitReporter: ActivityReporter {
 	Samples activity data in HealthKit (steps, flights climbed and active energy) and returns one HKQuantitySample per type in a callback.
 	Uses `c3_summaryOfSamplesOfTypeBetween(type:start:end:)` on the receiver's HKHealthStore instance.
 	*/
-	public func retrieveHealthKitActivitySummary(startingAt start: NSDate, until: NSDate, callback: ((samples: [HKQuantitySample]?, error: ErrorType?) -> Void)) {
+	open func retrieveHealthKitActivitySummary(startingAt start: Date, until: Date, callback: @escaping ((_ samples: [HKQuantitySample]?, _ error: Error?) -> Void)) {
 		if HKHealthStore.isHealthDataAvailable() {
-			let queueGroup = dispatch_group_create()
+			let queueGroup = DispatchGroup()
 			var quantities = [HKQuantitySample]()
-			var errors = [ErrorType]()
+			var errors = [Error]()
 			
-			let types = [HKQuantityTypeIdentifierStepCount, HKQuantityTypeIdentifierFlightsClimbed, HKQuantityTypeIdentifierActiveEnergyBurned]
+			let types = [HKQuantityTypeIdentifier.stepCount, HKQuantityTypeIdentifier.flightsClimbed, HKQuantityTypeIdentifier.activeEnergyBurned]
 			for type in types {
-				dispatch_group_enter(queueGroup)
+				queueGroup.enter()
 				healthStore.c3_summaryOfSamplesOfTypeBetween(type, start: start, end: until) { result, error in
 					if let result = result {
 						quantities.append(result)
@@ -81,18 +81,18 @@ public class HealthKitReporter: ActivityReporter {
 					else if let error = error {
 						errors.append(error)
 					}
-					dispatch_group_leave(queueGroup)
+					queueGroup.leave()
 				}
 			}
 			
 			// on group notify, call the callback on the main queue
-			dispatch_group_notify(queueGroup, dispatch_get_main_queue()) {
-				callback(samples: quantities, error: (errors.count > 0) ? C3Error.MultipleErrors(errors) : nil)
+			queueGroup.notify(queue: DispatchQueue.main) {
+				callback(quantities, (errors.count > 0) ? C3Error.multipleErrors(errors) : nil)
 			}
 		}
 		else {
 			c3_logIfDebug("HKHealthStorage is not available")
-			callback(samples: nil, error: C3Error.HealthKitNotAvailable)
+			callback(nil, C3Error.healthKitNotAvailable)
 		}
 	}
 }

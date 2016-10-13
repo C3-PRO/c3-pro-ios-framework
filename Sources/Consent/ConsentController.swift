@@ -24,9 +24,9 @@ import ResearchKit
 
 
 /**
-Callback used when signing the consent. Provides `contract`, `patient` and an optional `error`.
+Callback used when signing the consent. Provides `Contract`, `Patient` and an optional `Error`.
 */
-public typealias ConsentSigningCallback = ((contract: Contract, patient: Patient, error: ErrorType?) -> Void)
+public typealias ConsentSigningCallback = ((Contract, Patient, Error?) -> Void)
 
 /// Name of notification sent when the user completes and agrees to consent.
 public let C3UserDidConsentNotification = "C3UserDidConsentNotification"
@@ -89,10 +89,10 @@ public class ConsentController {
 	var consentDelegate: ConsentTaskViewControllerDelegate?
 	
 	/// The callback to call when the user consents.
-	var onUserDidConsent: ((controller: ORKTaskViewController, result: ConsentResult) -> Void)?
+	var onUserDidConsent: ((ORKTaskViewController, ConsentResult) -> Void)?
 	
 	/// The callback to call when the user declines (or aborts) consenting.
-	var onUserDidDeclineConsent: ((controller: ORKTaskViewController) -> Void)?
+	var onUserDidDeclineConsent: ((ORKTaskViewController) -> Void)?
 	
 	/// Whether a PIN was present before; if not and consenting is cancelled, the PIN is cleared.
 	internal private(set) var pinPresentBefore = false
@@ -104,16 +104,17 @@ public class ConsentController {
 	/**
 	Designated initializer.
 	
-	You can optionally supply the name of a bundled JSON file (without extension) that represents a serialized FHIR Contract resource.
+	You can optionally supply the name of a bundled JSON file (without extension) that represents a serialized FHIR Contract resource. This
+	uses the Bundle containing the C3PRO modules, so if you're calling the method from a different bundle (e.g. when unit testing), don't
+	provide a filename and assign `contract` manually by using `fhir_bundledResource(name:subdirectory:type:)`.
+	
+	- parameter bundledContract: The filename (without ".json" of the Contract resource to read)
+	- parameter subdirectory:    The subdirectory, if any, the Contract resource is located in
 	*/
-	public init(bundledContract: String? = nil) {
+	public init(bundledContract: String? = nil, subdirectory: String? = nil) throws {
 		if let name = bundledContract {
-			do {
-				contract = try NSBundle.mainBundle().fhir_bundledResource(name) as? Contract
-			}
-			catch let error {
-				c3_warn("failed to read bundled Contract resource: \(error)")
-			}
+			let bundle = Bundle(for: type(of: self))
+			contract = try bundle.fhir_bundledResource(name, subdirectory: subdirectory, type: Contract.self)
 		}
 	}
 	
@@ -126,9 +127,10 @@ public class ConsentController {
 	
 	- parameter config: An optional `StudyIntroConfiguration` instance that carries custom eligible/ineligible texts
 	- parameter onStartConsent: The block to execute when all eligibility criteria are met and the participant wants to start consent. Leave
-	    nil to automatically present (and dismiss) the consent task view controller that will be returned by `consentViewController()`.
+	                            nil to automatically present (and dismiss) the consent task view controller that will be returned by
+	                            `consentViewController()`.
 	*/
-	public func eligibilityStatusViewController(config: StudyIntroConfiguration? = nil, onStartConsent: ((viewController: EligibilityCheckViewController) -> Void)? = nil) -> EligibilityStatusViewController {
+	public func eligibilityStatusViewController(_ config: StudyIntroConfiguration? = nil, onStartConsent: ((EligibilityCheckViewController) -> Void)? = nil) -> EligibilityStatusViewController {
 		let check = EligibilityStatusViewController()
 		check.title = "Eligibility".c3_localized
 		check.titleText = "Let's see if you may take part in this study".c3_localized
@@ -136,7 +138,7 @@ public class ConsentController {
 		check.actionButtonTitle = "Start Eligibility".c3_localized
 		
 		// the actual eligibility check view controller; configure to present on check's navigation controller if no block is provided
-		let elig = EligibilityCheckViewController(style: .Grouped)
+		let elig = EligibilityCheckViewController(style: .grouped)
 		if let onStartConsent = onStartConsent {
 			elig.onStartConsent = onStartConsent
 		}
@@ -146,14 +148,14 @@ public class ConsentController {
 					do {
 						let consent = try self.consentViewController(
 							onUserDidConsent: { controller, result in
-								navi.dismissViewControllerAnimated(true, completion: nil)
+								navi.dismiss(animated: true, completion: nil)
 							},
 							onUserDidDecline: { controller in
-								navi.popToRootViewControllerAnimated(false)
-								navi.dismissViewControllerAnimated(true, completion: nil)
+								navi.popToRootViewController(animated: false)
+								navi.dismiss(animated: true, completion: nil)
 							}
 						)
-						navi.presentViewController(consent, animated: true, completion: nil)
+						navi.present(consent, animated: true, completion: nil)
 					}
 					catch let error {
 						c3_warn("failed to create consent view controller: \(error)")
@@ -176,7 +178,7 @@ public class ConsentController {
 		// eligibility requirements
 		check.waitingForAction = true
 		eligibilityRequirements { requirements in
-			dispatch_async(dispatch_get_main_queue()) {
+			DispatchQueue.main.async {
 				elig.requirements = requirements
 				check.waitingForAction = false
 			}
@@ -199,7 +201,7 @@ public class ConsentController {
 	- parameter callback: The callback that is called when the group is resolved (or resolution fails); may be on any thread but may be
 	                      called immediately in case of embedded resources.
 	*/
-	public func eligibilityRequirements(callback: ((requirements: [EligibilityRequirement]?) -> Void)) {
+	public func eligibilityRequirements(callback: @escaping (([EligibilityRequirement]?) -> Void)) {
 		if let group = contract?.subject?.first {
 			group.resolve(Group.self) { group in
 				if let characteristics = group?.characteristic {
@@ -212,17 +214,17 @@ public class ConsentController {
 							c3_warn("this characteristic failed to return an eligibility requirement: \(characteristic.asJSON())")
 						}
 					}
-					callback(requirements: criteria)
+					callback(criteria)
 				}
 				else {
 					c3_warn("failed to resolve the contract's subject group or there are no characteristics, hence no eligibility criteria")
-					callback(requirements: nil)
+					callback(nil)
 				}
 			}
 		}
 		else {
 			logger?.debug("C3-PRO", msg: "the contract does not have a subject, hence no eligibility criteria")
-			callback(requirements: nil)
+			callback(nil)
 		}
 	}
 	
@@ -236,10 +238,10 @@ public class ConsentController {
 	- returns: A `ConsentTask` that can be presented using ResearchKit
 	*/
 	public func createConsentTask() throws -> ConsentTask {
-		if let contract = contract {
-			return try ConsentTask(identifier: NSUUID().UUIDString, contract: contract, options: options)
+		guard let contract = contract else {
+			throw C3Error.consentContractNotPresent
 		}
-		throw C3Error.ConsentContractNotPresent
+		return try ConsentTask(identifier: UUID().uuidString, contract: contract, options: options)
 	}
 	
 	/**
@@ -252,8 +254,8 @@ public class ConsentController {
 	- parameter onUserDidDecline: Block executed when the user cancels or actively declines consent
 	- throws: Re-throws from `createConsentTask()`
 	*/
-	public func consentViewController(onUserDidConsent onConsent: ((controller: ORKTaskViewController, result: ConsentResult) -> Void),
-		onUserDidDecline: ((controller: ORKTaskViewController) -> Void)) throws -> ORKTaskViewController {
+	public func consentViewController(onUserDidConsent onConsent: @escaping ((ORKTaskViewController, ConsentResult) -> Void),
+		onUserDidDecline: @escaping ((ORKTaskViewController) -> Void)) throws -> ORKTaskViewController {
 		
 		if nil != onUserDidConsent {
 			c3_warn("a `onUserDidConsent` block is already set on \(self), are you already presenting a consent view controller? This might have unintended consequences.")
@@ -263,25 +265,25 @@ public class ConsentController {
 		consentDelegate = ConsentTaskViewControllerDelegate(controller: self)
 		
 		let task = try createConsentTask()
-		let consentVC = ORKTaskViewController(task: task, taskRunUUID: NSUUID())
+		let consentVC = ORKTaskViewController(task: task, taskRun: UUID())
 		consentVC.delegate = consentDelegate!
 		pinPresentBefore = ORKPasscodeViewController.isPasscodeStoredInKeychain()
 		
 		return consentVC
 	}
 	
-	func userDidFinishConsent(taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason) {
+	func userDidFinishConsent(_ taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason) {
 		if let task = taskViewController.task as? ConsentTask {
-            if .Completed == reason {
+            if .completed == reason {
 				let taskResult = taskViewController.result
 				
                 // if we have a signature in the signature result, we're consented: create PDF and call the callbacks
-                if let signatureResult = task.signatureResult(taskResult), let signature = task.signatureInResult(signatureResult) {
+				if let signatureResult = task.signatureResult(from: taskResult), let signature = task.signature(in: signatureResult) {
                     let result = ConsentResult(signature: signature)
-					signConsentDocument(task.consentDocument, withSignature: signatureResult)                    
+					sign(consentDocument: task.consentDocument, with: signatureResult)                    
                     
                     // sharing choice
-                    if let sharingResult = taskResult.stepResultForStepIdentifier(task.dynamicType.sharingStepName),
+                    if let sharingResult = taskResult.stepResult(forStepIdentifier: type(of: task).sharingStepName),
                         let sharing = sharingResult.results?.first as? ORKChoiceQuestionResult,
                         let choice = sharing.choiceAnswers?.first as? Int {
                             result.shareWidely = (0 == choice)			// the first option, index 0, is "share worldwide"
@@ -296,7 +298,7 @@ public class ConsentController {
                     userDidDeclineConsent(taskViewController)
                 }
             }
-			else if .Discarded == reason {
+			else if .discarded == reason {
 				userDidDeclineConsent(taskViewController)
 			}
 			else {
@@ -316,25 +318,25 @@ public class ConsentController {
 	/**
 	Called when the user successfully completes the consent task and agrees to all the things.
 	*/
-	public func userDidConsent(taskViewController: ORKTaskViewController, result: ConsentResult) {
+	public func userDidConsent(_ taskViewController: ORKTaskViewController, result: ConsentResult) {
 		if let exec = onUserDidConsent {
-			exec(controller: taskViewController, result: result)
+			exec(taskViewController, result)
 		}
 		let userInfo = [C3ConsentResultKey: result]
-		NSNotificationCenter.defaultCenter().postNotificationName(C3UserDidConsentNotification, object: self, userInfo: userInfo)
+		NotificationCenter.default.post(name: Notification.Name(rawValue: C3UserDidConsentNotification), object: self, userInfo: userInfo)
 	}
 	
 	/**
 	Called when the user aborts consenting or actively declines consent.
 	*/
-	public func userDidDeclineConsent(taskViewController: ORKTaskViewController) {
+	public func userDidDeclineConsent(_ taskViewController: ORKTaskViewController) {
 		if !pinPresentBefore {
 			ORKPasscodeViewController.removePasscodeFromKeychain()
 		}
 		if let exec = onUserDidDeclineConsent {
-			exec(controller: taskViewController)
+			exec(taskViewController)
 		}
-		NSNotificationCenter.defaultCenter().postNotificationName(C3UserDidDeclineConsentNotification, object: self)
+		NotificationCenter.default.post(name: Notification.Name(rawValue: C3UserDidDeclineConsentNotification), object: self)
 	}
 	
 	
@@ -344,56 +346,70 @@ public class ConsentController {
 	Instantiates a new "Contract" resource and fills the properties to represent a consent signed by a participant referencing the given
 	patient.
 	
-	- parameter patient: The Patient resource to use to sign
-	- parameter date: The date at which the contract was signed
-	- throws: `C3Error` when referencing the patient resource fails
-	- returns: A signed Contract resource, usually the receiver's `contract` ivar
+	- parameter with:   The Patient resource to use to sign
+	- parameter result: The date at which the contract was signed
+	- throws:           `C3Error` when referencing the patient resource fails
+	- returns:          A signed Contract resource, usually the receiver's `contract` ivar
 	*/
-	public func signContractWithPatient(patient: Patient, date: NSDate) throws -> Contract {
+	public func signContract(with patient: Patient, result: ConsentResult) throws -> Contract {
 		if nil == patient.id {
-			patient.id = NSUUID().UUIDString
+			patient.id = UUID().uuidString
 		}
 		do {
 			let reference = try patient.asRelativeReference()
 			let myContract = contract ?? Contract(json: nil)
+			let date = result.consentDate ?? Date()
 			
 			// applicable period
 			let period = Period(json: nil)
 			period.start = date.fhir_asDateTime()
 			myContract.applies = period
 			
-			// the participant/patient is the signer
+			// the participant/patient is the signer/consenter
 			let signer = ContractSigner(json: nil)
 			signer.type = Coding(json: nil)
-			signer.type!.display = "Consent"
-			signer.type!.code = "1.2.840.10065.1.12.1.7"
-			signer.type!.system = NSURL(string: "http://hl7.org/fhir/vs/contract-signer-type")
+			signer.type!.display = "consenter"
+			signer.type!.code = "CONSENTER"
+			signer.type!.system = URL(string: "http://hl7.org/fhir/ValueSet/contract-signer-type")
 			signer.party = reference
 			signer.signature = patient.id
+			
+			// extension to capture sharing intent
+			if let shareWidely = result.shareWidely {
+				let share = Extension(url: URL(string: "http://fhir-registry.smarthealthit.org/StructureDefinition/consents-to-data-sharing")!)
+				share.valueBoolean = shareWidely
+				signer.extension_fhir = [share]
+			}
 			myContract.signer = [signer]
 			
 			return myContract
 		}
 		catch let error {
-			throw C3Error.ConsentNoPatientReference(error)
+			throw C3Error.consentNoPatientReference(error)
 		}
 	}
 	
 	/**
 	Reverse geocodes and de-identifies the patient, then uses the new Patient resource to sign the contract.
+	
+	- parameter with:     The Patient resource to use to sign
+	- parameter result:   The result of the consenting task
+	- parameter callback: The callback to call when done or when signing failed
+	- throws:             `C3Error` when referencing the patient resource fails
+	- returns:            A signed Contract resource, usually the receiver's `contract` ivar
 	*/
-	public func deIdentifyAndSignConsentWithPatient(patient: Patient, date: NSDate, callback: ConsentSigningCallback) {
+	public func deIdentifyAndSignContract(with patient: Patient, result: ConsentResult, callback: @escaping ConsentSigningCallback) {
 		deidentifier = DeIdentifier()
 		deidentifier!.hipaaCompliantPatient(patient: patient) { patient in
 			self.deidentifier = nil
 			
 			do {
-				let contract = try self.signContractWithPatient(patient, date: date)
-				callback(contract: contract, patient: patient, error: nil)
+				let contract = try self.signContract(with: patient, result: result)
+				callback(contract, patient, nil)
 			}
 			catch let error {
 				c3_warn("\(error)")
-				callback(contract: Contract(json: nil), patient: patient, error: error)
+				callback(Contract(json: nil), patient, error)
 			}
 		}
 	}
@@ -402,18 +418,23 @@ public class ConsentController {
 	// MARK: - Consent PDF
 	
 	/**
-	Asynchronously generates a consent PDF at `self.dynamicType.signedConsentPDFURL()`, containing the given signature.
+	Asynchronously generates a consent PDF at `type(of: self).signedConsentPDFURL()`, containing the given signature.
 	
-	- parameter document: The consent document to sign, usually the one used in our consent task
-	- parameter withSignature: The signature to apply to the document
+	- parameter consentDocument: The consent document to sign, usually the one used in our consent task
+	- parameter with:            The signature to apply to the document
 	*/
-	func signConsentDocument(document: ORKConsentDocument, withSignature signature: ORKConsentSignatureResult) {
+	func sign(consentDocument document: ORKConsentDocument, with signature: ORKConsentSignatureResult) {
 		logger?.debug("C3-PRO", msg: "Writing consent PDF")
-		signature.applyToDocument(document)
-		document.makePDFWithCompletionHandler() { data, error in
-			if let data = data, let pdfURL = self.dynamicType.signedConsentPDFURL() {
-				data.writeToURL(pdfURL, atomically: true)
-				self.logger?.debug("C3-PRO", msg: "Consent PDF written to \(pdfURL)")
+		signature.apply(to: document)
+		document.makePDF() { data, error in
+			if let data = data, let pdfURL = type(of: self).signedConsentPDFURL() {
+				do {
+					try data.write(to: pdfURL, options: .atomic)
+					self.logger?.debug("C3-PRO", msg: "Consent PDF written to \(pdfURL)")
+				}
+				catch let error {
+					c3_warn("failed to write consent PDF: \(error)")
+				}
 			}
 			else {
 				c3_warn("failed to write consent PDF: \(error?.localizedDescription ?? (nil == data ? "no data" : "no url"))")
@@ -427,12 +448,11 @@ public class ConsentController {
 	- parameter mustExist: If `true` will return nil if no file exists at the expected file URL. If `false` will return the desired URL,
 	                       which is pretty sure to return non-nil, so use that exclamation mark!
 	*/
-	public class func signedConsentPDFURL(mustExist: Bool = false) -> NSURL? {
+	public class func signedConsentPDFURL(mustExist: Bool = false) -> URL? {
 		do {
-			let base = try NSFileManager.defaultManager()
-				.URLForDirectory(.DocumentDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: true)
-			let url = base.URLByAppendingPathComponent("consent-signed.pdf")
-			if !mustExist || NSFileManager().fileExistsAtPath(url.path!) {
+			let base = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+			let url = base.appendingPathComponent("consent-signed.pdf")
+			if !mustExist || FileManager().fileExists(atPath: url.path) {
 				return url
 			}
 		}
@@ -445,8 +465,8 @@ public class ConsentController {
 	/**
 	The local URL to the bundled consent; looks for «consent.pdf» in the main bundle.
 	*/
-	public class func bundledConsentPDFURL() -> NSURL? {
-		return NSBundle.mainBundle().URLForResource("consent", withExtension: "pdf")
+	public class func bundledConsentPDFURL() -> URL? {
+		return Bundle.main.url(forResource: "consent", withExtension: "pdf")
 	}
 }
 
@@ -459,7 +479,7 @@ class ConsentTaskViewControllerDelegate: NSObject, ORKTaskViewControllerDelegate
 		self.controller = controller
 	}
 	
-	func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
+	func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
 		controller.userDidFinishConsent(taskViewController, reason: reason)
 	}
 }

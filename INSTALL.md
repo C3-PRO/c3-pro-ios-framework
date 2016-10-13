@@ -1,41 +1,9 @@
 Installation
 ============
 
-There are two ways to use the _C3-PRO_ iOS framework: install via _CocoaPods_ or a manual install.
+There are two ways to use the _C3-PRO_ iOS framework: install via _CocoaPods_ or a _manual_ install.
 
 The CocoaPods install is **not yet functional**, hope to resolve issues with it soon.
-
-
-CocoaPods
----------
-
-Soon you can use [CocoaPods](http://cocoapods.org) (v 0.38.2 or above) to install _C3-PRO_.
-If you don't have it yet, you can install CocoaPods with the following command:
-
-```bash
-$ gem install cocoapods
-```
-
-Create a `Podfile` with these contents:
-
-```ruby
-platform :ios, '8.0'
-use_frameworks!
-
-pod 'C3PRO', '~> 1.0'
-```
-
-To install run:
-
-```bash
-$ pod install
-```
-
-If C3-PRO has been updated, run:
-
-```bash
-$ pod update
-```
 
 
 Manual Installation
@@ -43,33 +11,72 @@ Manual Installation
 
 Installing C3-PRO via git gives you most control but requires some fidgeting with Xcode.
 
+#### 1. Add C3-PRO as Submodule
+
 Add C3-PRO as a git [submodule](http://git-scm.com/docs/git-submodule) to your own project by running the following command:
 
 ```bash
 $ git submodule add https://github.com/chb/c3-pro-ios-framework.git
 ```
 
-#### _“Add files to XY”_
+#### 2. Add Files to Project
 
-Open your Xcode project, select the blue top level project file, then at the bottom click <key>+</key> to add a new file to your project.
-Select `c3-pro-ios-framework/C3PRO.xcodeproj` and make sure it appears nested in your own project hierarchy (doesn't matter whether at the top or bottom).
+Open your Xcode project, select the blue top level project file, then at the bottom click <key>+</key> to add a new file to your project (or right-click your project file).
 
-#### Embed Libraries
+![Add Files](./assets/install-step-2a.png)
+
+Select **all of the following project files** and make sure they appear nested in your own project hierarchy (doesn't matter whether at the top or bottom).
+
+- `c3-pro-ios-framework/C3PRO.xcodeproj`
+- `c3-pro-ios-framework/ResearchKit/ResearchKit.xcodeproj`
+- `c3-pro-ios-framework/Swift-SMART/SwiftSMART.xcodeproj`
+- `c3-pro-ios-framework/CryptoSwift/CryptoSwift.xcodeproj`
+- `c3-pro-ios-framework/SQLiteSwift/SQLite.xcodeproj`
+
+![Add Files](./assets/install-step-2b.png)
+
+#### 3. Embed Libraries
 
 With your blue project icon still active (in the Project Navigator), select the _“General”_ tab and scroll down to _“Embedded Libraries”_.
-Click on the <key>+</key> button; under `C3PRO.xcodeproj` you will see a `Products` folder with `C3PRO.framework`.
-Select it.
+Click on the <key>+</key> button and add all of the following libraries:
 
-Xcode will automatically add the C3-PRO framework as a target dependency, meaning it will build first whenever you build your app, and add a copy-files build phase that copies the built framework into your app bundle.
-
-#### Sub-Frameworks
-
-You will need to **manually add sub-frameworks** that are used by C3-PRO but are not automatically linked and embedded.
-This is unfortunately a rather painful exercise.
-You will first need to add these frameworks to your main project, similarly to how you added _C3-PRO_ above, by choosing _“Add files to XY”_, then selecting the `*.xcodeproj` files found **nested in _C3-PRO_**.
-
-Then, in the _“Embedded Libraries”_ section, you need to add those that are **at the top level** (they will appear multiple times, nested under _C3-PRO_; **don't** select those):
-
-- ResearchKit.framework
+- C3PRO.framework
 - SMART.framework
+- ResearchKit.framework
 - CryptoSwift.framework
+- SQLite.framework
+
+![Embed](./assets/install-step-3.png)
+
+#### 4. Add Target Dependencies
+
+Add all embedded libraries to your _“Target Dependencies”_ so they get build whenever you build your app.
+Still in the _“General”_ tab scroll up to _“Target Dependencies”_.
+Click on the <key>+</key> button and add:
+
+- C3PRO
+- SwiftSMART-iOS
+- ResearchKit
+- CryptoSwift
+- SQLite
+
+![Add Dependencies](./assets/install-step-4.png)
+
+You should now be able to build and run your app.
+
+
+Carthage
+--------
+
+You can use [Carthage](https://github.com/Carthage/Carthage#installing-carthage) to install _C3-PRO_ using this `Cartfile`:
+
+```
+github "C3-PRO/c3-pro-ios-framework"
+```
+
+
+CocoaPods
+---------
+
+Currently, [CocoaPods](http://cocoapods.org) cannot be used to install _C3-PRO_.
+

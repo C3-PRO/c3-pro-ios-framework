@@ -27,17 +27,17 @@ Class that uses both `HealthKitReporter` and `CoreMotionReporter` to retrieve ac
 
 See [HealthKit/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/HealthKit#activity-reporter) for detailed instructions.
 */
-public class ActivityCollector: ActivityReporter {
+open class ActivityCollector: ActivityReporter {
 	
 	var hkReporter: HealthKitReporter?
 	
 	var cmReporter: CoreMotionReporter?
 	
 	/// Path to the CoreMotionReporter local data store; you usually place this in ~/Library.
-	public let cmPath: String
+	open let cmPath: String
 	
 	/// The CoreMotionActivityInterpreter to use to interpret core motion activity sampled by the receiver.
-	public let cmInterpreter: CoreMotionActivityInterpreter?
+	open let cmInterpreter: CoreMotionActivityInterpreter?
 	
 	
 	/**
@@ -60,11 +60,11 @@ public class ActivityCollector: ActivityReporter {
 	- parameter ofLastDays: The number of days before today to start on
 	- parameter callback:   The callback to call when all activities are retrieved
 	*/
-	public func resourceForAllActivity(ofLastDays days: Int = 7, callback: ((resource: QuestionnaireResponse?, error: ErrorType?) -> Void)) {
-		let end = NSDate()
-		let comps = NSDateComponents()
+	open func resourceForAllActivity(ofLastDays days: Int = 7, callback: @escaping ((QuestionnaireResponse?, Error?) -> Void)) {
+		let end = Date()
+		var comps = DateComponents()
 		comps.day = -1 * days
-		let start = NSCalendar.currentCalendar().dateByAddingComponents(comps, toDate: end, options: [])!
+		let start = Calendar.current.date(byAdding: comps, to: end)!
 		resourceForAllActivity(startingAt: start, until: end, callback: callback)
 	}
 	
@@ -75,15 +75,15 @@ public class ActivityCollector: ActivityReporter {
 	- parameter until:      The end date
 	- parameter callback:   The callback to call when all activities are retrieved
 	*/
-	public func resourceForAllActivity(startingAt start: NSDate, until: NSDate, callback: ((resource: QuestionnaireResponse?, error: ErrorType?) -> Void)) {
+	open func resourceForAllActivity(startingAt start: Date, until: Date, callback: @escaping ((QuestionnaireResponse?, Error?) -> Void)) {
 		reportForActivityPeriod(startingAt: start, until: until) { report, error in
 			do {
-				let answer = try report?.asQuestionnaireResponse("org.chip.c3-pro.activity")
-				callback(resource: answer, error: error)
+				let answer = try report?.asQuestionnaireResponse(linkId: "org.chip.c3-pro.activity")
+				callback(answer, error)
 			}
 			catch let error {
 				c3_logIfDebug("Failed to create response resource: \(error)")
-				callback(resource: nil, error: error)
+				callback(nil, error)
 			}
 		}
 	}
@@ -98,12 +98,12 @@ public class ActivityCollector: ActivityReporter {
 	- parameter until:      The end date
 	- parameter callback:   The callback to call when all activities are retrieved
 	*/
-	public func reportForActivityPeriod(startingAt start: NSDate, until: NSDate, callback: ((period: ActivityReportPeriod?, error: ErrorType?) -> Void)) {
-		let queueGroup = dispatch_group_create()
-		var errors = [ErrorType]()
+	open func reportForActivityPeriod(startingAt start: Date, until: Date, callback: @escaping ((ActivityReportPeriod?, Error?) -> Void)) {
+		let queueGroup = DispatchGroup()
+		var errors = [Error]()
 		
 		// motion co-processor data
-		dispatch_group_enter(queueGroup)
+		queueGroup.enter()
 		var cmReport: ActivityReportPeriod?
 		let cm = cmReporter ?? CoreMotionReporter(path: cmPath)
 		cmReporter = cm
@@ -112,11 +112,11 @@ public class ActivityCollector: ActivityReporter {
 			if let error = error {
 				errors.append(error)
 			}
-			dispatch_group_leave(queueGroup)
+			queueGroup.leave()
 		}
 		
 		// HealthKit data
-		dispatch_group_enter(queueGroup)
+		queueGroup.enter()
 		var hkReport: ActivityReportPeriod?
 		let hk = hkReporter ?? HealthKitReporter()
 		hkReporter = hk
@@ -125,7 +125,7 @@ public class ActivityCollector: ActivityReporter {
 			if let error = error {
 				errors.append(error)
 			}
-			dispatch_group_leave(queueGroup)
+			queueGroup.leave()
 		}
 		
 		// some FHIR preparations while we wait
@@ -134,12 +134,12 @@ public class ActivityCollector: ActivityReporter {
 		period.end = until.fhir_asDateTime()
 		
 		// put both reports into one
-		dispatch_group_notify(queueGroup, dispatch_get_main_queue()) {
+		queueGroup.notify(queue: DispatchQueue.main) {
 			let period = ActivityReportPeriod(period: period)
 			period.coreMotionActivities = cmReport?.coreMotionActivities
 			period.healthKitSamples = hkReport?.healthKitSamples
 			
-			callback(period: period, error: (errors.count > 0) ? C3Error.MultipleErrors(errors) : nil)
+			callback(period, (errors.count > 0) ? C3Error.multipleErrors(errors) : nil)
 		}
 	}
 }

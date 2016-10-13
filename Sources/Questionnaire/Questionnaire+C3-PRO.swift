@@ -23,29 +23,30 @@ import SMART
 import ResearchKit
 
 
-/** Extending `SMART.Element` for use with ResearchKit. */
+/** Extending `SMART.QuestionnaireItem` for use with ResearchKit. */
 extension Element {
+	
 	/**
 	Tries to find the "enableWhen" extension on questionnaire groups and questions, and if there are any instantiates ResultRequirements
 	representing those.
 	*/
 	func c3_enableQuestionnaireElementWhen() throws -> [ResultRequirement]? {
-		if let enableWhen = extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-enableWhen") {
+		if let enableWhen = extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-enableWhen") {
 			var requirements = [ResultRequirement]()
 			
 			for when in enableWhen {
 				let question = when.extension_fhir?.filter() { return $0.url?.fragment == "question" }.first
 				let answer = when.extension_fhir?.filter() { return $0.url?.fragment == "answer" }.first
 				if let answer = answer, let questionIdentifier = question?.valueString {
-					let result = try answer.c3_desiredResultForValueOfStep(questionIdentifier)
+					let result = try answer.c3_desiredResultForValueOfStep(stepIdentifier: questionIdentifier)
 					let req = ResultRequirement(step: questionIdentifier, result: result)
 					requirements.append(req)
 				}
 				else if nil != answer {
-					throw C3Error.ExtensionIncomplete("'enableWhen' extension on \(self) has no #question.valueString as identifier")
+					throw C3Error.extensionIncomplete("'enableWhen' extension on \(self) has no #question.valueString as identifier")
 				}
 				else {
-					throw C3Error.ExtensionIncomplete("'enableWhen' extension on \(self) has no #answer")
+					throw C3Error.extensionIncomplete("'enableWhen' extension on \(self) has no #answer")
 				}
 			}
 			return requirements
@@ -55,20 +56,23 @@ extension Element {
 }
 
 
-/** Extending `SMART.Extension` for use with ResearchKit. */
+/** Extending `SMART.QuestionnaireItemEnableWhen` for use with ResearchKit. */
 extension Extension {
+	
 	/**
-	If this is an "answer" extension in questionnaire "enableWhen" extensions, returns the result that is required for the parent element to
-	be shown.
+	Returns the result that is required for the parent element to be shown.
 	
-	Throws if the extension cannot be converted to a result, you might want to be graceful catching these errors
+	Throws if the receiver cannot be converted to a result, you might want to be graceful catching these errors. Currently supports:
 	
-	- parameter stepIdentifier: The identifier of the step this extension applies to
-	- returns: An ORKQuestionResult representing the result that is required for the Group or Question to be shown
+	- answerBoolean
+	- answerCoding
+	
+	- parameter questionIdentifier: The identifier of the question step this extension applies to
+	- returns: An `ORKQuestionResult` representing the result that is required for the item to be shown
 	*/
 	func c3_desiredResultForValueOfStep(stepIdentifier: String) throws -> ORKQuestionResult {
 		if "answer" != url?.fragment {
-			throw C3Error.ExtensionInvalidInContext
+			throw C3Error.extensionInvalidInContext
 		}
 		
 		// standard bool switch
@@ -87,9 +91,9 @@ extension Extension {
 				result.answer = [value]
 				return result
 			}
-			throw C3Error.ExtensionIncomplete("Extension has `valueCoding` but is missing a code, cannot create an answer")
+			throw C3Error.extensionIncomplete("Extension has `valueCoding` but is missing a code, cannot create an answer")
 		}
-		throw C3Error.NotImplemented("create question results from value types other than bool and codeable concept, skipping \(url)")
+		throw C3Error.notImplemented("create question results from value types other than bool and codeable concept, skipping \(url)")
 	}
 }
 

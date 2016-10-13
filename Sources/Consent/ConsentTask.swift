@@ -41,7 +41,7 @@ public class ConsentTask: ORKOrderedTask {
 	
 	/// The sharing step.
 	public var sharingStep: ORKStep? {
-		return stepWithIdentifier(self.dynamicType.sharingStepName)
+		return step(withIdentifier: type(of: self).sharingStepName)
 	}
 	
 	/// The identifier of the sharing step.
@@ -51,7 +51,7 @@ public class ConsentTask: ORKOrderedTask {
 	public static let pinStepName = "passcode"
 	
 	public var teamName: String? {
-		return contract.authority?.first?.resolved(Organization)?.name
+		return contract.authority?.first?.resolved(Organization.self)?.name
 	}
 	
 	/**
@@ -66,7 +66,7 @@ public class ConsentTask: ORKOrderedTask {
 	public init(identifier: String, contract: Contract, options: ConsentTaskOptions) throws {
 		self.contract = contract
 		do {
-			let prepped = try self.dynamicType.stepsAndConsentFromContract(contract, options: options)
+			let prepped = try type(of: self).stepsAndConsent(from: contract, options: options)
 			consentDocument = prepped.consent
 			super.init(identifier: identifier, steps: prepped.steps)
 		}
@@ -87,19 +87,19 @@ public class ConsentTask: ORKOrderedTask {
 	/**
 	Prepare the task with the given options, from the given contract.
 	
-	- parameter contract: The contract to use to create a) a consent document and b) all the steps to perform
+	- parameter from:    The contract to use to create a) a consent document and b) all the steps to perform
 	- parameter options: The options to consider when creating the task
-	- returns: A named tuple returning the ORKConsentDocument and an array of ORKSteps
+	- returns:           A named tuple returning the ORKConsentDocument and an array of ORKSteps
 	*/
-	class func stepsAndConsentFromContract(contract: Contract, options: ConsentTaskOptions) throws -> (consent: ORKConsentDocument, steps: [ORKStep]) {
+	class func stepsAndConsent(from contract: Contract, options: ConsentTaskOptions) throws -> (consent: ORKConsentDocument, steps: [ORKStep]) {
 		let consent = try contract.c3_asConsentDocument()
-		let bundle = NSBundle.mainBundle()
+		let bundle = Bundle.main
 		
 		// full consent review document (override, if nil will automatically combine all consent sections)
 		if let reviewDoc = options.reviewConsentDocument {
-			if let url = bundle.URLForResource(reviewDoc, withExtension: "html") ?? bundle.URLForResource(reviewDoc, withExtension: "html", subdirectory: "HTMLContent") {
+			if let url = bundle.url(forResource: reviewDoc, withExtension: "html") ?? bundle.url(forResource: reviewDoc, withExtension: "html", subdirectory: "HTMLContent") {
 				do {
-					consent.htmlReviewContent = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
+					consent.htmlReviewContent = try String(contentsOf: url, encoding: String.Encoding.utf8)
 				}
 				catch let error {
 					c3_warn("Failed to read contents of file named «\(reviewDoc).html»: \(error)")
@@ -118,10 +118,10 @@ public class ConsentTask: ORKOrderedTask {
 		// sharing step
 		if options.askForSharing {
 			let more = options.shareMoreInfoDocument
-			if let url = bundle.URLForResource(more, withExtension: "html") ?? bundle.URLForResource(more, withExtension: "html", subdirectory: "HTMLContent") {
+			if let url = bundle.url(forResource: more, withExtension: "html") ?? bundle.url(forResource: more, withExtension: "html", subdirectory: "HTMLContent") {
 				do {
-					let learnMore = try NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding) as String
-					let teamName = contract.authority?.first?.resolved(Organization)?.name
+					let learnMore = try String(contentsOf: url, encoding: String.Encoding.utf8)
+					let teamName = contract.authority?.first?.resolved(Organization.self)?.name
 					let team = (nil != teamName) ? "The \(teamName!)" : options.shareTeamName
 					let sharing = ORKConsentSharingStep(identifier: sharingStepName,
 						investigatorShortDescription: team,
@@ -143,7 +143,7 @@ public class ConsentTask: ORKOrderedTask {
 		// consent review step
 		let signature = ORKConsentSignature(forPersonWithTitle: "Participant".c3_localized, dateFormatString: nil, identifier: participantSignatureName)
 		consent.addSignature(signature)
-		let review = ORKConsentReviewStep(identifier: reviewStepName, signature: signature, inDocument: consent)
+		let review = ORKConsentReviewStep(identifier: reviewStepName, signature: signature, in: consent)
 		review.reasonForConsent = options.reasonForConsent
 		steps.append(review)
 		
@@ -157,7 +157,7 @@ public class ConsentTask: ORKOrderedTask {
         }
 		
 		// request permissions step
-		if let services = options.wantedServicePermissions where !services.isEmpty {
+		if let services = options.wantedServicePermissions, !services.isEmpty {
 			let instruction = ORKInstructionStep(identifier: "permissionsInstruction")
 			instruction.title = "Permissions".c3_localized
 			instruction.text = "You will now be asked to grant the app access to certain system features. This allows us to show reminders and read health data from HealthKit, amongst others.".c3_localized
@@ -171,23 +171,23 @@ public class ConsentTask: ORKOrderedTask {
 	/**
 	Retrieves the signature result (identifier `participantSignatureName`) of the consent signature step (identifier `reviewStepName`).
 	
-	- parameter taskResult: The result of the consent task
-	- returns: The consent signature result, if the step has been completed yet
+	- parameter from: The result of the consent task
+	- returns:        The consent signature result, if the step has been completed yet
 	*/
-	public func signatureResult(taskResult: ORKTaskResult) -> ORKConsentSignatureResult? {
-		return taskResult.stepResultForStepIdentifier(self.dynamicType.reviewStepName)?
-			.resultForIdentifier(self.dynamicType.participantSignatureName) as? ORKConsentSignatureResult
+	public func signatureResult(from taskResult: ORKTaskResult) -> ORKConsentSignatureResult? {
+		return taskResult.stepResult(forStepIdentifier: type(of: self).reviewStepName)?
+			.result(forIdentifier: type(of: self).participantSignatureName) as? ORKConsentSignatureResult
 	}
 	
 	/**
 	Extracts the consent signature from the signature result, if it's there. If this method returns a signature, the patient has agreed to
 	the consent and signed on screen.
 	
-	- parameter result: The consent signature result to inspect
-	- returns: The consent signature, if it's there
+	- parameter in: The consent signature result to inspect
+	- returns:      The consent signature, if it's there
 	*/
-	public func signatureInResult(result: ORKConsentSignatureResult) -> ORKConsentSignature? {
-		if let signature = result.signature where nil != signature.signatureImage {
+	public func signature(in result: ORKConsentSignatureResult) -> ORKConsentSignature? {
+		if let signature = result.signature, nil != signature.signatureImage {
 			return signature
 		}
 		return nil
@@ -196,29 +196,29 @@ public class ConsentTask: ORKOrderedTask {
 	/**
 	Retrieve the consent signature found in the task result, if it's there, indicating the user consented.
 	
-	- parameter taskResult: The result of the consent task to inspect
-	- returns: The consent signature, if the user consented and signed
+	- parameter from: The result of the consent task to inspect
+	- returns:        The consent signature, if the user consented and signed
 	*/
-	public func signature(taskResult: ORKTaskResult) -> ORKConsentSignature? {
-		guard let result = signatureResult(taskResult) else {
+	public func signature(from taskResult: ORKTaskResult) -> ORKConsentSignature? {
+		guard let result = signatureResult(from: taskResult) else {
 			return nil
 		}
-		return signatureInResult(result)
+		return signature(in: result)
 	}
 	
 	
 	// MARK: - Task Navigation
 	
-	public override func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
+	override public func step(after step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
 		guard let step = step else {
 			return steps.first
 		}
 		
 		// declined consent, stop here
-		if self.dynamicType.reviewStepName == step.identifier && nil == signature(result) {
+		if type(of: self).reviewStepName == step.identifier && nil == signature(from: result) {
 			return nil
 		}
-		return super.stepAfterStep(step, withResult: result)
+		return super.step(after: step, with: result)
 	}
 }
 

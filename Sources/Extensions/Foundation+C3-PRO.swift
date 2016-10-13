@@ -1,5 +1,5 @@
 //
-//  FoundationExtensions.swift
+//  Foundation+C3-PRO.swift
 //  C3PRO
 //
 //  Created by Pascal Pfiffner on 4/27/15.
@@ -31,7 +31,7 @@ extension String {
 	func c3_stripMultipleSpaces() -> String {
 		do {
 			let regEx = try NSRegularExpression(pattern: " +", options: [])
-			return regEx.stringByReplacingMatchesInString(self, options: [], range: NSMakeRange(0, self.characters.count), withTemplate: " ")
+			return regEx.stringByReplacingMatches(in: self, options: [], range: NSMakeRange(0, self.characters.count), withTemplate: " ")
 		}
 		catch {
 		}
@@ -40,7 +40,7 @@ extension String {
 }
 
 
-extension NSFileManager {
+extension FileManager {
 	
 	/**
 	Return the path to the app's library directory.
@@ -48,16 +48,16 @@ extension NSFileManager {
 	- returns: The path to the app library
 	*/
 	public func c3_appLibraryDirectory() throws -> String {
-		let paths = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true)
+		let paths = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
 		if let first = paths.first {
 			return first
 		}
-		throw C3Error.AppLibraryDirectoryNotPresent
+		throw C3Error.appLibraryDirectoryNotPresent
 	}
 }
 
 
-extension NSCalendar {
+extension Calendar {
 	
 	/**
 	Returns an array of tuples, constituting from <-> to pairs, starting with all of yesterday and the 4 days before, then the 3 weeks
@@ -68,62 +68,64 @@ extension NSCalendar {
 	3. number of days in period
 	4. name of period
 	*/
-	public func reverseProgressiveDateComponentsSinceToday() -> [(NSDateComponents, NSDateComponents, Int, String)] {
-		let now = NSDate()
-		let startComponents = components([.Day, .Weekday, .Month, .Year], fromDate: now)
+	public func reverseProgressiveDateComponentsSinceToday() -> [(DateComponents, DateComponents, Int, String)] {
+		let now = Date()
+		let startComponents = dateComponents([.day, .weekday, .month, .year], from: now)
 		
-		var intervals = [(NSDateComponents, NSDateComponents, Int, String)]()
+		var intervals = [(DateComponents, DateComponents, Int, String)]()
 		
 		// days
 		var last = startComponents
 		for i in 1...5 {
-			let comps = NSDateComponents()
+			var comps = DateComponents()
 			comps.year = startComponents.year
 			comps.month = startComponents.month
-			comps.day = startComponents.day - i
-			let weekday = component(.Weekday, fromDate: dateFromComponents(comps)!) - 1		// weekdays are 1 (Sun) through 7 (Sat) in the Gregorian calendar
+			comps.day = (startComponents.day ?? 30) - i
+			let weekday = component(.weekday, from: date(from: comps)!) - 1		// weekdays are 1 (Sun) through 7 (Sat) in the Gregorian calendar
 			intervals.append((comps, last, 1, shortWeekdaySymbols[weekday]))
 			last = comps
 		}
 		
 		// weeks
-		let thisWeek = startComponents.copy() as! NSDateComponents
-		thisWeek.day -= thisWeek.weekday
-		let week = startComponents.copy() as! NSDateComponents
-		week.day -= week.weekday + 7
+		var thisWeek = startComponents
+		thisWeek.day! -= thisWeek.weekday!
+		var week = startComponents
+		week.day! -= week.weekday! + 7
 		intervals.append((week, thisWeek, 7, "Last\nWeek"))
 		last = week
 		
-		let weekBefore = week.copy() as! NSDateComponents
-		weekBefore.day -= 7
+		var weekBefore = week
+		weekBefore.day! -= 7
 		intervals.append((weekBefore, last, 7, "Week\nBfor"))
 		last = weekBefore
 		
-		//		let weekBeforeThat = weekBefore.copy() as! NSDateComponents
-		//		weekBeforeThat.day -= 7
-		//		intervals.append((weekBeforeThat, last, 7, "Week"))
-		//		last = weekBeforeThat
+//		var weekBeforeThat = weekBefore
+//		weekBeforeThat.day -= 7
+//		intervals.append((weekBeforeThat, last, 7, "Week"))
+//		last = weekBeforeThat
 		
 		// months
-		let currentMonth = dateFromComponents(last) ?? NSDate()
-		let month1 = component(.Month, fromDate: dateFromComponents(week)!)
-		let month2 = component(.Month, fromDate: currentMonth)
-		let firstMonth = NSDateComponents()
+		let currentMonth = date(from: last) ?? Date()
+		let month1 = component(.month, from: date(from: week)!)
+		let month2 = component(.month, from: currentMonth)
+		var firstMonth = DateComponents()
 		firstMonth.year = last.year
 		firstMonth.month = month2
 		firstMonth.day = 1
 		if month1 == month2 {
-			firstMonth.month -= 1
+			firstMonth.month! -= 1
 		}
-		let startMonth = dateFromComponents(firstMonth)!
-		intervals.append((firstMonth, last, rangeOfUnit(.Day, inUnit: .Month, forDate: startMonth).length, shortMonthSymbols[component(.Month, fromDate: startMonth) - 1]))
+		let startMonth = date(from: firstMonth)!
+		let rng = range(of: .day, in: .month, for: startMonth)!
+		intervals.append((firstMonth, last, rng.upperBound - rng.lowerBound, shortMonthSymbols[component(.month, from: startMonth) - 1]))
 		last = firstMonth
 		
 		for i in 1...3 {
-			let comps = firstMonth.copy() as! NSDateComponents
-			comps.month -= i
-			let date = dateFromComponents(comps)!
-			intervals.append((comps, last, rangeOfUnit(.Day, inUnit: .Month, forDate: date).length, shortMonthSymbols[component(.Month, fromDate: date) - 1]))
+			var comps = firstMonth
+			comps.month! -= i
+			let dt = date(from: comps)!
+			let rng = range(of: .day, in: .month, for: dt)!
+			intervals.append((comps, last, rng.upperBound - rng.lowerBound, shortMonthSymbols[component(.month, from: dt) - 1]))
 			last = comps
 		}
 		
@@ -139,19 +141,19 @@ extension NSCalendar {
 	3. number of days in period
 	4. name of period
 	*/
-	public func pastSevenDays() -> [(NSDateComponents, NSDateComponents, Int, String)] {
-		let now = NSDate()
-		let startComponents = components([.Hour, .Day, .Month, .Year], fromDate: now)
-		var intervals = [(NSDateComponents, NSDateComponents, Int, String)]()
+	public func pastSevenDays() -> [(DateComponents, DateComponents, Int, String)] {
+		let now = Date()
+		let startComponents = dateComponents([.hour, .day, .month, .year], from: now)
+		var intervals = [(DateComponents, DateComponents, Int, String)]()
 		
 		// days
 		var last = startComponents
 		for i in 0..<7 {
-			let comps = NSDateComponents()
+			var comps = DateComponents()
 			comps.year = startComponents.year
 			comps.month = startComponents.month
-			comps.day = startComponents.day - i
-			let weekday = component(.Weekday, fromDate: dateFromComponents(comps)!) - 1		// weekdays are 1 (Sun) through 7 (Sat) in the Gregorian calendar
+			comps.day = startComponents.day! - i
+			let weekday = component(.weekday, from: date(from: comps)!) - 1		// weekdays are 1 (Sun) through 7 (Sat) in the Gregorian calendar
 			intervals.append((comps, last, 1, shortWeekdaySymbols[weekday]))
 			last = comps
 		}

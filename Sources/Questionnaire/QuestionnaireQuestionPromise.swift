@@ -62,26 +62,27 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
 	- parameter callback: The callback to be called when done; note that even when you get an error, some steps might have successfully been
 	                      allocated still, so don't throw everything away just because you receive errors
 	*/
-	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
-		let linkId = question.linkId ?? NSUUID().UUIDString
+	func fulfill(requiring parentRequirements: [ResultRequirement]?, callback: @escaping (([Error]?) -> Void)) {
+		let linkId = question.linkId ?? UUID().uuidString
 		let (title, text) = question.c3_bestTitleAndText()
 		
 		// resolve answer format, THEN resolve sub-groups, if any
-		question.c3_asAnswerFormat() { format, berror in
+		question.c3_asAnswerFormat() { format, error in
 			var steps = [ORKStep]()
-			var errors = [ErrorType]()
+			var errors = [Error]()
 			var requirements = parentRequirements ?? [ResultRequirement]()
 			
+			// we know the answer format, create a conditional step
 			if let fmt = format {
 				let step = ConditionalQuestionStep(identifier: linkId, title: title, answer: fmt)
 				step.fhirType = self.question.type
 				step.text = text
-				step.optional = !(self.question.required ?? false)
+				step.isOptional = !(self.question.required ?? false)
 				
 				// questions "enableWhen" requirements
 				do {
 					if let myreqs = try self.question.c3_enableQuestionnaireElementWhen() {
-						requirements.appendContentsOf(myreqs)
+						requirements.append(contentsOf: myreqs)
 					}
 				}
 				catch let error {
@@ -89,42 +90,48 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
 				}
 				
 				if !requirements.isEmpty {
-					step.addRequirements(requirements: requirements)
+					step.add(requirements: requirements)
 				}
 				steps.append(step)
 			}
-			else {
-				errors.append(berror ?? C3Error.QuestionnaireQuestionTypeUnknownToResearchKit(self.question))
+			else if let error = error {
+				errors.append(error)
+			}
+				
+			// no error and no answer format but title and text - must be "display" or "group" item that has something to show!
+			else if nil != title || nil != text {
+				let step = ConditionalInstructionStep(identifier: linkId, title: title, text: text)
+				steps.append(step)
 			}
 			
 			// do we have sub-groups?
-			if let subgroups = self.question.group {
-				let gpromises = subgroups.map() { QuestionnaireGroupPromise(group: $0) }
+			if let subitems = self.question.group {
+				let subpromises = subitems.map() { QuestionnaireGroupPromise(group: $0) }
 				
 				// fulfill all group promises
-				let queueGroup = dispatch_group_create()
-				for gpromise in gpromises {
-					dispatch_group_enter(queueGroup)
-					gpromise.fulfill(requirements) { berrors in
+				let queueGroup = DispatchGroup()
+				for subpromise in subpromises {
+					queueGroup.enter()
+					subpromise.fulfill(requiring: requirements) { berrors in
 						if nil != berrors {
-							errors.appendContentsOf(berrors!)
+							errors.append(contentsOf: berrors!)
 						}
-						dispatch_group_leave(queueGroup)
+						queueGroup.leave()
 					}
 				}
 				
 				// all done
-				dispatch_group_notify(queueGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
-					let gsteps = gpromises.filter() { return nil != $0.steps }.flatMap() { return $0.steps! }
-					steps.appendContentsOf(gsteps)
+				queueGroup.notify(queue: DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated)) {
+					let gsteps = subpromises.filter() { return nil != $0.steps }.flatMap() { return $0.steps! }
+					steps.append(contentsOf: gsteps)
 					
 					self.steps = steps
-					callback(errors: errors.count > 0 ? errors : nil)
+					callback(errors.count > 0 ? errors : nil)
 				}
 			}
 			else {
 				self.steps = steps
-				callback(errors: errors)
+				callback(errors)
 			}
 		}
 	}
@@ -134,7 +141,7 @@ class QuestionnaireQuestionPromise: QuestionnairePromiseProto {
 	
 	/// String representation of the receiver.
 	var description: String {
-		return NSString(format: "<QuestionnaireQuestionPromise %p>", unsafeAddressOf(self)) as String
+		return String(format: "<QuestionnaireQuestionPromise %p>", self as! CVarArg)
 	}
 }
 
@@ -163,32 +170,33 @@ extension QuestionnaireGroupQuestion {
 		if nil == txt {
 			txt = c3_questionInstruction() ?? c3_questionHelpText()		// even if the title is still nil, we won't want to populate the title with help text
 		}
+		// TODO: Even if we have title and instructions, show help somewhere if present
 		
 		return (ttl?.c3_stripMultipleSpaces(), txt?.c3_stripMultipleSpaces())
 	}
 	
 	func c3_questionMinOccurs() -> Int? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger
 	}
 	
 	func c3_questionMaxOccurs() -> Int? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger
 	}
 	
 	func c3_questionInstruction() -> String? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString
 	}
 	
 	func c3_questionHelpText() -> String? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString
 	}
 	
 	func c3_numericAnswerUnit() -> String? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
 	}
 	
 	func c3_defaultAnswer() -> Extension? {
-		return extensionsFor("http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue")?.first
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-defaultValue")?.first
 	}
 	
 	
@@ -212,121 +220,141 @@ extension QuestionnaireGroupQuestion {
 	[x] ORKTimeOfDayAnswerFormat:       "time"
 	[ ] ORKTimeIntervalAnswerFormat:
 	*/
-	func c3_asAnswerFormat(callback: ((format: ORKAnswerFormat?, error: ErrorType?) -> Void)) {
+	func c3_asAnswerFormat(callback: @escaping ((ORKAnswerFormat?, Error?) -> Void)) {
 		let link = linkId ?? "<nil>"
 		if let type = type {
 			switch type {
-			case "boolean":		callback(format: ORKAnswerFormat.booleanAnswerFormat(), error: nil)
-			case "decimal":		callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(nil), error: nil)
+			case "boolean":	  callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
+			case "decimal":	  callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), nil)
 			case "integer":
 				let minVals = c3_minValue()
 				let maxVals = c3_maxValue()
 				let minVal = minVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger
 				let maxVal = maxVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger
-				if let minVal = minVal, maxVal = maxVal where maxVal > minVal {
+				if let minVal = minVal, let maxVal = maxVal, maxVal > minVal {
 					let minDesc = minVals?.filter() { return $0.valueString != nil }.first?.valueString
 					let maxDesc = maxVals?.filter() { return $0.valueString != nil }.first?.valueString
 					let defVal = c3_defaultAnswer()?.valueInteger ?? minVal
-					let format = ORKAnswerFormat.scaleAnswerFormatWithMaximumValue(maxVal, minimumValue: minVal, defaultValue: defVal,
+					let format = ORKAnswerFormat.scale(withMaximumValue: maxVal, minimumValue: minVal, defaultValue: defVal,
 						step: 1, vertical: (maxVal - minVal > 5),
 						maximumValueDescription: maxDesc, minimumValueDescription: minDesc)
-					callback(format: format, error: nil)
+					callback(format, nil)
 					
 				}
 				else {
-					callback(format: ORKAnswerFormat.integerAnswerFormatWithUnit(nil), error: nil)
+					callback(ORKAnswerFormat.integerAnswerFormat(withUnit: nil), nil)
 				}
-			case "quantity":	callback(format: ORKAnswerFormat.decimalAnswerFormatWithUnit(c3_numericAnswerUnit()), error: nil)
-			case "date":		callback(format: ORKAnswerFormat.dateAnswerFormat(), error: nil)
-			case "dateTime":	callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
-			case "instant":		callback(format: ORKAnswerFormat.dateTimeAnswerFormat(), error: nil)
-			case "time":		callback(format: ORKAnswerFormat.timeOfDayAnswerFormat(), error: nil)
-			case "string":		callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
-			case "url":			callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
+			case "quantity":  callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: c3_numericAnswerUnit()), nil)
+			case "date":      callback(ORKAnswerFormat.dateAnswerFormat(), nil)
+			case "dateTime":  callback(ORKAnswerFormat.dateTime(), nil)
+			case "instant":   callback(ORKAnswerFormat.dateTime(), nil)
+			case "time":      callback(ORKAnswerFormat.timeOfDayAnswerFormat(), nil)
+			case "string":    callback(ORKAnswerFormat.textAnswerFormat(), nil)
+			case "url":       callback(ORKAnswerFormat.textAnswerFormat(), nil)
 			case "choice":
 				c3_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? C3Error.QuestionnaireNoChoicesInChoiceQuestion(self))
+						callback(nil, error ?? C3Error.questionnaireNoChoicesInChoiceQuestion(self))
 					}
 					else {
-						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.c3_answerChoiceStyle(), textChoices: choices!), error: nil)
+						callback(ORKAnswerFormat.choiceAnswerFormat(with: self.c3_answerChoiceStyle(), textChoices: choices!), nil)
 					}
 				}
 			case "open-choice":
 				c3_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
-						callback(format: nil, error: error ?? C3Error.QuestionnaireNoChoicesInChoiceQuestion(self))
+						callback(nil, error ?? C3Error.questionnaireNoChoicesInChoiceQuestion(self))
 					}
 					else {
-						callback(format: ORKAnswerFormat.choiceAnswerFormatWithStyle(self.c3_answerChoiceStyle(), textChoices: choices!), error: nil)
+						callback(ORKAnswerFormat.choiceAnswerFormat(with: self.c3_answerChoiceStyle(), textChoices: choices!), nil)
 					}
 				}
 			//case "attachment":	callback(format: nil, error: nil)
 			//case "reference":		callback(format: nil, error: nil)
+			case "display":
+				callback(nil, nil)
+			case "group":
+				callback(nil, nil)
 			default:
-				callback(format: nil, error: C3Error.QuestionnaireQuestionTypeUnknownToResearchKit(self))
+				callback(nil, C3Error.questionnaireQuestionTypeUnknownToResearchKit(self))
 			}
 		}
 		else {
 			NSLog("Question «\(text)» does not have an answer type, assuming text answer [linkId: \(link)]")
-			callback(format: ORKAnswerFormat.textAnswerFormat(), error: nil)
+			callback(ORKAnswerFormat.textAnswerFormat(), nil)
 		}
 	}
 	
 	/**
 	For `choice` type questions, retrieves the possible answers and returns them as ORKTextChoice in the callback.
 	
-	The `value` property of the text choice is a combination of the coding system URL and the code, separated by a space. If no system URL
-	is provided, "https://fhir.smalthealthit.org" is used.
+	The `value` property of the text choice is a combination of the coding system URL and the code, separated by
+	`kORKTextChoiceSystemSeparator` (a space). If no system URL is provided, "https://fhir.smalthealthit.org" is used.
 	*/
-	func c3_resolveAnswerChoices(callback: ((choices: [ORKTextChoice]?, error: ErrorType?) -> Void)) {
-		options?.resolve(ValueSet.self) { valueSet in
-			var choices = [ORKTextChoice]()
-			
-			// we have an expanded ValueSet
-			if let expansion = valueSet?.expansion?.contains {
-				for option in expansion {
-					let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem
-					let code = option.code ?? kORKTextChoiceMissingCodeCode
-					let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-					let text = ORKTextChoice(text: option.display ?? code, value: value)
-					choices.append(text)
-				}
-			}
-			
-			// valueset defines its own concepts
-			else if let options = valueSet?.codeSystem?.concept {
-				let system = valueSet?.codeSystem?.system?.absoluteString ?? kORKTextChoiceDefaultSystem
-				for option in options {
-					let code = option.code ?? kORKTextChoiceMissingCodeCode			// code is a required property, so SHOULD always be present
-					let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-					let text = ORKTextChoice(text: option.display ?? code, value: value)
-					choices.append(text)
-				}
-			}
-			
-			// valueset includes codes
-			else if let options = valueSet?.compose?.include {		// TODO: also support `import`
-				for option in options {
-					let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem	// system is a required property
-					if let concepts = option.concept {
-						for concept in concepts {
-							let code = concept.code ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
-							let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-							let text = ORKTextChoice(text: concept.display ?? code, value: value)
-							choices.append(text)
-						}
+	func c3_resolveAnswerChoices(callback: @escaping (([ORKTextChoice]?, Error?) -> Void)) {
+		
+		// options are defined inline
+		if let options = option {
+			// TODO: implement!
+			callback(nil, C3Error.notImplemented("Using `option` in Questionnaire.group.question is not yet supported, use `options`"))
+		}
+		
+		// options are a referenced ValueSet
+		else if let options = options {
+			options.resolve(ValueSet.self) { valueSet in
+				var choices = [ORKTextChoice]()
+				
+				// we have an expanded ValueSet
+				if let expansion = valueSet?.expansion?.contains {
+					for option in expansion {
+						let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem
+						let code = option.code ?? kORKTextChoiceMissingCodeCode
+						let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
+						let text = ORKTextChoice(text: option.display ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
+						choices.append(text)
 					}
 				}
+				
+				// valueset defines its own concepts
+				else if let expansion = valueSet?.codeSystem?.concept {
+					for option in expansion {
+						let system = valueSet?.codeSystem?.system?.absoluteString ?? kORKTextChoiceDefaultSystem
+						let code = option.code ?? kORKTextChoiceMissingCodeCode
+						let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
+						let text = ORKTextChoice(text: option.display ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
+						choices.append(text)
+					}
+				}
+				
+				// valueset includes or defines codes
+				else if let compose = valueSet?.compose {
+					if let options = compose.include {
+						for option in options {
+							let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem	// system is a required property
+							if let concepts = option.concept {
+								for concept in concepts {
+									let code = concept.code ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
+									let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
+									let text = ORKTextChoice(text: concept.display ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
+									choices.append(text)
+								}
+							}
+						}
+					}
+					// TODO: also support `import`
+				}
+				
+				// all done
+				if choices.count > 0 {
+					callback(choices, nil)
+				}
+				else {
+					callback(nil, C3Error.questionnaireNoChoicesInChoiceQuestion(self))
+				}
 			}
-			
-			// all done
-			if choices.count > 0 {
-				callback(choices: choices, error: nil)
-			}
-			else {
-				callback(choices: nil, error: C3Error.QuestionnaireNoChoicesInChoiceQuestion(self))
-			}
+		}
+		else {
+			callback(nil, C3Error.questionnaireNoChoicesInChoiceQuestion(self))
 		}
 	}
 	
@@ -336,7 +364,7 @@ extension QuestionnaireGroupQuestion {
 	*/
 	func c3_answerChoiceStyle() -> ORKChoiceAnswerStyle {
 		let multiple = repeats ?? ((c3_questionMaxOccurs() ?? 1) > 1)
-		let style: ORKChoiceAnswerStyle = multiple ? .MultipleChoice : .SingleChoice
+		let style: ORKChoiceAnswerStyle = multiple ? .multipleChoice : .singleChoice
 		return style
 	}
 }

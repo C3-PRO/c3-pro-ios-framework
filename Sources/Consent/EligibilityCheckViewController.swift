@@ -25,45 +25,45 @@ import UIKit
 View controller presenting all eligibility criteria provided in the receiver`s `requirements` property, allowing the user to proceed to a
 summary page that informs of eligibility and allows to proceed to to consenting or not.
 */
-public class EligibilityCheckViewController: UITableViewController {
+open class EligibilityCheckViewController: UITableViewController {
 	
 	var nextButton: UIBarButtonItem?
 	
 	/// The eligibility criteria.
-	public var requirements: [EligibilityRequirement]?
+	open var requirements: [EligibilityRequirement]?
 	
 	/// Set this string to override the title message. Defaults to "You are eligible to join the study".
-	public var eligibleTitle: String?
+	open var eligibleTitle: String?
 	
 	/// Override point for the default eligible message "Tap the button below to begin the consent process".
-	public var eligibleMessage: String?
+	open var eligibleMessage: String?
 	
 	/// Override point for the default ineligible message "Thank you for your interest!\nUnfortunately, you are not eligible to join [...]".
-	public var ineligibleMessage: String?
+	open var ineligibleMessage: String?
 	
 	/// Block executed if all eligibility requirements are met and the user taps the "Start Consent" button.
-	public var onStartConsent: ((viewController: EligibilityCheckViewController) -> Void)?
+	open var onStartConsent: ((_ viewController: EligibilityCheckViewController) -> Void)?
 	
 	
 	// MARK: - View Tasks
 	
-	public override func viewDidLoad() {
+	override open func viewDidLoad() {
 		super.viewDidLoad()
-		tableView.registerClass(EligibilityCell.self, forCellReuseIdentifier: "EligibilityCell")
+		tableView.register(EligibilityCell.self, forCellReuseIdentifier: "EligibilityCell")
 		tableView.estimatedRowHeight = 120.0
 		tableView.rowHeight = UITableViewAutomaticDimension
 		
-		let next = UIBarButtonItem(title: "Next".c3_localized("Next step"), style: .Plain, target: self, action: #selector(EligibilityCheckViewController.verifyEligibility))
-		next.enabled = false
+		let next = UIBarButtonItem(title: "Next".c3_localized("Next step"), style: .plain, target: self, action: #selector(EligibilityCheckViewController.verifyEligibility))
+		next.isEnabled = false
 		navigationItem.rightBarButtonItem = next
 		nextButton = next
 		enableDisableNext()
 	}
 	
-	public override func viewWillAppear(animated: Bool) {
+	override open func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		if isMovingToParentViewController(), let eligible = isEligible() where eligible {
-			showEligibleAnimated(true)
+		if isMovingToParentViewController, isEligible() ?? false {
+			showEligible(animated: true)
 		}
 	}
 	
@@ -74,25 +74,25 @@ public class EligibilityCheckViewController: UITableViewController {
 		if let reqs = requirements {
 			for req in reqs {
 				if nil == req.met {
-					nextButton?.enabled = false
+					nextButton?.isEnabled = false
 					return
 				}
 			}
 		}
-		nextButton?.enabled = true
+		nextButton?.isEnabled = true
 	}
 	
 	func verifyEligibility() {
 		if let eligible = isEligible() {
 			if eligible {
-				showEligibleAnimated(true)
+				showEligible(animated: true)
 			}
 			else {
-				showIneligibleAnimated(true)
+				showIneligible(animated: true)
 			}
 		}
 		else {
-			nextButton?.enabled = false
+			nextButton?.isEnabled = false
 		}
 	}
 	
@@ -125,13 +125,13 @@ public class EligibilityCheckViewController: UITableViewController {
 	
 	- parameter animated: Whether to animate the push
 	*/
-	public func showEligibleAnimated(animated: Bool) {
+	open func showEligible(animated: Bool) {
 		let vc = EligibilityStatusViewController()
 		vc.titleText = eligibleTitle ?? "You are eligible to join the study".c3_localized
 		vc.subText = eligibleMessage ?? "Tap the button below to begin the consent process".c3_localized
 		vc.onActionButtonTap = { controller in
 			if let exec = self.onStartConsent {
-				exec(viewController: self)
+				exec(self)
 			}
 			else {
 				c3_warn("Tapped “Start Consent” but `onStartConsent` is not defined")
@@ -148,7 +148,7 @@ public class EligibilityCheckViewController: UITableViewController {
 	
 	- parameter animated: Whether to animate the push
 	*/
-	public func showIneligibleAnimated(animated: Bool) {
+	open func showIneligible(animated: Bool) {
 		let vc = EligibilityStatusViewController()
 		vc.subText = ineligibleMessage ?? "Thank you for your interest!\nUnfortunately, you are not eligible to join this study at this time.".c3_localized
 		
@@ -165,17 +165,17 @@ public class EligibilityCheckViewController: UITableViewController {
 	
 	// MARK: - Table View Data Source
 	
-	public override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+	override open func numberOfSections(in tableView: UITableView) -> Int {
 		return requirements?.count ?? 0
 	}
 	
-	public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 1
 	}
 	
-	public override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier("EligibilityCell", forIndexPath: indexPath) as! EligibilityCell
-		cell.item = requirements![indexPath.section]
+	override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "EligibilityCell", for: indexPath) as! EligibilityCell
+		cell.item = requirements![(indexPath as NSIndexPath).section]
 		cell.onButtonPress = { button in
 			self.enableDisableNext()
 		}
@@ -204,20 +204,20 @@ class EligibilityCell: UITableViewCell {
 		}
 	}
 	
-	var onButtonPress: ((button: UIButton) -> Void)?
+	var onButtonPress: ((UIButton) -> Void)?
 	
 	
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
-		selectionStyle = .None
+		selectionStyle = .none
 		
 		// title label
 		let title = UILabel()
 		title.translatesAutoresizingMaskIntoConstraints = false
-		title.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+		title.font = UIFont.preferredFont(forTextStyle: .body)
 		title.numberOfLines = 0
-		title.textAlignment = .Center
-		title.textColor = UIColor.blackColor()
+		title.textAlignment = .center
+		title.textColor = UIColor.black
 		titleLabel = title
 		
 		// choice view
@@ -225,24 +225,24 @@ class EligibilityCell: UITableViewCell {
 		choice.translatesAutoresizingMaskIntoConstraints = false
 		
 		// yes and no buttons
-		let yes = UIButton(type: .Custom)
-		let no = UIButton(type: .Custom)
+		let yes = UIButton(type: .custom)
+		let no = UIButton(type: .custom)
 		yes.translatesAutoresizingMaskIntoConstraints = false
 		no.translatesAutoresizingMaskIntoConstraints = false
-		yes.selected = false
-		no.selected = false
-		yes.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
-		no.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
-		yes.setTitleColor(self.tintColor, forState: .Selected)
-		no.setTitleColor(self.tintColor, forState: .Selected)
-		yes.addTarget(self, action: #selector(EligibilityCell.buttonDidPress(_:)), forControlEvents: .TouchUpInside)
-		no.addTarget(self, action: #selector(EligibilityCell.buttonDidPress(_:)), forControlEvents: .TouchUpInside)
+		yes.isSelected = false
+		no.isSelected = false
+		yes.setTitleColor(UIColor.lightGray, for: UIControlState())
+		no.setTitleColor(UIColor.lightGray, for: UIControlState())
+		yes.setTitleColor(self.tintColor, for: .selected)
+		no.setTitleColor(self.tintColor, for: .selected)
+		yes.addTarget(self, action: #selector(EligibilityCell.buttonDidPress(_:)), for: .touchUpInside)
+		no.addTarget(self, action: #selector(EligibilityCell.buttonDidPress(_:)), for: .touchUpInside)
 		
-		let desc = UIFontDescriptor.preferredFontDescriptorWithTextStyle(UIFontTextStyleBody)
+		let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body)
 		yes.titleLabel?.font = UIFont(descriptor: desc, size: desc.pointSize * 2)
 		no.titleLabel?.font = UIFont(descriptor: desc, size: desc.pointSize * 2)
-		yes.setTitle("Yes".c3_localized("Yes as in yes-i-meet-this-requirement"), forState: .Normal)
-		no.setTitle("No".c3_localized("No as in no-i-dont-meet-this-requirement"), forState: .Normal)
+		yes.setTitle("Yes".c3_localized("Yes as in yes-i-meet-this-requirement"), for: UIControlState())
+		no.setTitle("No".c3_localized("No as in no-i-dont-meet-this-requirement"), for: UIControlState())
 		let sep = UIView()
 		sep.translatesAutoresizingMaskIntoConstraints = false
 		sep.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
@@ -254,18 +254,18 @@ class EligibilityCell: UITableViewCell {
 		choice.addSubview(yes)
 		choice.addSubview(sep)
 		choice.addSubview(no)
-		choice.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[yes(==no)][sep(==0.5)][no]|", options: [], metrics: nil, views: buttons))
-		choice.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[yes]|", options: [], metrics: nil, views: buttons))
-		choice.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[sep]|", options: [], metrics: nil, views: buttons))
-		choice.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[no]|", options: [], metrics: nil, views: buttons))
+		choice.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[yes(==no)][sep(==0.5)][no]|", options: [], metrics: nil, views: buttons))
+		choice.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[yes]|", options: [], metrics: nil, views: buttons))
+		choice.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[sep]|", options: [], metrics: nil, views: buttons))
+		choice.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[no]|", options: [], metrics: nil, views: buttons))
 		
 		let views = ["title": title, "choice": choice]
 		contentView.addSubview(title)
 		contentView.addSubview(choice)
-		contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[title]-|", options: [], metrics: nil, views: views))
-		contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[choice]-|", options: [], metrics: nil, views: views))
-		contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[title]-[choice]-|", options: [], metrics: nil, views: views))
-		choice.addConstraint(NSLayoutConstraint(item: choice, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 0.0, constant: 80.0))
+		contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[title]-|", options: [], metrics: nil, views: views))
+		contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[choice]-|", options: [], metrics: nil, views: views))
+		contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[title]-[choice]-|", options: [], metrics: nil, views: views))
+		choice.addConstraint(NSLayoutConstraint(item: choice, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0.0, constant: 80.0))
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -275,25 +275,25 @@ class EligibilityCell: UITableViewCell {
 	
 	// MARK: - Button Action
 	
-	func buttonDidPress(sender: UIButton) {
-		sender.selected = !sender.selected
+	func buttonDidPress(_ sender: UIButton) {
+		sender.isSelected = !sender.isSelected
 		if yesButton == sender {
 			item?.met = true
-			noButton?.selected = false
+			noButton?.isSelected = false
 		}
 		else {
 			item?.met = false
-			yesButton?.selected = false
+			yesButton?.isSelected = false
 		}
 		
 		if let exec = onButtonPress {
-			exec(button: sender)
+			exec(sender)
 		}
 	}
 	
 	override func tintColorDidChange() {
-		yesButton?.setTitleColor(self.tintColor, forState: .Selected)
-		noButton?.setTitleColor(self.tintColor, forState: .Selected)
+		yesButton?.setTitleColor(self.tintColor, for: .selected)
+		noButton?.setTitleColor(self.tintColor, for: .selected)
 		super.tintColorDidChange()
 	}
 }

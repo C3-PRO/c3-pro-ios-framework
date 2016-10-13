@@ -24,7 +24,7 @@ import UIKit
 /**
 A bordered button which we need to create manually because ORKBorderedButton is not public.
 */
-public class BorderedButton: UIButton {
+open class BorderedButton: UIButton {
 	
 	var disabledTintColor = UIColor(white: 0.0, alpha: 0.3)
 	
@@ -48,23 +48,23 @@ public class BorderedButton: UIButton {
 	
 	// MARK: - Actions
 	
-	public override var enabled: Bool {
+	override open var isEnabled: Bool {
 		didSet {
-			super.enabled = enabled
+			super.isEnabled = isEnabled
 			updateBorderColor()
 		}
 	}
 	
-	public override var highlighted: Bool {
+	override open var isHighlighted: Bool {
 		didSet {
-			super.highlighted = highlighted
+			super.isHighlighted = isHighlighted
 			updateBorderColor()
 		}
 	}
 	
-	public override var selected: Bool {
+	override open var isSelected: Bool {
 		didSet {
-			super.selected = selected
+			super.isSelected = isSelected
 			updateBorderColor()
 		}
 	}
@@ -72,37 +72,37 @@ public class BorderedButton: UIButton {
 	
 	// MARK: - Colors
 	
-	public override func tintColorDidChange() {
+	override open func tintColorDidChange() {
 		super.tintColorDidChange()
-		setTitleColor(tintColor, forState: .Normal)
-		setTitleColor(UIColor.whiteColor(), forState: .Highlighted)
-		setTitleColor(UIColor.whiteColor(), forState: .Selected)
-		setTitleColor(disabledTintColor, forState: .Disabled)
+		setTitleColor(tintColor, for: UIControlState())
+		setTitleColor(UIColor.white, for: .highlighted)
+		setTitleColor(UIColor.white, for: .selected)
+		setTitleColor(disabledTintColor, for: .disabled)
 		updateBorderColor()
 	}
 	
 	func updateBorderColor() {
-		if enabled {
-			if highlighted || selected {
+		if isEnabled {
+			if isHighlighted || isSelected {
 				backgroundColor = tintColor
-				layer.borderColor = tintColor.CGColor
+				layer.borderColor = tintColor.cgColor
 			}
 			else {
-				backgroundColor = UIColor.whiteColor();
-				layer.borderColor = tintColor.CGColor;
+				backgroundColor = UIColor.white
+				layer.borderColor = tintColor.cgColor
 			}
 		}
 		else {
-			backgroundColor = UIColor.whiteColor();
-			layer.borderColor = disabledTintColor.CGColor;
+			backgroundColor = UIColor.white
+			layer.borderColor = disabledTintColor.cgColor
 		}
 	}
 	
 	
 	// MARK: - Sizing
 	
-	public override func intrinsicContentSize() -> CGSize {
-		let size = super.intrinsicContentSize()
+	override open var intrinsicContentSize: CGSize {
+		let size = super.intrinsicContentSize
 		return CGSize(width: max(size.width + 20, 100), height: max(size.height, 44))
 	}
 }

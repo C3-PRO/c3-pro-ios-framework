@@ -28,7 +28,7 @@ Standard implementation of a core motion activity preprocessor and interpreter.
 
 See `preprocess(activities:)` and `interpret(activities:)` for details on the logic performed.
 */
-public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterpreter {
+open class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterpreter {
 	
 	public init() {
 	}
@@ -49,7 +49,7 @@ public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterprete
 	- parameter activities: The activities to preprocess
 	- returns: Preprocessed and packaged motion activities
 	*/
-	public func preprocess(activities activities: [CMMotionActivity]) -> [CoreMotionActivity] {
+	open func preprocess(activities: [CMMotionActivity]) -> [CoreMotionActivity] {
 		var samples = [CoreMotionActivity]()
 		for cmactivity in activities {
 			let activity = CoreMotionActivity(activity: cmactivity)
@@ -69,18 +69,18 @@ public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterprete
 	- parameter followingAfter: The activity preceding `activity`, if any - may be modified
 	- returns:                  An interpreted activity to be collected by the caller; if nil is returned the activity has been filtered
 	*/
-	func preprocessedMotionActivity<T: CoreMotionActivity>(activity: T, followingAfter prev: T?) -> T? {
+	func preprocessedMotionActivity<T: CoreMotionActivity>(_ activity: T, followingAfter prev: T?) -> T? {
 		
 		// 1: skip unknown activities (skip if "unknown" = true (known unknown) as well as those without any true state (unknown unknown))
-		if !activity.type.isSubsetOf(.Unknown) {
+		if !activity.type.isSubset(of: .Unknown) {
 			
 			// 2: join same activities
-			if let prev = prev where prev.type.isSubsetOf(activity.type) && activity.type.isSubsetOf(prev.type) {
+			if let prev = prev, prev.type.isSubset(of: activity.type) && activity.type.isSubset(of: prev.type) {
 				prev.confidence = max(prev.confidence, activity.confidence)
 			}
 				
 				// 3: join automotive activities
-			else if let prev = prev where prev.type.contains(.Automotive) && activity.type.contains(.Automotive) {
+			else if let prev = prev, prev.type.contains(.Automotive) && activity.type.contains(.Automotive) {
 				prev.type = prev.type.union(activity.type)
 				prev.confidence = max(prev.confidence, activity.confidence)
 			}
@@ -103,47 +103,47 @@ public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterprete
 	- parameter activities: The activities to interpret
 	- returns:              An array of interpreted activities
 	*/
-	public func interpret(activities activities: [InterpretedCoreMotionActivity]) -> [InterpretedCoreMotionActivity] {
+	open func interpret(activities: [InterpretedCoreMotionActivity]) -> [InterpretedCoreMotionActivity] {
 		var prev: InterpretedCoreMotionActivity?
 		for i in 0..<activities.count {
 			let activity = activities[i]
-			let duration = activity.endDate.timeIntervalSinceDate(activity.startDate)
+			let duration = activity.endDate.timeIntervalSince(activity.startDate as Date)
 			
 			// automotive < 5 minutes: stationary
 			if activity.type.contains(.Automotive) && duration < 300.0 {
 				activity.type.remove(.Automotive)
-				activity.type.unionInPlace(.Stationary)
-				activity.interpretation = .Automotive
+				activity.type.formUnion(.Stationary)
+				activity.interpretation = .automotive
 			}
 				
 			// cycling < 2 minutes: running if prev/next is running, walking if prev/next is walking, stationary otherwise
 			else if activity.type.contains(.Cycling) && duration < 120.0 {
 				activity.type.remove(.Cycling)
-				if let prev = prev where prev.type.contains(.Running) {
-					activity.type.unionInPlace(.Running)
-					activity.interpretation = .Running
+				if let prev = prev, prev.type.contains(.Running) {
+					activity.type.formUnion(.Running)
+					activity.interpretation = .running
 				}
 				else if activities.count > i+1 && activities[i+1].type.contains(.Running) {
-					activity.type.unionInPlace(.Running)
-					activity.interpretation = .Running
+					activity.type.formUnion(.Running)
+					activity.interpretation = .running
 				}
-				else if let prev = prev where prev.type.contains(.Walking) {
-					activity.type.unionInPlace(.Walking)
-					activity.interpretation = .Walking
+				else if let prev = prev, prev.type.contains(.Walking) {
+					activity.type.formUnion(.Walking)
+					activity.interpretation = .walking
 				}
 				else if activities.count > i+1 && activities[i+1].type.contains(.Walking) {
-					activity.type.unionInPlace(.Walking)
-					activity.interpretation = .Walking
+					activity.type.formUnion(.Walking)
+					activity.interpretation = .walking
 				}
 				else {
-					activity.type.unionInPlace(.Stationary)
-					activity.interpretation = .Stationary
+					activity.type.formUnion(.Stationary)
+					activity.interpretation = .stationary
 				}
 			}
 			
 			/*/ stationary < 1 minute, running or walking before and after: standing
 			else if activity.type.contains(.Stationary) && duration < 60.0 {
-			if let prev = prev where prev.isWalkingRunningCycling {
+			if let prev = prev, prev.isWalkingRunningCycling {
 			}
 			else if self.activities.count > i+1 && self.activities[i+1].isWalkingRunningCycling {
 			}
@@ -152,22 +152,22 @@ public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterprete
 			// no rule, interpret by picking `type`
 			else {
 				if activity.type.contains(.Cycling) {
-					activity.interpretation = .Cycling
+					activity.interpretation = .cycling
 				}
 				else if activity.type.contains(.Running) {
-					activity.interpretation = .Running
+					activity.interpretation = .running
 				}
 				else if activity.type.contains(.Walking) {
-					activity.interpretation = .Walking
+					activity.interpretation = .walking
 				}
 				else if activity.type.contains(.Automotive) {
-					activity.interpretation = .Automotive
+					activity.interpretation = .automotive
 				}
 				else if activity.type.contains(.Stationary) {
-					activity.interpretation = .Stationary
+					activity.interpretation = .stationary
 				}
 				else {
-					activity.interpretation = .Unknown
+					activity.interpretation = .unknown
 				}
 			}
 			
@@ -181,9 +181,9 @@ public class CoreMotionStandardActivityInterpreter: CoreMotionActivityInterprete
 				interpreted.append(inter)
 				
 				// is this sleep? Yes if stationary > 3 hours
-				if .Stationary == inter.interpretation {
-					if NSCalendar.currentCalendar().components(.Hour, fromDate: inter.startDate, toDate: inter.endDate, options: []).hour >= 3 {
-						inter.interpretation = .Sleeping
+				if .stationary == inter.interpretation {
+					if Calendar.current.dateComponents([.hour], from: inter.startDate, to: inter.endDate).hour! >= 3 {
+						inter.interpretation = .sleeping
 					}
 				}
 			}

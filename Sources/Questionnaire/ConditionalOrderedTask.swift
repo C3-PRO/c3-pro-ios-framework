@@ -32,35 +32,35 @@ not.
 */
 class ConditionalOrderedTask: ORKOrderedTask {
 	
-	override func stepAfterStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
-		let serialNext = super.stepAfterStep(step, withResult: result)
+	override func step(after step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
+		let serialNext = super.step(after: step, with: result)
 		
 		// does the serial next step have conditional requirements and are they satisfied?
 		if let condNext = serialNext as? ConditionalQuestionStep {
-			if let ok = condNext.requirementsAreSatisfiedBy(result) where !ok {
-				return stepAfterStep(condNext, withResult: result)
+			if let ok = condNext.requirementsAreSatisfiedBy(result), !ok {
+				return self.step(after: condNext, with: result)
 			}
 		}
 		if let condNext = serialNext as? ConditionalInstructionStep {
-			if let ok = condNext.requirementsAreSatisfiedBy(result) where !ok {
-				return stepAfterStep(condNext, withResult: result)
+			if let ok = condNext.requirementsAreSatisfiedBy(result), !ok {
+				return self.step(after: condNext, with: result)
 			}
 		}
 		return serialNext
 	}
 	
-	override func stepBeforeStep(step: ORKStep?, withResult result: ORKTaskResult) -> ORKStep? {
-		let serialPrev = super.stepBeforeStep(step, withResult: result)
+	override func step(before step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
+		let serialPrev = super.step(before: step, with: result)
 		
 		// does the serial previous step have conditional requirements and are they satisfied?
 		if let condPrev = serialPrev as? ConditionalQuestionStep {
-			if let ok = condPrev.requirementsAreSatisfiedBy(result) where !ok {
-				return stepBeforeStep(condPrev, withResult: result)
+			if let ok = condPrev.requirementsAreSatisfiedBy(result), !ok {
+				return self.step(before: condPrev, with: result)
 			}
 		}
 		if let condPrev = serialPrev as? ConditionalInstructionStep {
-			if let ok = condPrev.requirementsAreSatisfiedBy(result) where !ok {
-				return stepBeforeStep(condPrev, withResult: result)
+			if let ok = condPrev.requirementsAreSatisfiedBy(result), !ok {
+				return self.step(before: condPrev, with: result)
 			}
 		}
 		return serialPrev
@@ -94,26 +94,26 @@ public class ResultRequirement: NSObject, NSCopying, NSSecureCoding {
 	
 	// MARK: - NSCopying
 	
-	public func copyWithZone(zone: NSZone) -> AnyObject {
-		let step = questionIdentifier.copyWithZone(zone) as! String
-		return ResultRequirement(step: step, result: result.copyWithZone(zone) as! ORKQuestionResult)
+	public func copy(with zone: NSZone? = nil) -> Any {
+		let step = questionIdentifier.copy(with: zone) as! String
+		return ResultRequirement(step: step, result: result.copy(with: zone) as! ORKQuestionResult)
 	}
 	
 	
 	// MARK: - NSSecureCoding
 	
-	public class func supportsSecureCoding() -> Bool {
+	public class var supportsSecureCoding: Bool {
 		return true
 	}
 	
 	required public init?(coder aDecoder: NSCoder) {
-		questionIdentifier = aDecoder.decodeObjectOfClass(NSString.self, forKey: "stepIdentifier")!
-		result = aDecoder.decodeObjectOfClass(ORKQuestionResult.self, forKey: "result")!
+		questionIdentifier = aDecoder.decodeObject(of: NSString.self, forKey: "stepIdentifier")!
+		result = aDecoder.decodeObject(of: ORKQuestionResult.self, forKey: "result")!
 	}
 	
-	public func encodeWithCoder(aCoder: NSCoder) {
-		aCoder.encodeObject(questionIdentifier, forKey: "stepIdentifier")
-		aCoder.encodeObject(result, forKey: "result")
+	public func encode(with aCoder: NSCoder) {
+		aCoder.encode(questionIdentifier, forKey: "stepIdentifier")
+		aCoder.encode(result, forKey: "result")
 	}
 }
 

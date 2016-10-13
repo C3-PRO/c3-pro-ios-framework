@@ -21,6 +21,7 @@
 import Foundation
 import CoreMotion
 import SMART
+import SQLite
 
 
 /**
@@ -28,10 +29,10 @@ Dumps latest activity data from CoreMotion to a SQLite database and returns prev
 
 See [HealthKit/README.md](https://github.com/C3-PRO/c3-pro-ios-framework/tree/master/Sources/HealthKit#core-motion-data-persistence) for detailed instructions.
 */
-public class CoreMotionReporter: ActivityReporter {
+open class CoreMotionReporter: ActivityReporter {
 	
 	/// The filesystem path to the database.
-	public let databaseLocation: String
+	open let databaseLocation: String
 	
 	lazy var motionManager = CMMotionActivityManager()
 	
@@ -65,7 +66,7 @@ public class CoreMotionReporter: ActivityReporter {
 	
 	// MARK: - Archiving
 	
-	private var lastArchival: NSDate?
+	fileprivate var lastArchival: Date?
 	
 	
 	/**
@@ -79,9 +80,9 @@ public class CoreMotionReporter: ActivityReporter {
 	                       callback returns; uses an `CoreMotionStandardActivityInterpreter` instance if none is provided
 	- parameter callback:  The callback to call when done, with an error if something happened, nil otherwise. Called on the main queue
 	*/
-	public func archiveActivities(processor: CoreMotionActivityInterpreter? = nil, callback: ((numNewActivities: Int, error: ErrorType?) -> Void)) {
-		if let lastArchival = lastArchival where lastArchival.timeIntervalSinceNow > -30 {
-			callback(numNewActivities: 0, error: nil)
+	open func archiveActivities(processor: CoreMotionActivityInterpreter? = nil, callback: @escaping ((_ numNewActivities: Int, _ error: Error?) -> Void)) {
+		if let lastArchival = lastArchival, lastArchival.timeIntervalSinceNow > -30 {
+			callback(0, nil)
 			return
 		}
 		
@@ -93,24 +94,24 @@ public class CoreMotionReporter: ActivityReporter {
 			let confidence = Expression<Int>("confidence")   // 0 = low, 1 = medium, 2 = high
 			
 			// create table if needed
-			try db.run(activities.create(ifNotExists: true) { t in
+			_ = try db.run(activities.create(ifNotExists: true) { t in
 				t.column(start, unique: true)
 				t.column(activity)
 				t.column(confidence)
 			})
 			
 			// grab latest startDate
-			let now = NSDate()
-			var latest: NSDate?
+			let now = Date()
+			var latest: Date?
 			let query = activities.select(start).order(start.desc).limit(1)
 			for row in try db.prepare(query) {
-				latest = NSDate(timeIntervalSinceReferenceDate: row[start])
+				latest = Date(timeIntervalSinceReferenceDate: row[start])
 			}
 			
-			if let latest = latest where (now.timeIntervalSinceReferenceDate - latest.timeIntervalSinceReferenceDate) < 2*60 {
+			if let latest = latest, (now.timeIntervalSinceReferenceDate - latest.timeIntervalSinceReferenceDate) < 2*60 {
 				c3_logIfDebug("Latest activity was sampled \(latest), not archiving again")
 				c3_performOnMainQueue() {
-					callback(numNewActivities: 0, error: nil)
+					callback(0, nil)
 				}
 				return
 			}
@@ -119,43 +120,43 @@ public class CoreMotionReporter: ActivityReporter {
 			let processor = processor ?? CoreMotionStandardActivityInterpreter()
 			collectCoreMotionActivities(startingOn: latest, processor: processor) { samples, collError in
 				if let error = collError {
-					callback(numNewActivities: 0, error: error)
+					callback(0, error)
 					return
 				}
 				if 0 == samples.count {
-					callback(numNewActivities: 0, error: nil)
+					callback(0, nil)
 					return
 				}
 				
 				// insert into database
-				dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+				DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
 					do {
 						try db.transaction() {
-							print("\(NSDate()) ARCHIVER inserting \(samples.count) samples")
+							print("\(Date()) ARCHIVER inserting \(samples.count) samples")
 							for sample in samples {
-								try db.run(activities.insert(or: .Ignore,    // UNIQUE constraint on `start` may fail, which we want to ignore
+								_ = try db.run(activities.insert(or: .ignore,    // UNIQUE constraint on `start` may fail, which we want to ignore
 									start <- round(sample.startDate.timeIntervalSinceReferenceDate * 10) / 10,
 									activity <- sample.type.rawValue,
 									confidence <- sample.confidence.rawValue))
 							}
-							print("\(NSDate()) ARCHIVER done inserting")
+							print("\(Date()) ARCHIVER done inserting")
 						}
-						self.lastArchival = NSDate()
+						self.lastArchival = Date()
 						c3_performOnMainQueue() {
-							callback(numNewActivities: samples.count, error: nil)
+							callback(samples.count, nil)
 						}
 					}
 					catch let error {
 						c3_performOnMainQueue() {
-							callback(numNewActivities: 0, error: error)
+							callback(0, error)
 						}
 					}
 				}
-			}
+			}	//	*/
 		}
 		catch let error {
 			c3_performOnMainQueue() {
-				callback(numNewActivities: 0, error: error)
+				callback(0, error)
 			}
 		}
 	}
@@ -168,35 +169,34 @@ public class CoreMotionReporter: ActivityReporter {
 	There is a bit of processing happening, rather than raw instances being returned, in the receiver's `preprocess(activities:)`
 	implementation.
 	
-	- parameter startingOn: The NSDate at which to start sampling, up until now
+	- parameter startingOn: The Date at which to start sampling, up until now
 	- parameter processor:  A `CoreMotionActivityInterpreter` instance to handle CMMotionActivity preprocessing (not interpretation!) before
 	                        the callback returns
 	- parameter callback:   The callback to call when sampling completes. Will execute on the main queue
 	*/
-	func collectCoreMotionActivities(startingOn start: NSDate?, processor: CoreMotionActivityInterpreter, callback: ((data: [CoreMotionActivity], error: ErrorType?) -> Void)) {
-		let collectorQueue = NSOperationQueue()
-		var begin = start ?? NSDate()
+	func collectCoreMotionActivities(startingOn start: Date?, processor: CoreMotionActivityInterpreter, callback: @escaping (([CoreMotionActivity], Error?) -> Void)) {
+		let collectorQueue = OperationQueue()
+		var begin = start ?? Date()
 		if nil == start {
-			begin = begin.dateByAddingTimeInterval(-15*24*3600)    // there's at most 7 days of activity available. Be conservative and use 15 days.
+			begin = begin.addingTimeInterval(-15*24*3600)    // there's at most 7 days of activity available. Be conservative and use 15 days.
 		}
-		motionManager.queryActivityStartingFromDate(begin, toDate: NSDate(), toQueue: collectorQueue) { activities, error in
+		motionManager.queryActivityStarting(from: begin, to: Date(), to: collectorQueue) { activities, error in
 			if let activities = activities {
-				let processor = processor ?? CoreMotionStandardActivityInterpreter()
 				let samples = processor.preprocess(activities: activities)
 				c3_performOnMainQueue() {
-					callback(data: samples, error: nil)
+					callback(samples, nil)
 				}
 			}
-			else if let error = error where CMErrorDomain != error.domain && 104 != error.code {   // CMErrorDomain error 104 means "no data available"
-				c3_logIfDebug("No activity data received with error: \(error ?? "no error")")
+			else if let error = error, CMErrorDomain != error._domain && 104 != error._code {   // CMErrorDomain error 104 means "no data available"
+				c3_logIfDebug("No activity data received with error: \(error)")
 				c3_performOnMainQueue() {
-					callback(data: [], error: error)
+					callback([], error)
 				}
 			}
 			else {
 				c3_logIfDebug("No activity data received")
 				c3_performOnMainQueue() {
-					callback(data: [], error: nil)
+					callback([], nil)
 				}
 			}
 		}
@@ -205,7 +205,7 @@ public class CoreMotionReporter: ActivityReporter {
 	
 	// MARK: - Retrieval
 	
-	public func reportForActivityPeriod(startingAt start: NSDate, until: NSDate, callback: ((period: ActivityReportPeriod?, error: ErrorType?) -> Void)) {
+	open func reportForActivityPeriod(startingAt start: Date, until: Date, callback: @escaping ((_ period: ActivityReportPeriod?, _ error: Error?) -> Void)) {
 		reportForActivityPeriod(startingAt: start, until: until, interpreter: nil, callback: callback)
 	}
 	
@@ -218,26 +218,26 @@ public class CoreMotionReporter: ActivityReporter {
 	- parameter interpreter: The interpreter to use; uses a fresh instance of `CoreMotionStandardActivityInterpreter` if nil
 	- parameter callback:    The callback to call when all activities are retrieved and the interpreter has run
 	*/
-	public func reportForActivityPeriod(startingAt start: NSDate, until: NSDate? = nil, interpreter: CoreMotionActivityInterpreter? = nil, callback: ((report: ActivityReportPeriod?, error: ErrorType?) -> Void)) {
+	open func reportForActivityPeriod(startingAt start: Date, until: Date? = nil, interpreter: CoreMotionActivityInterpreter? = nil, callback: @escaping ((_ report: ActivityReportPeriod?, _ error: Error?) -> Void)) {
 		archiveActivities() { newActivities, error in
 			if let error = error {
 				c3_logIfDebug("Ignoring error when archiving most recent activities before retrieving: \(error)")
 			}
-			let endDate = until ?? NSDate()
+			let endDate = until ?? Date()
 			
 			// dispatch to background queue and call back on the main queue
-			dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+			DispatchQueue.global(qos: DispatchQoS.QoSClass.utility).async() {
 				do {
 					let interpreter = interpreter ?? CoreMotionStandardActivityInterpreter()
 					let activities = try self.retrieveActivities(startingAt: start, until: endDate, interpreter: interpreter)
 					let report = self.report(forActivities: activities)
 					c3_performOnMainQueue() {
-						callback(report: report, error: nil)
+						callback(report, nil)
 					}
 				}
 				catch let error {
 					c3_performOnMainQueue() {
-						callback(report: nil, error: error)
+						callback(nil, error)
 					}
 				}
 			}
@@ -252,7 +252,7 @@ public class CoreMotionReporter: ActivityReporter {
 	- parameter until:       The end date; uses "now" if nil
 	- parameter interpreter: The interpreter to use; uses a fresh instance of `CoreMotionStandardActivityInterpreter` if nil
 	*/
-	func retrieveActivities(startingAt start: NSDate, until: NSDate, interpreter: CoreMotionActivityInterpreter) throws -> [InterpretedCoreMotionActivity] {
+	func retrieveActivities(startingAt start: Date, until: Date, interpreter: CoreMotionActivityInterpreter) throws -> [InterpretedCoreMotionActivity] {
 		let db = try self.connection()
 		let activitiesTable = Table("activities")
 		let startCol = Expression<Double>("start")
@@ -263,7 +263,7 @@ public class CoreMotionReporter: ActivityReporter {
 		let endTime = until.timeIntervalSinceReferenceDate
 		
 		// query database
-		let filtered = activitiesTable.filter(startCol >= startTime).filter(startCol <= endTime)
+		let filtered = activitiesTable.filter(startCol >= startTime).filter(startCol <= endTime)	//	*/
 		var collected = [InterpretedCoreMotionActivity]()
 		for row in try db.prepare(filtered) {
 			let activity = InterpretedCoreMotionActivity(start: row[startCol], activity: row[activityCol], confidence: row[confidenceCol], end: 0.0)
@@ -291,18 +291,18 @@ public class CoreMotionReporter: ActivityReporter {
 	- returns:                 An ActivityReportPeriod instance for the period defined by all individual activities
 	*/
 	func report(forActivities activities: [InterpretedCoreMotionActivity]) -> ActivityReportPeriod {
-		let calendar = NSCalendar.currentCalendar()
-		var earliest: NSDate?
-		var latest: NSDate?
+		let calendar = NSCalendar.current
+		var earliest: Date?
+		var latest: Date?
 		
 		// aggregate seconds
 		var periods = [CoreMotionActivityInterpretation: Int]()
 		for activity in activities {
-			earliest = (nil == earliest || activity.startDate.compare(earliest!) == .OrderedAscending) ? activity.startDate : earliest
-			latest = (nil == latest || activity.endDate.compare(latest!) == .OrderedDescending) ? activity.endDate : latest
+			earliest = (nil == earliest || activity.startDate.compare(earliest!) == .orderedAscending) ? activity.startDate as Date : earliest
+			latest = (nil == latest || activity.endDate.compare(latest!) == .orderedDescending) ? activity.endDate as Date : latest
 			
 			let baseSecs = periods[activity.interpretation] ?? 0
-			let newSecs = calendar.components(.Second, fromDate: activity.startDate, toDate: activity.endDate, options: []).second
+			let newSecs = calendar.dateComponents([.second], from: activity.startDate, to: activity.endDate).second ?? 0
 			periods[activity.interpretation] = baseSecs + newSecs
 		}
 		

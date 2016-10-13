@@ -28,7 +28,7 @@ extension String {
 	
 	/// Convenience getter for localized strings, uses `NSLocalizedString` internally on the main bundle and the "C3PRO" table.
 	public var c3_localized: String {
-		return NSLocalizedString(self, tableName: "C3PRO", bundle: NSBundle.mainBundle(), value: self, comment: "")
+		return NSLocalizedString(self, tableName: "C3PRO", bundle: Bundle.main, value: self, comment: "")
 	}
 	
 	/**
@@ -37,7 +37,7 @@ extension String {
 	- parameter comment: The comment for localizers
 	- returns: A localized string, if found in the "C3PRO" table
 	*/
-	public func c3_localized(comment: String) -> String {
-		return NSLocalizedString(self, tableName: "C3PRO", bundle: NSBundle.mainBundle(), value: self, comment: comment)
+	public func c3_localized(_ comment: String) -> String {
+		return NSLocalizedString(self, tableName: "C3PRO", bundle: Bundle.main, value: self, comment: comment)
 	}
 }

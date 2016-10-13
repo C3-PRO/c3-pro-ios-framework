@@ -60,22 +60,22 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto {
 	                      allocated still, so don't throw everything away just because you receive errors. Likely called on a background
 	                      queue.
 	*/
-	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
-		var errors = [ErrorType]()
+	func fulfill(requiring parentRequirements: [ResultRequirement]?, callback: @escaping (([Error]?) -> Void)) {
+		var errors = [Error]()
 		var promises = [QuestionnairePromiseProto]()
 		
 		// create an introductory instruction step if we have a title or text
 		var intro: ConditionalInstructionStep?
 		let (title, text) = group.c3_bestTitleAndText()
 		if (nil != title && !title!.isEmpty) || (nil != text && !text!.isEmpty) {
-			intro = ConditionalInstructionStep(identifier: group.linkId ?? NSUUID().UUIDString, title: title, text: text)
+			intro = ConditionalInstructionStep(identifier: group.linkId ?? NSUUID().uuidString, title: title, text: text)
 		}
 		
 		// "enableWhen" requirements
 		var requirements = parentRequirements ?? [ResultRequirement]()
 		do {
 			if let myreqs = try group.c3_enableQuestionnaireElementWhen() {
-				requirements.appendContentsOf(myreqs)
+				requirements.append(contentsOf: myreqs)
 			}
 		}
 		catch let error {
@@ -96,36 +96,36 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto {
 		
 		// fulfill our promises
 		if promises.count > 0 {
-			let queueGroup = dispatch_group_create()
+			let queueGroup = DispatchGroup()
 			for promise in promises {
-				dispatch_group_enter(queueGroup)
-				promise.fulfill(requirements) { berrors in
+				queueGroup.enter()
+				promise.fulfill(requiring: requirements) { berrors in
 					if let err = berrors {
-						errors.appendContentsOf(err)
+						errors.append(contentsOf: err)
 					}
-					dispatch_group_leave(queueGroup)
+					queueGroup.leave()
 				}
 			}
 			
 			// on group notify, call the callback on the main queue
-			dispatch_group_notify(queueGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+			queueGroup.notify(queue: DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated)) {
 				var steps = promises.filter() { return (nil != $0.steps) }.flatMap() { return $0.steps! }
 				if let intr = intro {
-					steps.insert(intr, atIndex: 0)
+					steps.insert(intr, at: 0)
 				}
 				
 				self.steps = steps
-				callback(errors: errors.count > 0 ? errors : nil)
+				callback(errors.count > 0 ? errors : nil)
 			}
 		}
 		
 		// no groups nor questions; maybe still some text
 		else {
 			if let intro = intro {
-				intro.addRequirements(requirements: requirements)
+				intro.add(requirements: requirements)
 				steps = [intro]
 			}
-			callback(errors: errors.count > 0 ? errors : nil)
+			callback(errors.count > 0 ? errors : nil)
 		}
 	}
 	
@@ -134,7 +134,7 @@ class QuestionnaireGroupPromise: QuestionnairePromiseProto {
 	
 	/// String representation of the receiver.
 	var description: String {
-		return NSString(format: "<QuestionnaireGroupPromise %p>", unsafeAddressOf(self)) as String
+		return String(format: "<QuestionnaireGroupPromise %p>", self as! CVarArg)
 	}
 }
 

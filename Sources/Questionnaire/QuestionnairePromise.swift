@@ -30,23 +30,23 @@ protocol QuestionnairePromiseProto: CustomStringConvertible {
 	
 	var steps: [ORKStep]? { get }
 	
-	func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void))
+	func fulfill(requiring parentRequirements: [ResultRequirement]?, callback: @escaping (([Error]?) -> Void))
 }
 
 
 /**
 A promise that can turn a FHIR Questionnaire into an ORKOrderedTask.
 */
-public class QuestionnairePromise: QuestionnairePromiseProto {
+open class QuestionnairePromise: QuestionnairePromiseProto {
 	
 	/// The promises' questionnaire.
 	let questionnaire: Questionnaire
 	
 	/// The questionnaire's steps, internally assigned after the promise has been successfully fulfilled.
-	internal(set) public var steps: [ORKStep]?
+	internal(set) open var steps: [ORKStep]?
 	
 	/// The task representing the questionnaire; available once the promise has been fulfilled.
-	internal(set) public var task: ORKTask?
+	internal(set) open var task: ORKTask?
 	
 	public init(questionnaire: Questionnaire) {
 		self.questionnaire = questionnaire
@@ -64,23 +64,23 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 	- parameter parentRequirements: An array of ResultRequirement instances required by parent elements
 	- parameter callback: Callback to be called upon promise fulfillment with a list of errors, if any. Called on the main thread.
 	*/
-	public func fulfill(parentRequirements: [ResultRequirement]?, callback: ((errors: [ErrorType]?) -> Void)) {
+	open func fulfill(requiring parentRequirements: [ResultRequirement]?, callback: @escaping (([Error]?) -> Void)) {
 		if let toplevel = questionnaire.group {
 			let identifier = questionnaire.id ?? (questionnaire.identifier?.first?.value ?? "questionnaire-task")
 			let gpromise = QuestionnaireGroupPromise(group: toplevel)
-			gpromise.fulfill(parentRequirements) { errors in
+			gpromise.fulfill(requiring: parentRequirements) { errors in
 				if let steps = gpromise.steps {
-					self.steps = steps
-					self.task = ConditionalOrderedTask(identifier: identifier, steps: steps)
-					callback(errors: errors)
+				self.steps = steps
+				self.task = ConditionalOrderedTask(identifier: identifier, steps: steps)
+					callback(errors)
 				}
 				else {
-					callback(errors: errors ?? [C3Error.QuestionnaireUnknownError])
+					callback(errors ?? [C3Error.questionnaireUnknownError])
 				}
 			}
 		}
 		else {
-			callback(errors: [C3Error.QuestionnaireInvalidNoTopLevel])
+			callback([C3Error.questionnaireInvalidNoTopLevelItem])
 		}
 	}
 	
@@ -88,8 +88,8 @@ public class QuestionnairePromise: QuestionnairePromiseProto {
 	// MARK: - Printable
 	
 	/// String representation of the receiver.
-	public var description: String {
-		return NSString(format: "<QuestionnairePromise %p>", unsafeAddressOf(self)) as String
+	open var description: String {
+		return String(format: "<QuestionnairePromise %p>", self as! CVarArg)
 	}
 }
 

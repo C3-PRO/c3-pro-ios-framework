@@ -6,7 +6,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "C3PRO"
-  s.version      = "1.0"
+  s.version      = "1.8"
   s.summary      = "Combining 🔥 SMART on FHIR and ResearchKit for data storage into i2b2."
   s.description  = <<-DESC
     Combining 🔥 FHIR and ResearchKit for data storage into i2b2, the C3-PRO iOS
@@ -30,7 +30,8 @@ Pod::Spec.new do |s|
     'C3PRO' => ['*.lproj/C3PRO.strings']
   }
   s.frameworks = 'UIKit', 'HealthKit'
-  s.dependency 'SMART', '~> 2.2'
+  s.dependency 'SMART', '~> 2.8'
   s.dependency 'ResearchKit', '~> 1.3'
-  s.dependency 'CryptoSwift', '~> 0.2'
+  s.dependency 'CryptoSwift', '~> 0.6'
+  s.dependency 'SQLite.swift'
 end

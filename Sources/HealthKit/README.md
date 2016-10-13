@@ -141,7 +141,7 @@ HKHealthStore
 
 Methods that query the store for samples:
 
-- `c3_latestSampleOfType()`: retrieve the latest sample of the given type.
+- `c3_latestSample(ofType:)`:  retrieve the latest sample of the given type.
 - `c3_samplesOfTypeBetween()`: retrieve all samples of a given type between two dates.
 - `c3_summaryOfSamplesOfTypeBetween()`: return a summary of all samples of a given type. 
     Use this to get an **aggregate count** of something over a given period
@@ -153,12 +153,12 @@ import C3PRO
 
 let store = HKHealthStore()
 
-store.c3_latestSampleOfType(HKQuantityTypeIdentifierHeight) { quantity, error in
+store.c3_latestSample(ofType: HKQuantityTypeIdentifier.height) { quantity, error in
     if let error = error {
         c3_warn("Error reading latest body height: \(error)")
     }
     else if let quantity = quantity {
-        let unit = HKUnit.meterUnit()
+        let unit = HKUnit.meter()
         let fhir = try! quantity.c3_asFHIRQuantityInUnit(unit)
         print("-->  \(fhir.asJSON())")
     }
@@ -168,12 +168,12 @@ store.c3_latestSampleOfType(HKQuantityTypeIdentifierHeight) { quantity, error in
 }
 
 
-let end = NSDate()
-let comps = NSDateComponents()
+let end = Date()
+var comps = DateComponents()
 comps.day = -14
-let start = NSCalendar.currentCalendar().dateByAddingComponents(comps, toDate: end, options: [])!
+let start = Calendar.current.date(byAdding: comps, to: end)!
 
-store.c3_summaryOfSamplesOfTypeBetween(HKQuantityTypeIdentifierFlightsClimbed, start: start, end: end) { result, error in
+store.c3_summaryOfSamplesOfTypeBetween(HKQuantityTypeIdentifier.flightsClimbed, start: start, end: end) { result, error in
     if let result = result {
         let fhir = try! result.c3_asFHIRQuantity()
         print("-->  \(fhir.asJSON())")

@@ -25,13 +25,13 @@ import SMART
 /**
 Class to represent a FHIR resource enqueued in a `DataQueue`.
 */
-public class QueuedResource {
+open class QueuedResource {
 	
 	/// The fath to the resource.
-	public let path: String
+	open let path: String
 	
 	/// The actual resource instance.
-	public var resource: Resource?
+	open var resource: Resource?
 	
 	
 	/**
@@ -50,13 +50,13 @@ public class QueuedResource {
 	- returns: True if the resource was successfully instantiated, false otherwise
 	*/
 	func readFromFile() throws {
-		let data = try NSData(contentsOfFile: path, options: [])
-		let json = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? FHIRJSON
-		resource = Resource.instantiateFrom(json, owner: nil) as? Resource
+		let data = try Data(contentsOf: URL(fileURLWithPath: path), options: [])
+		let json = try JSONSerialization.jsonObject(with: data, options: []) as? FHIRJSON
+		resource = Resource.instantiate(from: json, owner: nil) as? Resource
 		if nil != resource {
 			return
 		}
-		throw FHIRError.ResourceFailedToInstantiate(NSString(data: data, encoding: NSUTF8StringEncoding) as? String ?? "No data")
+		throw FHIRError.resourceFailedToInstantiate(String(data: data, encoding: String.Encoding.utf8) ?? "No data")
 	}
 }
 

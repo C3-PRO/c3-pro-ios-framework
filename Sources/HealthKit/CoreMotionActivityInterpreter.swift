@@ -31,10 +31,10 @@ public protocol CoreMotionActivityInterpreter {
 	- parameter activities: The activities to preprocess
 	- returns: Preprocessed and packaged motion activities
 	*/
-	func preprocess(activities activities: [CMMotionActivity]) -> [CoreMotionActivity]
+	func preprocess(activities: [CMMotionActivity]) -> [CoreMotionActivity]
 	
 	/**
 	
 	*/
-	func interpret(activities activities: [InterpretedCoreMotionActivity]) -> [InterpretedCoreMotionActivity]
+	func interpret(activities: [InterpretedCoreMotionActivity]) -> [InterpretedCoreMotionActivity]
 }

@@ -22,16 +22,16 @@
 /**
 Objects holding and tracking eligibility requirements.
 */
-public class EligibilityRequirement {
+open class EligibilityRequirement {
 	
 	/// The question/statement to show when asking about this requirement.
-	public let title: String
+	open let title: String
 	
 	/// Whether this requirement must be met.
-	public var mustBeMet = true
+	open var mustBeMet = true
 	
 	/// Whether this requirement has been met.
-	public var met: Bool? = nil
+	open var met: Bool? = nil
 	
 	public init(title: String, mustBeMet: Bool = true) {
 		self.title = title

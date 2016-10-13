@@ -61,15 +61,15 @@ Consent Workflow
 ----------------
 
 To read eligibility and consent data from a bundled consent called `Consent.json` you can do the following.
-It will also use the bundled file `Consent_full.html` to show a custom HTML page in the _“Agree”_ step instead of auto-generating that page from all consent sections.
+This example will also use the bundled file `Consent_full.html` to show a custom HTML page in the _“Agree”_ step instead of auto-generating that page from all consent sections.
 This is optional and, if omitted, the consent will be composed of all the individual consenting sections.
 
 You could use this method in combination with `setupUI()` shown in `StudyIntro/README.md`.
 
 ```swift
 func startEligibilityAndConsent(intro: StudyIntroCollectionViewController) {
-    self.controller = ConsentController(bundledContract: "Consent")  // retain
-    controller.options.reviewConsentDocument = "Consent_full"        // optional
+    self.controller = try! ConsentController(bundledContract: "Consent")  // retain
+    controller.options.reviewConsentDocument = "Consent_full"             // optional
     
     let center = NSNotificationCenter.defaultCenter()
     center.addObserver(self, selector: "userDidConsent",
@@ -85,18 +85,16 @@ func startEligibilityAndConsent(intro: StudyIntroCollectionViewController) {
 }
 
 func userDidConsent() {
-    // Your user is consented. A generated PDF will be written to
-    // `ConsentController.signedConsentPDFURL()` on a background queue, so
-    // might not yet be available. Usually, the user is now prompted for app
-    // setup (not yet provided by C3-PRO):
-    // - set a passcode
-    // - grant necessary permissions (notifications, HealthKit, Motion, ...)
+  // Your user is consented. A generated PDF will be written to
+  // `ConsentController.signedConsentPDFURL()` on a background queue, so
+  // might not yet be available. Usually, the user is now prompted to grant
+  // necessary permissions (notifications, HealthKit, Motion, ...)
 }
 ```
 
 First, the user will be asked your eligibility questions, and – if they are met – presents the consent task as a modal view controller.
 If the user cancels or declines consent, the view controller is dismissed and the eligibility view controller popped from its navigation controller.
-If the user consents the consent view controller is likewise dismissed and you'll receive the `C3UserDidConsentNotification` notification.
+If the user consents, the consent view controller is likewise dismissed and you'll receive the `C3UserDidConsentNotification` notification.
 
 ### Consent Sections
 
@@ -160,6 +158,53 @@ Example:
 ```
 
 
+### Sharing Options
+
+Usually, participants are also asked whether they consent to sharing their data with other qualified researchers or only the team running the study.
+You can turn it off by setting `ConsentTaskOptions.askForSharing` to false.
+
+To populate the team name used when the participant is asked if she's willing to share her data, the `authority.name` property of the Contract is consulted.
+
+> At this time this must be an _Organization_ element that is contained in the contract.
+
+The `ConsentResult` that is sent as a notification when the participant finishes consent contains the property `shareWidely`.
+This property is set to:
+
+- _true_ if the participant consents to sharing data
+- _false_ if only the study team should access the data
+- _nil_ if the question was not asked
+
+Additionally, the `Contract.signer` element is extended with `http://fhir-registry.smarthealthit.org/StructureDefinition/consents-to-data-sharing`, set to `true` if the participant consents to sharing data widely, false otherwise.
+The extension is not present when the question is not asked.
+
+Here is a short example, see [examples/Contract/sample-consent-signed.json](../../examples/Contract/sample-consent-signed.json) for a fully signed Contract:
+
+```json
+{
+  "resourceType": "Contract",
+  "id": "org.chip.c-tracker.consent",
+  ...
+  "authority": [{
+    "reference": "#team"
+  }],
+  "signer": [{
+    "extension": [{
+      "url": "http://fhir-registry.smarthealthit.org/StructureDefinition/consents-to-data-sharing",
+      "valueBoolean": true
+    }],
+    "party": {...},
+    "signature": [...],
+    "type": {...}
+  }],
+  "contained": [{
+    "resourceType": "Organization",
+    "id": "team",
+    "name": "C Tracker Team"
+  }]
+}
+```
+
+
 ### Passcode
 
 By default the user is asked to create a passcode right after signing on screen.
@@ -187,31 +232,6 @@ func passcodeViewControllerDidFailAuthentication(viewController: UIViewControlle
 ```
 
 
-### Sharing Options
-
-To populate the team name used when the user is asked if he's willing to share his data with qualified researchers worldwide or just the study researchers, the `authority.name` property of the Contract is consulted.
-
-> At this time this must be an _Organization_ element that is contained in the contract.
-
-Example:
-
-```json
-{
-  "id": "org.chip.c-tracker.consent",
-  "resourceType": "Contract",
-  ...
-  "authority": [{
-    "reference": "#team"
-  }],
-  "contained": [{
-    "id": "team",
-    "resourceType": "Organization",
-    "name": "C Tracker Team"
-  }]
-}
-```
-
-
 ### Access to System Services
 
 You can easily prompt the user to grant access to HealthKit, CoreMotion, Notifications and others.
@@ -228,16 +248,16 @@ A signed `Contract` resource can be generated by providing a Patient resource an
 let server = <# SMART client #>.server
 consentController = ConsentController()       // ivar on e.g. the App Delegate
 do {
-    let contract = try consentController.signContractWithPatient(patient, date: NSDate())
+    let contract = try consentController.signContract(with: patient, date: Date())
     patient._server = server
-    patient.update() { error in     // cannot use `create` as an ID was assigned
+    patient.update() { error in   // cannot use `create`: patient already has an ID
         if let error = error {
-            println("Error creating patient: \(error)")
+            print("Error creating patient: \(error)")
         }
         else {
             contract.create(server) { error in
                 if let error = error {
-                    println("Error creating contract: \(error)")
+                    print("Error creating contract: \(error)")
                 }
             }
         }
@@ -254,16 +274,16 @@ Using the `DeIdentifier` and `Geocoder` included in this framework, a de-identif
 ```swift
 let server = <# SMART client #>.server
 consentController = ConsentController()       // ivar on e.g. the App Delegate
-consentController!.deIdentifyAndSignConsentWithPatient(patient, date: NSDate()) { contract, patient, error in
+consentController!.deIdentifyAndSignContract(with: patient, date: Date()) { contract, patient, error in
     patient._server = server
-    patient.update() { error in     // cannot use `create` as an ID was assigned
+    patient.update() { error in   // cannot use `create`: patient already has an ID
         if let error = error {
-            println("Error creating patient: \(error)")
+            print("Error creating patient: \(error)")
         }
         else {
             contract.create(server) { error in
                 if let error = error {
-                    println("Error creating contract: \(error)")
+                    print("Error creating contract: \(error)")
                 }
             }
         }
@@ -283,30 +303,30 @@ You could call `eligibilityStatusViewController()` and push the received view co
 
 ```swift
 func eligibilityStatusViewController(withConfiguration config: StudyIntroConfiguration?) -> EligibilityStatusViewController {
-  return consentController.eligibilityStatusViewController(config) { controller in
-    let root = self.window!.rootViewController!
-    do {
-      let consentVC = try self.consentViewController()
-      root.presentViewController(consentVC, animated: true, completion: nil)
+    return consentController.eligibilityStatusViewController(config) { controller in
+        let root = self.window!.rootViewController!
+        do {
+            let consentVC = try self.consentViewController()
+            root.presentViewController(consentVC, animated: true, completion: nil)
+        }
+        catch let error {
+            c3_warn("Failed to create consent view controller: \(error)")
+        }
     }
-    catch let error {
-      c3_warn("Failed to create consent view controller: \(error)")
-    }
-  }
 }
 
 func consentViewController() throws -> ORKTaskViewController {
-  return try consentController.consentViewController(
-    onUserDidConsent: { controller, result in
-      // look at the consent result for participant's name, signature and sharing choice
-      print("\(result.participantFriendlyName) DID CONSENT, START APP SETUP")
-      controller.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
-    },
-    onUserDidDecline: { controller in
-      controller.navigationController?.popToRootViewControllerAnimated(false)
-      controller.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
-    }
-  )
+    return try consentController.consentViewController(
+        onUserDidConsent: { controller, result in
+            // look at the consent result for participant's name, signature and sharing choice
+            print("\(result.participantFriendlyName) DID CONSENT, START APP SETUP")
+            controller.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        },
+        onUserDidDecline: { controller in
+            controller.navigationController?.popToRootViewControllerAnimated(false)
+            controller.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        }
+    )
 }
 ```
 
@@ -315,7 +335,7 @@ func consentViewController() throws -> ORKTaskViewController {
 To create a consenting task from a bundled consent called `Consent.json` and show it using an `ORKTaskViewController` you can do the following.
 
 ```swift
-let controller = ConsentController(bundledContract: "Consent")
+let controller = try! try ConsentController(bundledContract: "Consent")
 let task = controller.createConsentTask()
 let vc = ORKTaskViewController(task: task, taskRunUUID: NSUUID())
 vc.delegate = <# your ORKTaskViewControllerDelegate #>

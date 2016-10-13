@@ -24,7 +24,7 @@ import CoreMotion
 /**
 Bitmask for core motion activity types, mapping directly to what's available in CMMotionActivity.
 */
-public struct CoreMotionActivityType: OptionSetType {
+public struct CoreMotionActivityType: OptionSet {
 	public let rawValue: Int
 	public init(rawValue: Int) {
 		self.rawValue = rawValue
@@ -53,19 +53,19 @@ public struct CoreMotionActivityType: OptionSetType {
 /**
 Class representing a CMMotionActivity.
 */
-public class CoreMotionActivity {
+open class CoreMotionActivity {
 	
 	/// The type(s) the activity represented.
-	public var type: CoreMotionActivityType
+	open var type: CoreMotionActivityType
 	
 	/// When the receiver started.
-	public var startDate: NSDate
+	open var startDate: Date
 	
 	/// The confidence in the activity determination.
-	public var confidence: CMMotionActivityConfidence
+	open var confidence: CMMotionActivityConfidence
 	
 	
-	public init(start: NSDate, activity: CoreMotionActivityType, confidence inConfidence: CMMotionActivityConfidence) {
+	public init(start: Date, activity: CoreMotionActivityType, confidence inConfidence: CMMotionActivityConfidence) {
 		type = activity
 		startDate = start
 		confidence = inConfidence

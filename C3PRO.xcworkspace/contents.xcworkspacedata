@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "container:C3PRO.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:CryptoSwift/CryptoSwift.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Swift-SMART/SwiftSMART.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:ResearchKit/ResearchKit.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:SQLiteSwift/SQLite.xcodeproj">
+   </FileRef>
+</Workspace>

@@ -29,7 +29,7 @@ Use `setupForService(service:permissioner:viewController:)` to setup the cell. I
 permission when the user taps the “Allow” button, show when enabling is not possible and also show an alert informing about how to recover
 from the error.
 */
-public class PermissionRequestTableViewCell: UITableViewCell {
+open class PermissionRequestTableViewCell: UITableViewCell {
 	
 	weak var viewController: UIViewController?
 	
@@ -39,21 +39,21 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	
 	@IBOutlet var actionButton: UIButton? {
 		didSet {
-			actionButton?.enabled = (nil == actionCallback)
+			actionButton?.isEnabled = (nil == actionCallback)
 		}
 	}
 	
-	public var actionCallback: ((button: UIButton) -> Void)? {
+	open var actionCallback: ((UIButton) -> Void)? {
 		didSet {
-			actionButton?.enabled = (nil != actionCallback)
+			actionButton?.isEnabled = (nil != actionCallback)
 			if let button = actionButton {
-				button.setTitle("Allow".c3_localized("Button to enable certain system services"), forState: .Normal)
-				button.setTitle("Granted".c3_localized("Disabled button when permissions were granted"), forState: .Disabled)
+				button.setTitle("Allow".c3_localized("Button to enable certain system services"), for: UIControlState())
+				button.setTitle("Granted".c3_localized("Disabled button when permissions were granted"), for: .disabled)
 			}
 		}
 	}
 	
-	public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+	override public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		setupUI()
 	}
@@ -65,14 +65,14 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	
 	// MARK: - View
 	
-	public override func prepareForReuse() {
+	override open func prepareForReuse() {
 		resetUI()
 		super.prepareForReuse()
 	}
 	
 	func resetUI() {
-		actionButton?.enabled = (nil != actionCallback)
-		commentLabel?.textColor = UIColor.blackColor()
+		actionButton?.isEnabled = (nil != actionCallback)
+		commentLabel?.textColor = UIColor.black
 	}
 	
 	
@@ -81,22 +81,22 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	/**
 	Configure the cell to represent a given service and make its button request access to the given service via the permissioner provided.
 	
-	- parameter service: The service to represent
+	- parameter service:      The service to represent
 	- parameter permissioner: The permissioner to use to request permission
 	*/
-	public func setupForService(service: SystemService, permissioner: SystemServicePermissioner, viewController vc: UIViewController) {
+	open func setup(for service: SystemService, permissioner: SystemServicePermissioner, viewController vc: UIViewController) {
 		titleLabel?.text = service.description
 		commentLabel?.text = service.usageReason
-		if permissioner.hasPermissionForService(service) {
+		if permissioner.hasPermission(for: service) {
 			viewController = nil
 			actionCallback = nil
 		}
 		else {
 			viewController = vc
 			actionCallback = { button in
-				permissioner.requestPermissionForService(service) { [weak self] error in
+				permissioner.requestPermission(for: service) { [weak self] error in
 					if let error = error {
-						self?.indicateError(error, forService: service)
+						self?.indicateError(error, for: service)
 					}
 					else {
 						self?.commentLabel?.text = service.usageReason
@@ -110,8 +110,8 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	}
 	
 	/** Perform the action assigned to the button; you normally don't need to use this method yourself. */
-	public func performAction(sender: UIButton) {
-		actionCallback?(button: sender)
+	open func performAction(_ sender: UIButton) {
+		actionCallback?(sender)
 	}
 	
 	/**
@@ -120,36 +120,36 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 	This method renders the error in place of the system service description, turning the text red, and calling
 	`showRecoveryInstructionsForService(service:fromViewController)` to show next steps.
 	
-	- parameter error: The error that occurred
-	- parameter forService: The system service affected
+	- parameter error:   The error that occurred
+	- parameter service: The system service that was affected
 	*/
-	public func indicateError(error: ErrorType, forService service: SystemService) {
+	open func indicateError(_ error: Error, for service: SystemService) {
 		commentLabel?.text = "\(error)."
-		commentLabel?.textColor = UIColor.redColor()
-		actionButton?.setTitle("Try Again".c3_localized("Button title"), forState: .Normal)
+		commentLabel?.textColor = UIColor.red
+		actionButton?.setTitle("Try Again".c3_localized("Button title"), for: UIControlState())
 		contentView.setNeedsLayout()
 		contentView.layoutIfNeeded()
 		
 		if let viewController = viewController {
-			showRecoveryInstructionsForService(service, fromViewController: viewController)
+			showRecoveryInstructions(for: service, from: viewController)
 		}
 	}
 	
 	/**
 	Show how to recover from failure to enable a certain service.
 	
-	- parameter service: The system service that was affected
-	- parameter fromViewController: The view controller to use for instruction presentation
+	- parameter service:        The system service that was affected
+	- parameter viewController: The view controller to use for instruction presentation
 	*/
-	public func showRecoveryInstructionsForService(service: SystemService, fromViewController viewController: UIViewController) {
-		let alert = UIAlertController(title: service.description, message: service.localizedHowToReEnable, preferredStyle: .Alert)
-		alert.addAction(UIAlertAction(title: "OK".c3_localized("Alert button title"), style: .Cancel, handler: nil))
-		if service.wantsAppSettingsPane, let url = NSURL(string: UIApplicationOpenSettingsURLString) {
-			alert.addAction(UIAlertAction(title: "Open Settings App".c3_localized, style: .Default) { action in
-				UIApplication.sharedApplication().openURL(url)
+	open func showRecoveryInstructions(for service: SystemService, from viewController: UIViewController) {
+		let alert = UIAlertController(title: service.description, message: service.localizedHowToReEnable, preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "OK".c3_localized("Alert button title"), style: .cancel, handler: nil))
+		if service.wantsAppSettingsPane, let url = URL(string: UIApplicationOpenSettingsURLString) {
+			alert.addAction(UIAlertAction(title: "Open Settings App".c3_localized, style: .default) { action in
+				UIApplication.shared.openURL(url)
 			})
 		}
-		viewController.presentViewController(alert, animated: true, completion: nil)
+		viewController.present(alert, animated: true, completion: nil)
 	}
 	
 	
@@ -160,40 +160,40 @@ public class PermissionRequestTableViewCell: UITableViewCell {
 			let ttl = UILabel()
 			ttl.translatesAutoresizingMaskIntoConstraints = false
 			if #available(iOS 9.0, *) {
-				ttl.font = UIFont.preferredFontForTextStyle(UIFontTextStyleTitle1)
+				ttl.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.title1)
 			}
 			else {
-				ttl.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+				ttl.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
 			}
-			ttl.textAlignment = .Center
+			ttl.textAlignment = .center
 			ttl.minimumScaleFactor = 0.7
 			contentView.addSubview(ttl)
-			contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|-[ttl]-|", options: [], metrics: nil, views: ["ttl": ttl]))
-			contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-(15)-[ttl]", options: [], metrics: nil, views: ["ttl": ttl]))
-			ttl.setContentHuggingPriority(UILayoutPriorityDefaultHigh, forAxis: .Vertical)
+			contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-[ttl]-|", options: [], metrics: nil, views: ["ttl": ttl]))
+			contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(15)-[ttl]", options: [], metrics: nil, views: ["ttl": ttl]))
+			ttl.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
 			titleLabel = ttl
 		}
 		if nil == commentLabel {
 			let cmnt = UILabel()
 			cmnt.translatesAutoresizingMaskIntoConstraints = false
-			cmnt.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
-			cmnt.textAlignment = .Center
+			cmnt.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)
+			cmnt.textAlignment = .center
 			cmnt.numberOfLines = 0
 			contentView.addSubview(cmnt)
-			contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("|-[cmnt]-|", options: [], metrics: nil, views: ["cmnt": cmnt]))
-			contentView.addConstraint(NSLayoutConstraint(item: cmnt, attribute: .Top, relatedBy: .Equal, toItem: titleLabel!, attribute: .Bottom, multiplier: 1, constant: 10))
+			contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-[cmnt]-|", options: [], metrics: nil, views: ["cmnt": cmnt]))
+			contentView.addConstraint(NSLayoutConstraint(item: cmnt, attribute: .top, relatedBy: .equal, toItem: titleLabel!, attribute: .bottom, multiplier: 1, constant: 10))
 			commentLabel = cmnt
 		}
 		if nil == actionButton {
 			let btn = BorderedButton()
 			btn.translatesAutoresizingMaskIntoConstraints = false
-			btn.setTitle("Allow".c3_localized, forState: .Normal)
-			btn.addTarget(self, action: #selector(PermissionRequestTableViewCell.performAction(_:)), forControlEvents: .TouchUpInside)
+			btn.setTitle("Allow".c3_localized, for: UIControlState())
+			btn.addTarget(self, action: #selector(PermissionRequestTableViewCell.performAction(_:)), for: .touchUpInside)
 			contentView.addSubview(btn)
-			contentView.addConstraint(NSLayoutConstraint(item: btn, attribute: .CenterX, relatedBy: .Equal, toItem: contentView, attribute: .CenterX, multiplier: 1, constant: 0))
-			contentView.addConstraint(NSLayoutConstraint(item: btn, attribute: .Width, relatedBy: .GreaterThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 150))
-			contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[cmnt]-(20)-[btn]-(20)-|", options: [], metrics: nil, views: ["cmnt": commentLabel!, "btn": btn]))
-			btn.setContentHuggingPriority(UILayoutPriorityDefaultHigh, forAxis: .Vertical)
+			contentView.addConstraint(NSLayoutConstraint(item: btn, attribute: .centerX, relatedBy: .equal, toItem: contentView, attribute: .centerX, multiplier: 1, constant: 0))
+			contentView.addConstraint(NSLayoutConstraint(item: btn, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 150))
+			contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[cmnt]-(20)-[btn]-(20)-|", options: [], metrics: nil, views: ["cmnt": commentLabel!, "btn": btn]))
+			btn.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
 			actionButton = btn
 		}
 		super.updateConstraints()
