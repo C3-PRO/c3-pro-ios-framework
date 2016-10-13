@@ -14,6 +14,7 @@ See below for what's included.
 
 Taking a _pure Swift_ approach, you will not be able to use this framework with Objective-C alone.
 Instead, you can use Swift code in your app, using a [mix and match][mix-match] approach, to connect the C3-PRO components to the Objective-C bits in your app.
+See below for **important Swift and FHIR version** considerations.
 
 [⤵️ Installation](INSTALL.md)  
 [📱 Sample App][sample app]  
@@ -26,22 +27,26 @@ import C3PRO
 
 #### Versions
 
-The `master` branch requires Xcode 7.3 and _should_ always be compatible with the latest version released.
-The `develop` branch may contain new developments and have different requirements.
-See the [releases](releases) tab for previous releases, for newer versions look for `feature/x` branches.
+The `master` branch requires Xcode 8 and _should_ always be compatible with the latest released version.
+It's on `Swift 3.0` and `FHIR DSTU-2`.
+
+The `develop` branch may contain new developments and have different requirements, it's currently on `Swift 3` and `FHIR 1.6.0 (STU-3)`.
+**It is highly suggested that you use the `develop` branch with the FHIR STU-3 ballot version at this time!**
+
+See the [releases](https://github.com/C3-PRO/c3-pro-ios-framework/releases) tab for previous releases, for newer versions look for `feature/x` branches.
 
 See [CHANGELOG.md](./CHANGELOG.md) for updates.
 This framework combines several versioned technologies, here's an overview over what's included:
 
-   Version |   Swift | ResearchKit |  FHIR
------------|---------|-------------|------
-   **2.0** |     3.0 |         1.x | 1.7.0
-   **1.9** |     3.0 |       1.3.1 | 1.6.0
-   **1.8** |     3.0 |         1.3 | 1.0.2
-   **1.2** |     2.2 |         1.3 | 1.6.0
-   **1.1** |     2.2 |         1.3 | 1.0.2
- **1.0.1** |     2.2 |         1.3 | 1.0.2
-   **1.0** | 2.0-2.2 |         1.3 | 1.0.2
+   Version |   Swift | ResearchKit |  FHIR |
+-----------|---------|-------------|-------|----------------
+   **2.0** |     3.0 |         1.x | 1.7.0 | STU-3
+   **1.9** |     3.0 |         1.4 | 1.6.0 | STU-3 Ballot
+   **1.8** |     3.0 |         1.4 | 1.0.2 | DSTU-2
+   **1.2** |     2.2 |         1.3 | 1.4.0 | _not supported_
+   **1.1** |     2.2 |         1.3 | 1.0.2 |
+ **1.0.1** |     2.2 |         1.3 | 1.0.2 |
+   **1.0** | 2.0-2.2 |         1.3 | 1.0.2 |
 
 
 Modules
