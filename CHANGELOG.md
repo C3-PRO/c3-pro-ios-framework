@@ -10,6 +10,8 @@ Changelog
 ## 1.8 (_not yet released_)
 
 - Full conversion to Swift 3.0, still on FHIR v1.0.2 (DSTU-2)
+- Update to ResearchKit v1.4
+- Now requires iOS 9 or newer
 
 
 ## 1.2 (2016-08-10) _not supported_
