@@ -29,10 +29,10 @@ Callback used when signing the consent. Provides `Contract`, `Patient` and an op
 public typealias ConsentSigningCallback = ((Contract, Patient, Error?) -> Void)
 
 /// Name of notification sent when the user completes and agrees to consent.
-public let C3UserDidConsentNotification = "C3UserDidConsentNotification"
+public let C3UserDidConsentNotification = NSNotification.Name(rawValue: "C3UserDidConsentNotification")
 
 /// Name of notification sent when the user cancels or declines to consent.
-public let C3UserDidDeclineConsentNotification = "C3UserDidDeclineConsentNotification"
+public let C3UserDidDeclineConsentNotification = NSNotification.Name(rawValue:"C3UserDidDeclineConsentNotification")
 
 /// User info dictionary key containing the consenting result in a `C3UserDidConsentNotification` notification.
 public let C3ConsentResultKey = "consent-result"
@@ -105,16 +105,15 @@ public class ConsentController {
 	Designated initializer.
 	
 	You can optionally supply the name of a bundled JSON file (without extension) that represents a serialized FHIR Contract resource. This
-	uses the Bundle containing the C3PRO modules, so if you're calling the method from a different bundle (e.g. when unit testing), don't
-	provide a filename and assign `contract` manually by using `fhir_bundledResource(name:subdirectory:type:)`.
+	uses the main Bundle, so if you're calling the method from a different bundle (e.g. when unit testing), don't provide a filename and
+	assign `contract` manually by using `fhir_bundledResource(name:subdirectory:type:)`.
 	
 	- parameter bundledContract: The filename (without ".json" of the Contract resource to read)
 	- parameter subdirectory:    The subdirectory, if any, the Contract resource is located in
 	*/
 	public init(bundledContract: String? = nil, subdirectory: String? = nil) throws {
 		if let name = bundledContract {
-			let bundle = Bundle(for: type(of: self))
-			contract = try bundle.fhir_bundledResource(name, subdirectory: subdirectory, type: Contract.self)
+			contract = try Bundle.main.fhir_bundledResource(name, subdirectory: subdirectory, type: Contract.self)
 		}
 	}
 	
@@ -323,7 +322,7 @@ public class ConsentController {
 			exec(taskViewController, result)
 		}
 		let userInfo = [C3ConsentResultKey: result]
-		NotificationCenter.default.post(name: Notification.Name(rawValue: C3UserDidConsentNotification), object: self, userInfo: userInfo)
+		NotificationCenter.default.post(name: C3UserDidConsentNotification, object: self, userInfo: userInfo)
 	}
 	
 	/**
@@ -336,7 +335,7 @@ public class ConsentController {
 		if let exec = onUserDidDeclineConsent {
 			exec(taskViewController)
 		}
-		NotificationCenter.default.post(name: Notification.Name(rawValue: C3UserDidDeclineConsentNotification), object: self)
+		NotificationCenter.default.post(name: C3UserDidDeclineConsentNotification, object: self)
 	}
 	
 	

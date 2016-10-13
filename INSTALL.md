@@ -1,9 +1,34 @@
 Installation
 ============
 
-There are two ways to use the _C3-PRO_ iOS framework: install via _CocoaPods_ or a _manual_ install.
+There are two ways to use the _C3-PRO_ iOS framework: install via _Carthage_ or a _manual_ install.
 
-The CocoaPods install is **not yet functional**, hope to resolve issues with it soon.
+
+Carthage
+--------
+
+You can use [Carthage](https://github.com/Carthage/Carthage), a modern iOS framework manager, to use the C3-PRO iOS framework.
+Put this in your `Cartfile`, then run `carthage update --platform "iOS"`:
+
+```ogdl
+github "C3-PRO/c3-pro-ios-framework.git" ~> 1.8
+```
+
+Check the matrix above to see which version you should be using.
+Now, on your application targets’ “Build Phases” settings tab, click the “+” icon and choose “New Run Script Phase”.
+Create a Run Script in which you specify your shell (ex: bin/sh), add the following contents to the script area below the shell:
+
+```bash
+/usr/local/bin/carthage copy-frameworks
+
+$(SRCROOT)/Carthage/Build/iOS/C3PRO.framework
+$(SRCROOT)/Carthage/Build/iOS/ResearchKit/ResearchKit.framework
+$(SRCROOT)/Carthage/Build/iOS/Swift-SMART/SwiftSMART.framework
+$(SRCROOT)/Carthage/Build/iOS/CryptoSwift/CryptoSwift.framework
+$(SRCROOT)/Carthage/Build/iOS/SQLiteSwift/SQLite.framework
+```
+
+Make sure you drag & drop these frameworks into the “Embedded Binaries” in the “General” settings tab of your app the first time you set up Carthage.
 
 
 Manual Installation
@@ -63,16 +88,6 @@ Click on the <key>+</key> button and add:
 ![Add Dependencies](./assets/install-step-4.png)
 
 You should now be able to build and run your app.
-
-
-Carthage
---------
-
-You can use [Carthage](https://github.com/Carthage/Carthage#installing-carthage) to install _C3-PRO_ using this `Cartfile`:
-
-```
-github "C3-PRO/c3-pro-ios-framework"
-```
 
 
 CocoaPods
