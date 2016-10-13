@@ -1,4 +1,5 @@
 .DS_Store
+Carthage
 
 # Xcode user data
 **.pbxuser

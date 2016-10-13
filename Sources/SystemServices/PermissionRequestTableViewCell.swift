@@ -124,7 +124,7 @@ open class PermissionRequestTableViewCell: UITableViewCell {
 	- parameter service: The system service that was affected
 	*/
 	open func indicateError(_ error: Error, for service: SystemService) {
-		commentLabel?.text = "\(error)."
+		commentLabel?.text = "\(error.localizedDescription)."
 		commentLabel?.textColor = UIColor.red
 		actionButton?.setTitle("Try Again".c3_localized("Button title"), for: UIControlState())
 		contentView.setNeedsLayout()

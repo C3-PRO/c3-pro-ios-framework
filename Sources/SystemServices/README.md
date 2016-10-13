@@ -4,6 +4,9 @@ System Service Permissions
 These classes provide facilities to prompt the user to allow certain system services, such as access to HealthKit, the device's current location, notifications and others.
 These are represented as `SystemService` enums, some of which have associated values.
 
+**Note** that as of iOS 10, you must provide a short explanation for `NSHealthShareUsageDescription`, if you use HealthKit, and `NSMotionUsageDescription`, if you use CoreMotion, in your app's _Info.plist_.
+
+
 ### Module Interface
 
 #### IN
