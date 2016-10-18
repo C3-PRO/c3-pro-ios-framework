@@ -33,5 +33,5 @@ Pod::Spec.new do |s|
   s.dependency 'SMART', '~> 2.8'
   s.dependency 'ResearchKit', '~> 1.3'
   s.dependency 'CryptoSwift', '~> 0.6'
-  s.dependency 'SQLite.swift'
+  s.dependency 'SQLite.swift', '~> 0.11'
 end
