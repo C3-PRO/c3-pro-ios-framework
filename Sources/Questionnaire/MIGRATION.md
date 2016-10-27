@@ -1,8 +1,8 @@
 Migrating Questionnaires
 ========================
 
-1.0.2 -> 1.6.0
---------------
+1.0.2 -> 1.4.0+
+---------------
 
 At this time, the `Questionnaire` resource is still on a very low maturity level – zero to be specific.
 While in 1.0.2, questions were children of groups, these have been merged into `item` with a type in 1.4.

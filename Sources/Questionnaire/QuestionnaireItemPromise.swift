@@ -69,8 +69,19 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 		// resolve answer format, THEN resolve sub-groups, if any
 		item.c3_asAnswerFormat() { format, error in
 			var steps = [ORKStep]()
+			var thisStep: ConditionalStep?
 			var errors = [Error]()
 			var requirements = parentRequirements ?? [ResultRequirement]()
+			
+			// find item's "enableWhen" requirements
+			do {
+				if let myreqs = try self.item.c3_enableQuestionnaireElementWhen() {
+					requirements.append(contentsOf: myreqs)
+				}
+			}
+			catch let error {
+				errors.append(error)
+			}
 			
 			// we know the answer format, create a conditional step
 			if let fmt = format {
@@ -78,21 +89,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				step.fhirType = self.item.type
 				step.text = text
 				step.isOptional = !(self.item.required ?? false)
-				
-				// questions "enableWhen" requirements
-				do {
-					if let myreqs = try self.item.c3_enableQuestionnaireElementWhen() {
-						requirements.append(contentsOf: myreqs)
-					}
-				}
-				catch let error {
-					errors.append(error)
-				}
-				
-				if !requirements.isEmpty {
-					step.add(requirements: requirements)
-				}
-				steps.append(step)
+				thisStep = step
 			}
 			else if let error = error {
 				errors.append(error)
@@ -100,8 +97,17 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				
 			// no error and no answer format but title and text - must be "display" or "group" item that has something to show!
 			else if nil != title || nil != text {
-				let step = ConditionalInstructionStep(identifier: linkId, title: title, text: text)
-				steps.append(step)
+				thisStep = ConditionalInstructionStep(identifier: linkId, title: title, text: text)
+			}
+			
+			// collect the step
+			if var step = thisStep {
+				if !requirements.isEmpty {
+					step.add(requirements: requirements)
+				}
+				if let step = step as? ORKStep {
+					steps.append(step)
+				}
 			}
 			
 			// do we have sub-groups?

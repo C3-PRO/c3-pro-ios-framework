@@ -27,8 +27,7 @@ import ResearchKit
 extension QuestionnaireItem {
 	
 	/**
-	Tries to find the "enableWhen" extension on questionnaire groups and questions, and if there are any instantiates ResultRequirements
-	representing those.
+	Checks whether the item has "enableWhen" conditions, and if there are any instantiates ResultRequirements representing those.
 	*/
 	func c3_enableQuestionnaireElementWhen() throws -> [ResultRequirement]? {
 		if let enableWhen = enableWhen {

@@ -23,41 +23,50 @@ import ResearchKit
 
 
 /**
-A conditional question step, for use with the conditional ordered task.
+A protocol for our own conditional steps.
 */
-class ConditionalQuestionStep: ORKQuestionStep {
+public protocol ConditionalStep {
 	
-	/// The original "type", specified in the FHIR Questionnaire.
-	var fhirType: String?
+	/// The step identifier; since steps will inherit from ORKStep this is a given.
+	var identifier: String { get }
 	
 	/// Requirements to fulfil for the step to show up, if any.
-	var requirements: [ResultRequirement]?
-	
+	var requirements: [ResultRequirement]? { get set }
 	
 	/**
-	Designated initializer.
+	Add the given requirement as a condition for this step.
 	
-	- parameter identifier: The step identifier
-	- parameter title: The step's title
-	- parameter answer: The step's answer format
+	- parameter requirement: The requirement that must be fulfilled for this step to be displayed
 	*/
-	init(identifier: String, title ttl: String?, answer: ORKAnswerFormat) {
-		super.init(identifier: identifier)
-		title = ttl
-		answerFormat = answer
-	}
+	mutating func add(requirement: ResultRequirement)
 	
+	/**
+	Make the given requirements a condition for this step.
 	
-	// MARK: - Requirements
+	- parameter requirements: The requirements that must be fulfilled for this step to be shown
+	*/
+	mutating func add(requirements reqs: [ResultRequirement])
 	
-	func add(requirement: ResultRequirement) {
+	/**
+	If the step has requirements, checks if all of them are fulfilled in step results in the given task result.
+	
+	- parameter result: The result to use for the checks
+	- returns: A bool indicating success or failure; nil if there are no requirements
+	*/
+	func requirementsAreSatisfiedBy(_ result: ORKTaskResult) -> Bool?
+}
+
+
+extension ConditionalStep {
+	
+	mutating func add(requirement: ResultRequirement) {
 		if nil == requirements {
 			requirements = [ResultRequirement]()
 		}
 		requirements!.append(requirement)
 	}
 	
-	func add(requirements reqs: [ResultRequirement]) {
+	mutating func add(requirements reqs: [ResultRequirement]) {
 		guard !reqs.isEmpty else {
 			return
 		}
@@ -69,12 +78,6 @@ class ConditionalQuestionStep: ORKQuestionStep {
 		}
 	}
 	
-	/**
-	If the step has requirements, checks if all of them are fulfilled in step results in the given task result.
-	
-	- parameter result: The result to use for the checks
-	- returns: A bool indicating success or failure, nil if there are no requirements
-	*/
 	func requirementsAreSatisfiedBy(_ result: ORKTaskResult) -> Bool? {
 		guard let requirements = requirements else {
 			return nil
@@ -104,6 +107,33 @@ class ConditionalQuestionStep: ORKQuestionStep {
 			}
 		}
 		return true
+	}
+}
+
+
+/**
+A conditional question step, for use with the conditional ordered task.
+*/
+class ConditionalQuestionStep: ORKQuestionStep, ConditionalStep {
+	
+	/// The original "type", specified in the FHIR Questionnaire.
+	var fhirType: String?
+	
+	/// Requirements to fulfil for the step to show up, if any.
+	var requirements: [ResultRequirement]?
+	
+	
+	/**
+	Designated initializer.
+	
+	- parameter identifier: The step identifier
+	- parameter title: The step's title
+	- parameter answer: The step's answer format
+	*/
+	init(identifier: String, title ttl: String?, answer: ORKAnswerFormat) {
+		super.init(identifier: identifier)
+		title = ttl
+		answerFormat = answer
 	}
 	
 	
@@ -133,7 +163,7 @@ class ConditionalQuestionStep: ORKQuestionStep {
 /**
 A conditional instruction step, to be used in the conditional ordered task.
 */
-class ConditionalInstructionStep: ORKInstructionStep {
+class ConditionalInstructionStep: ORKInstructionStep, ConditionalStep {
 	
 	/// Requirements to fulfil for the step to show up, if any.
 	var requirements: [ResultRequirement]?
@@ -149,61 +179,6 @@ class ConditionalInstructionStep: ORKInstructionStep {
 		super.init(identifier: identifier)
 		title = ttl
 		text = txt
-	}
-	
-	
-	// MARK: - Requirements
-	
-	func add(requirement: ResultRequirement) {
-		if nil == requirements {
-			requirements = [ResultRequirement]()
-		}
-		requirements!.append(requirement)
-	}
-	
-	func add(requirements reqs: [ResultRequirement]) {
-		if nil == requirements {
-			requirements = reqs
-		}
-		else {
-			requirements!.append(contentsOf: reqs)
-		}
-	}
-	
-	/**
-	If the step has requirements, checks if all of them are fulfilled in step results in the given task result.
-	
-	- returns: A bool indicating success or failure, nil if there are no requirements
-	*/
-	func requirementsAreSatisfiedBy(_ result: ORKTaskResult) -> Bool? {
-		guard let requirements = requirements else {
-			return nil
-		}
-		
-		// check each requirement and drop out early if one fails
-		for requirement in requirements {
-			if let stepResult = result.result(forIdentifier: requirement.questionIdentifier as String) as? ORKStepResult {
-				if let questionResults = stepResult.results as? [ORKQuestionResult] {
-					var ok = false
-					for questionResult in questionResults {
-						//c3_logIfDebug("===>  \(questionResult.identifier) is \(questionResult.answer), needs to be \(requirement.result.answer): \(questionResult.c3_hasSameResponse(requirement.result))")
-						if questionResult.c3_hasSameResponse(requirement.result) {
-							ok = true
-						}
-					}
-					if !ok {
-						return false
-					}
-				}
-				else {
-					c3_logIfDebug("Expecting Array<ORKQuestionResult> but got \(stepResult.results)")
-				}
-			}
-			else {
-				c3_logIfDebug("Next step \(identifier) has a condition on \(requirement.questionIdentifier), but the latter has no result yet")
-			}
-		}
-		return true
 	}
 	
 	
