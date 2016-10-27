@@ -36,6 +36,9 @@ open class SystemPermissionStepViewController: ORKStepViewController, UITableVie
 	
 	lazy var permissionRequester = SystemServicePermissioner()
 	
+	override public init(step: ORKStep, result: ORKResult) {
+		super.init(step: step, result: result)
+	}
 	
 	override public init(step: ORKStep?) {
 		super.init(step: step)
