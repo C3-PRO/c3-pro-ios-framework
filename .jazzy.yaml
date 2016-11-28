@@ -74,6 +74,7 @@ custom_categories:
     - HKQuantity
     - HKQuantitySample
     - HKQuantityType
+    - HKBiologicalSex
 
   - name: Data Queue
     children:
