@@ -21,6 +21,7 @@
 
 /* Why notifications want to be sent */
 "Enabling notifications allows the app to show reminders." = "Enabling notifications allows the app to show reminders.";
+"Female" = "Female";
 
 /* Disabled button when permissions were granted */
 "Granted" = "Granted";
@@ -32,6 +33,7 @@
 
 "Let's see if you may take part in this study" = "Let's see if you may take part in this study";
 "Location Services" = "Location Services";
+"Male" = "Male";
 "Microphone" = "Microphone";
 "Motion Activity" = "Motion Activity";
 
@@ -41,6 +43,8 @@
 /* No as in no-i-dont-meet-this-requirement */
 "No" = "No";
 
+/* Sex not set */
+"Not Set" = "Not Set";
 "Notifications" = "Notifications";
 
 /* Alert button title */
@@ -48,6 +52,9 @@
 
 /* Button to open settings */
 "Open Settings App" = "Open Settings App";
+
+/* Other sex */
+"Other" = "Other";
 
 "Participant" = "Participant";
 "Passcode" = "Passcode";

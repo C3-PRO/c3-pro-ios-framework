@@ -69,6 +69,7 @@
 		EEEA7FCF1BD785360089BF85 /* FHIR+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCC1BD785360089BF85 /* FHIR+C3-PRO.swift */; };
 		EEEA7FD01BD785360089BF85 /* Foundation+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FCD1BD785360089BF85 /* Foundation+C3-PRO.swift */; };
 		EEEA7FD31BD8D9890089BF85 /* EligibilityCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7FD21BD8D9890089BF85 /* EligibilityCheckViewController.swift */; };
+		EEEC78751DEC31E200E7020C /* HealthKit+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEC78741DEC31E200E7020C /* HealthKit+Convenience.swift */; };
 		EEEEAB801BDA9648001F8B5C /* EligibilityRequirement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEEAB7F1BDA9648001F8B5C /* EligibilityRequirement.swift */; };
 		EEEEAB891BDA97EE001F8B5C /* Group+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEEAB881BDA97EE001F8B5C /* Group+C3-PRO.swift */; };
 		EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */; };
@@ -101,7 +102,7 @@
 		EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncryptedDataQueue.swift; sourceTree = "<group>"; };
 		EE3086C21D9AFBA500D3910B /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = "SQLiteSwift/build/Debug-iphoneos/SQLite.framework"; sourceTree = "<group>"; };
 		EE3813FB1D75A35A001EFC49 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
-		EE3813FC1D75A3D8001EFC49 /* public.crt */ = {isa = PBXFileReference; lastKnownFileType = file; name = public.crt; path = enc/public.crt; sourceTree = "<group>"; };
+		EE3813FC1D75A3D8001EFC49 /* public.crt */ = {isa = PBXFileReference; lastKnownFileType = text; name = public.crt; path = enc/public.crt; sourceTree = "<group>"; };
 		EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueueManager.swift; sourceTree = "<group>"; };
 		EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2DynRegAppStore.swift; sourceTree = "<group>"; };
 		EE519B9C1B0CD3AC00036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -168,6 +169,7 @@
 		EEEA7FCC1BD785360089BF85 /* FHIR+C3-PRO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FHIR+C3-PRO.swift"; sourceTree = "<group>"; };
 		EEEA7FCD1BD785360089BF85 /* Foundation+C3-PRO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Foundation+C3-PRO.swift"; sourceTree = "<group>"; };
 		EEEA7FD21BD8D9890089BF85 /* EligibilityCheckViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EligibilityCheckViewController.swift; sourceTree = "<group>"; };
+		EEEC78741DEC31E200E7020C /* HealthKit+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HealthKit+Convenience.swift"; sourceTree = "<group>"; };
 		EEEEAB7F1BDA9648001F8B5C /* EligibilityRequirement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EligibilityRequirement.swift; sourceTree = "<group>"; };
 		EEEEAB881BDA97EE001F8B5C /* Group+C3-PRO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Group+C3-PRO.swift"; sourceTree = "<group>"; };
 		EEF1B0BF1B0CF4BB0061926E /* QuestionnaireController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireController.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 				EEC5A81C1D5CAF7200753852 /* CoreMotionStandardActivityInterpreter.swift */,
 				EE1AB3B51C23283100711108 /* HKHealthStore+Sampling.swift */,
 				EE1AB3B91C23286200711108 /* HKQuantity+FHIR.swift */,
+				EEEC78741DEC31E200E7020C /* HealthKit+Convenience.swift */,
 			);
 			name = "HealthKit & CoreMotion";
 			path = Sources/HealthKit;
@@ -496,7 +499,7 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Boston Children's Hospital";
 				TargetAttributes = {
 					EEFA84BA1AE5C18B00E61006 = {
@@ -572,6 +575,7 @@
 				EEC5A81F1D5CAF7200753852 /* ActivityCollector.swift in Sources */,
 				EE86C4721C490B7400B7D486 /* SystemServicePermissioner.swift in Sources */,
 				EE86C47E1C492F3C00B7D486 /* SystemPermissionStep.swift in Sources */,
+				EEEC78751DEC31E200E7020C /* HealthKit+Convenience.swift in Sources */,
 				EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */,
 				EEC5A8261D5CAF7200753852 /* CoreMotionReporter.swift in Sources */,
 				EEC5A8221D5CAF7200753852 /* ActivityReportPeriod.swift in Sources */,
@@ -658,8 +662,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -707,8 +713,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -739,6 +747,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -763,6 +772,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
