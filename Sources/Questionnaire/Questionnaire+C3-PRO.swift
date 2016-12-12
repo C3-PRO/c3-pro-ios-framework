@@ -55,7 +55,7 @@ extension QuestionnaireItemEnableWhen {
 	- returns: A String representing the step identifier the receiver applies to
 	*/
 	func c3_questionIdentifier() throws -> String {
-		guard let questionIdentifier = question else {
+		guard let questionIdentifier = question?.string else {
 			throw C3Error.questionnaireEnableWhenIncomplete("\(self) has no `question` to refer to")
 		}
 		return questionIdentifier

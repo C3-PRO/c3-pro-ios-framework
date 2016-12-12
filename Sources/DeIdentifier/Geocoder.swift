@@ -219,15 +219,15 @@ open class Geocoder {
 	- returns: A populated FHIR "Address" element
 	*/
 	open func addressFrom(placemark: CLPlacemark) -> Address {
-		let address = Address(json: nil)
-		address.country = placemark.isoCountryCode ?? placemark.country
-		if let state = placemark.administrativeArea {
+		let address = Address()
+		address.country = placemark.isoCountryCode?.fhir_string ?? placemark.country?.fhir_string
+		if let state = placemark.administrativeArea?.fhir_string {
 			address.state = state
 		}
-		if let city = placemark.locality {
+		if let city = placemark.locality?.fhir_string {
 			address.city = city
 		}
-		if let zip = placemark.postalCode {
+		if let zip = placemark.postalCode?.fhir_string {
 			address.postalCode = zip
 		}
 		return address
@@ -277,14 +277,14 @@ open class Geocoder {
 	- returns: A sparsely populated FHIR "Address" element
 	*/
 	open func hipaaCompliantAddress(_ address: Address) -> Address {
-		let hipaa = Address(json: nil)
+		let hipaa = Address()
 		hipaa.country = address.country
 		
 		// US: 3-digit ZIP
-		if let us = address.country, us.lowercased().hasPrefix("us") {
-			if let fullZip = address.postalCode, fullZip.characters.count >= 3 {
+		if let us = address.country?.string, us.lowercased().hasPrefix("us") {
+			if let fullZip = address.postalCode?.string, fullZip.characters.count >= 3 {
 				let zip = fullZip[fullZip.startIndex..<fullZip.index(fullZip.startIndex, offsetBy: 3)]
-				hipaa.postalCode = Geocoder.restrictedThreeDigitZIPs().contains(zip) ? "000" : zip
+				hipaa.postalCode = FHIRString(Geocoder.restrictedThreeDigitZIPs().contains(zip) ? "000" : zip)
 			}
 			if let state = address.state {
 				hipaa.state = state

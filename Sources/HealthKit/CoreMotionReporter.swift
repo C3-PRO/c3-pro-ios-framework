@@ -309,12 +309,14 @@ open class CoreMotionReporter: ActivityReporter {
 		// instantiate durations
 		var durations = [CoreMotionActivitySum]()
 		for (type, secs) in periods {
-			let minutes = Duration(json: ["value": secs / 60, "unit": "minute"])
+			let minutes = Duration()
+			minutes.value = FHIRDecimal("\(secs / 60)")
+			minutes.unit = FHIRString("minute")
 			let duration = CoreMotionActivitySum(type: type, duration: minutes)
 			durations.append(duration)
 		}
 		
-		let period = Period(json: nil)
+		let period = Period()
 		period.start = earliest?.fhir_asDateTime()
 		period.end = latest?.fhir_asDateTime()
 		let data = ActivityReportPeriod(period: period)

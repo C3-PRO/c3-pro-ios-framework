@@ -47,7 +47,7 @@ open class HealthKitReporter: ActivityReporter {
 		retrieveHealthKitActivitySummary(startingAt: start, until: until) { samples, error in
 			
 			// create the period
-			let period = Period(json: nil)
+			let period = Period()
 			period.start = start.fhir_asDateTime()
 			period.end = until.fhir_asDateTime()
 			

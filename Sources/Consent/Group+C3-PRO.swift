@@ -34,9 +34,9 @@ public extension GroupCharacteristic {
 	false, the meaning reverses.
 	*/
 	public func c3_asEligibilityRequirement() -> EligibilityRequirement? {
-		if let text = code?.text, let exclude = exclude {
+		if let text = code?.text?.string, let exclude = exclude {
 			let include = valueBoolean ?? true
-			return EligibilityRequirement(title: text, mustBeMet: include != exclude)
+			return EligibilityRequirement(title: text, mustBeMet: include.bool != exclude.bool)
 		}
 		return nil
 	}

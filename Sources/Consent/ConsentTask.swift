@@ -51,7 +51,7 @@ public class ConsentTask: ORKOrderedTask {
 	public static let pinStepName = "passcode"
 	
 	public var teamName: String? {
-		return contract.authority?.first?.resolved(Organization.self)?.name
+		return contract.authority?.first?.resolved(Organization.self)?.name?.string
 	}
 	
 	/**

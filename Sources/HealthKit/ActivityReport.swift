@@ -41,7 +41,7 @@ open class ActivityReport: CustomStringConvertible {
 				guard let st0 = $0.0.period.start else { return true }
 				guard let st1 = $0.1.period.start else { return false }
 				return st0 < st1 }
-			period = Period(json: nil)
+			period = Period()
 			period.start = periods.first?.period.start
 			period.end = periods.last?.period.end
 		}
@@ -55,7 +55,7 @@ open class ActivityReport: CustomStringConvertible {
 			guard let st0 = $0.0.period.start else { return true }
 			guard let st1 = $0.1.period.start else { return false }
 			return st0 < st1 }
-		period = Period(json: nil)
+		period = Period()
 		period.start = periods.first?.period.start
 		period.end = periods.last?.period.end
 	}

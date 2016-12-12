@@ -84,7 +84,7 @@ public extension ContractTerm {
 	public func c3_asConsentSection() throws -> ORKConsentSection {
 		let type = try c3_consentSectionType()
 		let section = ORKConsentSection(type: type)
-		section.summary = text
+		section.summary = text?.string
 		
 		// We need extensions for some other properties
 		if let subs = extensions(forURI: kContractTermConsentSectionExtension)?.first?.extension_fhir {
@@ -92,12 +92,12 @@ public extension ContractTerm {
 				if let url = sub.url?.absoluteString {
 					switch url {
 					case "title":
-						section.title = sub.valueString
+						section.title = sub.valueString?.string
 					case "htmlContent":
-						section.htmlContent = sub.valueString
+						section.htmlContent = sub.valueString?.string
 					case "htmlContentFile":
 						let bundle = Bundle.main
-						if let name = sub.valueString, let url = bundle.url(forResource: name, withExtension: "html") ?? bundle.url(forResource: name, withExtension: "html", subdirectory: "HTMLContent") {
+						if let name = sub.valueString?.string, let url = bundle.url(forResource: name, withExtension: "html") ?? bundle.url(forResource: name, withExtension: "html", subdirectory: "HTMLContent") {
 							do {
 								section.htmlContent = try String(contentsOf: url, encoding: String.Encoding.utf8)
 							}
@@ -109,7 +109,7 @@ public extension ContractTerm {
 							c3_warn("HTML consent section with name «\(sub.valueString)» is not in main bundle nor in its «HTMLContent» subdirectory")
 						}
 					case "image":
-						if let name = sub.valueString, let image = UIImage(named: name) {
+						if let name = sub.valueString?.string, let image = UIImage(named: name) {
 							section.customImage = image
 						}
 						else {
@@ -117,7 +117,7 @@ public extension ContractTerm {
 						}
 					case "animation":
 						let multi = (UIScreen.main.scale >= 3.0) ? "@3x" : "@2x"
-						if let name = sub.valueString, let url = Bundle.main.url(forResource: name + multi, withExtension: "m4v") {
+						if let name = sub.valueString?.string, let url = Bundle.main.url(forResource: name + multi, withExtension: "m4v") {
 							section.customAnimationURL = url
 						}
 						else {
@@ -146,10 +146,10 @@ public extension ContractTerm {
 					c3_logIfDebug("Ignoring consent section system “\(url)” (expecting “\(kContractTermConsentSectionType)”)")
 					continue
 				}
-				if nil == code.code {
+				guard let code = code.code?.string else {
 					continue
 				}
-				switch code.code! {
+				switch code {
 				case "Overview":
 					return ORKConsentSectionType.overview
 				case "Privacy":
@@ -171,7 +171,7 @@ public extension ContractTerm {
 				case "OnlyInDocument":
 					return ORKConsentSectionType.onlyInDocument
 				default:
-					throw C3Error.consentSectionTypeUnknownToResearchKit(code.code!)
+					throw C3Error.consentSectionTypeUnknownToResearchKit(code)
 				}
 			}
 		}

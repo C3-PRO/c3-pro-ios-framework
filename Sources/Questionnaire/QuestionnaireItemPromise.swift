@@ -63,7 +63,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	                      allocated still, so don't throw everything away just because you receive errors
 	*/
 	func fulfill(requiring parentRequirements: [ResultRequirement]?, callback: @escaping (([Error]?) -> Void)) {
-		let linkId = item.linkId ?? UUID().uuidString
+		let linkId = item.linkId?.string ?? UUID().uuidString
 		let (title, text) = item.c3_bestTitleAndText()
 		
 		// resolve answer format, THEN resolve sub-groups, if any
@@ -86,7 +86,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 			// we know the answer format, create a conditional step
 			if let fmt = format {
 				let step = ConditionalQuestionStep(identifier: linkId, title: title, answer: fmt)
-				step.fhirType = self.item.type
+				step.fhirType = self.item.type?.rawValue
 				step.text = text
 				step.isOptional = !(self.item.required ?? false)
 				thisStep = step
@@ -163,14 +163,14 @@ extension QuestionnaireItem {
 	- returns: A tuple of strings for title and text
 	*/
 	func c3_bestTitleAndText() -> (String?, String?) {
-		let cDisplay = concept?.filter() { return nil != $0.display }.map() { return $0.display! }
-		let cCodes = concept?.filter() { return nil != $0.code }.map() { return $0.code! }
+		let cDisplay = concept?.filter() { return nil != $0.display }.map() { return $0.display!.string }
+		let cCodes = concept?.filter() { return nil != $0.code }.map() { return $0.code!.string }
 		
 		var ttl = cDisplay?.first ?? cCodes?.first
-		var txt = text
+		var txt = text?.string
 		
 		if nil == ttl {
-			ttl = text
+			ttl = text?.string
 			txt = nil
 		}
 		if nil == txt {
@@ -182,23 +182,23 @@ extension QuestionnaireItem {
 	}
 	
 	func c3_questionMinOccurs() -> Int? {
-		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-minOccurs")?.first?.valueInteger?.int
 	}
 	
 	func c3_questionMaxOccurs() -> Int? {
-		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-maxOccurs")?.first?.valueInteger?.int
 	}
 	
 	func c3_questionInstruction() -> String? {
-		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString?.string
 	}
 	
 	func c3_questionHelpText() -> String? {
-		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString?.string
 	}
 	
 	func c3_numericAnswerUnit() -> String? {
-		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString?.string
 	}
 	
 	func c3_defaultAnswer() -> Extension? {
@@ -230,18 +230,18 @@ extension QuestionnaireItem {
 		let link = linkId ?? "<nil>"
 		if let type = type {
 			switch type {
-			case "boolean":	  callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
-			case "decimal":	  callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), nil)
-			case "integer":
+			case .boolean:	  callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
+			case .decimal:	  callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), nil)
+			case .integer:
 				let minVals = c3_minValue()
 				let maxVals = c3_maxValue()
-				let minVal = minVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger
-				let maxVal = maxVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger
+				let minVal = minVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger?.int
+				let maxVal = maxVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger?.int
 				if let minVal = minVal, let maxVal = maxVal, maxVal > minVal {
-					let minDesc = minVals?.filter() { return $0.valueString != nil }.first?.valueString
-					let maxDesc = maxVals?.filter() { return $0.valueString != nil }.first?.valueString
-					let defVal = c3_defaultAnswer()?.valueInteger ?? minVal
-					let format = ORKAnswerFormat.scale(withMaximumValue: maxVal, minimumValue: minVal, defaultValue: defVal,
+					let minDesc = minVals?.filter() { return $0.valueString != nil }.first?.valueString?.string
+					let maxDesc = maxVals?.filter() { return $0.valueString != nil }.first?.valueString?.string
+					let defVal = c3_defaultAnswer()?.valueInteger?.int ?? minVal
+					let format = ORKAnswerFormat.scale(withMaximumValue: Int(maxVal), minimumValue: Int(minVal), defaultValue: Int(defVal),
 						step: 1, vertical: (maxVal - minVal > 5),
 						maximumValueDescription: maxDesc, minimumValueDescription: minDesc)
 					callback(format, nil)
@@ -250,14 +250,14 @@ extension QuestionnaireItem {
 				else {
 					callback(ORKAnswerFormat.integerAnswerFormat(withUnit: nil), nil)
 				}
-			case "quantity":  callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: c3_numericAnswerUnit()), nil)
-			case "date":      callback(ORKAnswerFormat.dateAnswerFormat(), nil)
-			case "dateTime":  callback(ORKAnswerFormat.dateTime(), nil)
-			case "instant":   callback(ORKAnswerFormat.dateTime(), nil)
-			case "time":      callback(ORKAnswerFormat.timeOfDayAnswerFormat(), nil)
-			case "string":    callback(ORKAnswerFormat.textAnswerFormat(), nil)
-			case "url":       callback(ORKAnswerFormat.textAnswerFormat(), nil)
-			case "choice":
+			case .quantity:  callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: c3_numericAnswerUnit()), nil)
+			case .date:      callback(ORKAnswerFormat.dateAnswerFormat(), nil)
+			case .dateTime:  callback(ORKAnswerFormat.dateTime(), nil)
+			case .instant:   callback(ORKAnswerFormat.dateTime(), nil)
+			case .time:      callback(ORKAnswerFormat.timeOfDayAnswerFormat(), nil)
+			case .string:    callback(ORKAnswerFormat.textAnswerFormat(), nil)
+			case .url:       callback(ORKAnswerFormat.textAnswerFormat(), nil)
+			case .choice:
 				c3_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
 						callback(nil, error ?? C3Error.questionnaireNoChoicesInChoiceQuestion(self))
@@ -266,7 +266,7 @@ extension QuestionnaireItem {
 						callback(ORKAnswerFormat.choiceAnswerFormat(with: self.c3_answerChoiceStyle(), textChoices: choices!), nil)
 					}
 				}
-			case "open-choice":
+			case .openChoice:
 				c3_resolveAnswerChoices() { choices, error in
 					if nil != error || nil == choices {
 						callback(nil, error ?? C3Error.questionnaireNoChoicesInChoiceQuestion(self))
@@ -275,11 +275,11 @@ extension QuestionnaireItem {
 						callback(ORKAnswerFormat.choiceAnswerFormat(with: self.c3_answerChoiceStyle(), textChoices: choices!), nil)
 					}
 				}
-			//case "attachment":	callback(format: nil, error: nil)
-			//case "reference":		callback(format: nil, error: nil)
-			case "display":
+			//case .attachment:	callback(format: nil, error: nil)
+			//case .reference:		callback(format: nil, error: nil)
+			case .display:
 				callback(nil, nil)
-			case "group":
+			case .group:
 				callback(nil, nil)
 			default:
 				callback(nil, C3Error.questionnaireQuestionTypeUnknownToResearchKit(self))
@@ -314,9 +314,9 @@ extension QuestionnaireItem {
 				if let expansion = valueSet?.expansion?.contains {
 					for option in expansion {
 						let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem
-						let code = option.code ?? kORKTextChoiceMissingCodeCode
+						let code = option.code?.string ?? kORKTextChoiceMissingCodeCode
 						let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-						let text = ORKTextChoice(text: option.display ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
+						let text = ORKTextChoice(text: option.display?.string ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
 						choices.append(text)
 					}
 				}
@@ -328,9 +328,9 @@ extension QuestionnaireItem {
 							let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem	// system is a required property
 							if let concepts = option.concept {
 								for concept in concepts {
-									let code = concept.code ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
+									let code = concept.code?.string ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
 									let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-									let text = ORKTextChoice(text: concept.display ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
+									let text = ORKTextChoice(text: concept.display?.string ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
 									choices.append(text)
 								}
 							}
@@ -358,7 +358,7 @@ extension QuestionnaireItem {
 	true and the "max-occurs" extension is either not defined or larger than 1.
 	*/
 	func c3_answerChoiceStyle() -> ORKChoiceAnswerStyle {
-		let multiple = repeats ?? ((c3_questionMaxOccurs() ?? 1) > 1)
+		let multiple = repeats?.bool ?? ((c3_questionMaxOccurs() ?? 1) > 1)
 		let style: ORKChoiceAnswerStyle = multiple ? .multipleChoice : .singleChoice
 		return style
 	}

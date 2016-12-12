@@ -46,7 +46,7 @@ open class DeIdentifier {
 		geocoder!.hipaaCompliantCurrentAddress() { address, error in
 			self.geocoder = nil
 			
-			let patient = Patient(json: nil)
+			let patient = Patient()
 			patient.id = inPatient.id
 			if let address = address {
 				patient.address = [address]

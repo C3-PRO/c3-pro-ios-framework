@@ -129,7 +129,7 @@ open class ActivityCollector: ActivityReporter {
 		}
 		
 		// some FHIR preparations while we wait
-		let period = Period(json: nil)
+		let period = Period()
 		period.start = start.fhir_asDateTime()
 		period.end = until.fhir_asDateTime()
 		

@@ -23,7 +23,7 @@ import SMART
 
 
 /// The FHIR version used by this instance of the framework.
-public let C3PROFHIRVersion = "1.6.0"
+public let C3PROFHIRVersion = "1.8.0"
 
 
 /**
@@ -220,7 +220,7 @@ public enum C3Error: Error, CustomStringConvertible {
 		case .questionnaireInvalidNoTopLevelItem:
 			return "Invalid questionnaire, does not contain a top level item"
 		case .questionnaireQuestionTypeUnknownToResearchKit(let question):
-			return "Failed to map question type “\(question.type ?? "<nil>")” to ResearchKit answer format [linkId: \(question.linkId ?? "<nil>")]"
+			return "Failed to map question type “\(question.type?.rawValue ?? "<nil>")” to ResearchKit answer format [linkId: \(question.linkId ?? "<nil>")]"
 		case .questionnaireNoChoicesInChoiceQuestion(let question):
 			return "There are no choices in question “\(question.text ?? "")” [linkId: \(question.linkId ?? "<nil>")]"
 		case .questionnaireEnableWhenIncomplete(let reason):

@@ -210,7 +210,7 @@ public class ConsentController {
 							criteria.append(req)
 						}
 						else {
-							c3_warn("this characteristic failed to return an eligibility requirement: \(characteristic.asJSON())")
+							c3_warn("this characteristic failed to return an eligibility requirement: \((try? characteristic.asJSON().description) ?? "nil")")
 						}
 					}
 					callback(criteria)
@@ -352,39 +352,39 @@ public class ConsentController {
 	*/
 	public func signContract(with patient: Patient, result: ConsentResult) throws -> Contract {
 		if nil == patient.id {
-			patient.id = UUID().uuidString
+			patient.id = FHIRString(UUID().uuidString)
 		}
 		do {
 			let reference = try patient.asRelativeReference()
-			let myContract = contract ?? Contract(json: nil)
+			let myContract = contract ?? Contract()
 			let date = result.consentDate ?? Date()
 			
 			// applicable period
-			let period = Period(json: nil)
+			let period = Period()
 			period.start = date.fhir_asDateTime()
 			myContract.applies = period
 			
 			// the participant/patient is the signer/consenter
-			let signer = ContractSigner(json: nil)
-			signer.type = Coding(json: nil)
+			let signer = ContractSigner()
+			signer.type = Coding()
 			signer.type!.display = "consenter"
 			signer.type!.code = "CONSENTER"
-			signer.type!.system = URL(string: "http://hl7.org/fhir/ValueSet/contract-signer-type")
+			signer.type!.system = FHIRURL("http://hl7.org/fhir/ValueSet/contract-signer-type")
 			signer.party = reference
 			
 			// extension to capture sharing intent
 			if let shareWidely = result.shareWidely {
-				let share = Extension(url: URL(string: "http://fhir-registry.smarthealthit.org/StructureDefinition/consents-to-data-sharing")!)
-				share.valueBoolean = shareWidely
+				let share = Extension(url: FHIRURL("http://fhir-registry.smarthealthit.org/StructureDefinition/consents-to-data-sharing")!)
+				share.valueBoolean = FHIRBool(shareWidely)
 				signer.extension_fhir = [share]
 			}
 			
-			let signatureCode = Coding(json: nil)
-			signatureCode.system = URL(string: "http://hl7.org/fhir/ValueSet/signature-type")
+			let signatureCode = Coding()
+			signatureCode.system = FHIRURL("http://hl7.org/fhir/ValueSet/signature-type")
 			signatureCode.code = "1.2.840.10065.1.12.1.7"
 			signatureCode.display = "Consent Signature"
 			
-			let signature = Signature(json: nil)
+			let signature = Signature()
 			signature.type = [signatureCode]
 			signature.when = date.fhir_asInstant()
 			signature.whoReference = reference
@@ -419,7 +419,7 @@ public class ConsentController {
 			}
 			catch let error {
 				c3_warn("\(error)")
-				callback(Contract(json: nil), patient, error)
+				callback(Contract(), patient, error)
 			}
 		}
 	}

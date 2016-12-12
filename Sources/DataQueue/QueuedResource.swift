@@ -51,8 +51,8 @@ open class QueuedResource {
 	*/
 	func readFromFile() throws {
 		let data = try Data(contentsOf: URL(fileURLWithPath: path), options: [])
-		let json = try JSONSerialization.jsonObject(with: data, options: []) as? FHIRJSON
-		resource = Resource.instantiate(from: json, owner: nil) as? Resource
+		let json = try JSONSerialization.jsonObject(with: data, options: []) as! FHIRJSON
+		resource = try Resource.instantiate(from: json, owner: nil) as? Resource
 		if nil != resource {
 			return
 		}

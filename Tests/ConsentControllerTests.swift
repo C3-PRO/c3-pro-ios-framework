@@ -20,7 +20,7 @@ class ConsentControllerTests: XCTestCase {
 			controller.contract = try bundle.fhir_bundledResource("sample-consent", subdirectory: "Contract", type: Contract.self)
 			XCTAssertNotNil(controller.contract, "Must parse contract")
 			
-			let patient = Patient(json: ["resourceType": "Patient", "id": "RK201608XDH", "name": [["given": ["Jack"], "family": ["Rabbit"]]]])
+			let patient = try Patient(json: ["resourceType": "Patient", "id": "RK201608XDH", "name": [["given": ["Jack"], "family": "Rabbit"]]])
 			let result = ConsentResult(signature: nil)
 			result.consentDate = Instant(string: "2016-08-17T09:54:40Z")?.nsDate
 			result.participantGivenName = "Jack"

@@ -54,10 +54,10 @@ open class ActivityReportPeriod: CustomStringConvertible, CustomDebugStringConve
 		var questions = [QuestionnaireResponseItem]()
 		
 		for sample in samples {
-			let answer = QuestionnaireResponseItemAnswer(json: nil)
+			let answer = QuestionnaireResponseItemAnswer()
 			answer.valueQuantity = try? sample.c3_asFHIRQuantity()
-			let question = QuestionnaireResponseItem(json: nil)
-			question.linkId = "healthkit.\(sample.quantityType.identifier)"
+			let question = QuestionnaireResponseItem()
+			question.linkId = FHIRString("healthkit.\(sample.quantityType.identifier)")
 			question.answer = [answer]
 			questions.append(question)
 		}
@@ -71,10 +71,10 @@ open class ActivityReportPeriod: CustomStringConvertible, CustomDebugStringConve
 		var questions = [QuestionnaireResponseItem]()
 		
 		for duration in durations {
-			let answer = QuestionnaireResponseItemAnswer(json: nil)
+			let answer = QuestionnaireResponseItemAnswer()
 			answer.valueQuantity = duration.duration
-			let question = QuestionnaireResponseItem(json: nil)
-			question.linkId = "motion-coprocessor.\(duration.type.rawValue)"
+			let question = QuestionnaireResponseItem()
+			question.linkId = FHIRString("motion-coprocessor.\(duration.type.rawValue)")
 			question.answer = [answer]
 			questions.append(question)
 		}
@@ -82,11 +82,12 @@ open class ActivityReportPeriod: CustomStringConvertible, CustomDebugStringConve
 	}
 	
 	open func asQuestionnaireResponse(linkId: String) throws -> QuestionnaireResponse {
-		let response = QuestionnaireResponse(status: "completed")
-		response.questionnaire = Reference(json: ["reference": linkId])
+		let response = QuestionnaireResponse(status: .completed)
+		response.questionnaire = Reference()
+		response.questionnaire!.reference = FHIRString(linkId)
 		response.item = samplesAsResponse() + durationsAsResponse()
 		
-		let encounter = Encounter(status: "finished")
+		let encounter = Encounter(status: .finished)
 		encounter.id = "period"
 		encounter.period = period
 		response.context = try response.contain(resource: encounter)

@@ -47,10 +47,10 @@ extension ORKTaskResult {
 		}
 		
 		// create and return questionnaire answers
-		let questionnaire = Reference(json: nil)
-		questionnaire.reference = identifier
+		let questionnaire = Reference()
+		questionnaire.reference = FHIRString(identifier)
 		
-		let answer = QuestionnaireResponse(status: "completed")
+		let answer = QuestionnaireResponse(status: .completed)
 		answer.questionnaire = questionnaire
 		answer.item = groups
 		return answer
@@ -69,15 +69,15 @@ extension ORKStepResult {
 	*/
 	func c3_response(from task: ORKTask?) -> QuestionnaireResponseItem? {
 		if let results = results {
-			let group = QuestionnaireResponseItem(json: nil)
+			let group = QuestionnaireResponseItem()
 			var questions = [QuestionnaireResponseItem]()
 			
 			// loop results to collect answers; omit questions that do not have answers
 			for result in results {
 				if let result = result as? ORKQuestionResult,
 					let responses = result.c3_responses(from: task?.step?(withIdentifier: result.identifier) as? ORKQuestionStep) {
-						let question = QuestionnaireResponseItem(json: nil)
-						question.linkId = result.identifier
+						let question = QuestionnaireResponseItem()
+						question.linkId = FHIRString(result.identifier)
 						question.answer = responses
 						questions.append(question)
 				}
@@ -170,11 +170,13 @@ extension ORKChoiceQuestionResult {
 		}
 		var answers = [QuestionnaireResponseItemAnswer]()
 		for choice in choices {
-			let answer = QuestionnaireResponseItemAnswer(json: nil)
+			let answer = QuestionnaireResponseItemAnswer()
 			let splat = choice.characters.split() { $0 == kORKTextChoiceSystemSeparator }.map() { String($0) }
 			let system = splat[0]
 			let code = (splat.count > 1) ? splat[1..<splat.endIndex].joined(separator: String(kORKTextChoiceSystemSeparator)) : kORKTextChoiceMissingCodeCode
-			answer.valueCoding = Coding(json: ["system": system, "code": code])
+			answer.valueCoding = Coding()
+			answer.valueCoding!.system = FHIRURL(system)
+			answer.valueCoding!.code = FHIRString(code)
 			answers.append(answer)
 		}
 		return answers
@@ -194,12 +196,12 @@ extension ORKTextQuestionResult {
 		guard let text = textAnswer else {
 			return nil
 		}
-		let answer = QuestionnaireResponseItemAnswer(json: nil)
+		let answer = QuestionnaireResponseItemAnswer()
 		if let fhir = ofFHIRType, "url" == fhir {
-			answer.valueUri = URL(string: text)
+			answer.valueUri = FHIRURL(text)
 		}
 		else {
-			answer.valueString = text
+			answer.valueString = FHIRString(text)
 		}
 		return [answer]
 	}
@@ -218,16 +220,16 @@ extension ORKNumericQuestionResult {
 		guard let numeric = numericAnswer else {
 			return nil
 		}
-		let answer = QuestionnaireResponseItemAnswer(json: nil)
+		let answer = QuestionnaireResponseItemAnswer()
 		if let fhir = ofFHIRType, "quantity" == fhir {
-			answer.valueQuantity = Quantity(json: ["value": numeric])
-			answer.valueQuantity!.unit = unit
+			answer.valueQuantity!.value = FHIRDecimal(numeric.decimalValue)
+			answer.valueQuantity!.unit = unit?.fhir_string
 		}
 		else if let fhir = ofFHIRType, "integer" == fhir {
-			answer.valueInteger = numeric.intValue
+			answer.valueInteger = FHIRInteger(numeric.int32Value)
 		}
 		else {
-			answer.valueDecimal = NSDecimalNumber(json: numeric)
+			answer.valueDecimal = FHIRDecimal(numeric.decimalValue)
 		}
 		return [answer]
 	}
@@ -246,8 +248,8 @@ extension ORKScaleQuestionResult {
 		guard let numeric = scaleAnswer else {
 			return nil
 		}
-		let answer = QuestionnaireResponseItemAnswer(json: nil)
-		answer.valueDecimal = NSDecimalNumber(json: numeric)
+		let answer = QuestionnaireResponseItemAnswer()
+		answer.valueDecimal = FHIRDecimal(numeric.decimalValue)
 		return [answer]
 	}
 }
@@ -265,8 +267,8 @@ extension ORKBooleanQuestionResult {
 		guard let boolean = booleanAnswer?.boolValue else {
 			return nil
 		}
-		let answer = QuestionnaireResponseItemAnswer(json: nil)
-		answer.valueBoolean = boolean
+		let answer = QuestionnaireResponseItemAnswer()
+		answer.valueBoolean = FHIRBool(boolean)
 		return [answer]
 	}
 }
@@ -284,7 +286,7 @@ extension ORKTimeOfDayQuestionResult {
 		guard let components = dateComponentsAnswer else {
 			return nil
 		}
-		let answer = QuestionnaireResponseItemAnswer(json: nil)
+		let answer = QuestionnaireResponseItemAnswer()
 		answer.valueTime = FHIRTime(hour: UInt8(components.hour ?? 0), minute: UInt8(components.minute ?? 0), second: 0.0)
 		return [answer]
 	}
@@ -305,7 +307,7 @@ extension ORKTimeIntervalQuestionResult {
 		guard let interval = intervalAnswer else {
 			return nil
 		}
-		//let answer = QuestionnaireResponseItemAnswer(json: nil)
+		//let answer = QuestionnaireResponseItemAnswer()
 		// TODO: support interval answers
 		print("--->  \(interval) for FHIR type “\(ofFHIRType)”")
 		return nil
@@ -325,7 +327,7 @@ extension ORKDateQuestionResult {
 		guard let date = dateAnswer else {
 			return nil
 		}
-		let answer = QuestionnaireResponseItemAnswer(json: nil)
+		let answer = QuestionnaireResponseItemAnswer()
 		switch ofFHIRType ?? "dateTime" {
 		case "date":
 			answer.valueDate = date.fhir_asDate()

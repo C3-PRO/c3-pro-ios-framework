@@ -89,7 +89,7 @@ public struct CoreMotionActivitySum: CustomStringConvertible, CustomDebugStringC
 	// MARK: - String Convertible
 	
 	public var description: String {
-		return String(format: "<\(self) %p> “\(type.rawValue)” of \(duration.value ?? NSDecimalNumber.zero) \(duration.unit ?? "")", self as! CVarArg)
+		return String(format: "<\(self) %p> “\(type.rawValue)” of \(duration.value?.description ?? "0") \(duration.unit ?? "")", self as! CVarArg)
 	}
 	
 	public var debugDescription: String {

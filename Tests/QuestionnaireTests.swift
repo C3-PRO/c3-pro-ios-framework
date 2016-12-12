@@ -65,13 +65,17 @@ class QuestionnaireChoiceTests: XCTestCase {
 	func testRelativeValueSet() {
 		let local = BundledFileServer()
 		let exp = self.expectation(description: "Questionnaire preparation")
+		
+		// read questionnaire
 		Questionnaire.read("ValueSet-relative", server: local) { resource, error in
 			XCTAssertNil(error, "Not expecting an error but got \(error)")
 			guard let questionnaire = resource as? Questionnaire else {
 				XCTAssertTrue(false, "Not a questionnaire: \(resource)")
+				exp.fulfill()
 				return
 			}
 			
+			// prepare questionnaire
 			let controller = QuestionnaireController(questionnaire: questionnaire)
 			controller.prepareQuestionnaire() { task, error in
 				XCTAssertNil(error)
@@ -127,20 +131,24 @@ class BundledFileServer: Server {
 		super.init(baseURL: base, auth: auth)
 	}
 	
-	override func performPreparedRequest<R : FHIRServerRequestHandler>(_ request: URLRequest, handler: R, callback: @escaping ((FHIRServerResponse) -> Void)) {
+	override func perform(request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionTask? {
 		let parts = request.url?.path.components(separatedBy: "/").filter() { $0.characters.count > 0 }
 		guard let localName = parts?.joined(separator: "_") else {
-			callback(handler.notSent("Unable to infer local filename from request URL path \(request.url?.description ?? "nil")"))
-			return
+			completionHandler(nil, nil, FHIRError.requestNotSent("Unable to infer local filename from request URL path \(request.url?.description ?? "nil")"))
+			return nil
+		}
+		guard let localURL = Bundle(for: type(of: self)).url(forResource: localName, withExtension: "json") else {
+			completionHandler(nil, nil, FHIRError.requestNotSent("No bundled resource with name «\(localName).json» found"))
+			return nil
 		}
 		do {
-			let resource = try Bundle(for: type(of: self)).fhir_bundledResource(localName, type: Resource.self)
-			let response = FHIRServerResourceResponse(resource: resource)
-			callback(response)
+			let data = try Data(contentsOf: localURL)
+			completionHandler(data, URLResponse(), nil)
 		}
 		catch let error {
-			callback(handler.notSent("Error: \(error)"))
+			completionHandler(nil, nil, FHIRError.requestNotSent("Error: \(error)"))
 		}
+		return nil
 	}
 }
 

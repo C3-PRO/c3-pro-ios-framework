@@ -70,11 +70,11 @@ open class QuestionnairePromise: QuestionnairePromiseProto {
 			return
 		}
 		
-		let topItem = QuestionnaireItem(type: "group")
+		let topItem = QuestionnaireItem(linkId: FHIRString(UUID().uuidString))
 		topItem.item = questionnaire.item
 		let promise = QuestionnaireItemPromise(item: topItem)
 		promise.fulfill(requiring: parentRequirements) { errors in
-			let identifier = self.questionnaire.id ?? (self.questionnaire.identifier?.first?.value ?? "questionnaire-task")
+			let identifier = self.questionnaire.id?.string ?? (self.questionnaire.identifier?.first?.value?.string ?? "questionnaire-task")
 			if let steps = promise.steps {
 				self.steps = steps
 				self.task = ConditionalOrderedTask(identifier: identifier, steps: steps)

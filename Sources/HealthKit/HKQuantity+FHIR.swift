@@ -51,7 +51,10 @@ public extension HKQuantity {
 	*/
 	public func c3_asFHIRQuantityInUnit(_ unit: HKUnit) throws -> Quantity {
 		if `is`(compatibleWith: unit) {
-			return Quantity(json: ["value": self.doubleValue(for: unit), "unit": unit.unitString])
+			let quantity = Quantity()
+			quantity.value = FHIRDecimal("\(doubleValue(for: unit))")
+			quantity.unit = FHIRString(unit.unitString)
+			return quantity
 		}
 		throw C3Error.quantityNotCompatibleWithUnit
 	}
