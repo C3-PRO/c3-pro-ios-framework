@@ -74,12 +74,12 @@ extension QuestionnaireItemEnableWhen {
 	*/
 	func c3_answerResult(_ questionIdentifier: String) throws -> ORKQuestionResult {
 		let questionIdentifier = try c3_questionIdentifier()
-		if let answer = answerBoolean {
+		if let answer = answerBoolean?.bool {
 			let result = ORKBooleanQuestionResult(identifier: questionIdentifier)
 			result.answer = answer
 			return result
 		}
-		if let answer = answerString {
+		if let answer = answerString?.string {
 			let result = ORKTextQuestionResult(identifier: questionIdentifier)
 			result.answer = answer
 			return result
