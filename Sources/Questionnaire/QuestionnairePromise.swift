@@ -70,8 +70,10 @@ open class QuestionnairePromise: QuestionnairePromiseProto {
 			return
 		}
 		
-		let topItem = QuestionnaireItem(linkId: FHIRString(UUID().uuidString))
+		let topItem = QuestionnaireItem(linkId: FHIRString("{root}"))
+		topItem.type = .group
 		topItem.item = questionnaire.item
+		
 		let promise = QuestionnaireItemPromise(item: topItem)
 		promise.fulfill(requiring: parentRequirements) { errors in
 			let identifier = self.questionnaire.id?.string ?? (self.questionnaire.identifier?.first?.value?.string ?? "questionnaire-task")
