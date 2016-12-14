@@ -309,7 +309,7 @@ extension QuestionnaireItem {
 	func c3_resolveAnswerChoices(callback: @escaping (([ORKTextChoice]?, Error?) -> Void)) {
 		
 		// options are defined inline
-		if let options = option {
+		if let _ = option {
 			// TODO: implement!
 			callback(nil, C3Error.notImplemented("Using `option` in Questionnaire.item is not yet supported, use `options`"))
 		}

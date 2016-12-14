@@ -40,7 +40,7 @@ public enum SystemService: CustomStringConvertible {
 	/// Permission to deliver local notifications.
 	case localNotifications(Set<UIUserNotificationCategory>)
 	
-//	case RemoteNotifications
+//	case remoteNotifications
 	
 	/// Permission to access CoreMotion data.
 	case coreMotion

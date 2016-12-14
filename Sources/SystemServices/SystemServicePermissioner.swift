@@ -38,8 +38,10 @@ open class SystemServicePermissioner {
 	
 	var coreMotionManager: CMMotionActivityManager?
 	
-	/// If CoreMotion access was previously requested, this will hold the result.
-	var coreMotionPermitted: Bool?
+	
+	/** Designated initializer, takes no arguments. */
+	public init() {
+	}
 	
 	
 	// MARK: - Permission Status
@@ -70,22 +72,18 @@ open class SystemServicePermissioner {
 		}
 	}
 	
-	func hasGeoLocationPermissions(always: Bool) -> Bool {
+	public func hasGeoLocationPermissions(always: Bool) -> Bool {
 		let status = CLLocationManager.authorizationStatus()
 		return (.authorizedAlways == status || (!always && .authorizedWhenInUse == status))
 	}
 	
-	func hasLocalNotificationsPermissions(for categories: Set<UIUserNotificationCategory>) -> Bool {
+	public func hasLocalNotificationsPermissions(for categories: Set<UIUserNotificationCategory>) -> Bool {
 		let settings = UIApplication.shared.currentUserNotificationSettings
 		return ((settings?.types ?? UIUserNotificationType()) != UIUserNotificationType())
 	}
 	
-	/**
-	Has no way to query current CoreMotion permissions without prompting the user, hence will only return true if it has previously
-	requested permission which was granted.
-	*/
-	func hasCoreMotionPermissions() -> Bool {
-		return coreMotionPermitted ?? false
+	public func hasCoreMotionPermissions() -> Bool {
+		return CMMotionActivityManager.isActivityAvailable()
 	}
 	
 	/**
@@ -93,11 +91,11 @@ open class SystemServicePermissioner {
 	
 	- parameter types: The types for which to have access (ignored for now)
 	*/
-	func hasHealthKitPermissions(for types: HealthKitTypes) -> Bool {
+	public func hasHealthKitPermissions(for types: HealthKitTypes) -> Bool {
 		return false
 	}
 	
-	func hasMicrophonePermissions() -> Bool {
+	public func hasMicrophonePermissions() -> Bool {
 		return (AVAudioSession.sharedInstance().recordPermission() == AVAudioSessionRecordPermission.granted)
 	}
 	
@@ -204,11 +202,9 @@ open class SystemServicePermissioner {
 			self?.coreMotionManager = nil
 			c3_performOnMainQueue() {
 				if let error = error, error._domain == CMErrorDomain && error._code == Int(CMErrorMotionActivityNotAuthorized.rawValue) {
-					self?.coreMotionPermitted = false
 					callback(error)
 				}
 				else {
-					self?.coreMotionPermitted = true
 					callback(nil)
 				}
 			}

@@ -74,12 +74,13 @@ extension ORKStepResult {
 			
 			// loop results to collect answers; omit questions that do not have answers
 			for result in results {
-				if let result = result as? ORKQuestionResult,
-					let responses = result.c3_responses(from: task?.step?(withIdentifier: result.identifier) as? ORKQuestionStep) {
+				if let result = result as? ORKQuestionResult {
+					if let responses = result.c3_responses(from: task?.step?(withIdentifier: result.identifier) as? ORKQuestionStep) {
 						let question = QuestionnaireResponseItem()
 						question.linkId = FHIRString(result.identifier)
 						question.answer = responses
 						questions.append(question)
+					}
 				}
 				else {
 					c3_warn("I cannot handle ORKStepResult result \(result)")
@@ -165,7 +166,9 @@ extension ORKChoiceQuestionResult {
 	*/
 	func c3_responseItems(ofFHIRType: String?) -> [QuestionnaireResponseItemAnswer]? {
 		guard let choices = choiceAnswers as? [String] else {
-			c3_warn("expecting choice question results to be strings, but got: \(choiceAnswers)")
+			if let choices = choiceAnswers {
+				c3_warn("expecting choice question results to be strings, but got: \(choices)")
+			}
 			return nil
 		}
 		var answers = [QuestionnaireResponseItemAnswer]()

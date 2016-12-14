@@ -67,6 +67,21 @@ let vc = consentController.eligibilityStatusViewController(...)
 ...
 ```
 
+You can use `SystemServicePermissioner` to query for permissions.
+Instantiate a permissioner, then ask it for the current permission state like so:
+
+```swift
+let permissioner = SystemServicePermissioner()
+if permissioner.hasGeoLocationPermissions(always: false) {
+	// do geolocation, e.g. using `Geocoder`
+}
+
+// or
+if permissioner.hasPermission(for: .coreMotion) {
+	// you have access to motion activity
+}
+```
+
 
 ### Permissions View Controller
 
