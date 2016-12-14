@@ -26,6 +26,7 @@ import ResearchKit
 let kORKTextChoiceSystemSeparator: Character = " "
 let kORKTextChoiceDefaultSystem = "https://fhir.smalthealthit.org"
 let kORKTextChoiceMissingCodeCode = "⚠️"
+let kC3ValuePickerFormatExtensionURL = "http://fhir-registry.smarthealthit.org/StructureDefinition/value-picker"
 
 
 /**
@@ -99,6 +100,8 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 			else if nil != title || nil != text {
 				thisStep = ConditionalInstructionStep(identifier: linkId, title: title, text: text)
 			}
+			
+			// TODO: also look at "initial[x]" value and prepopulate
 			
 			// collect the step
 			if var step = thisStep {
@@ -216,7 +219,7 @@ extension QuestionnaireItem {
 	
 	[x] ORKScaleAnswerFormat:           "integer" plus min- and max-values defined, where max > min
 	[ ] ORKContinuousScaleAnswerFormat:
-	[ ] ORKValuePickerAnswerFormat:
+	[x] ORKValuePickerAnswerFormat:     "choice" (not multiple) plus extension `kC3ValuePickerFormatExtensionURL` (bool)
 	[ ] ORKImageChoiceAnswerFormat:
 	[x] ORKTextAnswerFormat:            "string", "url"
 	[x] ORKTextChoiceAnswerFormat:      "choice", "choice-open" (!)
@@ -263,7 +266,13 @@ extension QuestionnaireItem {
 						callback(nil, error ?? C3Error.questionnaireNoChoicesInChoiceQuestion(self))
 					}
 					else {
-						callback(ORKAnswerFormat.choiceAnswerFormat(with: self.c3_answerChoiceStyle(), textChoices: choices!), nil)
+						let multiStyle = self.c3_answerChoiceStyle()
+						if .multipleChoice != multiStyle, self.extensions(forURI: kC3ValuePickerFormatExtensionURL)?.first?.valueBoolean?.bool ?? false {
+							callback(ORKAnswerFormat.valuePickerAnswerFormat(with: choices!), nil)
+						}
+						else {
+							callback(ORKAnswerFormat.choiceAnswerFormat(with: multiStyle, textChoices: choices!), nil)
+						}
 					}
 				}
 			case .openChoice:
@@ -358,9 +367,8 @@ extension QuestionnaireItem {
 	true and the "max-occurs" extension is either not defined or larger than 1.
 	*/
 	func c3_answerChoiceStyle() -> ORKChoiceAnswerStyle {
-		let multiple = repeats?.bool ?? ((c3_questionMaxOccurs() ?? 1) > 1)
-		let style: ORKChoiceAnswerStyle = multiple ? .multipleChoice : .singleChoice
-		return style
+		let multiple = (repeats?.bool ?? false) && ((c3_questionMaxOccurs() ?? 2) > 1)
+		return multiple ? .multipleChoice : .singleChoice
 	}
 }
 
