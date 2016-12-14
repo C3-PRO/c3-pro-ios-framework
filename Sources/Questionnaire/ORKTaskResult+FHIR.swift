@@ -99,7 +99,7 @@ extension ORKStepResult {
 extension ORKQuestionResult {
 	
 	/**
-	Instantiate a QuestionnaireResponse.group.question.answer element from the receiver's answer, if any.
+	Instantiate a QuestionnaireResponse.item.answer element from the receiver's answer, if any.
 	
 	TODO: Cannot override methods defined in extensions, hence we need to check for the ORKQuestionResult subclass and then call the
 	method implemented in the extensions below.
