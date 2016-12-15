@@ -38,14 +38,21 @@ open class SystemServicePermissioner {
 	
 	var coreMotionManager: CMMotionActivityManager?
 	
-	/// If CoreMotion access was previously requested, this will hold the result.
+	/// If CoreMotion access was previously requested, this will hold the result (it's still not possible to query via a system call).
 	var coreMotionPermitted: Bool?
+	
+	
+	/** Designated initializer, takes no arguments. */
+	public init() {
+	}
 	
 	
 	// MARK: - Permission Status
 	
 	/**
 	Attempts to find out whether permission to the respective service has already been granted.
+	
+	- note: Will always return false for HealthKit permissions!
 	
 	- parameter service:  The SystemService to inquire for
 	- parameter callback: A block to be executed when status has been determined; executed on the main queue
@@ -89,7 +96,7 @@ open class SystemServicePermissioner {
 	}
 	
 	/**
-	Always returns false without inspecting HealthKit types.
+	ATTENTION: always returns false, without inspecting HealthKit types.
 	
 	- parameter types: The types for which to have access (ignored for now)
 	*/

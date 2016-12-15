@@ -54,8 +54,8 @@ open class CoreMotionReporter: ActivityReporter {
 	*/
 	func connection() throws -> Connection {
 		#if false
-		let fm = NSFileManager()
-		if let attrs = try? fm.attributesOfItemAtPath(databaseLocation) as NSDictionary {
+		let fm = FileManager()
+		if let attrs = try? fm.attributesOfItem(atPath: databaseLocation) as NSDictionary {
 			let size = attrs.fileSize()
 			c3_logIfDebug("REPORTER database is \(size / 1024) KB")
 		}
@@ -152,7 +152,7 @@ open class CoreMotionReporter: ActivityReporter {
 						}
 					}
 				}
-			}	//	*/
+			}
 		}
 		catch let error {
 			c3_performOnMainQueue() {
@@ -253,7 +253,7 @@ open class CoreMotionReporter: ActivityReporter {
 	- parameter interpreter: The interpreter to use; uses a fresh instance of `CoreMotionStandardActivityInterpreter` if nil
 	*/
 	func retrieveActivities(startingAt start: Date, until: Date, interpreter: CoreMotionActivityInterpreter) throws -> [InterpretedCoreMotionActivity] {
-		let db = try self.connection()
+		let db = try connection()
 		let activitiesTable = Table("activities")
 		let startCol = Expression<Double>("start")
 		let activityCol = Expression<Int>("activity")
