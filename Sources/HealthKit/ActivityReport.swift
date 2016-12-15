@@ -71,7 +71,7 @@ open class ActivityReport: CustomStringConvertible {
 	// MARK: - Custom String Convertible
 	
 	open var description: String {
-		return String(format: "<\(self) %p> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")", self as! CVarArg)
+		return "<\(type(of: self))> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")"
 	}
 }
 

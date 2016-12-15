@@ -30,7 +30,7 @@
 
 /* Why HealthKit wants to be used */
 "Individually specify which general health information the app may read from and write to HealthKit" = "Individually specify which general health information the app may read from and write to HealthKit";
-
+"Last\nWeek" = "Last\nWeek";
 "Let's see if you may take part in this study" = "Let's see if you may take part in this study";
 "Location Services" = "Location Services";
 "Male" = "Male";
@@ -92,6 +92,7 @@
 
 /* Why CoreMotion wants to be used */
 "Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease." = "Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease.";
+"Week\nBfor" = "Week\nBfor";
 
 /* Yes as in yes-i-meet-this-requirement */
 "Yes" = "Yes";

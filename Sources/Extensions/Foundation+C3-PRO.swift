@@ -91,12 +91,12 @@ extension Calendar {
 		thisWeek.day! -= thisWeek.weekday!
 		var week = startComponents
 		week.day! -= week.weekday! + 7
-		intervals.append((week, thisWeek, 7, "Last\nWeek"))
+		intervals.append((week, thisWeek, 7, "Last\nWeek".c3_localized))
 		last = week
 		
 		var weekBefore = week
 		weekBefore.day! -= 7
-		intervals.append((weekBefore, last, 7, "Week\nBfor"))
+		intervals.append((weekBefore, last, 7, "Week\nBfor".c3_localized))
 		last = weekBefore
 		
 //		var weekBeforeThat = weekBefore

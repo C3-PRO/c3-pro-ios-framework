@@ -6,7 +6,9 @@ Activity data interesting for research is available from two places from iOS: **
 This module provides facilities to easily retrieve data from HealthKit, but more importantly helps persisting CoreMotion activity data beyond the 7 day OS default.
 Minimal activity data preprocessing is included and can easily be customized.
 
-**Note** that as of iOS 10, you must provide a short explanation for `NSHealthShareUsageDescription`, if you use HealthKit, and `NSMotionUsageDescription`, if you use CoreMotion, in your app's _Info.plist_.
+**Note** that as of iOS 10, you must provide a short explanation for `NSHealthShareUsageDescription`, if you use HealthKit, and `NSMotionUsageDescription`, if you use CoreMotion, in your app's _Info.plist_, in addition to enabling _HealthKit_ capabilities for your app.
+You are also responsible to ask the user for permission before using the methods shown below, otherwise you'll simply get errors.
+See [Sources/SystemServices](../../Sources/SystemServices/) for help on how to achieve that.
 
 
 Activity Reporter
