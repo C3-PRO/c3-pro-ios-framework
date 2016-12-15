@@ -52,8 +52,8 @@ open class SystemPermissionTableViewController: UITableViewController {
 	
 	func serviceAtIndexPath(_ indexPath: IndexPath) -> SystemService? {
 		if let services = services {
-			if (indexPath as NSIndexPath).row < services.count {
-				return services[(indexPath as NSIndexPath).row]
+			if indexPath.row < services.count {
+				return services[indexPath.row]
 			}
 		}
 		return nil

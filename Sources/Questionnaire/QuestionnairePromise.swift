@@ -89,7 +89,7 @@ open class QuestionnairePromise: QuestionnairePromiseProto {
 	
 	/// String representation of the receiver.
 	open var description: String {
-		return String(format: "<QuestionnairePromise %p>", self as! CVarArg)
+		return "<\(type(of: self))>"
 	}
 }
 

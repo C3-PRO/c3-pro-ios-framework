@@ -175,7 +175,7 @@ open class EligibilityCheckViewController: UITableViewController {
 	
 	override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "EligibilityCell", for: indexPath) as! EligibilityCell
-		cell.item = requirements![(indexPath as NSIndexPath).section]
+		cell.item = requirements![indexPath.section]
 		cell.onButtonPress = { button in
 			self.enableDisableNext()
 		}
