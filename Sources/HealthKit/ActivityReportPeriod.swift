@@ -99,11 +99,13 @@ open class ActivityReportPeriod: CustomStringConvertible, CustomDebugStringConve
 	// MARK: - Custom String Convertible
 	
 	open var description: String {
-		return String(format: "<\(self) %p> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")", self as! CVarArg)
+		let human = (nil == humanPeriod) ? "" : " “\(humanPeriod!.replacingOccurrences(of: "\n", with: " "))”"
+		return "<\(type(of: self))>\(human) from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")"
 	}
 	
 	open var debugDescription: String {
-		return String(format: "<\(self) %p> from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")\n- samples: \(healthKitSamples ?? [])\n- motion: \(coreMotionActivities ?? [])", self as! CVarArg)
+		let human = (nil == humanPeriod) ? "" : " “\(humanPeriod!.replacingOccurrences(of: "\n", with: " "))”"
+		return "<\(type(of: self))>\(human) from \(period.start?.description ?? "unknown start") to \(period.end?.description ?? "unknown end")\n- samples: \(healthKitSamples ?? [])\n- motion: \(coreMotionActivities ?? [])"
 	}
 }
 

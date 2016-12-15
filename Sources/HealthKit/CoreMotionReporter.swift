@@ -231,6 +231,12 @@ open class CoreMotionReporter: ActivityReporter {
 					let interpreter = interpreter ?? CoreMotionStandardActivityInterpreter()
 					let activities = try self.retrieveActivities(startingAt: start, until: endDate, interpreter: interpreter)
 					let report = self.report(forActivities: activities)
+					if nil == report.period.start {
+						report.period.start = start.fhir_asDateTime()
+					}
+					if nil == report.period.end {
+						report.period.end = until?.fhir_asDateTime()
+					}
 					c3_performOnMainQueue() {
 						callback(report, nil)
 					}

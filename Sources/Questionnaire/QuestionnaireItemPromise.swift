@@ -150,7 +150,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	
 	/// String representation of the receiver.
 	var description: String {
-		return String(format: "<QuestionnaireItemPromise %p>", self as! CVarArg)
+		return "<\(type(of: self))>"
 	}
 }
 

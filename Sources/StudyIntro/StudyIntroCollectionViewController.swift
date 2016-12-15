@@ -205,7 +205,7 @@ open class StudyIntroCollectionViewController: UIViewController, UICollectionVie
 	}
 	
 	open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let item = items![(indexPath as NSIndexPath).row]
+		let item = items![indexPath.row]
 		
 		// welcome cell
 		if let item = item as? StudyIntroWelcomeItem {
