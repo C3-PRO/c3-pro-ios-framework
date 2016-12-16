@@ -61,19 +61,19 @@
 "Permissions" = "Permissions";
 
 /* How to re-enable the microphone */
-"Please go to the Settings app ➔ “\(appName)” and turn “Microphone” on" = "Please go to the Settings app ➔ “\(appName)” and turn “Microphone” on";
+"Please go to the Settings app ➔ “{{appName}}” and turn “Microphone” on" = "Please go to the Settings app ➔ “{{appName}}” and turn “Microphone” on";
 
 /* How to re-enable CoreMotion */
-"Please go to the Settings app ➔ “\(appName)” and turn “Motion & Fitness” on" = "Please go to the Settings app ➔ “\(appName)” and turn “Motion & Fitness” on";
+"Please go to the Settings app ➔ “{{appName}}” and turn “Motion & Fitness” on" = "Please go to the Settings app ➔ “{{appName}}” and turn “Motion & Fitness” on";
 
 /* How to re-enable Geo-location */
-"Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable." = "Please go to the Settings app ➔ “\(appName)” ➔ “Location” to re-enable.";
+"Please go to the Settings app ➔ “{{appName}}” ➔ “Location” to re-enable." = "Please go to the Settings app ➔ “{{appName}}” ➔ “Location” to re-enable.";
 
 /* How to re-enable Local Notifications */
-"Please go to the Settings app ➔ “\(appName)” ➔ “Notifications” and turn “Allow Notifications” on." = "Please go to the Settings app ➔ “\(appName)” ➔ “Notifications” and turn “Allow Notifications” on.";
+"Please go to the Settings app ➔ “{{appName}}” ➔ “Notifications” and turn “Allow Notifications” on." = "Please go to the Settings app ➔ “{{appName}}” ➔ “Notifications” and turn “Allow Notifications” on.";
 
 /* How to re-enable HealthKit */
-"Please go to the Settings app ➔ “Privacy ”➔ “Health” ➔ \(appName) to re-enable." = "Please go to the Settings app ➔ “Privacy ”➔ “Health” ➔ \(appName) to re-enable.";
+"Please go to the Settings app ➔ “Privacy” ➔ “Health” ➔ {{appName}} to re-enable." = "Please go to the Settings app ➔ “Privacy” ➔ “Health” ➔ {{appName}} to re-enable.";
 
 /* Start Consent button title */
 "Start Consent" = "Start Consent";
