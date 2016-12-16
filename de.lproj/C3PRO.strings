@@ -91,7 +91,7 @@
 "Try Again" = "Erneut Versuchen";
 
 /* Why CoreMotion wants to be used */
-"Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease." = "Durch Zugriff auf den “Motien Co-Prozessor” kann die App Ihre Aktivität bestimmen, womit ein möglicher Einfluss der Aktivität auf den Krankheitsverlauf besser beurteilt werden kann.";
+"Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease." = "Durch Zugriff auf den “Motion Co-Prozessor” kann die App Ihre Aktivität bestimmen, woduch ein möglicher Einfluss der körperlichen Aktivität auf den Krankheitsverlauf besser beurteilt werden kann.";
 "Week\nBfor" = "Woche\nDavor";
 
 /* Yes as in yes-i-meet-this-requirement */
