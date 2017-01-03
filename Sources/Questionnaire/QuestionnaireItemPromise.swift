@@ -166,14 +166,14 @@ extension QuestionnaireItem {
 	- returns: A tuple of strings for title and text
 	*/
 	func c3_bestTitleAndText() -> (String?, String?) {
-		let cDisplay = concept?.filter() { return nil != $0.display }.map() { return $0.display!.string }
-		let cCodes = concept?.filter() { return nil != $0.code }.map() { return $0.code!.string }
+		let cDisplay = concept?.filter() { return nil != $0.display }.map() { return $0.display!.localized }
+		let cCodes = concept?.filter() { return nil != $0.code }.map() { return $0.code!.string }		// TODO: can these be localized?
 		
 		var ttl = cDisplay?.first ?? cCodes?.first
-		var txt = text?.string
+		var txt = text?.localized
 		
 		if nil == ttl {
-			ttl = text?.string
+			ttl = text?.localized
 			txt = nil
 		}
 		if nil == txt {
@@ -193,15 +193,15 @@ extension QuestionnaireItem {
 	}
 	
 	func c3_questionInstruction() -> String? {
-		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString?.string
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction")?.first?.valueString?.localized
 	}
 	
 	func c3_questionHelpText() -> String? {
-		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString?.string
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-help")?.first?.valueString?.localized
 	}
 	
 	func c3_numericAnswerUnit() -> String? {
-		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString?.string
+		return extensions(forURI: "http://hl7.org/fhir/StructureDefinition/questionnaire-units")?.first?.valueString?.localized
 	}
 	
 	func c3_defaultAnswer() -> Extension? {
@@ -241,8 +241,8 @@ extension QuestionnaireItem {
 				let minVal = minVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger?.int
 				let maxVal = maxVals?.filter() { return $0.valueInteger != nil }.first?.valueInteger?.int
 				if let minVal = minVal, let maxVal = maxVal, maxVal > minVal {
-					let minDesc = minVals?.filter() { return $0.valueString != nil }.first?.valueString?.string
-					let maxDesc = maxVals?.filter() { return $0.valueString != nil }.first?.valueString?.string
+					let minDesc = minVals?.filter() { return $0.valueString != nil }.first?.valueString?.localized
+					let maxDesc = maxVals?.filter() { return $0.valueString != nil }.first?.valueString?.localized
 					let defVal = c3_defaultAnswer()?.valueInteger?.int ?? minVal
 					let format = ORKAnswerFormat.scale(withMaximumValue: Int(maxVal), minimumValue: Int(minVal), defaultValue: Int(defVal),
 						step: 1, vertical: (maxVal - minVal > 5),
@@ -325,7 +325,7 @@ extension QuestionnaireItem {
 						let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem
 						let code = option.code?.string ?? kORKTextChoiceMissingCodeCode
 						let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-						let text = ORKTextChoice(text: option.display?.string ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
+						let text = ORKTextChoice(text: option.display?.localized ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
 						choices.append(text)
 					}
 				}
@@ -339,7 +339,7 @@ extension QuestionnaireItem {
 								for concept in concepts {
 									let code = concept.code?.string ?? kORKTextChoiceMissingCodeCode	// code is a required property, so SHOULD always be present
 									let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-									let text = ORKTextChoice(text: concept.display?.string ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
+									let text = ORKTextChoice(text: concept.display_localized ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
 									choices.append(text)
 								}
 							}
