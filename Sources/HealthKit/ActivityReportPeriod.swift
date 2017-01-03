@@ -22,6 +22,12 @@ import SMART
 import HealthKit
 
 
+/**
+A class that represents a period of activity.
+
+The period is defined via its `period` property, which has a human-readable name, knows how many days it spans and can hold on to HealthKit
+and CoreMotion samples in `healthKitSamples` (as `HKQuantitySample`) and `coreMotionActivities` (as `CoreMotionActivitySum`), respectively.
+*/
 open class ActivityReportPeriod: CustomStringConvertible, CustomDebugStringConvertible {
 	
 	/// The reporting period.

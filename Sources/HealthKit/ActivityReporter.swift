@@ -57,7 +57,7 @@ extension ActivityReporter {
 		queue.async {
 			var calendar = Calendar.current
 			calendar.timeZone = TimeZone(abbreviation: "UTC")!    // use UTC
-			let intervals = calendar.reverseProgressiveDateComponentsSinceToday()
+			let intervals = calendar.c3_reverseProgressiveDateComponentsSinceToday()
 			var errors = [Error]()
 			
 			// sample all intervals

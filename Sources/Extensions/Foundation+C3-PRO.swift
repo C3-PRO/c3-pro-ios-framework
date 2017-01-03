@@ -60,21 +60,21 @@ extension FileManager {
 extension Calendar {
 	
 	/**
-	Returns an array of tuples, constituting from <-> to pairs, starting with all of yesterday and the 4 days before, then the 3 weeks
-	before, then the 4 months before. Tuples contain:
+	Returns an array of tuples, constituting from <-> to pairs, starting with all of yesterday and the 4 days before, then the 2 weeks
+	before, then the month of the second week plus the 3 months before that. Tuples contain:
 	
 	1. start date components
 	2. end date components
 	3. number of days in period
 	4. name of period
 	*/
-	public func reverseProgressiveDateComponentsSinceToday() -> [(DateComponents, DateComponents, Int, String)] {
+	public func c3_reverseProgressiveDateComponentsSinceToday() -> [(DateComponents, DateComponents, Int, String)] {
 		let now = Date()
 		let startComponents = dateComponents([.day, .weekday, .month, .year], from: now)
 		
 		var intervals = [(DateComponents, DateComponents, Int, String)]()
 		
-		// days
+		// days: walk back 5 days starting yesterday
 		var last = startComponents
 		for i in 1...5 {
 			var comps = DateComponents()
@@ -86,7 +86,7 @@ extension Calendar {
 			last = comps
 		}
 		
-		// weeks
+		// weeks: last week and the week before that
 		var thisWeek = startComponents
 		thisWeek.day! -= thisWeek.weekday!
 		var week = startComponents
@@ -99,25 +99,15 @@ extension Calendar {
 		intervals.append((weekBefore, last, 7, "Week\nBfor".c3_localized))
 		last = weekBefore
 		
-//		var weekBeforeThat = weekBefore
-//		weekBeforeThat.day -= 7
-//		intervals.append((weekBeforeThat, last, 7, "Week"))
-//		last = weekBeforeThat
-		
-		// months
-		let currentMonth = date(from: last) ?? Date()
-		let month1 = component(.month, from: date(from: week)!)
-		let month2 = component(.month, from: currentMonth)
-		var firstMonth = DateComponents()
-		firstMonth.year = last.year
-		firstMonth.month = month2
+		// months: pick the month of `weekBefore` as starting month, then count down three more months
+		let monthlyStart = date(from: weekBefore)!		// we do this so that negative date components get straightened out (such as year 2017, month 1, days -14 become Dez 2016)
+		var firstMonth = dateComponents([.year, .month], from: monthlyStart)
 		firstMonth.day = 1
-		if month1 == month2 {
-			firstMonth.month! -= 1
-		}
 		let startMonth = date(from: firstMonth)!
 		let rng = range(of: .day, in: .month, for: startMonth)!
-		intervals.append((firstMonth, last, rng.upperBound - rng.lowerBound, shortMonthSymbols[component(.month, from: startMonth) - 1]))
+		var firstMonthEnd = firstMonth
+		firstMonthEnd.day = rng.upperBound
+		intervals.append((firstMonth, firstMonthEnd, rng.upperBound - rng.lowerBound, shortMonthSymbols[component(.month, from: startMonth) - 1]))
 		last = firstMonth
 		
 		for i in 1...3 {
@@ -128,7 +118,9 @@ extension Calendar {
 			intervals.append((comps, last, rng.upperBound - rng.lowerBound, shortMonthSymbols[component(.month, from: dt) - 1]))
 			last = comps
 		}
-		
+		//for (fr, to, days, name) in intervals {
+		//	c3_logIfDebug("===>  \(date(from: fr)?.description ?? "nil") - \(date(from: to)?.description ?? "nil"), \(days) days: \(name.replacingOccurrences(of: "\n", with: " "))")
+		//}
 		return intervals
 	}
 	

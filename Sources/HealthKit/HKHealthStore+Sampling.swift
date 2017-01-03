@@ -91,6 +91,7 @@ public extension HKHealthStore {
 		// we create one interval for the whole period between start and end dates
 		let interval = Calendar.current.dateComponents([.day, .hour], from: start, to: end)
 		guard interval.day! + interval.hour! > 0 else {
+			c3_logIfDebug("Interval is too small: \(interval.day!)d \(interval.hour!)h from \(start) to \(end)")
 			callback(nil, C3Error.intervalTooSmall)
 			return
 		}
