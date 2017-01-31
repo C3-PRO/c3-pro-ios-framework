@@ -12,7 +12,7 @@ import HealthKit
 extension HKBiologicalSex {
 	
 	/// Human readable strings: "Male", "Female", "Other" and "Not Set".
-	var humanString: String {
+	public var humanString: String {
 		switch self {
 		case .male:
 			return "Male".c3_localized
@@ -22,6 +22,20 @@ extension HKBiologicalSex {
 			return "Other".c3_localized("Other sex")
 		case .notSet:
 			return "Not Set".c3_localized("Sex not set")
+		}
+	}
+	
+	/// Symbol strings.
+	public var symbolString: String {
+		switch self {
+		case .male:
+			return "♂".c3_localized("Male")
+		case .female:
+			return "♀".c3_localized("Female")
+		case .other:
+			return "⚧".c3_localized("Other sex")
+		case .notSet:
+			return "∅".c3_localized("Sex not set")
 		}
 	}
 }

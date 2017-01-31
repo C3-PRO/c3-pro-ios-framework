@@ -133,6 +133,7 @@
 		EE9560AB1D645B6A0069D49B /* ValueSet */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ValueSet; sourceTree = "<group>"; };
 		EE9560AC1D645EB30069D49B /* Contract */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Contract; sourceTree = "<group>"; };
 		EE957D551E042B94004FADB4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/C3PRO.strings; sourceTree = "<group>"; };
+		EE98525A1E3A110700A88D72 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/C3PRO.strings; sourceTree = "<group>"; };
 		EEA5CF181BEA5B5A00A6D4C9 /* ConsentResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentResult.swift; sourceTree = "<group>"; };
 		EEB6DD1A1B5D3F91006A3B9F /* DeIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeIdentifier.swift; sourceTree = "<group>"; };
 		EEB6DD221B5D3FD3006A3B9F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -520,6 +521,7 @@
 			knownRegions = (
 				en,
 				de,
+				fr,
 			);
 			mainGroup = EEFA84B11AE5C18B00E61006;
 			productRefGroup = EEFA84BC1AE5C18B00E61006 /* Products */;
@@ -645,6 +647,7 @@
 			children = (
 				EEC6DC3E1C4D4F0200A42E87 /* en */,
 				EE957D551E042B94004FADB4 /* de */,
+				EE98525A1E3A110700A88D72 /* fr */,
 			);
 			name = C3PRO.strings;
 			sourceTree = "<group>";

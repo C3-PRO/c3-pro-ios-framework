@@ -96,15 +96,15 @@ public enum SystemService: CustomStringConvertible {
 		let appName = (Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String ?? Bundle.main.infoDictionary?["CFBundleName"] as? String) ?? "App Name".c3_localized
 		switch self {
 		case .geoLocationWhenUsing:
-			return "Please go to the Settings app ➔ “{{appName}}” ➔ “Location” to re-enable.".c3_localized.replacingOccurrences(of: "{{appName}}", with: appName)
+			return "Please go to the Settings app ➔ “Privacy” ➔ “Location Services” and turn on the service for “{{appName}}”".c3_localized.replacingOccurrences(of: "{{appName}}", with: appName)
 		case .geoLocationAlways:
-			return "Please go to the Settings app ➔ “{{appName}}” ➔ “Location” to re-enable.".c3_localized.replacingOccurrences(of: "{{appName}}", with: appName)
+			return "Please go to the Settings app ➔ “Privacy” ➔ “Location Services” and turn on the service for “{{appName}}”".c3_localized.replacingOccurrences(of: "{{appName}}", with: appName)
 		case .localNotifications:
-			return "Please go to the Settings app ➔ “{{appName}}” ➔ “Notifications” and turn “Allow Notifications” on.".c3_localized.replacingOccurrences(of: "{{appName}}", with: appName)
+			return "Please go to the Settings app ➔ “{{appName}}” ➔ “Notifications” and turn “Allow Notifications” on".c3_localized.replacingOccurrences(of: "{{appName}}", with: appName)
 		case .coreMotion:
 			return "Please go to the Settings app ➔ “{{appName}}” and turn “Motion & Fitness” on".c3_localized.replacingOccurrences(of: "{{appName}}", with: appName)
 		case .healthKit:
-			return "Please go to the Settings app ➔ “Privacy” ➔ “Health” ➔ {{appName}} to re-enable.".c3_localized.replacingOccurrences(of: "{{appName}}", with: appName)
+			return "Please go to the Settings app ➔ “Privacy” ➔ “Health” ➔ “{{appName}}” to re-enable".c3_localized.replacingOccurrences(of: "{{appName}}", with: appName)
 		case .microphone:
 			return "Please go to the Settings app ➔ “{{appName}}” and turn “Microphone” on".c3_localized.replacingOccurrences(of: "{{appName}}", with: appName)
 		}

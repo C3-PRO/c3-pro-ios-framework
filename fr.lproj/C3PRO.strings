@@ -1,0 +1,107 @@
+/* 
+  C3PRO.strings
+  C3PRO
+
+  Created by Pascal Pfiffner on 1/18/16.
+  Copyright © 2016 Boston Children's Hospital. All rights reserved.
+*/
+
+/* Why the microphone wants to be used */
+"Access to microphone is required for your Voice Recording Activity." = "L'accès au microphone est requis pour votre activité d'enregistrement vocal";
+
+/* Button to enable certain system services */
+"Allow" = "Permettre";
+
+/* When the app's actual name isn't known */
+"App Name" = "Nom de l'app";
+
+"By agreeing you confirm that you read the consent and that you wish to take part in this research study." = "En acceptant, vous confirmez que vous avez lu le consentement et que vous souhaitez participer à cette étude.";
+"Consent" = "Consentement";
+"Eligibility" = "Éligibilité";
+
+/* Why notifications want to be sent */
+"Enabling notifications allows the app to show reminders." = "L'activation des notifications permet à l'application d'afficher des rappels.";
+"Female" = "Féminin";
+
+/* Disabled button when permissions were granted */
+"Granted" = "Accordé";
+
+"HealthKit" = "HealthKit";
+
+/* Why HealthKit wants to be used */
+"Individually specify which general health information the app may read from and write to HealthKit" = "Indiquez individuellement les informations générales sur la santé auxquelles l'application peut lire et écrivez à HealthKit";
+"Last\nWeek" = "sem.\ndern.";
+"Let's see if you may take part in this study" = "Voyons si vous pouvez participer à cette étude";
+"Location Services" = "Services de location";
+"Male" = "Masculin";
+"Microphone" = "Microphone";
+"Motion Activity" = "Activité de mouvement";
+
+/* Next step */
+"Next" = "Prochain";
+
+/* No as in no-i-dont-meet-this-requirement */
+"No" = "Non";
+
+/* Sex not set */
+"Not Set" = "Pas défini";
+"Notifications" = "Notifications";
+
+/* Alert button title */
+"OK" = "OK";
+
+/* Button to open settings */
+"Open Settings App" = "Ouvrez l'application Réglages";
+
+/* Other sex */
+"Other" = "Autre";
+
+"Participant" = "Participant";
+"Passcode" = "Mot de Passe";
+"Permissions" = "Permission";
+
+/* How to re-enable the microphone */
+"Please go to the Settings app ➔ “{{appName}}” and turn “Microphone” on" = "Accédez à l'application Réglages ➔ “{{appName}}” et activez “Microphone”";
+
+/* How to re-enable CoreMotion */
+"Please go to the Settings app ➔ “{{appName}}” and turn “Motion & Fitness” on" = "Accédez à l'application Réglages ➔ “{{appName}}” et activez “Mouvements et forme”";
+
+/* How to re-enable Geo-location */
+"Please go to the Settings app ➔ “Privacy” ➔ “Location Services” and turn on the service for “{{appName}}”" = "Accédez à l'application Réglages ➔ “Confidentialité” ➔ “Service de localisation” et activez localisation pour “{{appName}}”";
+
+/* How to re-enable Local Notifications */
+"Please go to the Settings app ➔ “{{appName}}” ➔ “Notifications” and turn “Allow Notifications” on" = "Accédez à l'application Réglages ➔ “{{appName}}” ➔ “Notifications” et activez “Autoriser les notifications”";
+
+/* How to re-enable HealthKit */
+"Please go to the Settings app ➔ “Privacy” ➔ “Health” ➔ “{{appName}}” to re-enable" = "Accédez à l'application Réglages ➔ “Confidentialité” ➔ “Santé” ➔ {{appName}} pour réactiver";
+
+/* Start Consent button title */
+"Start Consent" = "Démarrer Consentement";
+
+"Start Eligibility" = "Démarrer Éligibilité";
+"Swipe to learn more" = "Balayez pour en savoir plus";
+"Tap the button below to begin the consent process" = "Appuyez sur le bouton ci-dessous pour commencer consentement";
+"Tap the button below to begin the eligibility process" = "Appuyez sur le bouton ci-dessous pour commencer le processus d’éligibilité";
+"Thank you for your interest!\nUnfortunately, you are not eligible to join this study at this time." = "Merci de votre intérêt!\nMalheureusement, vous n'êtes pas admissible à participer à cette étude en ce moment.";
+
+/* Default team name during consenting */
+"the research team" = "l'équipe de recherche";
+
+/* Button title */
+"Try Again" = "Réessayer";
+
+/* Why CoreMotion wants to be used */
+"Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease." = "L'utilisation du coprocesseur de mouvement permet à l'application de déterminer votre activité, en aidant l'étude à mieux comprendre comment le niveau d'activité peut influencer la maladie.";
+"Week\nBfor" = "sem.\navant";
+
+/* Yes as in yes-i-meet-this-requirement */
+"Yes" = "Oui";
+
+"You are eligible to join the study" = "Vous êtes éligible à participer à l'étude";
+
+/* Text shown before prompting to create a passcode */
+"You will now be asked to create a passcode.\n\nThis protects your data from unauthorized access should you hand your phone to a friend." = "Vous serez alors invité à créer un mot de passe.\n\nCeci protège vos données de tout accès non autorisé si vous passez votre téléphone à un ami.";
+
+/* Text shown before prompting to enable app permissions */
+"You will now be asked to grant the app access to certain system features. This allows us to show reminders and read health data from HealthKit, amongst others." = "Vous serez alors invité à accorder à l'application l'accès à certaines fonctionnalités du système. Cela nous permet de montrer des rappels et de lire les données de santé de HealthKit, entre autres.";
+

@@ -67,13 +67,13 @@
 "Please go to the Settings app ➔ “{{appName}}” and turn “Motion & Fitness” on" = "Gehen Sie in der Einstellungen App auf “{{appName}}” und aktivieren Sie “Bewegung & Fitness”";
 
 /* How to re-enable Geo-location */
-"Please go to the Settings app ➔ “{{appName}}” ➔ “Location” to re-enable." = "Gehen Sie in der Einstellungen App auf “{{appName}}” und aktivieren Sie “Ortungsdienste”";
+"Please go to the Settings app ➔ “Privacy” ➔ “Location Services” and turn on the service for “{{appName}}”" = "Gehen Sie in der Einstellungen App auf “Privatsphäre” ➔ “Ortungsdienste” und aktivieren Sie Ortungsdienste für “{{appName}}”";
 
 /* How to re-enable Local Notifications */
-"Please go to the Settings app ➔ “{{appName}}” ➔ “Notifications” and turn “Allow Notifications” on." = "Gehen Sie in der Einstellungen App auf “{{appName}}” ➔ “Erinnerungen” und aktivieren Sie “Erinnerungen Erlauben”";
+"Please go to the Settings app ➔ “{{appName}}” ➔ “Notifications” and turn “Allow Notifications” on" = "Gehen Sie in der Einstellungen App auf “{{appName}}” ➔ “Erinnerungen” und aktivieren Sie “Erinnerungen Erlauben”";
 
 /* How to re-enable HealthKit */
-"Please go to the Settings app ➔ “Privacy” ➔ “Health” ➔ {{appName}} to re-enable." = "Gehen Sie in der Einstellungen App auf “Privatsphäre” ➔ “Gesundheit” ➔ {{appName}}, um Zugriff zu erlauben";
+"Please go to the Settings app ➔ “Privacy” ➔ “Health” ➔ “{{appName}}” to re-enable" = "Gehen Sie in der Einstellungen App auf “Privatsphäre” ➔ “Gesundheit” ➔ “{{appName}}”, um Zugriff zu erlauben";
 
 /* Start Consent button title */
 "Start Consent" = "Einwilligung Beginnen";
