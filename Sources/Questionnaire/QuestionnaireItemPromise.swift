@@ -325,7 +325,7 @@ extension QuestionnaireItem {
 						let system = option.system?.absoluteString ?? kORKTextChoiceDefaultSystem
 						let code = option.code?.string ?? kORKTextChoiceMissingCodeCode
 						let value = "\(system)\(kORKTextChoiceSystemSeparator)\(code)"
-						let text = ORKTextChoice(text: option.display?.localized ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
+						let text = ORKTextChoice(text: option.display_localized ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
 						choices.append(text)
 					}
 				}

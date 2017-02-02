@@ -225,6 +225,7 @@ extension ORKNumericQuestionResult {
 		}
 		let answer = QuestionnaireResponseItemAnswer()
 		if let fhir = ofFHIRType, "quantity" == fhir {
+			answer.valueQuantity = Quantity()
 			answer.valueQuantity!.value = FHIRDecimal(numeric.decimalValue)
 			answer.valueQuantity!.unit = unit?.fhir_string
 		}
