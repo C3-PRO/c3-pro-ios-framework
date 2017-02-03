@@ -70,6 +70,8 @@ open class QuestionnairePromise: QuestionnairePromiseProto {
 			return
 		}
 		
+		// wrap into our own root item since there may be multiple top level items in the questionnaire, and we don't want to implement
+		// looping over them here
 		let topItem = QuestionnaireItem(linkId: FHIRString("{root}"))
 		topItem.type = .group
 		topItem.item = questionnaire.item

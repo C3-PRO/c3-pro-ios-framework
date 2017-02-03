@@ -10,6 +10,7 @@
 		EE0EB96F1AEEE925006AF9E9 /* ConditionalOrderedTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0EB96E1AEEE925006AF9E9 /* ConditionalOrderedTask.swift */; };
 		EE1AB3B71C23283100711108 /* HKHealthStore+Sampling.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1AB3B51C23283100711108 /* HKHealthStore+Sampling.swift */; };
 		EE1AB3BA1C23286200711108 /* HKQuantity+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1AB3B91C23286200711108 /* HKQuantity+FHIR.swift */; };
+		EE2011871E44845900913FA7 /* QuestionnaireResponse_main.duplicates.json in Resources */ = {isa = PBXBuildFile; fileRef = EE2011861E44845900913FA7 /* QuestionnaireResponse_main.duplicates.json */; };
 		EE2A9D6D1CE5FB3E00FB2B4F /* QuestionnaireTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2A9D6C1CE5FB3E00FB2B4F /* QuestionnaireTests.swift */; };
 		EE2A9D7E1CE61F2500FB2B4F /* Questionnaire_ValueSet-contained.json in Resources */ = {isa = PBXBuildFile; fileRef = EE2A9D7B1CE61F2500FB2B4F /* Questionnaire_ValueSet-contained.json */; };
 		EE2A9D7F1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json in Resources */ = {isa = PBXBuildFile; fileRef = EE2A9D7C1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json */; };
@@ -95,6 +96,7 @@
 		EE1AB3B51C23283100711108 /* HKHealthStore+Sampling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HKHealthStore+Sampling.swift"; sourceTree = "<group>"; };
 		EE1AB3B61C23283100711108 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EE1AB3B91C23286200711108 /* HKQuantity+FHIR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HKQuantity+FHIR.swift"; sourceTree = "<group>"; };
+		EE2011861E44845900913FA7 /* QuestionnaireResponse_main.duplicates.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = QuestionnaireResponse_main.duplicates.json; sourceTree = "<group>"; };
 		EE2A9D6C1CE5FB3E00FB2B4F /* QuestionnaireTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionnaireTests.swift; sourceTree = "<group>"; };
 		EE2A9D7B1CE61F2500FB2B4F /* Questionnaire_ValueSet-contained.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Questionnaire_ValueSet-contained.json"; sourceTree = "<group>"; };
 		EE2A9D7C1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "Questionnaire_ValueSet-relative.json"; sourceTree = "<group>"; };
@@ -439,9 +441,11 @@
 				EE2A9D7B1CE61F2500FB2B4F /* Questionnaire_ValueSet-contained.json */,
 				EE2A9D7C1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json */,
 				EE2A9D7D1CE61F2500FB2B4F /* ValueSet_SF36.json */,
+				EE2011861E44845900913FA7 /* QuestionnaireResponse_main.duplicates.json */,
 				EEFA84CC1AE5C18B00E61006 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			path = ../TestResources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -553,6 +557,7 @@
 				EE9560AD1D645EBC0069D49B /* Contract in Resources */,
 				EE3813FF1D75A673001EFC49 /* public.crt in Resources */,
 				EE2A9D7F1CE61F2500FB2B4F /* Questionnaire_ValueSet-relative.json in Resources */,
+				EE2011871E44845900913FA7 /* QuestionnaireResponse_main.duplicates.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -811,7 +816,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = Tests/Info.plist;
+				INFOPLIST_FILE = TestResources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = C3PROTests;
 				SWIFT_VERSION = 3.0;
@@ -825,7 +830,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = Tests/Info.plist;
+				INFOPLIST_FILE = TestResources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = C3PROTests;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

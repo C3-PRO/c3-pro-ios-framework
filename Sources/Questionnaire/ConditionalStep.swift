@@ -30,6 +30,9 @@ public protocol ConditionalStep {
 	/// The step identifier; since steps will inherit from ORKStep this is a given.
 	var identifier: String { get }
 	
+	/// An array of linkIds of the parent groups, used to preserve hierarchy.
+	var linkIds: [String] { get }
+	
 	/// Requirements to fulfil for the step to show up, if any.
 	var requirements: [ResultRequirement]? { get set }
 	
@@ -119,6 +122,9 @@ class ConditionalQuestionStep: ORKQuestionStep, ConditionalStep {
 	/// The original "type", specified in the FHIR Questionnaire.
 	var fhirType: String?
 	
+	/// A path of linkIds, used to preserve hierarchy.
+	var linkIds = [String]()
+	
 	/// Requirements to fulfil for the step to show up, if any.
 	var requirements: [ResultRequirement]?
 	
@@ -127,11 +133,13 @@ class ConditionalQuestionStep: ORKQuestionStep, ConditionalStep {
 	Designated initializer.
 	
 	- parameter identifier: The step identifier
+	- parameter linkIds: The identifier of the groups this step is nested in, if any
 	- parameter title: The step's title
 	- parameter answer: The step's answer format
 	*/
-	init(identifier: String, title ttl: String?, answer: ORKAnswerFormat) {
+	init(identifier: String, linkIds ids: [String], title ttl: String?, answer: ORKAnswerFormat) {
 		super.init(identifier: identifier)
+		linkIds = ids
 		title = ttl
 		answerFormat = answer
 	}
@@ -165,6 +173,9 @@ A conditional instruction step, to be used in the conditional ordered task.
 */
 class ConditionalInstructionStep: ORKInstructionStep, ConditionalStep {
 	
+	/// An array of linkIds of the parent groups, used to preserve hierarchy.
+	var linkIds = [String]()
+	
 	/// Requirements to fulfil for the step to show up, if any.
 	var requirements: [ResultRequirement]?
 	
@@ -172,11 +183,13 @@ class ConditionalInstructionStep: ORKInstructionStep, ConditionalStep {
 	Designated initializer.
 	
 	- parameter identifier: The step's identifier
+	- parameter linkIds: The identifier of the groups this step is nested in, if any
 	- parameter title: The step's title
 	- parameter text: The instruction text
 	*/
-	init(identifier: String, title ttl: String?, text txt: String?) {
+	init(identifier: String, linkIds ids: [String], title ttl: String?, text txt: String?) {
 		super.init(identifier: identifier)
+		linkIds = ids
 		title = ttl
 		text = txt
 	}

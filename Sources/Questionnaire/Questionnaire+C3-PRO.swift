@@ -18,7 +18,6 @@
 //  limitations under the License.
 //
 
-import Foundation
 import SMART
 import ResearchKit
 
@@ -95,6 +94,66 @@ extension QuestionnaireItemEnableWhen {
 			throw C3Error.questionnaireEnableWhenIncomplete("\(self) has `answerCoding` but is missing a code, cannot create a question result")
 		}
 		throw C3Error.questionnaireEnableWhenIncomplete("\(self) has no `answerType` type that is supported right now")
+	}
+}
+
+
+extension QuestionnaireResponse {
+	
+	/**
+	Inspects all the instance's `item` items and removes those with duplicate `linkId`, consolidating its items into the first item with the
+	same linkId. Calls out to `QuestionnaireResponseItem.itemsDeduplicatedByLinkId(items:)`.
+	*/
+	public func deduplicateItemsByLinkId() {
+		guard let items = item, items.count > 0 else {
+			return
+		}
+		item = QuestionnaireResponseItem.itemsDeduplicatedByLinkId(items)
+	}
+}
+
+
+extension QuestionnaireResponseItem {
+	
+	/**
+	Inspects all the instance's `item` items and removes those with duplicate `linkId`, consolidating its items into the first item with the
+	same linkId. Calls out to `QuestionnaireResponseItem.itemsDeduplicatedByLinkId(items:)`.
+	*/
+	public func deduplicateItemsByLinkId() {
+		guard let items = item, items.count > 0 else {
+			return
+		}
+		item = type(of: self).itemsDeduplicatedByLinkId(items)
+	}
+	
+	/**
+	Consolidates all items with the same `linkId` into one (the first) item. Recurses into subitems.
+	*/
+	public class func itemsDeduplicatedByLinkId(_ items: [QuestionnaireResponseItem]) -> [QuestionnaireResponseItem] {
+		guard items.count > 0 else {
+			return items
+		}
+		var itemDict = [String: QuestionnaireResponseItem]()
+		var finalItems = [QuestionnaireResponseItem]()
+		for item in items {
+			guard let thisLinkId = item.linkId?.string else {   // is invalid without linkId anyway
+				continue
+			}
+			if let existing = itemDict[thisLinkId] {
+				if nil == existing.item {
+					existing.item = item.item
+				}
+				else if let theseItems = item.item {
+					existing.item!.append(contentsOf: theseItems)
+				}
+			}
+			else {
+				itemDict[thisLinkId] = item
+				finalItems.append(item)
+			}
+		}
+		finalItems.forEach() { $0.deduplicateItemsByLinkId() }
+		return finalItems
 	}
 }
 

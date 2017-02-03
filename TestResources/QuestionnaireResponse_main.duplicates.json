@@ -1,0 +1,183 @@
+{
+  "status" : "completed",
+  "resourceType" : "QuestionnaireResponse",
+  "questionnaire" : {
+    "reference" : "main"
+  },
+  "item" : [
+    {
+      "linkId" : "meds",
+      "item" : [
+        {
+          "answer" : [
+            {
+              "valueCoding" : {
+                "code" : "considered-not-started",
+                "system" : "http:\/\/c3-pro.chip.org\/fhir\/ValueSet\/antivirals-considered"
+              }
+            }
+          ],
+          "linkId" : "consideredAntivirals"
+        }
+      ]
+    },
+    {
+      "linkId" : "meds",
+      "item" : [
+        {
+          "answer" : [
+            {
+              "valueCoding" : {
+                "code" : "no-dont-know",
+                "system" : "http:\/\/c3-pro.chip.org\/fhir\/ValueSet\/meds-prescribed"
+              }
+            }
+          ],
+          "linkId" : "physicianDidPrescribeMeds"
+        }
+      ]
+    },
+    {
+      "linkId" : "SF36",
+      "item" : [
+        {
+          "linkId" : "roleLimitations",
+          "item" : [
+            {
+              "answer" : [
+                {
+                  "valueBoolean" : true
+                }
+              ],
+              "linkId" : "reduce-work"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId" : "meds",
+      "item" : [
+        {
+          "answer" : [
+            {
+              "valueCoding" : {
+                "code" : "Y",
+                "system" : "http:\/\/hl7.org\/fhir\/v2\/vs\/0136"
+              }
+            }
+          ],
+          "linkId" : "antiviralMedsYesNo"
+        }
+      ]
+    },
+    {
+      "linkId" : "meds",
+      "item" : [
+        {
+          "answer" : [
+            {
+              "valueCoding" : {
+                "code" : "1606218",
+                "system" : "http:\/\/www.nlm.nih.gov\/research\/umls\/rxnorm"
+              }
+            },
+            {
+              "valueCoding" : {
+                "code" : "1482804",
+                "system" : "http:\/\/www.nlm.nih.gov\/research\/umls\/rxnorm"
+              }
+            }
+          ],
+          "linkId" : "antiviralMeds"
+        }
+      ]
+    },
+    {
+      "linkId" : "SF36",
+      "item" : [
+        {
+          "linkId" : "roleLimitations",
+          "item" : [
+            {
+              "answer" : [
+                {
+                  "valueBoolean" : true
+                }
+              ],
+              "linkId" : "accomplished-less"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId" : "SF36",
+      "item" : [
+        {
+          "linkId" : "roleLimitations",
+          "item" : [
+            {
+              "answer" : [
+                {
+                  "valueBoolean" : false
+                }
+              ],
+              "linkId" : "limited-other"
+            }
+          ]
+        },
+        {
+          "linkId" : "roleLimitations",
+          "item" : [
+            {
+              "answer" : [
+                {
+                  "valueBoolean" : true
+                }
+              ],
+              "linkId" : "had-difficulties"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId" : "workLimitationsPast7Days",
+      "item" : [
+        {
+          "answer" : [
+            {
+              "valueBoolean" : false
+            }
+          ],
+          "linkId" : "employedYesNo"
+        }
+      ]
+    },
+    {
+      "linkId" : "workLimitationsPast7Days",
+      "item" : [
+        {
+          "answer" : [
+            {
+              "valueDecimal" : 3
+            }
+          ],
+          "linkId" : "effectOfHepCOnDailyLiving"
+        }
+      ]
+    },
+    {
+      "answer" : [
+        {
+          "valueCoding" : {
+            "code" : "not-regularly",
+            "system" : "http:\/\/c3-pro.chip.org\/fhir\/ValueSet\/device-carry-frequency"
+          }
+        }
+      ],
+      "linkId" : "deviceCarryFrequency"
+    }
+  ]
+}

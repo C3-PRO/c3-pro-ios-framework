@@ -114,6 +114,43 @@ class QuestionnaireChoiceTests: XCTestCase {
 		}
 		self.waitForExpectations(timeout: 4, handler: nil)
 	}
+	
+	func testResponseDeduplication() {
+		do {
+			let bundle = Bundle(for: type(of: self))
+			let response = try bundle.fhir_bundledResource("QuestionnaireResponse_main.duplicates", type: QuestionnaireResponse.self)
+			XCTAssertEqual(10, response.item?.count ?? 0)
+			XCTAssertEqual("meds", response.item?[0].linkId)
+			XCTAssertEqual("meds", response.item?[1].linkId)
+			XCTAssertEqual("SF36", response.item?[2].linkId)
+			XCTAssertEqual("meds", response.item?[3].linkId)
+			XCTAssertEqual("meds", response.item?[4].linkId)
+			XCTAssertEqual("SF36", response.item?[5].linkId)
+			XCTAssertEqual("SF36", response.item?[6].linkId)
+			XCTAssertEqual("workLimitationsPast7Days", response.item?[7].linkId)
+			XCTAssertEqual("workLimitationsPast7Days", response.item?[8].linkId)
+			XCTAssertEqual("deviceCarryFrequency", response.item?[9].linkId)
+			
+			XCTAssertEqual("roleLimitations", response.item?[2].item?[0].linkId)
+			XCTAssertEqual("accomplished-less", response.item?[5].item?[0].item?[0].linkId)
+			XCTAssertEqual("limited-other", response.item?[6].item?[0].item?[0].linkId)
+			
+			// deduplicate
+			response.deduplicateItemsByLinkId()
+			XCTAssertEqual(4, response.item?.count ?? 0)
+			XCTAssertEqual("meds", response.item?[0].linkId)
+			XCTAssertEqual("SF36", response.item?[1].linkId)
+			XCTAssertEqual("workLimitationsPast7Days", response.item?[2].linkId)
+			XCTAssertEqual("deviceCarryFrequency", response.item?[3].linkId)
+			
+			XCTAssertEqual("roleLimitations", response.item?[1].item?[0].linkId)
+			XCTAssertEqual("accomplished-less", response.item?[1].item?[0].item?[1].linkId)
+			XCTAssertEqual("limited-other", response.item?[1].item?[0].item?[2].linkId)
+		}
+		catch {
+			XCTAssertTrue(false, "Failed: \(error)")
+		}
+	}
 }
 
 

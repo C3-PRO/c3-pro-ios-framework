@@ -37,6 +37,9 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	/// The promises' item.
 	let item: QuestionnaireItem
 	
+	/// Parent item, if any.
+	weak var parent: QuestionnaireItemPromise?
+	
 	/// The step(s), internally assigned after the promise has been successfully fulfilled.
 	internal(set) var steps: [ORKStep]?
 	
@@ -46,8 +49,9 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	
 	- parameter question: The question the receiver represents
 	*/
-	init(item: QuestionnaireItem) {
+	init(item: QuestionnaireItem, parent: QuestionnaireItemPromise? = nil) {
 		self.item = item
+		self.parent = parent
 	}
 	
 	
@@ -64,8 +68,6 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 	                      allocated still, so don't throw everything away just because you receive errors
 	*/
 	func fulfill(requiring parentRequirements: [ResultRequirement]?, callback: @escaping (([Error]?) -> Void)) {
-		let linkId = item.linkId?.string ?? UUID().uuidString
-		let (title, text) = item.c3_bestTitleAndText()
 		
 		// resolve answer format, THEN resolve sub-groups, if any
 		item.c3_asAnswerFormat() { format, error in
@@ -73,6 +75,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 			var thisStep: ConditionalStep?
 			var errors = [Error]()
 			var requirements = parentRequirements ?? [ResultRequirement]()
+			let (title, text) = self.item.c3_bestTitleAndText()
 			
 			// find item's "enableWhen" requirements
 			do {
@@ -84,9 +87,9 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				errors.append(error)
 			}
 			
-			// we know the answer format, create a conditional step
+			// we know the answer format, so this is a question, create a conditional step
 			if let fmt = format {
-				let step = ConditionalQuestionStep(identifier: linkId, title: title, answer: fmt)
+				let step = ConditionalQuestionStep(identifier: self.linkId, linkIds: self.linkIds, title: title, answer: fmt)
 				step.fhirType = self.item.type?.rawValue
 				step.text = text
 				step.isOptional = !(self.item.required ?? false)
@@ -98,7 +101,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				
 			// no error and no answer format but title and text - must be "display" or "group" item that has something to show!
 			else if nil != title || nil != text {
-				thisStep = ConditionalInstructionStep(identifier: linkId, title: title, text: text)
+				thisStep = ConditionalInstructionStep(identifier: self.linkId, linkIds: self.linkIds, title: title, text: text)
 			}
 			
 			// TODO: also look at "initial[x]" value and prepopulate
@@ -115,7 +118,7 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 			
 			// do we have sub-groups?
 			if let subitems = self.item.item {
-				let subpromises = subitems.map() { QuestionnaireItemPromise(item: $0) }
+				let subpromises = subitems.map() { QuestionnaireItemPromise(item: $0, parent: ("{root}" == self.linkId) ? nil : self) }
 				
 				// fulfill all group promises
 				let queueGroup = DispatchGroup()
@@ -143,6 +146,24 @@ class QuestionnaireItemPromise: QuestionnairePromiseProto {
 				callback(errors)
 			}
 		}
+	}
+	
+	
+	// MARK: - Properties
+	
+	var linkId: String {
+		return item.linkId?.string ?? UUID().uuidString
+	}
+	
+	/// Returns an array of all linkIds of the parents down to the receiver.
+	var linkIds: [String] {
+		var ids = [String]()
+		var prnt = parent
+		while let parent = prnt {
+			ids.append(parent.linkId)
+			prnt = parent.parent
+		}
+		return ids
 	}
 	
 	

@@ -33,7 +33,7 @@ extension ORKTaskResult {
 	- parameter for: The task the receiver is a result for
 	- returns:       A `QuestionnaireResponse` resource or nil
 	*/
-	func c3_asQuestionnaireResponse(for task: ORKTask?) -> QuestionnaireResponse? {
+	public func c3_asQuestionnaireResponse(for task: ORKTask?) -> QuestionnaireResponse? {
 		guard let results = results as? [ORKStepResult] else {
 			return nil
 		}
@@ -41,8 +41,8 @@ extension ORKTaskResult {
 		// loop results to collect groups
 		var groups = [QuestionnaireResponseItem]()
 		for result in results {
-			if let group = result.c3_response(from: task) {
-				groups.append(group)
+			if let items = result.c3_responseItems(from: task) {
+				groups.append(contentsOf: items)
 			}
 		}
 		
@@ -53,6 +53,7 @@ extension ORKTaskResult {
 		let answer = QuestionnaireResponse(status: .completed)
 		answer.questionnaire = questionnaire
 		answer.item = groups
+		answer.deduplicateItemsByLinkId()
 		return answer
 	}
 }
@@ -67,19 +68,27 @@ extension ORKStepResult {
 	- parameter task: The ORKTask the result belongs to
 	- returns: A QuestionnaireResponseItem element or nil
 	*/
-	func c3_response(from task: ORKTask?) -> QuestionnaireResponseItem? {
+	func c3_responseItems(from task: ORKTask?) -> [QuestionnaireResponseItem]? {
 		if let results = results {
-			let group = QuestionnaireResponseItem()
-			var questions = [QuestionnaireResponseItem]()
+			var items = [QuestionnaireResponseItem]()
 			
 			// loop results to collect answers; omit questions that do not have answers
 			for result in results {
 				if let result = result as? ORKQuestionResult {
-					if let responses = result.c3_responses(from: task?.step?(withIdentifier: result.identifier) as? ORKQuestionStep) {
-						let question = QuestionnaireResponseItem()
-						question.linkId = FHIRString(result.identifier)
-						question.answer = responses
-						questions.append(question)
+					if let question = task?.step?(withIdentifier: result.identifier) as? ORKQuestionStep, let answers = result.c3_responseItemAnswers(from: question) {
+						var response = QuestionnaireResponseItem(linkId: result.identifier.fhir_string)
+						response.answer = answers
+						
+						// wrap into parent items - will dedupe by linkId later
+						if let conditional = question as? ConditionalStep {
+							var parentIds = conditional.linkIds
+							while let parentId = parentIds.popLast() {
+								let parent = QuestionnaireResponseItem(linkId: parentId.fhir_string)
+								parent.item = [response]
+								response = parent
+							}
+						}
+						items.append(response)
 					}
 				}
 				else {
@@ -87,9 +96,9 @@ extension ORKStepResult {
 				}
 			}
 			
-			if questions.count > 0 {
-				group.item = questions
-				return group
+			// return non-nil if we have at least one response item
+			if items.count > 0 {
+				return items
 			}
 		}
 		return nil
@@ -108,7 +117,7 @@ extension ORKQuestionResult {
 	- parameter from: The ORKQuestionStep the responses belong to
 	- returns:        An array of question answers or nil
 	*/
-	func c3_responses(from step: ORKQuestionStep?) -> [QuestionnaireResponseItemAnswer]? {
+	func c3_responseItemAnswers(from step: ORKQuestionStep?) -> [QuestionnaireResponseItemAnswer]? {
 		let fhirType = (step as? ConditionalQuestionStep)?.fhirType
 		
 		if let this = self as? ORKChoiceQuestionResult {
