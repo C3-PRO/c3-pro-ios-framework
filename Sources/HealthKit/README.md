@@ -112,10 +112,10 @@ func application(application: UIApplication, performFetchWithCompletionHandler c
     let reporter = CoreMotionReporter(path: <# database path #>)
     reporter.archiveActivities { numNewActivities, error in
         if let _ = error {
-            completionHandler(.Failed)
+            completionHandler(.failed)
         }
         else {
-            completionHandler(numNewActivities > 0 ? .NewData : .NoData)
+            completionHandler(numNewActivities > 0 ? .newData : .noData)
         }
     }
 }

@@ -72,11 +72,11 @@ open class WebViewController : UIViewController, UIWebViewDelegate {
 	/// The CSS style to apply.
 	var appStyle: String {
 		if nil == type(of: self)._appStyle {
-			if let styleURL = Bundle.main.url(forResource: "Intro", withExtension: "css") ?? Bundle.main.url(forResource: "Intro", withExtension: "css", subdirectory: "HTMLContent") {
+			if let styleURL = Bundle.main.url(forResource: "Style", withExtension: "css") ?? Bundle.main.url(forResource: "Style", withExtension: "css", subdirectory: "HTMLContent") {
 				type(of: self)._appStyle = (try? String(contentsOfFile: styleURL.path, encoding: String.Encoding.utf8))
 			}
 			else {
-				c3_warn("Please include a CSS stylesheet called «Intro.css» in the app bundle")
+				c3_warn("Please include a CSS stylesheet called «Style.css» in the app bundle")
 			}
 		}
 		return type(of: self)._appStyle ?? ""
