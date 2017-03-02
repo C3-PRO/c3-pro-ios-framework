@@ -108,10 +108,31 @@ open class WebViewController : UIViewController, UIWebViewDelegate {
 	
 	open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
 		if openLinksExternally && .linkClicked == navigationType, let url = request.url {
+			if "file" == url.scheme && "pdf" == url.pathExtension {
+				let pdf = PDFViewController()
+				pdf.startURL = url
+				pdf.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(WebViewController.dismissModal(_:)))
+				let navi = UINavigationController(rootViewController: pdf)
+				if let _ = presentedViewController {
+					dismiss(animated: true) {
+						self.present(navi, animated: true)
+					}
+				}
+				else {
+					present(navi, animated: true)
+				}
+				return false
+			}
+			
+			// hand off all other links
 			UIApplication.shared.openURL(url)
 			return false
 		}
 		return true
+	}
+	
+	public func dismissModal(_ sender: AnyObject?) {
+		dismiss(animated: nil != sender)
 	}
 }
 
@@ -125,9 +146,9 @@ open class PDFViewController : WebViewController, UIDocumentInteractionControlle
 	
 	var documentInteraction: UIDocumentInteractionController?
 	
-	fileprivate var PDFURL: URL? {
+	override open var startURL: URL? {
 		didSet {
-			shareButton?.isEnabled = nil != PDFURL
+			shareButton?.isEnabled = nil != startURL
 		}
 	}
 	
@@ -136,7 +157,7 @@ open class PDFViewController : WebViewController, UIDocumentInteractionControlle
 		
 		// create share button
 		let share = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(PDFViewController.share))
-		share.isEnabled = nil != PDFURL
+		share.isEnabled = nil != startURL
 		shareButton = share
 		
 		if nil == navigationItem.rightBarButtonItem {
@@ -144,23 +165,6 @@ open class PDFViewController : WebViewController, UIDocumentInteractionControlle
 		}
 		else {
 			navigationItem.leftBarButtonItem = share
-		}
-		
-		if let url = PDFURL {
-			loadPDFDataFrom(url)
-		}
-	}
-	
-	/**
-	Loads PDF data from the given url.
-	
-	- parameter url: The URL to load PDF data from
-	*/
-	open func loadPDFDataFrom(_ url: URL) {
-		PDFURL = url
-		if let web = webView {
-			let request = URLRequest(url: url)
-			web.loadRequest(request)
 		}
 	}
 	
@@ -171,7 +175,7 @@ open class PDFViewController : WebViewController, UIDocumentInteractionControlle
 	Display a `UIDocumentInteractionController` so the user can share the PDF.
 	*/
 	open func share() {
-		if let url = PDFURL {
+		if let url = startURL {
 			documentInteraction = UIDocumentInteractionController(url: url)
 			documentInteraction!.delegate = self;
 			documentInteraction!.name = self.title;

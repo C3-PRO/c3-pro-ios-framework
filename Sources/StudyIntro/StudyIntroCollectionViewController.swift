@@ -123,6 +123,7 @@ open class StudyIntroCollectionViewController: UIViewController, UICollectionVie
 		if let url = type(of: self).bundledConsentPDFURL() {
 			pdfVC.title = "Consent".c3_localized
 			pdfVC.hidesBottomBarWhenPushed = true
+			pdfVC.startURL = url
 			if let navi = navigationController {
 				navi.pushViewController(pdfVC, animated: true)
 			}
@@ -132,10 +133,6 @@ open class StudyIntroCollectionViewController: UIViewController, UICollectionVie
 				let done = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(StudyIntroCollectionViewController.dismissModal))
 				pdfVC.navigationItem.rightBarButtonItem = done
 				present(navi, animated: true, completion: nil)
-			}
-			
-			DispatchQueue.main.async {
-				pdfVC.loadPDFDataFrom(url)
 			}
 		}
 		else {
