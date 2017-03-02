@@ -130,7 +130,7 @@ open class StudyIntroCollectionViewController: UIViewController, UICollectionVie
 			else {
 				c3_warn("hint: if you put the intro collection view controller into a navigation controller, the consent document will be pushed instead of shown modally")
 				let navi = UINavigationController(rootViewController: pdfVC)
-				let done = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(StudyIntroCollectionViewController.dismissModal))
+				let done = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(StudyIntroCollectionViewController.dismissModal(_:)))
 				pdfVC.navigationItem.rightBarButtonItem = done
 				present(navi, animated: true, completion: nil)
 			}
@@ -186,10 +186,6 @@ open class StudyIntroCollectionViewController: UIViewController, UICollectionVie
 		super.viewWillDisappear(animated)
 	}
 	
-	func dismissModal() {
-		dismiss(animated: true, completion: nil)
-	}
-	
 	
 	// MARK: - Collection View
 	
@@ -231,6 +227,14 @@ open class StudyIntroCollectionViewController: UIViewController, UICollectionVie
 		let html = item as! StudyIntroHTMLItem
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: type(of: html).cellReuseIdentifier, for: indexPath) as! StudyIntroHTMLCell
 		cell.item = html
+		cell.onPDFLinkTap = { url in
+			let pdf = PDFViewController()
+			pdf.startURL = url
+			pdf.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(StudyIntroCollectionViewController.dismissModal(_:)))
+			let navi = UINavigationController(rootViewController: pdf)
+			self.present(navi, animated: true)
+			return false
+		}
 		return cell
 	}
 	
@@ -251,6 +255,10 @@ open class StudyIntroCollectionViewController: UIViewController, UICollectionVie
 	*/
 	open class func bundledConsentPDFURL() -> URL? {
 		return Bundle.main.url(forResource: "Consent", withExtension: "pdf")
+	}
+	
+	public func dismissModal(_ sender: AnyObject?) {
+		dismiss(animated: nil != sender)
 	}
 }
 

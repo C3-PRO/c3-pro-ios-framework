@@ -122,6 +122,8 @@ open class StudyIntroHTMLCell: UICollectionViewCell, UIWebViewDelegate {
 	
 	@IBOutlet open var webView: UIWebView?
 	
+	open var onPDFLinkTap: ((URL) -> Bool)?
+	
 	open var item: StudyIntroHTMLItem? {
 		didSet {
 			setupCell(with: item)
@@ -137,6 +139,9 @@ open class StudyIntroHTMLCell: UICollectionViewCell, UIWebViewDelegate {
 	
 	open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
 		if .linkClicked == navigationType, let url = request.url {
+			if "file" == url.scheme && "pdf" == url.pathExtension, let exec = onPDFLinkTap {
+				return exec(url)
+			}
 			return !UIApplication.shared.openURL(url)
 		}
 		return true

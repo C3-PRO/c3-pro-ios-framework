@@ -27,7 +27,7 @@ This assumes you have a file `StudyOverview.json` with the proper structure in y
 
 ```swift
 func setupUI() {
-  let intro = try! StudyIntroCollectionViewController.fromStoryboard("StudyIntro")
+  let intro = try! StudyIntroCollectionViewController.fromStoryboard(named: "StudyIntro")
   intro.config = try! StudyIntroConfiguration(json: "StudyOverview")
   intro.onJoinStudy = { viewController in
     // Action to perform when user taps "Join Study"
@@ -58,15 +58,15 @@ func setupUI() {
     },
     {
       "title": "About this Study",
-      "filename": "Intro_about",
+      "filename": "Intro_about"
     },
     {
       "title": "How this Study works",
-      "filename": "Intro_howstuffworks",
+      "filename": "Intro_howstuffworks"
     },
     {
       "title": "Who is Eligible to Participate",
-      "filename": "Intro_eligibility",
+      "filename": "Intro_eligibility"
     }
   ]
 }
