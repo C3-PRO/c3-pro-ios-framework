@@ -350,12 +350,6 @@ extension ORKDateQuestionResult {
 //				dateTime.timeZone = tz			// TODO: reported NSDate is in UTC, convert to the given time zone
 //			}
 			answer.valueDateTime = dateTime
-		case "instant":
-			let instant = date.fhir_asInstant()
-//			if let tz = timeZone {
-//				instant.timeZone = tz
-//			}
-			answer.valueInstant = instant
 		default:
 			c3_warn("unknown date-time FHIR type “\(ofFHIRType!)”, treating as dateTime")
 			let dateTime = date.fhir_asDateTime()

@@ -73,7 +73,7 @@ open class DataQueue: Server {
 	
 	// MARK: - URL Session
 	
-	override open func performRequest<R: FHIRServerRequestHandler>(against path: String, handler: R, callback: @escaping ((FHIRServerResponse) -> Void)) {
+	override open func performRequest(against path: String, handler: FHIRRequestHandler, callback: @escaping ((FHIRServerResponse) -> Void)) {
 		if .POST == handler.method || .PUT == handler.method {
 			// Note: can NOT use a completion block with a background session: will crash, must use delegate
 			
@@ -88,7 +88,7 @@ open class DataQueue: Server {
 					if let error = error {
 						self.queueManager.enqueue(resourceInHandler: handler)
 						
-						let response = R.ResponseType.init(error: error)
+						let response = handler.response(response: nil, data: nil, error: error)
 						callback(response)
 					}
 					else {

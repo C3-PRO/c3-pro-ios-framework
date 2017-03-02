@@ -187,8 +187,8 @@ extension QuestionnaireItem {
 	- returns: A tuple of strings for title and text
 	*/
 	func c3_bestTitleAndText() -> (String?, String?) {
-		let cDisplay = concept?.filter() { return nil != $0.display }.map() { return $0.display!.localized }
-		let cCodes = concept?.filter() { return nil != $0.code }.map() { return $0.code!.string }		// TODO: can these be localized?
+		let cDisplay = code?.filter() { return nil != $0.display }.map() { return $0.display!.localized }
+		let cCodes = code?.filter() { return nil != $0.code }.map() { return $0.code!.string }		// TODO: can these be localized?
 		
 		var ttl = cDisplay?.first ?? cCodes?.first
 		var txt = text?.localized
@@ -277,7 +277,6 @@ extension QuestionnaireItem {
 			case .quantity:  callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: c3_numericAnswerUnit()), nil)
 			case .date:      callback(ORKAnswerFormat.dateAnswerFormat(), nil)
 			case .dateTime:  callback(ORKAnswerFormat.dateTime(), nil)
-			case .instant:   callback(ORKAnswerFormat.dateTime(), nil)
 			case .time:      callback(ORKAnswerFormat.timeOfDayAnswerFormat(), nil)
 			case .string:    callback(ORKAnswerFormat.textAnswerFormat(), nil)
 			case .url:       callback(ORKAnswerFormat.textAnswerFormat(), nil)

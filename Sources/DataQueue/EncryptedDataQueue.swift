@@ -101,14 +101,14 @@ open class EncryptedDataQueue: DataQueue {
 	
 	// MARK: - Requests
 	
-	override open func handlerForRequest(withMethod method: FHIRRequestMethod, resource: Resource?, headers: FHIRRequestHeaders?) -> FHIRServerRequestHandler? {
+	override open func handlerForRequest(withMethod method: FHIRRequestMethod, resource: Resource?) -> FHIRRequestHandler? {
 		if let resource = resource, nil == delegate || delegate!.encryptedDataQueue(self, wantsEncryptionForResource: resource, requestMethod: method) {
 			return EncryptedJSONRequestHandler(method, resource: resource, dataQueue: self)
 		}
-		return super.handlerForRequest(withMethod: method, resource: resource, headers: headers)
+		return super.handlerForRequest(withMethod: method, resource: resource)
 	}
 	
-	override open func absoluteURL(for path: String, handler: FHIRServerRequestHandler) -> URL? {
+	override open func absoluteURL(for path: String, handler: FHIRRequestHandler) -> URL? {
 		if handler is EncryptedJSONRequestHandler {
 			return URL(string: path, relativeTo: encryptedBaseURL)
 		}
@@ -122,7 +122,7 @@ A request handler for encrypted JSON data, to be used with `EncryptedDataQueue`.
 
 Its `prepareData()` method asks its dataQueue to encrypt the resource.
 */
-open class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler {
+open class EncryptedJSONRequestHandler: FHIRJSONRequestHandler {
 	
 	let dataQueue: EncryptedDataQueue
 	
@@ -133,9 +133,13 @@ open class EncryptedJSONRequestHandler: FHIRServerJSONRequestHandler {
 	- parameter resource: The resource to send with this request
 	- parameter dataQueue: The `EncryptedDataQueue` instance that's sending this request
 	*/
-	init(_ type: FHIRRequestMethod, resource: Resource?, dataQueue: EncryptedDataQueue) {
+	public init(_ type: FHIRRequestMethod, resource: Resource?, dataQueue: EncryptedDataQueue) {
 		self.dataQueue = dataQueue
 		super.init(type, resource: resource)
+	}
+	
+	public required init(_ method: FHIRRequestMethod, resource: Resource?) {
+		fatalError("init(_:resource:) cannot be used on an encrypted request handler")
 	}
 	
 	/** This implementation asks `dataQueue` to handle resource encryption by calling its `encryptedData()` method. */

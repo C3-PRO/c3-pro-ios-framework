@@ -154,7 +154,7 @@ class DataQueueManager {
 	}
 	
 	/** Convenience method for internal use; POST requests should be DataRequests so this should never fail. */
-	func enqueue(resourceInHandler handler: FHIRServerRequestHandler) {
+	func enqueue(resourceInHandler handler: FHIRRequestHandler) {
 		if let resource = handler.resource {
 			enqueue(resource: resource)
 		}

@@ -47,16 +47,15 @@ open class QueuedResource {
 	/**
 	If path is known, reads the data from file, interprets as JSON and instantiates the receiver's resource.
 	
-	- returns: True if the resource was successfully instantiated, false otherwise
+	- throws: If the resource was not successfully instantiated
 	*/
 	func readFromFile() throws {
 		let data = try Data(contentsOf: URL(fileURLWithPath: path), options: [])
 		let json = try JSONSerialization.jsonObject(with: data, options: []) as! FHIRJSON
-		resource = try Resource.instantiate(from: json, owner: nil)
-		if nil != resource {
-			return
-		}
-		throw FHIRError.resourceFailedToInstantiate(String(data: data, encoding: String.Encoding.utf8) ?? "No data")
+		
+		var context = FHIRInstantiationContext()
+		resource = Resource.instantiate(from: json, owner: nil, context: &context)
+		try context.validate()
 	}
 }
 
