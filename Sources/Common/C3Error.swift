@@ -83,6 +83,18 @@ public enum C3Error: Error, CustomStringConvertible {
 	case consentSectionTypeUnknownToResearchKit(String)
 	
 	
+	// MARK: User & Consent
+	
+	/// The schedule's file-format, or a date format string, is invalid.
+	case invalidScheduleFormat(String)
+	
+	/// No user has been enrolled at this time.
+	case noUserEnrolled
+	
+	/// This is a user without user id.
+	case userHasNoUserId
+	
+	
 	// MARK: Server
 	
 	/// No server is configured.
@@ -92,7 +104,7 @@ public enum C3Error: Error, CustomStringConvertible {
 	case dataQueueFlushHalted
 	
 	
-	// MARK: Encryption
+	// MARK: Encryption & JWT
 	
 	/// The given error occurred during encryption.
 	case encryptionFailedWithStatus(OSStatus)
@@ -105,6 +117,15 @@ public enum C3Error: Error, CustomStringConvertible {
 	
 	/// The X509 certificate could not be loaded for the given reason.
 	case encryptionX509CertificateNotLoaded(String)
+	
+	/// Some JWT data was refuted.
+	case jwtDataRefuted
+	
+	/// The JWT payload is missing its audience.
+	case jwtMissingAudience
+	
+	/// The JWT `aud` param is not a valid URL.
+	case jwtInvalidAudience(String)
 	
 	
 	// MARK: Services
@@ -196,6 +217,13 @@ public enum C3Error: Error, CustomStringConvertible {
 		case .consentSectionTypeUnknownToResearchKit(let type):
 			return "Unknown consent section type “\(type)”"
 		
+		case .invalidScheduleFormat(let str):
+			return "Schedule format is invalid".c3_localized + ":\n\n" + str
+		case .noUserEnrolled:
+			return "Not enrolled in the study yet".c3_localized
+		case .userHasNoUserId:
+			return "The user does not have a userId".c3_localized
+		
 		case .serverNotConfigured:
 			return "No server has been configured"
 		case .dataQueueFlushHalted:
@@ -209,6 +237,12 @@ public enum C3Error: Error, CustomStringConvertible {
 			return "Failed to read bundled X509 certificate «\(file).crt»"
 		case .encryptionX509CertificateNotLoaded(let message):
 			return message
+		case .jwtDataRefuted:
+			return "You refuted some of the information contained in the code".c3_localized
+		case .jwtMissingAudience:
+			return "The JWT is missing its audience (`aud` parameter)".c3_localized
+		case .jwtInvalidAudience(let str):
+			return "The JWT `aud` param's value is “{{aud}}”, which is not a valid URL".c3_localized.replacingOccurrences(of: "{{aud}}", with: str)
 		
 		case .locationServicesDisabled:
 			return "Location services are disabled or have been restricted"

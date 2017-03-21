@@ -189,29 +189,3 @@ class BundledFileServer: Server {
 	}
 }
 
-
-class FHIRServerResourceResponse: FHIRServerDataResponse {
-	
-	let resource: Resource
-	
-	init(resource: Resource) {
-		self.resource = resource
-		super.init(response: URLResponse(), data: nil, error: nil)
-	}
-	
-	required init(response: URLResponse, data: Data?, error: Error?) {
-		fatalError("Cannot use init(response:data:error:)")
-	}
-	
-	required init(error: Error) {
-		fatalError("Cannot use init(error:)")
-	}
-	
-	override func responseResource<T : Resource>(ofType: T.Type) -> T? {
-		guard let resource = resource as? T else {
-			return nil
-		}
-		return resource
-	}
-}
-

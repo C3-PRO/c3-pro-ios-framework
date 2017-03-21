@@ -59,6 +59,17 @@
 		EEC5A85E1D5CB19E00753852 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EEC5A85D1D5CB19E00753852 /* libsqlite3.tbd */; };
 		EEC6DC2B1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC6DC2A1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift */; };
 		EEC6DC3D1C4D4F0200A42E87 /* C3PRO.strings in Resources */ = {isa = PBXBuildFile; fileRef = EEC6DC3F1C4D4F0200A42E87 /* C3PRO.strings */; };
+		EED503581E80230500E29A79 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED503481E80230500E29A79 /* NotificationManager.swift */; };
+		EED5035C1E80230500E29A79 /* ProfileLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED5034D1E80230500E29A79 /* ProfileLink.swift */; };
+		EED5035D1E80230500E29A79 /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED5034E1E80230500E29A79 /* ProfileManager.swift */; };
+		EED5035E1E80230500E29A79 /* ProfileManagerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED5034F1E80230500E29A79 /* ProfileManagerSettings.swift */; };
+		EED5035F1E80230500E29A79 /* ProfilePersister.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED503501E80230500E29A79 /* ProfilePersister.swift */; };
+		EED503611E80230500E29A79 /* ProfileTaskHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED503521E80230500E29A79 /* ProfileTaskHandler.swift */; };
+		EED503621E80230500E29A79 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED503531E80230500E29A79 /* User.swift */; };
+		EED503631E80230500E29A79 /* UserActivityTaskHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED503541E80230500E29A79 /* UserActivityTaskHandler.swift */; };
+		EED503641E80230500E29A79 /* UserTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED503551E80230500E29A79 /* UserTask.swift */; };
+		EED503651E80230500E29A79 /* UserTaskPreparer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED503561E80230500E29A79 /* UserTaskPreparer.swift */; };
+		EED503661E80230500E29A79 /* UserTaskSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED503571E80230500E29A79 /* UserTaskSetting.swift */; };
 		EEE091FE1D66105C00F1C829 /* EncryptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE091FD1D66105C00F1C829 /* EncryptionTests.swift */; };
 		EEE60CD31C68999E00F381B7 /* ConditionalStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE60CD21C68999E00F381B7 /* ConditionalStep.swift */; };
 		EEEA7F481BD61EA20089BF85 /* StudyIntroCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEA7F471BD61EA20089BF85 /* StudyIntroCollectionViewController.swift */; };
@@ -160,6 +171,19 @@
 		EEC5A85D1D5CB19E00753852 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		EEC6DC2A1C4D3CDD00A42E87 /* SystemPermissionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemPermissionTableViewController.swift; sourceTree = "<group>"; };
 		EEC6DC3E1C4D4F0200A42E87 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/C3PRO.strings; sourceTree = "<group>"; };
+		EED503481E80230500E29A79 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		EED5034D1E80230500E29A79 /* ProfileLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileLink.swift; sourceTree = "<group>"; };
+		EED5034E1E80230500E29A79 /* ProfileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileManager.swift; sourceTree = "<group>"; };
+		EED5034F1E80230500E29A79 /* ProfileManagerSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileManagerSettings.swift; sourceTree = "<group>"; };
+		EED503501E80230500E29A79 /* ProfilePersister.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfilePersister.swift; sourceTree = "<group>"; };
+		EED503521E80230500E29A79 /* ProfileTaskHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTaskHandler.swift; sourceTree = "<group>"; };
+		EED503531E80230500E29A79 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		EED503541E80230500E29A79 /* UserActivityTaskHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserActivityTaskHandler.swift; sourceTree = "<group>"; };
+		EED503551E80230500E29A79 /* UserTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTask.swift; sourceTree = "<group>"; };
+		EED503561E80230500E29A79 /* UserTaskPreparer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTaskPreparer.swift; sourceTree = "<group>"; };
+		EED503571E80230500E29A79 /* UserTaskSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTaskSetting.swift; sourceTree = "<group>"; };
+		EED503671E80235700E29A79 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EED503681E80236100E29A79 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EEE091FD1D66105C00F1C829 /* EncryptionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncryptionTests.swift; sourceTree = "<group>"; };
 		EEE60CD21C68999E00F381B7 /* ConditionalStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionalStep.swift; sourceTree = "<group>"; };
 		EEEA7F451BD61E800089BF85 /* StudyIntro.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = StudyIntro.storyboard; sourceTree = "<group>"; };
@@ -328,6 +352,35 @@
 			path = Sources/Encryption;
 			sourceTree = "<group>";
 		};
+		EED503471E80230500E29A79 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				EED503671E80235700E29A79 /* README.md */,
+				EED503481E80230500E29A79 /* NotificationManager.swift */,
+			);
+			name = Notifications;
+			path = Sources/Notifications;
+			sourceTree = "<group>";
+		};
+		EED5034A1E80230500E29A79 /* Profile & User, Tasks */ = {
+			isa = PBXGroup;
+			children = (
+				EED503681E80236100E29A79 /* README.md */,
+				EED5034E1E80230500E29A79 /* ProfileManager.swift */,
+				EED5034F1E80230500E29A79 /* ProfileManagerSettings.swift */,
+				EED503501E80230500E29A79 /* ProfilePersister.swift */,
+				EED5034D1E80230500E29A79 /* ProfileLink.swift */,
+				EED503531E80230500E29A79 /* User.swift */,
+				EED503551E80230500E29A79 /* UserTask.swift */,
+				EED503571E80230500E29A79 /* UserTaskSetting.swift */,
+				EED503561E80230500E29A79 /* UserTaskPreparer.swift */,
+				EED503521E80230500E29A79 /* ProfileTaskHandler.swift */,
+				EED503541E80230500E29A79 /* UserActivityTaskHandler.swift */,
+			);
+			name = "Profile & User, Tasks";
+			path = Sources/ProfileAndUser;
+			sourceTree = "<group>";
+		};
 		EEEA7F3D1BD61E4B0089BF85 /* StudyIntro */ = {
 			isa = PBXGroup;
 			children = (
@@ -374,8 +427,10 @@
 				EE519BA51B0CD69B00036B96 /* Consent & Eligibility */,
 				EEFA84BD1AE5C18B00E61006 /* Questionnaire */,
 				EE5F4F6A1B174B6B00DB38B3 /* DataQueue */,
+				EED5034A1E80230500E29A79 /* Profile & User, Tasks */,
 				EE1AB3B41C23283100711108 /* HealthKit & CoreMotion */,
 				EE86C47A1C490BB000B7D486 /* SystemServices */,
+				EED503471E80230500E29A79 /* Notifications */,
 				EEC3C9531B83D3460096D5BE /* Encryption */,
 				EEB6DD211B5D3FA3006A3B9F /* DeIdentifier */,
 				EEEA7FC11BD784B20089BF85 /* ViewController & Views */,
@@ -575,11 +630,15 @@
 				EEC3C95D1B83D3C80096D5BE /* RSAUtility.swift in Sources */,
 				EE851A651BD90DBC007EC6A9 /* BorderedButton.swift in Sources */,
 				EE2D8DE51B87764200D044B4 /* EncryptedDataQueue.swift in Sources */,
+				EED503661E80230500E29A79 /* UserTaskSetting.swift in Sources */,
+				EED503641E80230500E29A79 /* UserTask.swift in Sources */,
 				EEEA7F4C1BD627570089BF85 /* StudyIntroItem.swift in Sources */,
 				EEB6DD241B5D3FEC006A3B9F /* Geocoder.swift in Sources */,
 				EEEA7F4A1BD624490089BF85 /* StudyIntroCollectionViewCell.swift in Sources */,
 				EEF458561B3DC1230076CE76 /* ORKTaskResult+FHIR.swift in Sources */,
+				EED5035C1E80230500E29A79 /* ProfileLink.swift in Sources */,
 				EEEA7FD01BD785360089BF85 /* Foundation+C3-PRO.swift in Sources */,
+				EED503621E80230500E29A79 /* User.swift in Sources */,
 				EE8901101B7DEE8200F1EDBF /* ConsentTask.swift in Sources */,
 				EEC5A81F1D5CAF7200753852 /* ActivityCollector.swift in Sources */,
 				EE86C4721C490B7400B7D486 /* SystemServicePermissioner.swift in Sources */,
@@ -587,24 +646,31 @@
 				EEEC78751DEC31E200E7020C /* HealthKit+Convenience.swift in Sources */,
 				EE7A43931B0D08DE00B30D17 /* ConsentController.swift in Sources */,
 				EEC5A8261D5CAF7200753852 /* CoreMotionReporter.swift in Sources */,
+				EED503611E80230500E29A79 /* ProfileTaskHandler.swift in Sources */,
 				EEC5A8221D5CAF7200753852 /* ActivityReportPeriod.swift in Sources */,
 				EEEA7FCF1BD785360089BF85 /* FHIR+C3-PRO.swift in Sources */,
 				EEF1B0C01B0CF4BB0061926E /* QuestionnaireController.swift in Sources */,
 				EE851A551BD90984007EC6A9 /* EligibilityStatusViewController.swift in Sources */,
 				EEEA7FCB1BD784FA0089BF85 /* WebViewController.swift in Sources */,
+				EED5035E1E80230500E29A79 /* ProfileManagerSettings.swift in Sources */,
 				EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */,
 				EEC5A8251D5CAF7200753852 /* CoreMotionActivitySum.swift in Sources */,
+				EED5035F1E80230500E29A79 /* ProfilePersister.swift in Sources */,
 				EE86C4801C49327D00B7D486 /* SystemPermissionStepViewController.swift in Sources */,
 				EEEEAB891BDA97EE001F8B5C /* Group+C3-PRO.swift in Sources */,
 				EEFA84DC1AE5C25500E61006 /* QuestionnaireItemPromise.swift in Sources */,
+				EED5035D1E80230500E29A79 /* ProfileManager.swift in Sources */,
 				EE1AB3B71C23283100711108 /* HKHealthStore+Sampling.swift in Sources */,
+				EED503631E80230500E29A79 /* UserActivityTaskHandler.swift in Sources */,
 				EE86C48F1C4AC1E500B7D486 /* String+C3-PRO.swift in Sources */,
 				EE5F4F6E1B17A84A00DB38B3 /* QueuedResource.swift in Sources */,
 				EEC5A8281D5CAF7200753852 /* HealthKitReporter.swift in Sources */,
 				EE86C47C1C490C4B00B7D486 /* SystemService.swift in Sources */,
 				EEC5A8241D5CAF7200753852 /* CoreMotionActivityInterpreter.swift in Sources */,
+				EED503651E80230500E29A79 /* UserTaskPreparer.swift in Sources */,
 				EEC3C95F1B83DA650096D5BE /* AESUtility.swift in Sources */,
 				EEEA7F671BD68DFE0089BF85 /* StudyIntroConfiguration.swift in Sources */,
+				EED503581E80230500E29A79 /* NotificationManager.swift in Sources */,
 				EEEA7FD31BD8D9890089BF85 /* EligibilityCheckViewController.swift in Sources */,
 				EEEA7F691BD68E800089BF85 /* C3Error.swift in Sources */,
 				EE519BA31B0CD44300036B96 /* Questionnaire+C3-PRO.swift in Sources */,

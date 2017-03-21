@@ -34,7 +34,7 @@
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Study Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="vLT-BZ-JQv">
                                         <rect key="frame" x="16" y="70" width="288" height="21"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3Pi-hw-ceo">
@@ -88,7 +88,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="320" height="322"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4lb-aC-vR0">
-                                                                    <rect key="frame" x="20" y="16" width="280" height="275"/>
+                                                                    <rect key="frame" x="20" y="18" width="280" height="275"/>
                                                                     <subviews>
                                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6Xz-74-tTh">
                                                                             <rect key="frame" x="103" y="0.0" width="75" height="75"/>
@@ -118,7 +118,7 @@
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="42" id="Vau-lP-siI"/>
                                                                             </constraints>
-                                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                             <variation key="default">
@@ -178,12 +178,12 @@
                                                                     </variation>
                                                                 </view>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" text="Swipe to learn more" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kbZ-XP-b9S">
-                                                                    <rect key="frame" x="92" y="299" width="137" height="18"/>
+                                                                    <rect key="frame" x="100.5" y="301" width="120.5" height="16"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="21" id="N9S-af-V6X"/>
                                                                         <constraint firstAttribute="width" constant="187" id="hQ9-FJ-HF2"/>
                                                                     </constraints>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                                     <color key="textColor" red="0.46274509800000002" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                     <variation key="default">
@@ -377,7 +377,7 @@
                                             <constraint firstAttribute="height" constant="44" id="Dvu-zv-PUf"/>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="144" id="NTO-1H-xST"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                         <state key="normal" title="Join Study"/>
                                         <connections>
                                             <action selector="joinStudy" destination="7Xo-de-aEI" eventType="touchUpInside" id="2SX-YG-jLh"/>

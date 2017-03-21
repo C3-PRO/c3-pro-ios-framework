@@ -43,6 +43,8 @@
 /* No as in no-i-dont-meet-this-requirement */
 "No" = "No";
 
+"Not enrolled in the study yet" = "Not enrolled in the study yet";
+
 /* Sex not set */
 "Not Set" = "Not Set";
 "Notifications" = "Notifications";
@@ -75,29 +77,41 @@
 /* How to re-enable HealthKit */
 "Please go to the Settings app ➔ “Privacy” ➔ “Health” ➔ “{{appName}}” to re-enable" = "Please go to the Settings app ➔ “Privacy” ➔ “Health” ➔ “{{appName}}” to re-enable";
 
+"Remind in 1 hour" = "Remind in 1 hour";
+"Remind me tomorrow" = "Remind me tomorrow";
+"Schedule format is invalid" = "Schedule format is invalid";
+
 /* Start Consent button title */
 "Start Consent" = "Start Consent";
 
 "Start Eligibility" = "Start Eligibility";
+"Survey" = "Survey";
 "Swipe to learn more" = "Swipe to learn more";
 "Tap the button below to begin the consent process" = "Tap the button below to begin the consent process";
 "Tap the button below to begin the eligibility process" = "Tap the button below to begin the eligibility process";
 "Thank you for your interest!\nUnfortunately, you are not eligible to join this study at this time." = "Thank you for your interest!\nUnfortunately, you are not eligible to join this study at this time.";
+"The JWT `aud` param's value is “{{aud}}”, which is not a valid URL" = "The JWT `aud` param's value is “{{aud}}”, which is not a valid URL";
+"The JWT is missing its audience (`aud` parameter)" = "The JWT is missing its audience (`aud` parameter)";
 
 /* Default team name during consenting */
 "the research team" = "the research team";
+
+"The user does not have a userId" = "The user does not have a userId";
 
 /* Button title */
 "Try Again" = "Try Again";
 
 /* Why CoreMotion wants to be used */
 "Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease." = "Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease.";
+
+"We'd like you to complete another survey" = "We'd like you to complete another survey";
 "Week\nBfor" = "Week\nBfor";
 
 /* Yes as in yes-i-meet-this-requirement */
 "Yes" = "Yes";
 
 "You are eligible to join the study" = "You are eligible to join the study";
+"You refuted some of the information contained in the code" = "You refuted some of the information contained in the code";
 
 /* Text shown before prompting to create a passcode */
 "You will now be asked to create a passcode.\n\nThis protects your data from unauthorized access should you hand your phone to a friend." = "You will now be asked to create a passcode.\n\nThis protects your data from unauthorized access should you hand your phone to a friend.";

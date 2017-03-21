@@ -38,7 +38,7 @@ See the [releases](https://github.com/C3-PRO/c3-pro-ios-framework/releases) tab 
 See [CHANGELOG.md](./CHANGELOG.md) for updates.
 This framework combines several versioned technologies, here's an overview over what's included:
 
-   Version |   Swift | ResearchKit |  FHIR |
+   Version |   Swift | ResearchKit |  FHIR | &nbsp;
 -----------|---------|-------------|-------|----------------
    **2.0** |     3.0 |         1.x | 1.7.0 | STU-3
    **1.9** |     3.0 |         1.4 | 1.6.0 | STU-3 Ballot
@@ -75,6 +75,12 @@ Also serves as return format of **activity data** collected on the phone.
 `DataQueue` is a FHIR server implementation used to move FHIR resources, created on device, to a FHIR server, without the need for user interaction nor -confirmation.  
 [➔ DataQueue](./Sources/DataQueue/)
 
+### ProfileManager, Users & Tasks
+
+A collection of classes and protocols that make it easier to enroll, link and withdraw users from a research app.
+`DataQueue` is a FHIR server implementation used to move FHIR resources, created on device, to a FHIR server, without the need for user interaction nor -confirmation.  
+[➔ Profile & User](./Sources/ProfileAndUser/)
+
 ### HealthKit & CoreMotion (Activity Data)
 
 `ActivityReporter` implementations for _HealthKit_ and _CoreMotion_.
@@ -86,7 +92,8 @@ Extensions to _HealthKit_ classes to easily query for samples and to represent q
 
 Facilities to request permission to send notifications, access HealthKit and others.
 These can be integrated into the Consent flow.  
-[➔ SystemServices](./Sources/SystemServices)
+[➔ SystemServices](./Sources/SystemServices)  
+[➔ Notifications](./Sources/Notifications)
 
 ### Encryption
 

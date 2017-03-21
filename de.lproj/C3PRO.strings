@@ -6,29 +6,16 @@
   Copyright © 2016 Boston Children's Hospital. All rights reserved.
 */
 
-/* Why the microphone wants to be used */
 "Access to microphone is required for your Voice Recording Activity." = "Für die Tonaufnahme wird Zugriff auf das Mikrofon benötigt.";
-
-/* Button to enable certain system services */
 "Allow" = "Erlauben";
-
-/* When the app's actual name isn't known */
 "App Name" = "App-Name";
-
 "By agreeing you confirm that you read the consent and that you wish to take part in this research study." = "Durch Zustimmen bestätigen Sie, dass die die Einwilligungserklärung gelesen und verstanden haben und gerne an der Studie teilnehmen möchten.";
 "Consent" = "Einwilligung";
 "Eligibility" = "Auswahlkriterien";
-
-/* Why notifications want to be sent */
 "Enabling notifications allows the app to show reminders." = "Erlaubt der App, Erinnerungen anzuzeigen.";
 "Female" = "Frau";
-
-/* Disabled button when permissions were granted */
 "Granted" = "Erlaubt";
-
 "HealthKit" = "HealthKit";
-
-/* Why HealthKit wants to be used */
 "Individually specify which general health information the app may read from and write to HealthKit" = "Geben Sie genau an, welche generellen medizinischen Daten die App aus HealthKit lesen darf";
 "Last\nWeek" = "Lzt\nWo";
 "Let's see if you may take part in this study" = "Schauen wir, ob Sie die Auswahlkriterien für diese Studie erfüllen";
@@ -36,72 +23,47 @@
 "Male" = "Mann";
 "Microphone" = "Mikrofon";
 "Motion Activity" = "Aktivitätsdaten";
-
-/* Next step */
 "Next" = "Nächste";
-
-/* No as in no-i-dont-meet-this-requirement */
 "No" = "Nein";
-
-/* Sex not set */
+"Not enrolled in the study yet" = "Noch nicht angemeldet";
 "Not Set" = "Nicht angegeben";
 "Notifications" = "Erinnerungen";
-
-/* Alert button title */
 "OK" = "OK";
-
-/* Button to open settings */
 "Open Settings App" = "Einstellungen App öffnen";
-
-/* Other sex */
 "Other" = "Anderes";
-
 "Participant" = "Teilnehmer";
 "Passcode" = "PIN";
 "Permissions" = "Berechtigungen";
-
-/* How to re-enable the microphone */
-"Please go to the Settings app ➔ “{{appName}}” and turn “Microphone” on" = "Gehen Sie in der Einstellungen App auf “{{appName}}” und aktivieren Sie “Mikrofon”";
-
-/* How to re-enable CoreMotion */
-"Please go to the Settings app ➔ “{{appName}}” and turn “Motion & Fitness” on" = "Gehen Sie in der Einstellungen App auf “{{appName}}” und aktivieren Sie “Bewegung & Fitness”";
-
-/* How to re-enable Geo-location */
-"Please go to the Settings app ➔ “Privacy” ➔ “Location Services” and turn on the service for “{{appName}}”" = "Gehen Sie in der Einstellungen App auf “Privatsphäre” ➔ “Ortungsdienste” und aktivieren Sie Ortungsdienste für “{{appName}}”";
-
-/* How to re-enable Local Notifications */
-"Please go to the Settings app ➔ “{{appName}}” ➔ “Notifications” and turn “Allow Notifications” on" = "Gehen Sie in der Einstellungen App auf “{{appName}}” ➔ “Erinnerungen” und aktivieren Sie “Erinnerungen Erlauben”";
-
-/* How to re-enable HealthKit */
 "Please go to the Settings app ➔ “Privacy” ➔ “Health” ➔ “{{appName}}” to re-enable" = "Gehen Sie in der Einstellungen App auf “Privatsphäre” ➔ “Gesundheit” ➔ “{{appName}}”, um Zugriff zu erlauben";
-
-/* Start Consent button title */
+"Please go to the Settings app ➔ “Privacy” ➔ “Location Services” and turn on the service for “{{appName}}”" = "Gehen Sie in der Einstellungen App auf “Privatsphäre” ➔ “Ortungsdienste” und aktivieren Sie Ortungsdienste für “{{appName}}”";
+"Please go to the Settings app ➔ “{{appName}}” and turn “Microphone” on" = "Gehen Sie in der Einstellungen App auf “{{appName}}” und aktivieren Sie “Mikrofon”";
+"Please go to the Settings app ➔ “{{appName}}” and turn “Motion & Fitness” on" = "Gehen Sie in der Einstellungen App auf “{{appName}}” und aktivieren Sie “Bewegung & Fitness”";
+"Please go to the Settings app ➔ “{{appName}}” ➔ “Notifications” and turn “Allow Notifications” on" = "Gehen Sie in der Einstellungen App auf “{{appName}}” ➔ “Erinnerungen” und aktivieren Sie “Erinnerungen Erlauben”";
+"Remind in 1 hour" = "In 1 Stunde erinnern";
+"Remind me tomorrow" = "Morgen erinnern";
+"Schedule format is invalid" = "Das Format des Zeitplans ist ungültig";
 "Start Consent" = "Einwilligung Beginnen";
-
 "Start Eligibility" = "Auswahlkriterien bestätigen";
+"Survey" = "Fragebogen";
 "Swipe to learn more" = "Wischen, um mehr zu sehen";
 "Tap the button below to begin the consent process" = "Tappen Sie den Knopf unten, um die Einwilligung zu beginnen";
 "Tap the button below to begin the eligibility process" = "Tappen Sie den Knopf unten, um die Auswahlkriterien zu bestätigen";
 "Thank you for your interest!\nUnfortunately, you are not eligible to join this study at this time." = "Vielen Dank für Ihr Interesse\nLeider sind Sie zum jetzigen Zeitpunkt nicht teilnahmeberechtigt.";
-
-/* Default team name during consenting */
+"The JWT `aud` param's value is “{{aud}}”, which is not a valid URL" = "Im JWT ist der `aud` Parameter “{{aud}}” – dies ist keine gültige URL";
+"The JWT is missing its audience (`aud` parameter)" = "Im JWT fehlt die “audience” (`aud` Parameter)";
 "the research team" = "das Forscherteam";
-
-/* Button title */
+"The user does not have a userId" = "Der User hat keine userId";
 "Try Again" = "Erneut Versuchen";
-
-/* Why CoreMotion wants to be used */
+"Unknown" = "Unbekannt";
 "Using the motion co-processor allows the app to determine your activity, helping the study to better understand how activity level may influence disease." = "Durch Zugriff auf den “Motion Co-Prozessor” kann die App Ihre Aktivität bestimmen, woduch ein möglicher Einfluss der körperlichen Aktivität auf den Krankheitsverlauf besser beurteilt werden kann.";
+"We'd like you to complete another survey" = "Bitte beantworten Sie einen weiteren Fragebogen";
 "Week\nBfor" = "Wo\nDavor";
-
-/* Yes as in yes-i-meet-this-requirement */
 "Yes" = "Ja";
-
 "You are eligible to join the study" = "Sie können an der Studie teilnehmen";
-
-/* Text shown before prompting to create a passcode */
+"You refuted some of the information contained in the code" = "Sie gaben an, gewisse Angaben im Code seien nicht korrekt";
 "You will now be asked to create a passcode.\n\nThis protects your data from unauthorized access should you hand your phone to a friend." = "Sie werden nun gebeten, einen PIN zu erstellen.\n\nDies schützt Ihre Daten vor unbefugtem Zugriff, zum Beispiel wenn Sie Ihr Telefon einer Freundin ausleihen.";
-
-/* Text shown before prompting to enable app permissions */
 "You will now be asked to grant the app access to certain system features. This allows us to show reminders and read health data from HealthKit, amongst others." = "Sie werden nun gebeten, der App Zugriff auf bestimmte System-Komponenten zu erlauben. Dies erlaubt es unter anderem, Erinnerungen anzugeigen und Daten aus HealthKit auszulesen.";
-
+"∅" = "∅";
+"♀" = "♀";
+"♂" = "♂";
+"⚧" = "⚧";

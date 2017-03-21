@@ -7,13 +7,16 @@ import re
 import sys
 import glob
 
+# the reference language - 1st argument, defaults to "en"
+REFERENCE = sys.argv[1] if len(sys.argv) > 1 else 'en'
+REFERENCE_FILE = '{}.lproj/C3PRO.strings'.format(REFERENCE)
+
 # the 1st group must capture the actual string
 #PATTERN = re.compile(r'"((([^"])|(\\"))+?)".c3_localized')
 # TODO: how to zip past '\"'?
 PATTERN = re.compile(r'"([^"]+?)".c3_localized')
 # TODO: extract the comments if this form is used: .c3_localized("Start Consent button title")
 
-REFERENCE_FILE = 'en.lproj/C3PRO.strings'
 
 def parse_into(filepath, into):
 	with open(filepath, 'r') as handle:
