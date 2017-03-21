@@ -13,3 +13,6 @@
 [submodule "examples"]
 	path = examples
 	url = https://github.com/C3-PRO/c3-pro-sample-data.git
+[submodule "JSONWebToken"]
+	path = JSONWebToken
+	url = https://github.com/kylef/JSONWebToken.swift

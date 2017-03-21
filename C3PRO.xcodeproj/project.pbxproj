@@ -17,6 +17,7 @@
 		EE2A9D801CE61F2500FB2B4F /* ValueSet_SF36.json in Resources */ = {isa = PBXBuildFile; fileRef = EE2A9D7D1CE61F2500FB2B4F /* ValueSet_SF36.json */; };
 		EE2D8DE51B87764200D044B4 /* EncryptedDataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */; };
 		EE3086C31D9AFBA500D3910B /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE3086C21D9AFBA500D3910B /* SQLite.framework */; };
+		EE36D8281E8160E6008FE8BD /* JWT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE36D8271E8160E6008FE8BD /* JWT.framework */; };
 		EE3813FE1D75A643001EFC49 /* QuestionnaireResponse in Resources */ = {isa = PBXBuildFile; fileRef = EE9560AA1D645B4B0069D49B /* QuestionnaireResponse */; };
 		EE3813FF1D75A673001EFC49 /* public.crt in Resources */ = {isa = PBXBuildFile; fileRef = EE3813FC1D75A3D8001EFC49 /* public.crt */; };
 		EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */; };
@@ -114,6 +115,7 @@
 		EE2A9D7D1CE61F2500FB2B4F /* ValueSet_SF36.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ValueSet_SF36.json; sourceTree = "<group>"; };
 		EE2D8DE41B87764200D044B4 /* EncryptedDataQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncryptedDataQueue.swift; sourceTree = "<group>"; };
 		EE3086C21D9AFBA500D3910B /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = "SQLiteSwift/build/Debug-iphoneos/SQLite.framework"; sourceTree = "<group>"; };
+		EE36D8271E8160E6008FE8BD /* JWT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JWT.framework; path = "JSONWebToken/build/Debug-iphoneos/JWT.framework"; sourceTree = "<group>"; };
 		EE3813FB1D75A35A001EFC49 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		EE3813FC1D75A3D8001EFC49 /* public.crt */ = {isa = PBXFileReference; lastKnownFileType = text; name = public.crt; path = enc/public.crt; sourceTree = "<group>"; };
 		EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueueManager.swift; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 				EEB917AC1D4B9F820077D257 /* CryptoSwift.framework in Frameworks */,
 				EEB917AE1D4B9F820077D257 /* SMART.framework in Frameworks */,
 				EEB917AD1D4B9F820077D257 /* ResearchKit.framework in Frameworks */,
+				EE36D8281E8160E6008FE8BD /* JWT.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,6 +335,7 @@
 		EEB917A81D4B9F810077D257 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EE36D8271E8160E6008FE8BD /* JWT.framework */,
 				EE3086C21D9AFBA500D3910B /* SQLite.framework */,
 				EEC5A85D1D5CB19E00753852 /* libsqlite3.tbd */,
 				EEB917A91D4B9F820077D257 /* CryptoSwift.framework */,

@@ -14,7 +14,7 @@ Put this in your `Cartfile`, then run `carthage update --platform "iOS"`:
 github "C3-PRO/c3-pro-ios-framework.git" ~> 1.8
 ```
 
-Check the matrix above to see which version you should be using.
+Check the matrix in the README to see which version you should be using.
 Now, on your application targets’ “Build Phases” settings tab, click the “+” icon and choose “New Run Script Phase”.
 Create a Run Script in which you specify your shell (ex: bin/sh), add the following contents to the script area below the shell:
 
@@ -26,6 +26,7 @@ $(SRCROOT)/Carthage/Build/iOS/ResearchKit/ResearchKit.framework
 $(SRCROOT)/Carthage/Build/iOS/Swift-SMART/SwiftSMART.framework
 $(SRCROOT)/Carthage/Build/iOS/CryptoSwift/CryptoSwift.framework
 $(SRCROOT)/Carthage/Build/iOS/SQLiteSwift/SQLite.framework
+$(SRCROOT)/Carthage/Build/iOS/JSONWebToken.swift/JWT.framework
 ```
 
 Make sure you drag & drop these frameworks into the “Embedded Binaries” in the “General” settings tab of your app the first time you set up Carthage.
@@ -57,6 +58,7 @@ Select **all of the following project files** and make sure they appear nested i
 - `c3-pro-ios-framework/Swift-SMART/SwiftSMART.xcodeproj`
 - `c3-pro-ios-framework/CryptoSwift/CryptoSwift.xcodeproj`
 - `c3-pro-ios-framework/SQLiteSwift/SQLite.xcodeproj`
+- `c3-pro-ios-framework/JSONWebToken/JWT.xcodeproj`
 
 ![Add Files](./assets/install-step-2b.png)
 
@@ -70,12 +72,13 @@ Click on the <key>+</key> button and add all of the following libraries:
 - ResearchKit.framework
 - CryptoSwift.framework
 - SQLite.framework
+- JWT.framework
 
 ![Embed](./assets/install-step-3.png)
 
 #### 4. Add Target Dependencies
 
-Add all embedded libraries to your _“Target Dependencies”_ so they get build whenever you build your app.
+Add all embedded libraries to your _“Target Dependencies”_ so they get built whenever you build your app.
 Still in the _“General”_ tab scroll up to _“Target Dependencies”_.
 Click on the <key>+</key> button and add:
 
@@ -84,6 +87,7 @@ Click on the <key>+</key> button and add:
 - ResearchKit
 - CryptoSwift
 - SQLite
+- JWT
 
 ![Add Dependencies](./assets/install-step-4.png)
 

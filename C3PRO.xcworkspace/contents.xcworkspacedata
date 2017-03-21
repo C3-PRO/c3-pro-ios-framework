@@ -16,4 +16,7 @@
    <FileRef
       location = "group:SQLiteSwift/SQLite.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:JSONWebToken/JWT.xcodeproj">
+   </FileRef>
 </Workspace>

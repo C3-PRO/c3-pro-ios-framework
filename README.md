@@ -40,7 +40,7 @@ This framework combines several versioned technologies, here's an overview over 
 
    Version |   Swift | ResearchKit |  FHIR | &nbsp;
 -----------|---------|-------------|-------|----------------
-   **2.0** |     3.0 |         1.x | 1.7.0 | STU-3
+   **2.0** |     3.0 |         1.4 | 3.0.0 | STU-3
    **1.9** |     3.0 |         1.4 | 1.6.0 | STU-3 Ballot
    **1.8** |     3.0 |         1.4 | 1.0.2 | DSTU-2
    **1.2** |     2.2 |         1.3 | 1.4.0 | _not supported_
@@ -119,10 +119,12 @@ License
 -------
 
 This work is [Apache 2](./LICENSE.txt) licensed.
-Be sure to take a look at the [NOTICE.txt](./NOTICE.txt) file, and don't forget to also add the licensing information of the two submodules somewhere in your product:
+Be sure to take a look at the [NOTICE.txt](./NOTICE.txt) file, and don't forget to also add the licensing information of the submodules somewhere in your product:
 
 - [ResearchKit](./ResearchKit/LICENSE)
 - [CryptoSwift](./CryptoSwift/LICENSE)
+- [SQLiteSwift](./SQLiteSwift/LICENSE.txt)
+- [JSONWebToken.swift](./JSONWebToken/LICENSE)
 
 
 [C3-PRO]: http://c3-pro.org

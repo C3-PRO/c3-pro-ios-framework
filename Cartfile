@@ -8,4 +8,7 @@ github "smart-on-fhir/Swift-SMART" == 2.8.1
 github "krzyzanowskim/CryptoSwift" ~> 0.6.0
 
 # require SQLite.swift
-github "p2/SQLite.swift" "hotfix/insert-or-ignore"
+github "stephencelis/SQLite.swift" ~> 0.11.2
+
+# require JSONWebToken.swift
+github "kylef/JSONWebToken.swift" ~> 2.1.0
