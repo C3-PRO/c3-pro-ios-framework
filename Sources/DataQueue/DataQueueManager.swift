@@ -142,10 +142,13 @@ class DataQueueManager {
 		seq += 1
 		
 		// store new resoure to queue
-		let url = URL(fileURLWithPath: queueDirectory).appendingPathComponent(fileName(for: seq))
+		var url = URL(fileURLWithPath: queueDirectory).appendingPathComponent(fileName(for: seq))
 		do {
 			let data = try JSONSerialization.data(withJSONObject: resource.asJSON(), options: [])
 			try data.write(to: url, options: fileProtection)
+			var skipBackup = URLResourceValues()
+			skipBackup.isExcludedFromBackup = true
+			try url.setResourceValues(skipBackup)
 			logger?.debug("C3-PRO", msg: "Enqueued resource at \(url.path)")
 		}
 		catch let error {

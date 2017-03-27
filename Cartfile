@@ -1,11 +1,11 @@
 # require ResearchKit
-github "ResearchKit/ResearchKit" "master"
+github "ResearchKit/ResearchKit" ~> 1.4.1
 
 # require SMART
-github "smart-on-fhir/Swift-SMART" == 2.8.1
+github "smart-on-fhir/Swift-SMART" ~> 3.0.0
 
 # require CryptoSwift
-github "krzyzanowskim/CryptoSwift" ~> 0.6.0
+github "krzyzanowskim/CryptoSwift" ~> 0.6.8
 
 # require SQLite.swift
 github "stephencelis/SQLite.swift" ~> 0.11.2

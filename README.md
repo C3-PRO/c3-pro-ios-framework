@@ -40,7 +40,7 @@ This framework combines several versioned technologies, here's an overview over 
 
    Version |   Swift | ResearchKit |  FHIR | &nbsp;
 -----------|---------|-------------|-------|----------------
-   **2.0** |     3.0 |         1.4 | 3.0.0 | STU-3
+   **2.0** |     3.0 |       1.4.1 | 3.0.0 | STU-3
    **1.9** |     3.0 |         1.4 | 1.6.0 | STU-3 Ballot
    **1.8** |     3.0 |         1.4 | 1.0.2 | DSTU-2
    **1.2** |     2.2 |         1.3 | 1.4.0 | _not supported_

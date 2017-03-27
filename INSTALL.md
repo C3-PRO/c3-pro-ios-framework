@@ -11,7 +11,7 @@ You can use [Carthage](https://github.com/Carthage/Carthage), a modern iOS frame
 Put this in your `Cartfile`, then run `carthage update --platform "iOS"`:
 
 ```ogdl
-github "C3-PRO/c3-pro-ios-framework.git" ~> 1.8
+github "C3-PRO/c3-pro-ios-framework.git" ~> 2.0
 ```
 
 Check the matrix in the README to see which version you should be using.
@@ -97,5 +97,5 @@ You should now be able to build and run your app.
 CocoaPods
 ---------
 
-Currently, [CocoaPods](http://cocoapods.org) cannot be used to install _C3-PRO_.
+We have also pushed the framework to [CocoaPods](http://cocoapods.org), specify _C3PRO_ as a dependency.
 

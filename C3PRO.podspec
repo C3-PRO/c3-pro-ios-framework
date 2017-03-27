@@ -6,7 +6,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "C3PRO"
-  s.version      = "1.2"
+  s.version      = "2.0.0"
   s.summary      = "Combining 🔥 SMART on FHIR and ResearchKit for data storage into i2b2."
   s.description  = <<-DESC
     Combining 🔥 FHIR and ResearchKit for data storage into i2b2, the C3-PRO iOS
@@ -17,12 +17,12 @@ Pod::Spec.new do |s|
     with a research app.
   DESC
 
-  s.homepage     = "https://c3-pro.chip.org"
+  s.homepage     = "https://c3-pro.org"
   s.license      = 'Apache 2'
   s.authors      = { "Pascal Pfiffner" => "phase.of.matter@gmail.com" }
-  s.source       = { :git => "https://github.com/p2/c3-pro-ios-framework.git", :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/c3-pro/c3-pro-ios-framework.git", :tag => s.version.to_s }
 
-  s.platform     = :ios, '8.0'
+  s.platform     = :ios, '9.0'
   s.requires_arc = true
 
   s.source_files = 'Sources/*/*.swift'
@@ -30,8 +30,9 @@ Pod::Spec.new do |s|
     'C3PRO' => ['*.lproj/C3PRO.strings']
   }
   s.frameworks = 'UIKit', 'HealthKit'
-  s.dependency 'SMART', '~> 2.9'
-  s.dependency 'ResearchKit', '~> 1.3'
-  s.dependency 'CryptoSwift', '~> 0.6'
-  s.dependency 'SQLite.swift'
+  s.dependency 'SMART', '~> 3.0.0'
+  s.dependency 'ResearchKit', '~> 1.4.1'
+  s.dependency 'CryptoSwift', '~> 0.6.8'
+  s.dependency 'SQLite.swift', '~> 0.11.2'
+  s.dependency 'JSONWebToken', '~> 2.0.2'
 end
