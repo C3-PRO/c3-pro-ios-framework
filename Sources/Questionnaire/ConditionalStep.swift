@@ -102,7 +102,7 @@ extension ConditionalStep {
 					}
 				}
 				else {
-					c3_logIfDebug("Expecting Array<ORKQuestionResult> but got \(stepResult.results)")
+					c3_logIfDebug("Expecting Array<ORKQuestionResult> but got \(String(describing: stepResult.results))")
 				}
 			}
 			else {

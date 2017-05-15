@@ -68,9 +68,9 @@ class QuestionnaireChoiceTests: XCTestCase {
 		
 		// read questionnaire
 		Questionnaire.read("ValueSet-relative", server: local) { resource, error in
-			XCTAssertNil(error, "Not expecting an error but got \(error)")
+			XCTAssertNil(error, "Not expecting an error but got \(String(describing: error))")
 			guard let questionnaire = resource as? Questionnaire else {
-				XCTAssertTrue(false, "Not a questionnaire: \(resource)")
+				XCTAssertTrue(false, "Not a questionnaire: \(String(describing: resource))")
 				exp.fulfill()
 				return
 			}

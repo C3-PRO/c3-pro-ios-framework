@@ -56,10 +56,10 @@ let hkTypes = HealthKitTypes(
 
 // set options on our consent controller BEFORE starting consent
 consentController.options.wantedServicePermissions = [
-    SystemService.LocalNotifications(Set(arrayLiteral: category)),
-    SystemService.CoreMotion,
-    SystemService.GeoLocationWhenUsing("Access to your current location..."),
-    SystemService.HealthKit(hkTypes),
+    SystemService.localNotifications(Set(arrayLiteral: category)),
+    SystemService.coreMotion,
+    SystemService.geoLocationWhenUsing("Access to your current location..."),
+    SystemService.healthKit(hkTypes),
 ]
 
 // now you could present the consent task view controller

@@ -322,7 +322,7 @@ extension ORKTimeIntervalQuestionResult {
 		}
 		//let answer = QuestionnaireResponseItemAnswer()
 		// TODO: support interval answers
-		print("--->  \(interval) for FHIR type “\(ofFHIRType)”")
+		print("--->  \(interval) for FHIR type “\(String(describing: ofFHIRType))”")
 		return nil
 	}
 }

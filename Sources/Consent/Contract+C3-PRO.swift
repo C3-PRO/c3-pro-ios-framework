@@ -106,14 +106,14 @@ public extension ContractTerm {
 							}
 						}
 						else {
-							c3_warn("HTML consent section with name «\(sub.valueString)» is not in main bundle nor in its «HTMLContent» subdirectory")
+							c3_warn("HTML consent section with name «\(String(describing: sub.valueString))» is not in main bundle nor in its «HTMLContent» subdirectory")
 						}
 					case "image":
 						if let name = sub.valueString?.string, let image = UIImage(named: name) {
 							section.customImage = image
 						}
 						else {
-							c3_warn("Custom consent image named «\(sub.valueString)» is not in main bundle")
+							c3_warn("Custom consent image named «\(String(describing: sub.valueString))» is not in main bundle")
 						}
 					case "animation":
 						let multi = (UIScreen.main.scale >= 3.0) ? "@3x" : "@2x"
@@ -121,7 +121,7 @@ public extension ContractTerm {
 							section.customAnimationURL = url
 						}
 						else {
-							c3_warn("Custom animation named «\(sub.valueString)» is not in main bundle")
+							c3_warn("Custom animation named «\(String(describing: sub.valueString))» is not in main bundle")
 						}
 					default:
 						break

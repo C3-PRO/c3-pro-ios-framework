@@ -315,7 +315,7 @@ extension QuestionnaireItem {
 			}
 		}
 		else {
-			NSLog("Question «\(text)» does not have an answer type, assuming text answer [linkId: \(link)]")
+			NSLog("Question «\(String(describing: text))» does not have an answer type, assuming text answer [linkId: \(link)]")
 			callback(ORKAnswerFormat.textAnswerFormat(), nil)
 		}
 	}

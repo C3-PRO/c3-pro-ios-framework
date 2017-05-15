@@ -116,7 +116,7 @@ open class Geocoder {
 	}
 	
 	func locationManagerDidFail(_ error: Error?) {
-		c3_logIfDebug("Location determination failed with error: \(error)")
+		c3_logIfDebug("Location determination failed with error: \(String(describing: error))")
 		locationCallback?(nil, error)
 		locationCallback = nil
 		locationDelegate = nil

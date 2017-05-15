@@ -96,7 +96,7 @@ open class StudyIntroCollectionViewController: UIViewController, UICollectionVie
 		if let vc = vc as? StudyIntroCollectionViewController {
 			return vc
 		}
-		throw C3Error.invalidStoryboard("The initial view controller of «\(storyboardName).storyboard» must be a `StudyIntroCollectionViewController` instance, but is: \(vc)")
+		throw C3Error.invalidStoryboard("The initial view controller of «\(storyboardName).storyboard» must be a `StudyIntroCollectionViewController` instance, but is: \(String(describing: vc))")
 	}
 	
 	
