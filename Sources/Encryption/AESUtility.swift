@@ -69,8 +69,7 @@ open class AESUtility {
 	*/
 	open func encrypt(data: Data) throws -> Data {
 		let aes = try AES(key: symmetricKey)		// this only fails if keySize is wrong
-		let enc = try aes.encrypt(data.bytes)
-		return Data(bytes: enc)
+		return try data.encrypt(cipher: aes)
 	}
 	
 	

@@ -152,10 +152,10 @@ open class ProfileManager {
 	open func userFromLink(_ link: ProfileLink) -> User {
 		var user = userType.init()
 		user.userId = UUID().uuidString
-		if let name = link.payload["sub"] as? String, name.characters.count > 0 {
+		if let name = link.claimset["sub"] as? String, name.characters.count > 0 {
 			user.name = name
 		}
-		if let bday = link.payload["birthdate"] as? String, bday.characters.count > 0 {
+		if let bday = link.claimset["birthdate"] as? String, bday.characters.count > 0 {
 			user.birthDate = FHIRDate(string: bday)?.nsDate
 		}
 		return user

@@ -27,7 +27,7 @@ public class ProfileLink {
 	/// The JWT audience (`aud`), if any.
 	public let audience: String?
 	
-	public let payload: Payload
+	public let claimset: ClaimSet
 	
 	/**
 	Designated initializer.
@@ -41,7 +41,7 @@ public class ProfileLink {
 			throw OAuth2Error.utf8EncodeError
 		}
 		//print("--->  \(token)")
-		self.payload = try JWT.decode(token, algorithm: .hs256(secretData), verify: true, audience: audience, issuer: issuer)
+		self.claimset = try JWT.decode(token, algorithm: .hs256(secretData), verify: true, audience: audience, issuer: issuer)
 	}
 	
 	
@@ -52,7 +52,7 @@ public class ProfileLink {
 	final endpoint.
 	*/
 	public func establishURL() throws -> URL {
-		guard let aud = payload["aud"] as? String else {
+		guard let aud = claimset.audience else {
 			throw C3Error.jwtMissingAudience
 		}
 		guard let url = URL(string: aud) else {
