@@ -20,6 +20,7 @@
 		EE36D8281E8160E6008FE8BD /* JWT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE36D8271E8160E6008FE8BD /* JWT.framework */; };
 		EE3813FE1D75A643001EFC49 /* QuestionnaireResponse in Resources */ = {isa = PBXBuildFile; fileRef = EE9560AA1D645B4B0069D49B /* QuestionnaireResponse */; };
 		EE3813FF1D75A673001EFC49 /* public.crt in Resources */ = {isa = PBXBuildFile; fileRef = EE3813FC1D75A3D8001EFC49 /* public.crt */; };
+		EE388FA11EE4D85F0050BBED /* User+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE388FA01EE4D85F0050BBED /* User+FHIR.swift */; };
 		EE507A2E1B1DF2B000AE02E9 /* DataQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */; };
 		EE507A3B1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */; };
 		EE519BA31B0CD44300036B96 /* Questionnaire+C3-PRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE519BA21B0CD44200036B96 /* Questionnaire+C3-PRO.swift */; };
@@ -118,6 +119,7 @@
 		EE36D8271E8160E6008FE8BD /* JWT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JWT.framework; path = "JSONWebToken/build/Debug-iphoneos/JWT.framework"; sourceTree = "<group>"; };
 		EE3813FB1D75A35A001EFC49 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		EE3813FC1D75A3D8001EFC49 /* public.crt */ = {isa = PBXFileReference; lastKnownFileType = text; name = public.crt; path = enc/public.crt; sourceTree = "<group>"; };
+		EE388FA01EE4D85F0050BBED /* User+FHIR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+FHIR.swift"; sourceTree = "<group>"; };
 		EE507A2D1B1DF2B000AE02E9 /* DataQueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataQueueManager.swift; sourceTree = "<group>"; };
 		EE507A3A1B1E169300AE02E9 /* OAuth2DynRegAppStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2DynRegAppStore.swift; sourceTree = "<group>"; };
 		EE519B9C1B0CD3AC00036B96 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -375,6 +377,7 @@
 				EED503501E80230500E29A79 /* ProfilePersister.swift */,
 				EED5034D1E80230500E29A79 /* ProfileLink.swift */,
 				EED503531E80230500E29A79 /* User.swift */,
+				EE388FA01EE4D85F0050BBED /* User+FHIR.swift */,
 				EED503551E80230500E29A79 /* UserTask.swift */,
 				EED503571E80230500E29A79 /* UserTaskSetting.swift */,
 				EED503561E80230500E29A79 /* UserTaskPreparer.swift */,
@@ -630,6 +633,7 @@
 				EEC5A8201D5CAF7200753852 /* ActivityReport.swift in Sources */,
 				EE1AB3BA1C23286200711108 /* HKQuantity+FHIR.swift in Sources */,
 				EE5F4F6C1B174BB000DB38B3 /* DataQueue.swift in Sources */,
+				EE388FA11EE4D85F0050BBED /* User+FHIR.swift in Sources */,
 				EEEA7F481BD61EA20089BF85 /* StudyIntroCollectionViewController.swift in Sources */,
 				EEC3C95D1B83D3C80096D5BE /* RSAUtility.swift in Sources */,
 				EE851A651BD90DBC007EC6A9 /* BorderedButton.swift in Sources */,

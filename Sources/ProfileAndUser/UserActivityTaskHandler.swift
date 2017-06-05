@@ -88,23 +88,26 @@ open class UserActivityTaskHandler: ProfileTaskHandler {
 	// MARK: - Health Data
 	
 	func submitLatestSubjectData(for user: User) {
-		// try to get latest weight reading, otherwise send what we have
-//		manager.readUserDataFromHealthKit() { user in
-//			let (_, observations) = user.c3_asPatient(weightOnly: true)
-//			if let weight = observations?.first {
-//				weight.create(self.smart.server) { error in
-//					if let error = error {
-//						c3_logIfDebug("Failed to send bodyweight observation: \(error)")
-//					}
-//				}
-//
-//				#if DEBUG
-//					let dat = try! JSONSerialization.data(withJSONObject: weight.asJSON(), options: .prettyPrinted)
-//					let str = String(data: dat, encoding: String.Encoding.utf8)!
-//					print("---->  Weight sent as \(weight)  \(str)")
-//				#endif
-//			}
-//		}
+		guard let server = manager.dataServer else {
+			c3_logIfDebug("No data server is set, cannot submit latest subject observations")
+			return
+		}
+		let (_, observationsTuple) = user.c3_asPatientAndObservations()
+		guard let observations = observationsTuple, observations.count > 0 else {
+			c3_logIfDebug("No observations from user \(user), nothing to submit")
+			return
+		}
+		for observation in observations {
+			observation.create(server) { error in
+				if let error = error {
+					c3_logIfDebug("Failed to send subject observation: \(error)")
+				}
+			}
+			
+			#if DEBUG
+			debugPrint(observation)
+			#endif
+		}
 	}
 	
 	
