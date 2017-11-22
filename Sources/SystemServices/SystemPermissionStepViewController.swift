@@ -79,7 +79,7 @@ open class SystemPermissionStepViewController: ORKStepViewController, UITableVie
 	override open func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		if hasNextStep() {
-			let title = "Next"; // FIXME: no longer available: ORKBundle().localizedStringForKey("BUTTON_NEXT", value: "BUTTON_NEXT", table: "ResearchKit")
+			let title = "Next".c3_localized
 			let next = UIBarButtonItem(title: title, style: .plain, target: self, action: #selector(UIWebView.goForward))
 			self.navigationItem.rightBarButtonItem = next
 		}
