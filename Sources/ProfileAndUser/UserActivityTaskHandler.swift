@@ -43,26 +43,37 @@ open class UserActivityTaskHandler: ProfileTaskHandler {
 		}
 		if user.isSampleUser {
 			c3_logIfDebug("This is a sample user, not submitting any task data")
+			#if DEBUG
+			if .survey == task.type, let resource = task.resultResource {
+				debugPrint(resource)
+			}
+			#endif
 			return
 		}
 		
 		// survey completed: submit, submit current user data, sample activity data and submit as well
 		if .survey == task.type {
-			submitResult(of: task, for: user)
-			submitLatestSubjectData(for: user)
-			sampleAndSubmitLatestActivityData(for: user)
+			guard let server = manager.dataServer else {
+				c3_warn("Task completed but no dataServer set on profileManager, cannot submit!")
+				return
+			}
+			server.ready { error in
+				if let error = error {
+					c3_warn("Task completed but dataServer is not ready: \(error)")
+					return
+				}
+				self.submitResult(of: task, for: user, to: server)
+				self.submitLatestSubjectData(for: user, to: server)
+				self.sampleAndSubmitLatestActivityData(for: user, to: server)
+			}
 		}
 	}
 	
 	
 	// MARK: - Submit Task Data
 	
-	func submitResult(of task: UserTask, for user: User) {
+	func submitResult(of task: UserTask, for user: User, to server: Server) {
 		c3_logIfDebug("Task completed, submitting")
-		guard let server = manager.dataServer else {
-			c3_warn("Task completed but no dataServer set on profileManager")
-			return
-		}
 		guard let resource = task.resultResource as? QuestionnaireResponse else {
 			c3_warn("Task completed but no questionnaire response resource received, have this: \(task.resultResource?.description ?? "nil")")
 			return
@@ -87,11 +98,7 @@ open class UserActivityTaskHandler: ProfileTaskHandler {
 	
 	// MARK: - Health Data
 	
-	func submitLatestSubjectData(for user: User) {
-		guard let server = manager.dataServer else {
-			c3_logIfDebug("No data server is set, cannot submit latest subject observations")
-			return
-		}
+	func submitLatestSubjectData(for user: User, to server: Server) {
 		let (_, observationsTuple) = user.c3_asPatientAndObservations()
 		guard let observations = observationsTuple, observations.count > 0 else {
 			c3_logIfDebug("No observations from user \(user), nothing to submit")
@@ -115,7 +122,7 @@ open class UserActivityTaskHandler: ProfileTaskHandler {
 	
 	var activityCollector: ActivityCollector?
 	
-	func sampleAndSubmitLatestActivityData(for user: User) {
+	func sampleAndSubmitLatestActivityData(for user: User, to server: Server) {
 		guard let path = motionReporterStore?.path else {
 			return
 		}
@@ -126,10 +133,6 @@ open class UserActivityTaskHandler: ProfileTaskHandler {
 		
 		let days = manager.settings?.activitySampleNumDays ?? 0
 		guard days > 0 else {
-			return
-		}
-		guard let server = manager.dataServer else {
-			c3_logIfDebug("The profile manager does not have a data server")
 			return
 		}
 		

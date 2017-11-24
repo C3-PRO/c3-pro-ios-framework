@@ -35,7 +35,7 @@ open class StudyIntroWelcomeCell: UICollectionViewCell {
 	
 	@IBOutlet open var swipeLabel: UILabel?
 	
-	open var onConsentTap: ((Void) -> Void)?
+	open var onConsentTap: (() -> Void)?
 	open var onVideoTap: ((_ name: String) -> Void)?
 	
 	open var item: StudyIntroWelcomeItem? {

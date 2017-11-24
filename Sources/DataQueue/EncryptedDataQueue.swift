@@ -61,7 +61,7 @@ open class EncryptedDataQueue: DataQueue {
 	- parameter publicCertificateFile: Filename, without ".crt" extension, of a bundled X509 public key certificate
 	*/
 	public init(baseURL: URL, auth: OAuth2JSON?, encBaseURL: URL, publicCertificateFile: String) {
-		if let lastChar = encBaseURL.absoluteString.characters.last, "/" != lastChar {
+		if let lastChar = encBaseURL.absoluteString.last, "/" != lastChar {
 			encryptedBaseURL = encBaseURL.appendingPathComponent("/")
 		}
 		else {

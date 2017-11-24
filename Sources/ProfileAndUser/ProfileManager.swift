@@ -44,7 +44,7 @@ open class ProfileManager {
 	public internal(set) var persister: ProfilePersister?
 	
 	/// The data server to be used.
-	public internal(set) var dataServer: FHIRServer?
+	public internal(set) var dataServer: Server?
 	
 	/// Internally used to hold on to a token server instance.
 	public internal(set) var tokenServer: OAuth2Requestable?
@@ -85,7 +85,7 @@ open class ProfileManager {
 	- parameter dataServer:  A handle to the FHIR server that should receive study data
 	- parameter persister:   The instance to use to persist app data
 	*/
-	public init(userType: User.Type, taskType: UserTask.Type, settingsURL: URL, dataServer: FHIRServer?, persister: ProfilePersister?) throws {
+	public init(userType: User.Type, taskType: UserTask.Type, settingsURL: URL, dataServer: Server?, persister: ProfilePersister?) throws {
 		self.userType = userType
 		self.taskType = taskType
 		self.dataServer = dataServer
@@ -152,10 +152,10 @@ open class ProfileManager {
 	open func userFromLink(_ link: ProfileLink) -> User {
 		var user = userType.init()
 		user.userId = UUID().uuidString
-		if let name = link.claimset["sub"] as? String, name.characters.count > 0 {
+		if let name = link.claimset["sub"] as? String, name.count > 0 {
 			user.name = name
 		}
-		if let bday = link.claimset["birthdate"] as? String, bday.characters.count > 0 {
+		if let bday = link.claimset["birthdate"] as? String, bday.count > 0 {
 			user.birthDate = FHIRDate(string: bday)?.nsDate
 		}
 		return user

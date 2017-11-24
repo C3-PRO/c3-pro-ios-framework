@@ -23,7 +23,7 @@ import SMART
 
 
 /// The FHIR version used by this instance of the framework.
-public let C3PROFHIRVersion = "1.8.0"
+public let C3PROFHIRVersion = "3.0.0"
 
 
 /**
@@ -282,7 +282,7 @@ Ensures that the given block is executed on the main queue.
 
 - parameter block: The block to execute on the main queue.
 */
-public func c3_performOnMainQueue(_ block: @escaping ((Void) -> Void)) {
+public func c3_performOnMainQueue(_ block: @escaping (() -> Void)) {
 	if Thread.current.isMainThread {
 		block()
 	}

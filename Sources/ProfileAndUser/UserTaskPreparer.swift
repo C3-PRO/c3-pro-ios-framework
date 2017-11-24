@@ -32,7 +32,7 @@ open class UserTaskPreparer {
 	
 	// MARK: - Task Checking
 	
-	open func prepareDueTasks(_ callback: ((Void) -> Void)? = nil) {
+	open func prepareDueTasks(_ callback: (() -> Void)? = nil) {
 		if type(of: self).preparingDueTasks {
 			c3_logIfDebug("Already preparing tasks, skipping this run")
 			return
@@ -65,8 +65,8 @@ open class UserTaskPreparer {
 	- paramater task:     The task to prepare for
 	- parameter callback: Block to execute when preparation has finished
 	*/
-	open func prepare(task: UserTask, callback: @escaping ((Void) -> Void)) {
-		c3_logIfDebug("Preparing task \(task.id)")
+	open func prepare(task: UserTask, callback: @escaping (() -> Void)) {
+		c3_logIfDebug("Preparing task \(task.id) (\(task.taskId))")
 		switch task.type {
 		case .survey:
 			prepareSurveyTask(task, callback: callback)
@@ -82,7 +82,7 @@ open class UserTaskPreparer {
 	- parameter task:     The task that wants a survey completed
 	- parameter callback: Block to execute when preparation has finished
 	*/
-	open func prepareSurveyTask(_ task: UserTask, callback: @escaping ((Void) -> Void)) {
+	open func prepareSurveyTask(_ task: UserTask, callback: @escaping (() -> Void)) {
 		guard .survey == task.type else {
 			c3_logIfDebug("Not attempting to cache non-survey task \(task)")
 			return
@@ -136,14 +136,14 @@ open class UserTaskPreparer {
 			}
 			
 			c3_logIfDebug("Retrieving Questionnaire from \(server)")
-			Questionnaire.read(task.id, server: server) { resource, error in
+			Questionnaire.read(task.taskId, server: server) { resource, error in
 				DispatchQueue.main.async {
 					var err: Error?
 					var res = resource
 					if let error = error {
 						c3_logIfDebug("Failed to read Questionnaire from server, falling back to app bundle. Error was: \(error)")
 						do {
-							res = try Bundle.main.fhir_bundledResource(task.id, type: Questionnaire.self)
+							res = try Bundle.main.fhir_bundledResource(task.taskId, type: Questionnaire.self)
 						}
 						catch let bundleError {
 							err = bundleError
@@ -166,7 +166,7 @@ open class UserTaskPreparer {
 	
 	func cacheURL(for task: UserTask) -> URL? {
 		if let first = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first {
-			let file = (.survey == task.type) ? "SurveyTask-\(task.id).json" : "Task-\(task.id).json"
+			let file = (.survey == task.type) ? "SurveyTask-\(task.taskId).json" : "Task-\(task.taskId).json"
 			return URL(fileURLWithPath: first).appendingPathComponent(file)
 		}
 		return nil
@@ -177,7 +177,7 @@ open class UserTaskPreparer {
 	filesystem URL.
 	*/
 	public func bundleResourceIsNewerThanResource(at url: URL, for task: UserTask) -> Bool {
-		if let bundled = Bundle.main.path(forResource: task.id, ofType: "json") {
+		if let bundled = Bundle.main.path(forResource: task.taskId, ofType: "json") {
 			let fm = FileManager()
 			if let dateBundled = (try? fm.attributesOfItem(atPath: bundled))?[FileAttributeKey.creationDate] as? Date,
 				let dateCached = (try? fm.attributesOfItem(atPath: url.path))?[FileAttributeKey.creationDate] as? Date {

@@ -1,15 +1,15 @@
 # require ResearchKit
-github "ResearchKit/ResearchKit" "master"
+github "ResearchKit/ResearchKit" ~> 1.5
 
 # require SMART
-github "smart-on-fhir/Swift-SMART" ~> 3.0.1
+github "smart-on-fhir/Swift-SMART" ~> 3.2
 
 # require CryptoSwift
-github "krzyzanowskim/CryptoSwift" ~> 0.6.9
+github "krzyzanowskim/CryptoSwift" "swift32"
 
 # require SQLite.swift
-github "stephencelis/SQLite.swift" ~> 0.11.3
+github "stephencelis/SQLite.swift" ~> 0.11.4
 
 # require JSONWebToken.swift
-github "kylef/JSONWebToken.swift" ~> 2.1.1
+github "kylef/JSONWebToken.swift" ~> 2.2.0
 

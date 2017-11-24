@@ -114,11 +114,19 @@ C3-PRO contains a dynamic client registration variant that allows client registr
 Use as follows:
 
 ```swift
-let queue = DataQueue(baseURL: baseURL, auth: auth)
-queue.onBeforeDynamicClientRegistration = { url in
+let baseURL = NSURL(string: "https://fhir-api-dstu2.smarthealthit.org")
+let auth = [
+    "client_name": "My Awesome App",
+    "authorize_uri": "{OAuth2 authorize endpoint URL}",
+    "registration_uri": "{OAuth2 dynamic client registration endpoint URL}",
+    "authorize_type": "client_credentials",
+] as OAuth2JSON
+
+let dataQueue = DataQueue(baseURL: baseURL, auth: auth)
+dataQueue.onBeforeDynamicClientRegistration = { url in
     return OAuth2DynRegAppStore()
 }
-smart = Client(server: queue)
+smart = Client(server: dataQueue)
 ```
 
 The framework automatically attempts to register your app when you call `authorize()` if

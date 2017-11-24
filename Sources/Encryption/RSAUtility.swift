@@ -71,11 +71,14 @@ open class RSAUtility {
 		let cipherBufferSize = SecKeyGetBlockSize(key)
 		var cipherBufferPointer = [UInt8](repeating: 0, count: Int(cipherBufferSize))
 		var cipherBufferSizeResult = Int(cipherBufferSize)
+		let dataPointer = data.withUnsafeBytes {
+			[UInt8](UnsafeBufferPointer(start: $0, count: data.count))
+		}
 		
 		let status = SecKeyEncrypt(
 			key,
 			SecPadding.OAEP,				// `SecPadding.OAEP` works with RSA/ECB/OAEPWithSHA1AndMGF1Padding on the Java side
-			UnsafePointer<UInt8>(data.bytes),
+			dataPointer,
 			data.count,
 			&cipherBufferPointer,
 			&cipherBufferSizeResult

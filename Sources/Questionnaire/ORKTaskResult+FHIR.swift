@@ -183,7 +183,7 @@ extension ORKChoiceQuestionResult {
 		var answers = [QuestionnaireResponseItemAnswer]()
 		for choice in choices {
 			let answer = QuestionnaireResponseItemAnswer()
-			let splat = choice.characters.split() { $0 == kORKTextChoiceSystemSeparator }.map() { String($0) }
+			let splat = choice.split() { $0 == kORKTextChoiceSystemSeparator }.map() { String($0) }
 			let system = splat[0]
 			let code = (splat.count > 1) ? splat[1..<splat.endIndex].joined(separator: String(kORKTextChoiceSystemSeparator)) : kORKTextChoiceMissingCodeCode
 			answer.valueCoding = Coding()
