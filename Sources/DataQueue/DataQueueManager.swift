@@ -197,18 +197,21 @@ class DataQueueManager {
 		}
 		
 		if let first = firstInQueue() {
-			logger?.debug("C3-PRO", msg: "Dequeueing first in queue: \(first.path)")
+			c3_logIfDebug("Dequeueing first in queue: \(first.path)")
 			do {
 				try first.readFromFile()
 				currentlyDequeueing = first
 				let cb: FHIRErrorCallback = { cError in
-					if nil == cError {
+					if let cError = cError {
+						self.currentlyDequeueing = nil
+						c3_warn("Failed to dequeue: \(cError)")
+					} else {
 						self.clearCurrentlyDequeueing()
 					}
 					callback((nil == cError), cError)
 				}
 				
-				if nil != first.resource!.id {
+				if nil != first.resource?.id {
 					first.resource!._server = server
 					first.resource!.update(callback: cb)
 				}

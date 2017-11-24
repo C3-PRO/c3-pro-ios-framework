@@ -67,7 +67,13 @@ open class DataQueue: Server {
 	
 	/** Starts flushing the queue, oldest resources first, until no more resources are enqueued or an error occurs. */
 	open func flush(callback: @escaping ((Error?) -> Void)) {
-		queueManager.flush(callback: callback)
+		ready { [weak self] error in
+			if let error = error {
+				callback(error)
+				return
+			}
+			self?.queueManager.flush(callback: callback)
+		}
 	}
 	
 	

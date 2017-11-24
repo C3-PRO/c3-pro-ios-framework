@@ -28,10 +28,9 @@ import C3PRO
 #### Versions
 
 The `master` branch requires Xcode 8 and _should_ always be compatible with the latest released version.
-It's on `Swift 3.0` and `FHIR DSTU-2`.
+It's on `Swift 3.2` and `FHIR STU-3`.
 
-The `develop` branch may contain new developments and have different requirements, it's currently on `Swift 3` and `FHIR 1.6.0 (STU-3)`.
-**It is highly suggested that you use the `develop` branch with the FHIR STU-3 ballot version at this time!**
+The `develop` branch may contain new developments and have different requirements, it's currently on `Swift 3` and `FHIR 3.0.0 (STU-3)`.
 
 See the [releases](https://github.com/C3-PRO/c3-pro-ios-framework/releases) tab for previous releases, for newer versions look for `feature/x` branches.
 
@@ -40,7 +39,7 @@ This framework combines several versioned technologies, here's an overview over 
 
    Version |   Swift | ResearchKit |  FHIR | &nbsp;
 -----------|---------|-------------|-------|----------------
-   **2.0** |     3.0 |       1.4.1 | 3.0.0 | STU-3
+   **2.0** |     3.2 |         1.5 | 3.0.0 | STU-3
    **1.9** |     3.0 |         1.4 | 1.6.0 | STU-3 Ballot
    **1.8** |     3.0 |         1.4 | 1.0.2 | DSTU-2
    **1.2** |     2.2 |         1.3 | 1.4.0 | _not supported_

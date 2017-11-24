@@ -282,7 +282,7 @@ open class Geocoder {
 		
 		// US: 3-digit ZIP
 		if let us = address.country?.string, us.lowercased().hasPrefix("us") {
-			if let fullZip = address.postalCode?.string, fullZip.characters.count >= 3 {
+			if let fullZip = address.postalCode?.string, fullZip.count >= 3 {
 				let zip = fullZip[fullZip.startIndex..<fullZip.index(fullZip.startIndex, offsetBy: 3)]
 				hipaa.postalCode = FHIRString(Geocoder.restrictedThreeDigitZIPs().contains(zip) ? "000" : zip)
 			}
