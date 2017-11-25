@@ -91,6 +91,13 @@ open class OAuth2DynRegAppStore: OAuth2DynReg {
 	}
 	
 	/**
+	Use for testing purposes: sets `appReceipt`, normally read from file, to the given string.
+	*/
+	public func overrideAppReceipt(_ receipt: String?) {
+		appReceipt = receipt
+	}
+	
+	/**
 	Asks the OS to refresh the App Store receipt.
 	
 	Uses `SKReceiptRefreshRequest` with `AppStoreRequestDelegate`, which the receiver is holding on to.

@@ -54,6 +54,38 @@ open class DataQueue: Server {
 	}
 	
 	
+	// MARK: - Overrides
+	
+	private var isRunningReady = false
+	
+	open override func ready(callback: @escaping (FHIRError?) -> ()) {
+		guard !isRunningReady else {	// this hack is needed since we call `authorize()` within the override, which in the superclass also calls `ready()`
+			callback(nil)
+			return
+		}
+		
+		isRunningReady = true
+		super.ready() { registrationError in
+			if let registrationError = registrationError {
+				self.isRunningReady = false
+				callback(FHIRError.error("\(registrationError)"))
+				return
+			}
+			
+			var authProperties = SMARTAuthProperties()
+			authProperties.granularity = .tokenOnly
+			self.authorize(with: authProperties) { patient, authError in
+				self.isRunningReady = false
+				if let authError = authError {
+					callback(FHIRError.error("\(authError)"))
+				} else {
+					callback(nil)
+				}
+			}
+		}
+	}
+	
+	
 	// MARK: - Queue Manager
 	
 	/**
