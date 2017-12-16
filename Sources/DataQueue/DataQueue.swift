@@ -88,6 +88,10 @@ open class DataQueue: Server {
 	
 	// MARK: - Queue Manager
 	
+	open func numberOfEnqueuedResources() -> Int {
+		return queueManager.countEnqueuedResources()
+	}
+	
 	/**
 	Enqueues the given resource.
 	

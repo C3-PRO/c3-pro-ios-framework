@@ -100,6 +100,20 @@ class DataQueueManager {
 		}
 	}
 	
+	/** The number of resources currently enqueued. */
+	public func countEnqueuedResources() -> Int {
+		let manager = FileManager()
+		guard let iterator = manager.enumerator(atPath: queueDirectory) else {
+			return 0
+		}
+		var i = 0
+		for _ in iterator {
+			// validate `item`?
+			i += 1
+		}
+		return i
+	}
+	
 	/**
 	Looks at all resources in the queue and returns the lowest and highest position, if any.
 	
@@ -111,7 +125,7 @@ class DataQueueManager {
 		var myMax: Int?
 		
 		do {
-			let files = try manager.contentsOfDirectory(atPath: queueDirectory)
+			let files = manager.fileExists(atPath: queueDirectory) ? try manager.contentsOfDirectory(atPath: queueDirectory) : []
 			for anyFile in files {
 				let file = anyFile as NSString
 				let pure = file.deletingPathExtension.replacingOccurrences(of: type(of: self).prefix, with: "") as NSString

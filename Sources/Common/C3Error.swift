@@ -163,7 +163,7 @@ public enum C3Error: Error, CustomStringConvertible {
 	
 	// MARK: HealthKit
 	
-	/// Access to HealthKit was not granted.
+	/// HealthKit is not available on the device.
 	case healthKitNotAvailable
 	
 	/// There is no HealthKit sample of the given type.
