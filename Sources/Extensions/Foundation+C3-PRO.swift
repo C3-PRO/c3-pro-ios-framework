@@ -107,7 +107,10 @@ extension Calendar {
 		let rng = range(of: .day, in: .month, for: startMonth)!
 		var firstMonthEnd = firstMonth
 		firstMonthEnd.day = rng.upperBound
-		intervals.append((firstMonth, firstMonthEnd, rng.upperBound - rng.lowerBound, shortMonthSymbols[component(.month, from: startMonth) - 1]))
+		if (date(from: firstMonthEnd) ?? now > now) {	// firstMonthEnd is later than today, so month is not yet done
+			firstMonthEnd.day = startComponents.day
+		}
+		intervals.append((firstMonth, firstMonthEnd, firstMonthEnd.day!, shortMonthSymbols[component(.month, from: startMonth) - 1]))
 		last = firstMonth
 		
 		for i in 1...3 {
